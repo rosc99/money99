@@ -31,6 +31,9 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
+img, canvas, video { max-width: 100%; }
+/* Prevent any element from causing horizontal overflow */
+.page, .card, .modal, section { max-width: 100%; overflow-x: hidden; }
 
 body {
   background: var(--bg-base);
@@ -643,7 +646,7 @@ input::placeholder { color: var(--text-muted); }
    EXPORT ROW
 ══════════════════════════════════ */
 .export-row { display:flex;justify-content:flex-end;gap:10px;margin-top:12px;flex-wrap:wrap; }
-.two-col { display:grid;grid-template-columns:380px 1fr;gap:20px; }
+.two-col { display:grid;grid-template-columns:minmax(0,380px) 1fr;gap:20px; }
 .two-col-equal { display:grid;grid-template-columns:1fr 1fr;gap:20px; }
 
 /* ══════════════════════════════════
@@ -818,7 +821,7 @@ input::placeholder { color: var(--text-muted); }
 }
 #authOverlay.hidden { display: none; }
 .auth-box {
-  width: 400px; padding: 44px 40px 36px;
+  width: min(400px, 94vw); padding: clamp(20px, 5vw, 44px) clamp(16px, 5vw, 40px) 36px;
   background: #141720; border: 1px solid #2e3550;
   border-radius: 18px; text-align: center;
   box-shadow: 0 32px 80px rgba(0,0,0,0.7);
@@ -1001,7 +1004,7 @@ input::placeholder { color: var(--text-muted); }
 
 <!-- 修改密碼 modal -->
 <div id="changePwModal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;">
-  <div style="background:#141720;border:1px solid #2e3550;border-radius:14px;padding:32px 28px;width:320px;box-shadow:0 24px 64px rgba(0,0,0,0.6);">
+  <div style="background:#141720;border:1px solid #2e3550;border-radius:14px;padding:32px 28px;width:min(320px,92vw);box-shadow:0 24px 64px rgba(0,0,0,0.6);">
     <div style="font-size:0.9rem;font-weight:500;color:#e8ecf5;margin-bottom:20px;">🔑 修改密碼</div>
     <input class="auth-input" type="password" id="newPw1" placeholder="新密碼" style="margin-bottom:10px;">
     <input class="auth-input" type="password" id="newPw2" placeholder="確認新密碼" style="margin-bottom:16px;">
@@ -1722,7 +1725,7 @@ input::placeholder { color: var(--text-muted); }
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:360px 1fr;gap:18px;" id="liabMainGrid">
+    <div style="display:grid;grid-template-columns:minmax(0,360px) 1fr;gap:18px;" id="liabMainGrid">
 
       <!-- 新增表單 -->
       <div class="card" style="align-self:start;">
@@ -1848,7 +1851,7 @@ input::placeholder { color: var(--text-muted); }
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:360px 1fr;gap:18px;" id="recurMainGrid">
+    <div style="display:grid;grid-template-columns:minmax(0,360px) 1fr;gap:18px;" id="recurMainGrid">
 
       <!-- 新增表單 -->
       <div style="display:flex;flex-direction:column;gap:14px;">
@@ -2021,7 +2024,7 @@ input::placeholder { color: var(--text-muted); }
 
 <!-- ── 固定支出快速新增彈窗 ── -->
 <div id="fixedQuickModal" style="display:none;position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,0.72);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
-  <div style="width:500px;max-width:95vw;max-height:90vh;overflow-y:auto;background:#141720;border:1px solid #2e3550;border-radius:18px;padding:28px 28px 24px;box-shadow:0 32px 80px rgba(0,0,0,0.7);animation:authFadeIn 0.25s ease;">
+  <div style="width:min(500px,94vw);max-width:94vw;max-height:90vh;overflow-y:auto;background:#141720;border:1px solid #2e3550;border-radius:18px;padding:clamp(16px,4vw,28px) clamp(14px,4vw,28px) 24px;box-shadow:0 32px 80px rgba(0,0,0,0.7);animation:authFadeIn 0.25s ease;">
 
     <!-- header -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
@@ -2106,7 +2109,7 @@ input::placeholder { color: var(--text-muted); }
 
 <!-- ── 分期快速選擇彈窗 ── -->
 <div id="instQuickModal" style="display:none;position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
-  <div style="width:520px;max-width:95vw;max-height:90vh;overflow-y:auto;background:#141720;border:1px solid #2e3550;border-radius:18px;padding:28px 28px 24px;box-shadow:0 32px 80px rgba(0,0,0,0.7);animation:authFadeIn 0.25s ease;">
+  <div style="width:min(520px,94vw);max-width:94vw;max-height:90vh;overflow-y:auto;background:#141720;border:1px solid #2e3550;border-radius:18px;padding:clamp(16px,4vw,28px) clamp(14px,4vw,28px) 24px;box-shadow:0 32px 80px rgba(0,0,0,0.7);animation:authFadeIn 0.25s ease;">
     <!-- header -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
       <div>
