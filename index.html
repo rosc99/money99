@@ -820,6 +820,7 @@ input::placeholder { color: var(--text-muted); }
   /* Home KPI */
   #homeKpiRow { grid-template-columns: 1fr !important; gap: 8px !important; }
   #homeRow2, #homeRow3, #homeRow4 { grid-template-columns: 1fr !important; gap: 12px !important; }
+  #debtDistRow, #pledgeRow { grid-template-columns: 1fr !important; }
   .kpi-value { font-size: 0.92rem; }
   .kpi-label { font-size: 0.58rem; }
 
@@ -1892,8 +1893,9 @@ input::placeholder { color: var(--text-muted); }
 
     <!-- ══ TAB: 債務追蹤 ══ -->
     <div id="ac-panel-debts" style="display:none;">
-      <!-- KPI -->
-      <div class="stats-row stats-row-4" style="margin-bottom:20px;">
+
+      <!-- KPI Row -->
+      <div class="stats-row stats-row-4" style="margin-bottom:16px;">
         <div class="stat-card c-red">
           <div class="stat-label">負債總額</div>
           <div class="stat-value c-red" id="liabStatTotal">$0</div>
@@ -1916,6 +1918,119 @@ input::placeholder { color: var(--text-muted); }
         </div>
       </div>
 
+      <!-- 分布圖 Row -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px;" id="debtDistRow">
+
+        <!-- 貸款總額分布 -->
+        <div class="card" style="padding:16px 18px;">
+          <div class="card-header" style="margin-bottom:12px;">
+            <div class="card-title">貸款總額分布</div>
+            <span style="font-size:0.62rem;color:var(--text-muted);font-family:var(--mono);" id="loanDistTotal">$0</span>
+          </div>
+          <div id="loanDistBars" style="display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
+
+        <!-- 分期付款分布 -->
+        <div class="card" style="padding:16px 18px;">
+          <div class="card-header" style="margin-bottom:12px;">
+            <div class="card-title">分期付款分布</div>
+            <span style="font-size:0.62rem;color:var(--text-muted);font-family:var(--mono);" id="instDistTotal">$0/月</span>
+          </div>
+          <div id="instDistBars" style="display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
+
+        <!-- 固定支出分布 -->
+        <div class="card" style="padding:16px 18px;">
+          <div class="card-header" style="margin-bottom:12px;">
+            <div class="card-title">固定支出分布</div>
+            <span style="font-size:0.62rem;color:var(--text-muted);font-family:var(--mono);" id="recurDistTotal">$0/月</span>
+          </div>
+          <div id="recurDistBars" style="display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
+      </div>
+
+      <!-- 股票質押 & 維持率 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;" id="pledgeRow">
+
+        <!-- 股票質押管理 -->
+        <div class="card" style="padding:16px 18px;">
+          <div class="card-header" style="margin-bottom:14px;">
+            <div class="card-title">股票質押管理</div>
+            <button onclick="addPledge()" style="background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.3);color:var(--accent-blue);border-radius:7px;padding:4px 12px;font-size:0.72rem;cursor:pointer;font-family:var(--sans);">＋ 新增</button>
+          </div>
+          <!-- 新增表單 -->
+          <div id="pledgeForm" style="display:none;margin-bottom:14px;padding:12px;background:var(--bg-card2);border:1px solid var(--border);border-radius:8px;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+              <div>
+                <label>台股代號</label>
+                <input type="text" id="pledgeTicker" placeholder="例：2330、0056" maxlength="6"
+                  style="text-transform:uppercase;"
+                  onblur="previewPledgeQuote(this.value)">
+              </div>
+              <div><label>股票名稱 <span style="color:var(--text-muted);text-transform:none;letter-spacing:0;font-weight:400;">自動帶入</span></label><input type="text" id="pledgeName" placeholder="查詢後自動帶入…"></div>
+              <div>
+                <label>質押張數 <span style="color:var(--text-muted);text-transform:none;letter-spacing:0;font-weight:400;">1張=1000股</span></label>
+                <input type="number" id="pledgeShares" placeholder="0" min="0" oninput="calcPledgeValue()">
+              </div>
+              <div>
+                <label>即時報價</label>
+                <input type="number" id="pledgePrice" placeholder="查詢後自動帶入" min="0" readonly
+                  style="background:rgba(167,139,250,0.04);color:var(--accent-purple);">
+              </div>
+              <div class="full">
+                <label>質押市值 (NTD) <span style="color:var(--text-muted);text-transform:none;letter-spacing:0;font-weight:400;">自動計算</span></label>
+                <input type="number" id="pledgeValue" placeholder="0" min="0"
+                  style="background:rgba(167,139,250,0.04);color:var(--accent-purple);" readonly>
+              </div>
+              <div><label>借款金額 (NTD)</label><input type="number" id="pledgeLoan" placeholder="0" min="0" oninput="calcPledgeValue()"></div>
+              <div id="pledgeMaintPreview" style="display:none;padding:8px 10px;background:rgba(0,229,160,0.06);border:1px solid rgba(0,229,160,0.2);border-radius:7px;align-self:end;">
+                <div style="font-size:0.6rem;color:var(--text-muted);">預估維持率</div>
+                <div style="font-family:var(--mono);font-size:1rem;font-weight:500;" id="pledgeMaintPct">—</div>
+              </div>
+              <div><label>警戒維持率 (%)</label><input type="number" id="pledgeWarnRate" placeholder="130" min="100" value="130"></div>
+              <div><label>斷頭維持率 (%)</label><input type="number" id="pledgeCutRate" placeholder="120" min="100" value="120"></div>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button onclick="savePledge()" class="btn btn-primary" style="flex:1;font-size:0.8rem;padding:8px 0;">儲存</button>
+              <button onclick="document.getElementById('pledgeForm').style.display='none'" class="btn btn-ghost" style="font-size:0.8rem;padding:8px 16px;">取消</button>
+            </div>
+          </div>
+          <div id="pledgeList" style="display:flex;flex-direction:column;gap:8px;">
+            <div class="empty-state" style="padding:20px 0;font-size:0.78rem;">尚無質押資料</div>
+          </div>
+        </div>
+
+        <!-- 整體維持率儀表 -->
+        <div class="card" style="padding:16px 18px;">
+          <div class="card-header" style="margin-bottom:14px;">
+            <div class="card-title">整體維持率</div>
+            <span style="font-size:0.68rem;color:var(--text-muted);">質押市值 ÷ 借款金額</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+            <div style="position:relative;width:140px;height:72px;overflow:hidden;">
+              <canvas id="maintGauge" width="140" height="140" style="margin-top:-70px;display:block;"></canvas>
+            </div>
+            <div style="font-family:var(--mono);font-size:2rem;font-weight:500;" id="maintRateDisplay">—</div>
+            <div style="font-size:0.72rem;color:var(--text-muted);" id="maintRateStatus">尚無質押資料</div>
+            <div style="width:100%;display:flex;flex-direction:column;gap:6px;margin-top:4px;">
+              <div style="display:flex;justify-content:space-between;font-size:0.72rem;">
+                <span style="color:var(--text-secondary);">質押總市值</span>
+                <span style="font-family:var(--mono);color:var(--accent-blue);" id="pledgeTotalValue">$0</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:0.72rem;">
+                <span style="color:var(--text-secondary);">借款總額</span>
+                <span style="font-family:var(--mono);color:var(--accent-red);" id="pledgeTotalLoan">$0</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:0.72rem;">
+                <span style="color:var(--text-secondary);">安全墊</span>
+                <span style="font-family:var(--mono);" id="pledgeSafetyBuffer">$0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 負債清單 -->
       <div style="display:grid;grid-template-columns:minmax(0,360px) 1fr;gap:18px;" id="liabMainGrid">
         <!-- 新增表單 -->
         <div class="card" style="align-self:start;">
@@ -5041,6 +5156,138 @@ const LIAB_COLORS = {
   '學貸':'#06b6d4','信用卡分期':'#ec4899','其他貸款':'#6b7280',
 };
 
+// ━━━━━━━━━━━━ 股票質押 ━━━━━━━━━━━━
+let _pledgeCache = null;
+
+async function getPledges() {
+  try {
+    const api = await sb.from('pledges');
+    const data = await api.select('*');
+    _pledgeCache = Array.isArray(data) ? data : [];
+    return _pledgeCache;
+  } catch { return _pledgeCache || []; }
+}
+
+function addPledge() {
+  const f = document.getElementById('pledgeForm');
+  if (f) f.style.display = f.style.display === 'none' ? '' : 'none';
+}
+
+async function previewPledgeQuote(ticker) {
+  ticker = (ticker || '').trim().toUpperCase();
+  const priceEl = document.getElementById('pledgePrice');
+  const nameEl  = document.getElementById('pledgeName');
+  if (!ticker) return;
+  if (priceEl) { priceEl.value = ''; priceEl.placeholder = '查詢中…'; }
+  const q = await fetchQuote(ticker);
+  if (!q) {
+    if (priceEl) priceEl.placeholder = '找不到代號';
+    return;
+  }
+  if (priceEl) { priceEl.value = q.price; priceEl.placeholder = ''; }
+  if (nameEl && !nameEl.value.trim()) nameEl.value = q.name;
+  calcPledgeValue();
+}
+
+function calcPledgeValue() {
+  const lots  = parseFloat(document.getElementById('pledgeShares')?.value) || 0;
+  const price = parseFloat(document.getElementById('pledgePrice')?.value)  || 0;
+  const valEl = document.getElementById('pledgeValue');
+  const loanEl= document.getElementById('pledgeLoan');
+  const prev  = document.getElementById('pledgeMaintPreview');
+  const pctEl = document.getElementById('pledgeMaintPct');
+  const computed = lots > 0 && price > 0 ? Math.round(lots * 1000 * price) : 0;
+  if (valEl) valEl.value = computed || '';
+  // 即時維持率預覽
+  const loan = parseFloat(loanEl?.value) || 0;
+  if (computed > 0 && loan > 0 && prev && pctEl) {
+    const rate = Math.round((computed / loan) * 100);
+    prev.style.display = '';
+    pctEl.textContent  = rate + '%';
+    pctEl.style.color  = rate >= 150 ? 'var(--accent-green)' : rate >= 130 ? 'var(--accent-amber)' : 'var(--accent-red)';
+    prev.style.borderColor = rate >= 150 ? 'rgba(0,229,160,0.3)' : rate >= 130 ? 'rgba(245,158,11,0.3)' : 'rgba(255,77,109,0.3)';
+    prev.style.background  = rate >= 150 ? 'rgba(0,229,160,0.06)' : rate >= 130 ? 'rgba(245,158,11,0.06)' : 'rgba(255,77,109,0.06)';
+  } else if (prev) { prev.style.display = 'none'; }
+}
+
+async function savePledge() {
+  const ticker    = (document.getElementById('pledgeTicker')?.value || '').trim().toUpperCase();
+  const name      = document.getElementById('pledgeName')?.value.trim();
+  const shares    = parseFloat(document.getElementById('pledgeShares')?.value) || 0; // 張數
+  const price     = parseFloat(document.getElementById('pledgePrice')?.value)  || 0;
+  const value     = parseFloat(document.getElementById('pledgeValue')?.value)  || 0;
+  const loan      = parseFloat(document.getElementById('pledgeLoan')?.value)   || 0;
+  const warnRate  = parseFloat(document.getElementById('pledgeWarnRate')?.value) || 130;
+  const cutRate   = parseFloat(document.getElementById('pledgeCutRate')?.value)  || 120;
+  if (!name || loan <= 0) { showToast('⚠ 請填寫股票名稱與借款金額', 'warn'); return; }
+  const item = { id: Date.now().toString(), ticker, name, shares, price, value, loan, warnRate, cutRate };
+  try { const api = await sb.from('pledges'); await api.upsert(item); } catch { setStatus(false, '儲存失敗'); }
+  ['pledgeTicker','pledgeName','pledgeShares','pledgePrice','pledgeValue','pledgeLoan'].forEach(id => {
+    const el = document.getElementById(id); if(el) { el.value=''; el.placeholder = id==='pledgePrice'?'查詢後自動帶入':el.placeholder; }
+  });
+  document.getElementById('pledgeWarnRate').value = 130;
+  document.getElementById('pledgeCutRate').value  = 120;
+  const prev = document.getElementById('pledgeMaintPreview');
+  if (prev) prev.style.display = 'none';
+  document.getElementById('pledgeForm').style.display = 'none';
+  _pledgeCache = null;
+  await renderLiabList();
+  showToast('✓ 已新增質押：' + name);
+}
+
+async function deletePledge(id) {
+  try { const api = await sb.from('pledges'); await api.delete(id); } catch {}
+  _pledgeCache = (_pledgeCache||[]).filter(p => p.id !== id);
+  await renderLiabList();
+}
+
+function drawMaintGauge(rate) {
+  const canvas = document.getElementById('maintGauge');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W=140, cx=70, cy=70, r=54;
+  ctx.clearRect(0,0,W,W);
+  // bg
+  ctx.beginPath(); ctx.arc(cx,cy,r,Math.PI,2*Math.PI);
+  ctx.strokeStyle='rgba(255,255,255,0.06)'; ctx.lineWidth=14; ctx.lineCap='round'; ctx.stroke();
+  // color by rate
+  const color = rate >= 150 ? '#00e5a0' : rate >= 130 ? '#f59e0b' : '#ff4d6d';
+  const pct = Math.min(1, Math.max(0, (rate - 100) / 150));
+  const end = Math.PI + pct * Math.PI;
+  const grad = ctx.createLinearGradient(0,cy,W,cy);
+  grad.addColorStop(0, color); grad.addColorStop(1, color+'aa');
+  ctx.beginPath(); ctx.arc(cx,cy,r,Math.PI,end);
+  ctx.strokeStyle=grad; ctx.lineWidth=14; ctx.lineCap='round'; ctx.stroke();
+}
+
+function renderDistBars(containerId, items, totalId, colorMap) {
+  const el = document.getElementById(containerId);
+  const totalEl = document.getElementById(totalId);
+  if (!el) return;
+  if (!items.length) {
+    el.innerHTML = '<div style="font-size:0.78rem;color:var(--text-muted);padding:8px 0;">尚無資料</div>';
+    if (totalEl) totalEl.textContent = '$0';
+    return;
+  }
+  const total = items.reduce((s,i) => s + i.value, 0);
+  if (totalEl) totalEl.textContent = '$' + total.toLocaleString('zh-TW') + (containerId !== 'loanDistBars' ? '/月' : '');
+  const maxVal = Math.max(...items.map(i=>i.value), 1);
+  el.innerHTML = items.sort((a,b)=>b.value-a.value).map(item => {
+    const color = colorMap[item.label] || '#6b7280';
+    const w = Math.round((item.value / maxVal) * 100);
+    const pct = total > 0 ? Math.round((item.value/total)*100) : 0;
+    return `<div>
+      <div style="display:flex;justify-content:space-between;font-size:0.72rem;margin-bottom:3px;">
+        <span style="color:var(--text-secondary);">${item.label}</span>
+        <span style="font-family:var(--mono);color:${color};">$${item.value.toLocaleString('zh-TW')} <span style="color:var(--text-muted);font-size:0.65rem;">${pct}%</span></span>
+      </div>
+      <div style="height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
+        <div style="height:100%;width:${w}%;background:${color};border-radius:3px;transition:width 0.5s;"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 async function getLiabilities() {
   try {
     const api  = await sb.from('liabilities');
@@ -5152,30 +5399,120 @@ function renderLiabListUI(all) {
 
 async function renderLiabList() {
   const all = await getLiabilities();
-  const totalDebt   = all.reduce((s,l)=>s+Math.max(0,l.total-l.paid),0);
-  const totalMonthly= all.reduce((s,l)=>s+l.monthly,0);
+  const totalDebt    = all.reduce((s,l)=>s+Math.max(0,l.total-l.paid),0);
+  const totalMonthly = all.reduce((s,l)=>s+l.monthly,0);
   const safe = id => document.getElementById(id);
   if (safe('liabStatTotal'))    safe('liabStatTotal').textContent    = '$'+totalDebt.toLocaleString('zh-TW');
   if (safe('liabStatCount'))    safe('liabStatCount').textContent    = all.length+' 筆';
   if (safe('liabStatMonthly'))  safe('liabStatMonthly').textContent  = '$'+totalMonthly.toLocaleString('zh-TW');
   if (safe('liabHeaderTotal'))  safe('liabHeaderTotal').textContent  = '$'+totalDebt.toLocaleString('zh-TW');
   if (safe('liabHeaderMonthly'))safe('liabHeaderMonthly').textContent= '$'+totalMonthly.toLocaleString('zh-TW');
-  // avg remaining periods
   const withPeriods = all.filter(l=>l.monthly>0);
-  if (withPeriods.length) {
+  if (withPeriods.length && safe('liabStatPeriods')) {
     const avgPeriods = Math.round(withPeriods.reduce((s,l)=>s+Math.ceil(Math.max(0,l.total-l.paid)/l.monthly),0)/withPeriods.length);
-    if (safe('liabStatPeriods')) safe('liabStatPeriods').textContent = avgPeriods+' 期';
+    safe('liabStatPeriods').textContent = avgPeriods+' 期';
   }
-  // paid pct overall
   const totalOriginal = all.reduce((s,l)=>s+l.total,0);
   const totalPaid     = all.reduce((s,l)=>s+l.paid,0);
   if (totalOriginal>0 && safe('liabStatPaidPct'))
     safe('liabStatPaidPct').textContent = Math.round((totalPaid/totalOriginal)*100)+'%';
 
-  // sync to assets: store total liab
+  // ── 貸款總額分布（按類型）
+  const loanByType = {};
+  all.forEach(l => { loanByType[l.type] = (loanByType[l.type]||0) + Math.max(0, l.total-l.paid); });
+  renderDistBars('loanDistBars', Object.entries(loanByType).map(([label,value])=>({label,value})), 'loanDistTotal', LIAB_COLORS);
+
+  // ── 分期付款分布（從 installments，按類別）
+  const insts = (await getInstallments()).filter(i=>i.paid<i.total);
+  const instByCat = {};
+  insts.forEach(i => { instByCat[i.category||'其他'] = (instByCat[i.category||'其他']||0) + i.amount; });
+  renderDistBars('instDistBars', Object.entries(instByCat).map(([label,value])=>({label,value})), 'instDistTotal', INST_CAT_COLORS);
+
+  // ── 固定支出分布（從 recurring，按類別）
+  const recurs = await getRecurring();
+  const recurByCat = {};
+  recurs.forEach(r => {
+    const monthly = r.freq==='monthly' ? r.amount : r.freq==='quarterly' ? Math.round(r.amount/3) : Math.round(r.amount/12);
+    recurByCat[r.category||r.cat||'其他'] = (recurByCat[r.category||r.cat||'其他']||0) + monthly;
+  });
+  renderDistBars('recurDistBars', Object.entries(recurByCat).map(([label,value])=>({label,value})), 'recurDistTotal', RECUR_CAT_COLORS);
+
+  // ── 質押管理
+  const pledges = await getPledges();
+  const pledgeList = document.getElementById('pledgeList');
+  if (pledgeList) {
+    if (!pledges.length) {
+      pledgeList.innerHTML = '<div class="empty-state" style="padding:20px 0;font-size:0.78rem;">尚無質押資料</div>';
+    } else {
+      pledgeList.innerHTML = pledges.map(p => {
+        const rate = p.loan > 0 ? Math.round((p.value / p.loan) * 100) : 0;
+        const statusColor = rate >= 150 ? 'var(--accent-green)' : rate >= p.warnRate ? 'var(--accent-amber)' : 'var(--accent-red)';
+        const statusText  = rate >= 150 ? '安全' : rate >= p.warnRate ? '警戒' : rate >= p.cutRate ? '危險' : '斷頭風險';
+        const lotsDisplay = p.shares ? `${p.shares.toLocaleString()} 張` : '';
+        const priceDisplay = p.price ? `@$${p.price.toLocaleString('zh-TW')}` : '';
+        return `<div style="padding:12px 14px;background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
+              <span style="font-size:0.88rem;font-weight:500;">${p.name}</span>
+              ${p.ticker ? `<span style="font-size:0.65rem;padding:1px 7px;border-radius:5px;background:rgba(59,130,246,0.12);color:var(--accent-blue);">${p.ticker}</span>` : ''}
+              ${lotsDisplay ? `<span style="font-size:0.68rem;color:var(--text-muted);">${lotsDisplay}${priceDisplay ? ' ' + priceDisplay : ''}</span>` : ''}
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-family:var(--mono);font-size:1rem;font-weight:500;color:${statusColor};">${rate}%</span>
+              <span style="font-size:0.65rem;padding:2px 7px;border-radius:6px;background:${statusColor}22;color:${statusColor};">${statusText}</span>
+              <button class="btn btn-danger-ghost" onclick="deletePledge('${p.id}')">✕</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;">
+            <div><span style="font-size:0.6rem;color:var(--text-muted);">質押市值</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-blue);">$${p.value.toLocaleString('zh-TW')}</span></div>
+            <div><span style="font-size:0.6rem;color:var(--text-muted);">借款金額</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-red);">$${p.loan.toLocaleString('zh-TW')}</span></div>
+            <div><span style="font-size:0.6rem;color:var(--text-muted);">安全墊</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:${p.value-p.loan>=0?'var(--accent-green)':'var(--accent-red)'};">${p.value-p.loan>=0?'+':''}$${(p.value-p.loan).toLocaleString('zh-TW')}</span></div>
+            <div><span style="font-size:0.6rem;color:var(--text-muted);">警戒線</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-amber);">${p.warnRate}%</span></div>
+            <div><span style="font-size:0.6rem;color:var(--text-muted);">斷頭線</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-red);">${p.cutRate}%</span></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:var(--text-muted);margin-bottom:3px;">
+              <span>斷頭 ${p.cutRate}%</span><span>警戒 ${p.warnRate}%</span><span>安全 150%+</span>
+            </div>
+            <div style="height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;position:relative;">
+              <div style="position:absolute;left:${Math.min(100,Math.round(((p.cutRate-100)/150)*100))}%;top:0;bottom:0;width:1px;background:rgba(255,77,109,0.5);"></div>
+              <div style="position:absolute;left:${Math.min(100,Math.round(((p.warnRate-100)/150)*100))}%;top:0;bottom:0;width:1px;background:rgba(245,158,11,0.5);"></div>
+              <div style="height:100%;width:${Math.min(100,Math.round(((rate-100)/150)*100))}%;background:${statusColor};border-radius:3px;transition:width 0.5s;"></div>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  // ── 整體維持率
+  const totalPledgeValue = pledges.reduce((s,p)=>s+p.value, 0);
+  const totalPledgeLoan  = pledges.reduce((s,p)=>s+p.loan, 0);
+  const overallRate = totalPledgeLoan > 0 ? Math.round((totalPledgeValue/totalPledgeLoan)*100) : 0;
+  if (safe('pledgeTotalValue')) safe('pledgeTotalValue').textContent = '$'+totalPledgeValue.toLocaleString('zh-TW');
+  if (safe('pledgeTotalLoan'))  safe('pledgeTotalLoan').textContent  = '$'+totalPledgeLoan.toLocaleString('zh-TW');
+  if (safe('pledgeSafetyBuffer')) {
+    const buf = totalPledgeValue - totalPledgeLoan;
+    safe('pledgeSafetyBuffer').textContent = (buf>=0?'+':'') + '$'+buf.toLocaleString('zh-TW');
+    safe('pledgeSafetyBuffer').style.color = buf>=0 ? 'var(--accent-green)' : 'var(--accent-red)';
+  }
+  if (safe('maintRateDisplay')) {
+    if (overallRate > 0) {
+      safe('maintRateDisplay').textContent = overallRate + '%';
+      safe('maintRateDisplay').style.color = overallRate>=150?'var(--accent-green)':overallRate>=130?'var(--accent-amber)':'var(--accent-red)';
+      const status = overallRate>=150?'安全範圍':overallRate>=130?'⚠ 接近警戒線':'🚨 危險！請注意斷頭風險';
+      if (safe('maintRateStatus')) { safe('maintRateStatus').textContent=status; safe('maintRateStatus').style.color=overallRate>=150?'var(--text-muted)':overallRate>=130?'var(--accent-amber)':'var(--accent-red)'; }
+      drawMaintGauge(overallRate);
+    } else {
+      safe('maintRateDisplay').textContent = '—';
+      safe('maintRateDisplay').style.color = 'var(--text-muted)';
+      if (safe('maintRateStatus')) safe('maintRateStatus').textContent = '尚無質押資料';
+    }
+  }
+
+  // sync to assets
   window._liabTotalForAsset = totalDebt;
   updateNetAsset();
-
   renderLiabListUI(all);
 }
 
