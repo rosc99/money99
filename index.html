@@ -650,6 +650,8 @@ input::placeholder { color: var(--text-muted); }
 @media (max-width: 700px) {
   #homeKpiRow { grid-template-columns: 1fr !important; }
   #homeRow3, #homeRow4 { grid-template-columns: 1fr !important; }
+  .ac-overview-grid { grid-template-columns: 1fr !important; }
+  .inv-main-grid { grid-template-columns: 1fr !important; }
 }
 
 /* ══════════════════════════════════
@@ -721,6 +723,8 @@ input::placeholder { color: var(--text-muted); }
   #recurMainGrid { grid-template-columns: 1fr !important; }
   #homeKpiRow { grid-template-columns: 1fr !important; }
   #homeRow3, #homeRow4 { grid-template-columns: 1fr !important; }
+  .ac-overview-grid { grid-template-columns: 1fr !important; }
+  .inv-main-grid { grid-template-columns: 1fr !important; }
 }
 
 /* ══════════════════════════════════
@@ -749,8 +753,10 @@ input::placeholder { color: var(--text-muted); }
   /* Grids — all single column */
   .two-col, .two-col-equal, .home-grid { grid-template-columns: 1fr; gap: 12px; }
   .home-block.span-2 { grid-column: 1; }
-  .stats-row, .stats-row.stats-row-4 { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stats-row, .stats-row.stats-row-4 { grid-template-columns: 1fr; gap: 8px; }
   #banksMainGrid, #liabMainGrid, #recurMainGrid { grid-template-columns: 1fr !important; }
+  .ac-overview-grid { grid-template-columns: 1fr !important; }
+  .inv-main-grid { grid-template-columns: 1fr !important; }
 
   /* Stat cards smaller */
   .stat-card { padding: 10px 12px; border-radius: 10px; }
@@ -812,7 +818,7 @@ input::placeholder { color: var(--text-muted); }
   .bank-item, .recur-item, .liab-item { padding: 10px 12px; }
 
   /* Home KPI */
-  #homeKpiRow { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+  #homeKpiRow { grid-template-columns: 1fr !important; gap: 8px !important; }
   #homeRow2, #homeRow3, #homeRow4 { grid-template-columns: 1fr !important; gap: 12px !important; }
   .kpi-value { font-size: 0.92rem; }
   .kpi-label { font-size: 0.58rem; }
@@ -1270,46 +1276,7 @@ input::placeholder { color: var(--text-muted); }
         </div>
       </div>
 
-      <!-- 固定支出：gauge圖左、數字明細右 -->
-      <div class="card" style="padding:18px 20px;cursor:pointer;" onclick="goPage('recurring',navItemOf('recurring'))">
-        <div class="card-header" style="margin-bottom:12px;">
-          <div class="card-title">本月固定支出</div>
-          <div style="display:flex;align-items:center;gap:6px;">
-            <span style="font-size:0.6rem;color:var(--accent-purple);font-family:var(--mono);padding:2px 6px;background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.2);border-radius:4px;">固定支出</span>
-            <div class="home-block-arrow">→</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:14px;align-items:flex-start;">
-          <!-- 左：半圓 gauge -->
-          <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;">
-            <div style="position:relative;width:110px;height:58px;overflow:hidden;">
-              <canvas id="homeGauge" width="110" height="110" style="margin-top:-55px;display:block;"></canvas>
-            </div>
-            <div style="font-family:var(--mono);font-size:1rem;font-weight:500;color:var(--accent-purple);margin-top:4px;" id="h-recurTotal">$0</div>
-            <div style="font-size:0.6rem;color:var(--text-muted);">固定＋分期 / 月</div>
-          </div>
-          <!-- 右：明細列表 -->
-          <div id="homeRecurBreakdown" style="flex:1;display:flex;flex-direction:column;gap:5px;padding-top:2px;"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── ROW 4: 最近交易 + 投資 sparkline ── -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" id="homeRow4">
-
-      <!-- 最近記錄：月份小圖左、記錄清單右 -->
-      <div class="card" style="padding:18px 20px;cursor:pointer;" onclick="goPage('ledger',navItemOf('ledger'))">
-        <div class="card-header" style="margin-bottom:14px;">
-          <div class="card-title">最近收支</div>
-          <div style="display:flex;align-items:center;gap:6px;">
-            <span style="font-size:0.6rem;color:var(--accent-green);font-family:var(--mono);padding:2px 6px;background:rgba(0,229,160,0.07);border:1px solid rgba(0,229,160,0.2);border-radius:4px;">帳務流水帳</span>
-            <div class="home-block-arrow">→</div>
-          </div>
-        </div>
-        <div id="h-recentTx" style="display:flex;flex-direction:column;gap:7px;"></div>
-      </div>
-
-      <!-- 投資組合：類型長條圖左、數字摘要右 -->
+      <!-- 投資組合：類型長條圖 + 數字摘要 -->
       <div class="card" style="padding:18px 20px;cursor:pointer;" onclick="goPage('invest',navItemOf('invest'))">
         <div class="card-header" style="margin-bottom:14px;">
           <div class="card-title">投資組合</div>
@@ -1322,7 +1289,7 @@ input::placeholder { color: var(--text-muted); }
           <!-- 左：類型長條圖 -->
           <div id="homeInvBars" style="flex:1;display:flex;flex-direction:column;gap:7px;"></div>
           <!-- 右：數字摘要 -->
-          <div style="flex-shrink:0;display:flex;flex-direction:column;gap:8px;min-width:110px;">
+          <div style="flex-shrink:0;display:flex;flex-direction:column;gap:8px;min-width:100px;">
             <div style="padding:10px 12px;background:var(--bg-card2);border:1px solid var(--border);border-radius:8px;">
               <div style="font-size:0.6rem;color:var(--text-muted);margin-bottom:4px;">總投入</div>
               <div style="font-family:var(--mono);font-size:0.88rem;color:var(--accent-blue);" id="h-invCost">$0</div>
@@ -1337,6 +1304,22 @@ input::placeholder { color: var(--text-muted); }
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- ── ROW 4: 最近交易 ── -->
+    <div style="display:grid;grid-template-columns:1fr;gap:16px;" id="homeRow4">
+
+      <!-- 最近記錄：月份小圖左、記錄清單右 -->
+      <div class="card" style="padding:18px 20px;cursor:pointer;" onclick="goPage('ledger',navItemOf('ledger'))">
+        <div class="card-header" style="margin-bottom:14px;">
+          <div class="card-title">最近收支</div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:0.6rem;color:var(--accent-green);font-family:var(--mono);padding:2px 6px;background:rgba(0,229,160,0.07);border:1px solid rgba(0,229,160,0.2);border-radius:4px;">帳務流水帳</span>
+            <div class="home-block-arrow">→</div>
+          </div>
+        </div>
+        <div id="h-recentTx" style="display:flex;flex-direction:column;gap:7px;"></div>
       </div>
     </div>
 
@@ -1676,7 +1659,7 @@ input::placeholder { color: var(--text-muted); }
     <!-- ══ TAB: 總覽 ══ -->
     <div id="ac-panel-overview">
       <!-- 資產圓餅 + 淨資產指標 -->
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;" id="acOverviewGrid">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;" id="acOverviewGrid" class="ac-overview-grid">
 
         <!-- 資產配置圓餅 -->
         <div class="card" style="padding:20px;">
@@ -1830,7 +1813,7 @@ input::placeholder { color: var(--text-muted); }
         </div>
       </div>
 
-      <div style="display:grid;grid-template-columns:minmax(0,360px) 1fr;gap:18px;">
+      <div style="display:grid;grid-template-columns:minmax(0,360px) 1fr;gap:18px;" class="inv-main-grid">
         <!-- 新增表單 -->
         <div class="card" style="align-self:start;">
           <div class="card-header">
@@ -1838,13 +1821,13 @@ input::placeholder { color: var(--text-muted); }
             <div style="font-family:var(--mono);font-size:0.72rem;color:var(--text-muted);" id="invListCount">0 筆</div>
           </div>
           <div class="form-grid" style="margin-bottom:14px;">
-            <div class="full"><label>項目名稱</label><input type="text" id="invName" placeholder="例：台積電、0050…"></div>
             <div>
-              <label>台股代號 <span style="color:var(--text-muted);text-transform:none;letter-spacing:0;font-weight:400;">用於自動報價</span></label>
+              <label>台股代號 <span style="color:var(--text-muted);text-transform:none;letter-spacing:0;font-weight:400;">輸入後自動帶名稱</span></label>
               <input type="text" id="invTicker" placeholder="例：2330、0050、6547" maxlength="6"
                 style="text-transform:uppercase;"
                 onblur="previewTickerQuote(this.value)">
             </div>
+            <div><label>項目名稱 <span style="color:var(--text-muted);text-transform:none;letter-spacing:0;font-weight:400;">自動填入或手動輸入</span></label><input type="text" id="invName" placeholder="代號查詢後自動帶入…"></div>
             <div>
               <label>類型</label>
               <select id="invType">
@@ -1870,13 +1853,18 @@ input::placeholder { color: var(--text-muted); }
               <input type="number" id="invValue" placeholder="0" min="0">
             </div>
             <!-- 報價預覽 -->
-            <div class="full" id="tickerPreviewBox" style="display:none;padding:10px 12px;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.2);border-radius:8px;">
-              <div style="font-size:0.65rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;">📡 即時報價預覽</div>
-              <div style="display:flex;justify-content:space-between;align-items:center;">
-                <span style="font-size:0.82rem;" id="tickerPreviewName">—</span>
+            <div class="full" id="tickerPreviewBox" style="display:none;padding:12px 14px;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.2);border-radius:8px;">
+              <div style="font-size:0.65rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">📡 即時報價</div>
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+                <span style="font-size:0.82rem;flex:1;" id="tickerPreviewName">—</span>
                 <span style="font-family:var(--mono);font-size:1.1rem;font-weight:500;color:var(--accent-amber);" id="tickerPreviewPrice">—</span>
               </div>
               <div style="font-size:0.65rem;color:var(--text-muted);margin-top:3px;" id="tickerPreviewChange">—</div>
+              <!-- 套用 / 手動修改 按鈕 -->
+              <div id="tickerPreviewActions" style="display:none;margin-top:10px;display:flex;gap:8px;">
+                <button onclick="applyQuoteToValue()" style="flex:1;padding:7px 0;background:rgba(167,139,250,0.2);border:1px solid rgba(167,139,250,0.4);color:var(--accent-purple);border-radius:7px;font-size:0.78rem;cursor:pointer;font-family:var(--sans);">✓ 套用報價</button>
+                <button onclick="unlockInvValue()" style="flex:1;padding:7px 0;background:transparent;border:1px solid var(--border);color:var(--text-secondary);border-radius:7px;font-size:0.78rem;cursor:pointer;font-family:var(--sans);">✏️ 手動修改</button>
+              </div>
             </div>
             <div class="full"><label>備註</label><input type="text" id="invNote" placeholder="例：長期持有、定期定額…"></div>
           </div>
@@ -3948,7 +3936,7 @@ async function renderHome() {
   // ══════════════════════════════════════
   // 6. 固定支出 Gauge（來源：固定支出 + 分期）
   // ══════════════════════════════════════
-  safe('h-recurTotal').textContent = fmtMoney(fixedTotal);
+  if (safe('h-recurTotal')) safe('h-recurTotal').textContent = fmtMoney(fixedTotal);
   const gaugeRatio = mIncome>0 ? Math.min(1, fixedTotal/mIncome) : (fixedTotal>0?1:0);
   drawGauge(gaugeRatio);
   const bdEl = document.getElementById('homeRecurBreakdown');
@@ -4579,142 +4567,136 @@ async function getInvestments() {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 台股報價 — 使用 openapi.twse.com.tw (有 CORS、免費、無需 API Key)
+// 台股報價 — 透過 Supabase Edge Function 代理（無 CORS 問題）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-// 全市場快取：一次撈全部，之後用代號查找（避免逐筆呼叫）
-let _twseCache = null;      // 上市
-let _tpexCache = null;      // 上櫃
-let _twseCacheTime = 0;
-let _tpexCacheTime = 0;
-const QUOTE_CACHE_TTL = 5 * 60 * 1000; // 5 分鐘快取
+const QUOTE_CACHE_TTL = 5 * 60 * 1000;
+const _quoteCache = {};
+const QUOTE_PROXY_URL = 'https://dlwswwioqbghwpksbnjv.supabase.co/functions/v1/quote-proxy';
+const QUOTE_PROXY_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsd3N3d2lvcWJnaHdwa3Nibmp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MzQ3NjEsImV4cCI6MjA4ODMxMDc2MX0.d5jRhb_6qQDnfcEIfvRErfAWIEWcEnuR74diYtAicfg';
 
-async function loadTWSEAll() {
-  if (_twseCache && Date.now() - _twseCacheTime < QUOTE_CACHE_TTL) return _twseCache;
-  try {
-    const r = await fetch('https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL');
-    if (!r.ok) return _twseCache || {};
-    const arr = await r.json();
-    // 非交易日(假日/休市)回傳空陣列 -> 保留舊快取
-    if (!arr.length) return _twseCache || {};
-    const map = {};
-    arr.forEach(s => {
-      if (s.Code && s.ClosingPrice) {
-        const price = parseFloat(s.ClosingPrice);
-        const change = parseFloat(s.Change) || 0;
-        if (price > 0) map[s.Code] = { price, change, name: s.Name || s.Code, src: 'twse' };
-      }
-    });
-    _twseCache = map;
-    _twseCacheTime = Date.now();
-    return map;
-  } catch { return _twseCache || {}; }
-}
-
-// 備援：抓個股當月日成交歷史（非交易日/假日時主 API 無資料時使用）
-async function fetchStockHistory(ticker) {
-  for (let offset = 0; offset <= 2; offset++) {
-    const d = new Date();
-    d.setMonth(d.getMonth() - offset);
-    const dateStr = d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + '01';
-    try {
-      const r = await fetch(`https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=${dateStr}&stockNo=${ticker}`);
-      if (!r.ok) continue;
-      const json = await r.json();
-      if (json.data && json.data.length > 0) {
-        const last = json.data[json.data.length - 1];
-        // 欄位: 日期,成交股數,成交金額,開盤,最高,最低,收盤,漲跌,筆數
-        const price = parseFloat(last[6].replace(/,/g,''));
-        const chRaw = (last[7]||'').replace(/,/g,'').replace(/[▲▼X]/g,'');
-        const change = parseFloat(chRaw) || 0;
-        if (price > 0) return { price, change, name: ticker, src: 'history' };
-      }
-    } catch {}
-  }
-  return null;
-}
-
-async function loadTPEXAll() {
-  if (_tpexCache && Date.now() - _tpexCacheTime < QUOTE_CACHE_TTL) return _tpexCache;
-  try {
-    // 上櫃官方 OpenAPI（有 CORS）
-    const r = await fetch('https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes?l=zh-tw');
-    if (!r.ok) return _tpexCache || {};
-    const arr = await r.json();
-    const map = {};
-    arr.forEach(s => {
-      // 上櫃欄位：SecuritiesCompanyCode / Close
-      const code = s.SecuritiesCompanyCode || s.Code;
-      const price = parseFloat((s.Close || s.ClosingPrice || '').replace(/,/g,''));
-      if (code && price > 0) {
-        const change = parseFloat((s.Change || '0').replace(/,/g,'')) || 0;
-        map[code] = { price, change, name: s.CompanyName || s.Name || code, src: 'tpex' };
-      }
-    });
-    _tpexCache = map;
-    _tpexCacheTime = Date.now();
-    return map;
-  } catch { return _tpexCache || {}; }
-}
-
-// 查詢單一股票：先上市再上櫃，若主 API 空（非交易日）則用歷史備援
 async function fetchQuote(ticker) {
   if (!ticker) return null;
   ticker = ticker.trim().toUpperCase();
 
-  const [tse, tpex] = await Promise.all([loadTWSEAll(), loadTPEXAll()]);
-
-  if (tse[ticker]) return tse[ticker];
-  if (tpex[ticker]) return tpex[ticker];
-
-  // 主 API 無資料（非交易日）-> 抓歷史最後收盤
-  const hist = await fetchStockHistory(ticker);
-  if (hist) {
-    // 補上公司名（若主 API 剛好有快取）
-    if (_twseCache && _twseCache[ticker]) hist.name = _twseCache[ticker].name;
-    hist.isHistorical = true;
-    return hist;
+  // 快取命中
+  if (_quoteCache[ticker] && Date.now() - _quoteCache[ticker].time < QUOTE_CACHE_TTL) {
+    return _quoteCache[ticker].data;
   }
-  return null;
+
+  try {
+    const r = await fetch(`${QUOTE_PROXY_URL}?ticker=${encodeURIComponent(ticker)}`, {
+      headers: {
+        'Authorization': `Bearer ${QUOTE_PROXY_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      signal: AbortSignal.timeout(10000),
+    });
+
+    if (!r.ok) return null;
+    const data = await r.json();
+    if (data.error || !data.price) return null;
+
+    const q = {
+      price:  data.price,
+      change: data.change || 0,
+      name:   data.name || ticker,
+      src:    'supabase-proxy',
+    };
+    _quoteCache[ticker] = { data: q, time: Date.now() };
+    return q;
+  } catch { return null; }
 }
 
+// 相容舊有變數
+let _twseCache = null, _tpexCache = null;
+async function loadTWSEAll() { return {}; }
+async function loadTPEXAll() { return {}; }
+
 // 新增時預覽股票報價
+let _invValueLocked = false; // true = 自動報價鎖定，false = 手動模式
+
 async function previewTickerQuote(ticker) {
   ticker = (ticker || '').trim();
-  const box   = document.getElementById('tickerPreviewBox');
+  const box     = document.getElementById('tickerPreviewBox');
   const nameEl  = document.getElementById('tickerPreviewName');
   const priceEl = document.getElementById('tickerPreviewPrice');
   const chEl    = document.getElementById('tickerPreviewChange');
+  const actions = document.getElementById('tickerPreviewActions');
+  const valInput = document.getElementById('invValue');
 
-  if (!ticker) { if (box) box.style.display = 'none'; return; }
-  if (box) box.style.display = '';
-  if (nameEl)  nameEl.textContent  = '查詢中…';
-  if (priceEl) priceEl.textContent = '—';
-  if (chEl)    chEl.textContent    = '';
-
-  const q = await fetchQuote(ticker);
-  if (!q) {
-    if (nameEl) nameEl.textContent = '找不到此代號（確認是上市/上櫃代號）';
+  if (!ticker) {
+    if (box) box.style.display = 'none';
+    _invValueLocked = false;
+    if (valInput) { valInput.readOnly = false; valInput.style.borderColor = ''; valInput.style.background = ''; }
     return;
   }
 
-  if (nameEl)  nameEl.textContent  = q.name;
+  if (box) box.style.display = '';
+  if (actions) actions.style.display = 'none';
+  if (nameEl)  { nameEl.textContent = '🔍 查詢中，請稍候…'; nameEl.style.color = ''; }
+  if (priceEl) priceEl.textContent = '—';
+  if (chEl)    chEl.textContent = '';
+
+  const q = await fetchQuote(ticker);
+  if (!q) {
+    if (nameEl) { nameEl.textContent = '找不到此代號'; nameEl.style.color = 'var(--accent-red)'; }
+    if (chEl)   { chEl.textContent = '請確認代號是否正確（支援上市/上櫃/ETF）'; chEl.style.color = 'var(--text-muted)'; }
+    _invValueLocked = false;
+    if (valInput) { valInput.readOnly = false; valInput.style.borderColor = ''; valInput.style.background = ''; }
+    return;
+  }
+
+  if (nameEl)  { nameEl.textContent = q.name; nameEl.style.color = ''; }
   if (priceEl) priceEl.textContent = '$' + q.price.toLocaleString('zh-TW');
   if (chEl) {
     const sign = q.change >= 0 ? '▲ +' : '▼ ';
-    const srcLabel = q.isHistorical ? ' ｜ 歷史最後收盤' : ' ｜ 昨收';
-    chEl.textContent = `${sign}${q.change.toFixed(2)}${srcLabel}`;
+    chEl.textContent = `${sign}${q.change.toFixed(2)} ｜ 即時報價`;
     chEl.style.color = q.change >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
   }
-  // 如果有填股數，自動帶入市值
-  const shares = parseFloat(document.getElementById('invShares')?.value) || 0;
-  if (shares > 0 && document.getElementById('invValue')) {
-    document.getElementById('invValue').value = Math.round(q.price * shares);
-  }
+  if (actions) actions.style.display = 'flex';
+
+  // 自動填入項目名稱
+  const nameInput = document.getElementById('invName');
+  if (nameInput && !nameInput.value.trim()) nameInput.value = q.name;
+
+  // 自動套用報價（鎖定市值欄位）
+  applyQuoteToValue();
 }
 
-// 股數變動時自動計算市值
+// 套用報價到市值欄位，並鎖定
+function applyQuoteToValue() {
+  const priceText = document.getElementById('tickerPreviewPrice')?.textContent || '';
+  const price = parseFloat(priceText.replace(/[^0-9.]/g, '')) || 0;
+  const shares = parseFloat(document.getElementById('invShares')?.value) || 0;
+  const valInput = document.getElementById('invValue');
+  if (!valInput || !price) return;
+
+  const computed = shares > 0 ? Math.round(price * shares) : Math.round(price);
+  valInput.value = computed;
+  valInput.readOnly = true;
+  valInput.style.borderColor = 'rgba(167,139,250,0.5)';
+  valInput.style.background  = 'rgba(167,139,250,0.06)';
+  valInput.style.color       = 'var(--accent-purple)';
+  _invValueLocked = true;
+}
+
+// 解鎖市值欄位，允許手動輸入
+function unlockInvValue() {
+  const valInput = document.getElementById('invValue');
+  if (!valInput) return;
+  valInput.readOnly = false;
+  valInput.style.borderColor = 'var(--accent-amber)';
+  valInput.style.background  = 'rgba(245,158,11,0.06)';
+  valInput.style.color       = 'var(--accent-amber)';
+  _invValueLocked = false;
+  valInput.focus();
+  valInput.select();
+}
+
+// 股數變動時自動重算市值（僅在鎖定模式下）
 function calcInvValue() {
+  if (!_invValueLocked) return;
   const shares    = parseFloat(document.getElementById('invShares')?.value) || 0;
   const priceText = document.getElementById('tickerPreviewPrice')?.textContent || '';
   const price     = parseFloat(priceText.replace(/[^0-9.]/g, '')) || 0;
@@ -4731,7 +4713,7 @@ async function fetchAllQuotes() {
 
   if (btn)  btn.disabled = true;
   if (icon) icon.textContent = '⏳';
-  if (label) label.textContent = '載入市場資料…';
+  if (label) label.textContent = '更新報價中…';
 
   const invs     = await getInvestments();
   const tickered = invs.filter(i => i.ticker);
@@ -4744,14 +4726,12 @@ async function fetchAllQuotes() {
     return;
   }
 
-  // 強制清快取，重新撈最新資料
-  _twseCache = null; _tpexCache = null;
-  const [tse, tpex] = await Promise.all([loadTWSEAll(), loadTPEXAll()]);
-  const allQuotes = { ...tpex, ...tse };
+  // 清快取，逐筆用 Yahoo Finance 查詢
+  Object.keys(_quoteCache).forEach(k => delete _quoteCache[k]);
 
   let updated = 0;
   for (const inv of tickered) {
-    const q = allQuotes[inv.ticker.toUpperCase()];
+    const q = await fetchQuote(inv.ticker);
     if (!q) continue;
     const newValue = inv.shares > 0 ? Math.round(q.price * inv.shares) : inv.value;
     if (newValue === inv.value && inv.lastPrice === q.price) continue;
@@ -4772,7 +4752,7 @@ async function fetchAllQuotes() {
   const timeEl = document.getElementById('quoteLastTime');
   if (timeEl) timeEl.textContent = '更新於 ' + new Date().toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit'});
   setTimeout(() => { if(icon) icon.textContent='📡'; if(label) label.textContent='更新即時報價'; }, 5000);
-  showToast(`✓ 已更新 ${updated} 筆市值（來源：${Object.keys(tse).length ? '證交所' : ''}${Object.keys(tpex).length ? '+櫃買' : ''}）`);
+  showToast(`✓ 已更新 ${updated} 筆市值（來源：台灣證交所）`);
 }
 
 
@@ -4786,6 +4766,10 @@ function clearInvForm() {
   });
   const box = document.getElementById('tickerPreviewBox');
   if (box) box.style.display = 'none';
+  // 解鎖市值欄位
+  _invValueLocked = false;
+  const valInput = document.getElementById('invValue');
+  if (valInput) { valInput.readOnly = false; valInput.style.borderColor = ''; valInput.style.background = ''; valInput.style.color = ''; }
 }
 
 async function addInvestment() {
