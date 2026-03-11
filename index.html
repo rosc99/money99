@@ -629,6 +629,62 @@ input::placeholder { color: var(--text-muted); }
 .wt-btn.active { background: var(--accent-blue); color: #fff; }
 .wt-btn:hover:not(.active) { color: var(--text-primary); }
 
+/* Intel range buttons */
+.ir-btn {
+  padding: 4px 10px; border-radius: 6px; border: none;
+  background: transparent; color: var(--text-muted);
+  font-family: var(--sans); font-size: 0.72rem; cursor: pointer; transition: all 0.15s;
+}
+.ir-btn.ir-active { background: var(--accent-blue); color: #fff; }
+.ir-btn:hover:not(.ir-active) { color: var(--text-primary); }
+
+/* ── 四大面向儀表板 ── */
+.dash-panel {
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: var(--bg-card);
+  overflow: hidden;
+}
+.dash-panel-hd {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.dash-panel-icon {
+  width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 1rem;
+}
+.dash-panel-title { font-size: 0.72rem; font-weight: 600; color: var(--text-primary); }
+.dash-panel-sub   { font-size: 0.58rem; color: var(--text-muted); margin-top: 1px; }
+.dash-badge {
+  font-size: 0.6rem; font-weight: 600; padding: 3px 8px; border-radius: 6px;
+  white-space: nowrap;
+}
+.dash-panel-body  { padding: 12px 14px 14px; }
+.dash-row         { display: flex; }
+.dash-metric-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px; padding: 10px 11px;
+}
+.dash-metric-label { font-size: 0.6rem; color: var(--text-muted); margin-bottom: 3px; }
+.dash-metric-val   { font-size: 0.95rem; font-weight: 600; font-family: var(--mono); color: var(--text-primary); }
+.dash-metric-chg   { font-size: 0.65rem; margin-top: 1px; }
+.dash-signal-bar {
+  padding: 8px 10px; border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  font-size: 0.72rem; color: var(--text-secondary); line-height: 1.6;
+}
+.dash-legend-dot {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 0.6rem; color: var(--text-muted);
+}
+.dash-legend-dot::before {
+  content: ''; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--dc); flex-shrink: 0;
+}
+
 /* Asset Center Tabs */
 .ac-tab {
   background: transparent; border: none; color: var(--text-muted);
@@ -676,11 +732,11 @@ input::placeholder { color: var(--text-muted); }
   z-index: 200;
   background: var(--bg-card);
   border-top: 1px solid var(--border);
-  padding: 0 4px env(safe-area-inset-bottom, 8px);
+  padding: 0 2px env(safe-area-inset-bottom, 6px);
   display: none;
   align-items: stretch;
   justify-content: space-around;
-  height: 60px;
+  height: 58px;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -692,14 +748,15 @@ input::placeholder { color: var(--text-muted); }
   justify-content: center;
   gap: 2px;
   cursor: pointer;
-  padding: 8px 4px;
-  border-radius: 10px;
+  padding: 6px 2px;
+  border-radius: 8px;
   transition: background 0.15s;
   -webkit-tap-highlight-color: transparent;
   color: var(--text-muted);
-  font-size: 0.56rem;
-  letter-spacing: 0.04em;
+  font-size: 0.5rem;
+  letter-spacing: 0.02em;
   font-family: var(--sans);
+  min-width: 0;
 }
 .mobile-nav-item.active { color: var(--accent-blue); }
 .mobile-nav-item:active { background: rgba(59,130,246,0.1); }
@@ -826,6 +883,9 @@ input::placeholder { color: var(--text-muted); }
   #homeKpiRow { grid-template-columns: 1fr !important; gap: 8px !important; }
   #homeRow2, #homeRow3, #homeRow4 { grid-template-columns: 1fr !important; gap: 12px !important; }
   #debtDistRow, #pledgeRow { grid-template-columns: 1fr !important; }
+  #aiIntelCols { grid-template-columns: 1fr !important; }
+  #homeAssetKpiRow { grid-template-columns: 1fr 1fr 1fr !important; gap: 6px !important; }
+  #homeAssetKpiRow > div { padding: 10px 4px !important; }
   .kpi-value { font-size: 0.92rem; }
   .kpi-label { font-size: 0.58rem; }
 
@@ -839,8 +899,8 @@ input::placeholder { color: var(--text-muted); }
 .ico svg { display:block;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round; }
 .nav-item .ico { width:18px;height:18px;opacity:0.75; }
 .nav-item.active .ico,.nav-item:hover .ico { opacity:1; }
-.mobile-nav-item .mobile-nav-icon { display:flex;align-items:center;justify-content:center;height:24px; }
-.mobile-nav-item .mobile-nav-icon .ico { width:22px;height:22px; }
+.mobile-nav-item .mobile-nav-icon { display:flex;align-items:center;justify-content:center;height:22px; }
+.mobile-nav-item .mobile-nav-icon .ico { width:20px;height:20px; }
 .mobile-nav-item.active .ico { stroke:var(--accent-blue); }
 .chip-ico { width:13px;height:13px;vertical-align:-2px;flex-shrink:0; }
 .iq-cat-btn .ico { width:22px;height:22px;margin-bottom:3px; }
@@ -1078,6 +1138,12 @@ input::placeholder { color: var(--text-muted); }
   </div>
   <div class="nav-item" onclick="goPage('recurring',this)">
     <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span> 固定支出
+  </div>
+
+  <div class="nav-section-label">市場情報</div>
+  <div class="nav-item" onclick="goPage('intel',this)">
+    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span> 情報瀏覽
+  </div>
 
   <div class="sidebar-bottom">
     <div class="sync-status">
@@ -1126,20 +1192,20 @@ input::placeholder { color: var(--text-muted); }
           <div class="home-block-arrow" style="font-size:0.68rem;">資產負債表 →</div>
         </div>
         <!-- 三大數字 -->
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px;">
-          <div style="text-align:center;padding:12px 8px;background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px;" id="homeAssetKpiRow">
+          <div style="text-align:center;padding:12px 6px;background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;min-width:0;">
             <div style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">總資產</div>
-            <div style="font-family:var(--mono);font-size:1.05rem;font-weight:500;color:var(--accent-amber);" id="h-asset">$0</div>
+            <div style="font-family:var(--mono);font-size:clamp(0.72rem,2.5vw,1.05rem);font-weight:500;color:var(--accent-amber);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" id="h-asset">$0</div>
             <div style="font-size:0.62rem;color:var(--text-muted);margin-top:3px;">銀行＋投資</div>
           </div>
-          <div style="text-align:center;padding:12px 8px;background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;">
+          <div style="text-align:center;padding:12px 6px;background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;min-width:0;">
             <div style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">總負債</div>
-            <div style="font-family:var(--mono);font-size:1.05rem;font-weight:500;color:var(--accent-red);" id="h-liab">$0</div>
+            <div style="font-family:var(--mono);font-size:clamp(0.72rem,2.5vw,1.05rem);font-weight:500;color:var(--accent-red);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" id="h-liab">$0</div>
             <div style="font-size:0.62rem;color:var(--text-muted);margin-top:3px;">貸款餘額</div>
           </div>
-          <div style="text-align:center;padding:12px 8px;background:var(--bg-card2);border:1px solid rgba(0,229,160,0.25);border-radius:10px;">
+          <div style="text-align:center;padding:12px 6px;background:var(--bg-card2);border:1px solid rgba(0,229,160,0.25);border-radius:10px;min-width:0;">
             <div style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">淨資產</div>
-            <div style="font-family:var(--mono);font-size:1.05rem;font-weight:500;color:var(--accent-green);" id="h-net">$0</div>
+            <div style="font-family:var(--mono);font-size:clamp(0.72rem,2.5vw,1.05rem);font-weight:500;color:var(--accent-green);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" id="h-net">$0</div>
             <div style="font-size:0.62rem;color:var(--text-muted);margin-top:3px;">資產－負債</div>
           </div>
         </div>
@@ -2323,6 +2389,241 @@ input::placeholder { color: var(--text-muted); }
     </div>
   </section>
 
+  <!-- 情報瀏覽 PAGE -->
+  <section class="page" id="page-intel">
+    <div class="page-header">
+      <div>
+        <div class="page-label">MARKET INTEL</div>
+        <h1 class="page-title">情報瀏覽</h1>
+      </div>
+      <button onclick="refreshAllIntel()" style="display:flex;align-items:center;gap:6px;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.3);color:var(--accent-blue);border-radius:8px;padding:8px 14px;font-size:0.78rem;cursor:pointer;font-family:var(--sans);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        更新報價
+      </button>
+    </div>
+
+    <!-- ══ 四大面向儀表板 ══ -->
+    <!-- 區塊標題列 -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <div style="font-size:0.65rem;color:var(--text-muted);letter-spacing:0.12em;text-transform:uppercase;">市場分析儀表板</div>
+      <button onclick="loadAllDashboard(true)" style="font-size:0.65rem;color:var(--text-muted);background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:4px;">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>全部更新
+      </button>
+    </div>
+
+    <!-- 1️⃣ 景氣面 -->
+    <div class="dash-panel" style="--pc:#00e5a0;margin-bottom:12px;">
+      <div class="dash-panel-hd">
+        <div class="dash-panel-icon" style="background:linear-gradient(135deg,#065f46,#10b981);">🏛️</div>
+        <div>
+          <div class="dash-panel-title">景氣面 · Macro</div>
+          <div class="dash-panel-sub" id="macroSub">景氣燈號 · 領先指標</div>
+        </div>
+        <div id="macroBadge" class="dash-badge" style="margin-left:auto;background:#10b98122;color:#10b981;">—</div>
+      </div>
+      <div class="dash-panel-body">
+        <!-- 景氣燈號 -->
+        <div class="dash-row" id="bciMain" style="align-items:center;gap:12px;">
+          <div id="bciLamp" style="width:44px;height:44px;border-radius:50%;background:#444;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 0 16px #44444444;transition:all 0.5s;">…</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:0.58rem;color:var(--text-muted);margin-bottom:1px;" id="bciMonthLabel">國發會景氣燈號</div>
+            <div style="font-size:0.92rem;font-weight:600;" id="bciSignalName">載入中…</div>
+            <div style="font-size:0.65rem;color:var(--text-muted);" id="bciScore">—</div>
+          </div>
+          <div id="bciHistory" style="display:flex;gap:4px;align-items:flex-end;"></div>
+        </div>
+        <!-- 景氣說明行 -->
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05);">
+          <div class="dash-legend-dot" style="--dc:#ff4d6d;">紅燈 過熱</div>
+          <div class="dash-legend-dot" style="--dc:#ffb347;">黃紅 微熱</div>
+          <div class="dash-legend-dot" style="--dc:#00e5a0;">綠燈 穩定</div>
+          <div class="dash-legend-dot" style="--dc:#00bfff;">黃藍 微冷</div>
+          <div class="dash-legend-dot" style="--dc:#4a90e2;">藍燈 衰退</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2️⃣ 動能面 -->
+    <div class="dash-panel" style="--pc:#3b82f6;margin-bottom:12px;">
+      <div class="dash-panel-hd">
+        <div class="dash-panel-icon" style="background:linear-gradient(135deg,#1e3a8a,#3b82f6);">📈</div>
+        <div>
+          <div class="dash-panel-title">動能面 · Momentum</div>
+          <div class="dash-panel-sub">市場寬度 · 趨勢強度</div>
+        </div>
+        <div id="momentumBadge" class="dash-badge" style="margin-left:auto;background:#3b82f622;color:#3b82f6;">載入中</div>
+      </div>
+      <div class="dash-panel-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <!-- QQQ 動能 -->
+          <div class="dash-metric-card">
+            <div class="dash-metric-label">美股 QQQ</div>
+            <div class="dash-metric-val" id="mom_qqq">—</div>
+            <div class="dash-metric-chg" id="mom_qqq_chg">—</div>
+            <canvas id="mom_qqq_spark" width="120" height="28" style="width:100%;height:28px;margin-top:5px;"></canvas>
+          </div>
+          <!-- 台股 0050 -->
+          <div class="dash-metric-card">
+            <div class="dash-metric-label">台股 0050</div>
+            <div class="dash-metric-val" id="mom_0050">—</div>
+            <div class="dash-metric-chg" id="mom_0050_chg">—</div>
+            <canvas id="mom_0050_spark" width="120" height="28" style="width:100%;height:28px;margin-top:5px;"></canvas>
+          </div>
+          <!-- 美債10年 -->
+          <div class="dash-metric-card">
+            <div class="dash-metric-label">美債 10Y 殖利率</div>
+            <div class="dash-metric-val" id="mom_tnx">—</div>
+            <div class="dash-metric-chg" id="mom_tnx_chg" style="font-size:0.6rem;color:var(--text-muted);">↑ 利率上升 → 科技股承壓</div>
+            <canvas id="mom_tnx_spark" width="120" height="28" style="width:100%;height:28px;margin-top:5px;"></canvas>
+          </div>
+          <!-- 美元指數 DXY -->
+          <div class="dash-metric-card">
+            <div class="dash-metric-label">美元指數 DXY</div>
+            <div class="dash-metric-val" id="mom_dxy">—</div>
+            <div class="dash-metric-chg" id="mom_dxy_chg" style="font-size:0.6rem;color:var(--text-muted);">↑ 美元強 → 新興市場壓力</div>
+            <canvas id="mom_dxy_spark" width="120" height="28" style="width:100%;height:28px;margin-top:5px;"></canvas>
+          </div>
+        </div>
+        <!-- 動能解讀 -->
+        <div id="momentumSignal" class="dash-signal-bar" style="margin-top:8px;">分析中…</div>
+      </div>
+    </div>
+
+    <!-- 3️⃣ 情緒面 -->
+    <div class="dash-panel" style="--pc:#f59e0b;margin-bottom:12px;">
+      <div class="dash-panel-hd">
+        <div class="dash-panel-icon" style="background:linear-gradient(135deg,#78350f,#f59e0b);">😱</div>
+        <div>
+          <div class="dash-panel-title">情緒面 · Sentiment</div>
+          <div class="dash-panel-sub">恐慌指數 · 波動度</div>
+        </div>
+        <div id="sentimentBadge" class="dash-badge" style="margin-left:auto;background:#f59e0b22;color:#f59e0b;">載入中</div>
+      </div>
+      <div class="dash-panel-body">
+        <!-- VIX 儀表 -->
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
+          <div style="flex-shrink:0;">
+            <canvas id="vixGauge" width="90" height="54" style="width:90px;height:54px;"></canvas>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:0.6rem;color:var(--text-muted);">VIX 恐慌指數</div>
+            <div style="font-size:1.3rem;font-weight:700;font-family:var(--mono);" id="sent_vix_val">—</div>
+            <div style="font-size:0.68rem;" id="sent_vix_label">—</div>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <canvas id="vix_spark" width="120" height="40" style="width:100%;height:40px;display:block;"></canvas>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <!-- 原油波動 -->
+          <div class="dash-metric-card">
+            <div class="dash-metric-label">原油 CL=F</div>
+            <div class="dash-metric-val" id="sent_oil">—</div>
+            <div class="dash-metric-chg" id="sent_oil_chg">—</div>
+            <canvas id="sent_oil_spark" width="120" height="28" style="width:100%;height:28px;margin-top:5px;"></canvas>
+          </div>
+          <!-- 短期波動率（VIX vs 均值） -->
+          <div class="dash-metric-card">
+            <div class="dash-metric-label">VIX 相對位階</div>
+            <div class="dash-metric-val" id="sent_vix_rel">—</div>
+            <div style="font-size:0.6rem;color:var(--text-muted);margin-top:2px;">相對近30日均值</div>
+            <div style="margin-top:6px;height:6px;border-radius:3px;background:rgba(255,255,255,0.08);overflow:hidden;">
+              <div id="sent_vix_bar" style="height:100%;width:50%;background:#f59e0b;border-radius:3px;transition:width 0.6s;"></div>
+            </div>
+          </div>
+        </div>
+        <!-- 情緒解讀 -->
+        <div id="sentimentSignal" class="dash-signal-bar" style="margin-top:8px;">分析中…</div>
+      </div>
+    </div>
+
+    <!-- 4️⃣ 流動性面 -->
+    <div class="dash-panel" style="--pc:#a78bfa;margin-bottom:12px;">
+      <div class="dash-panel-hd">
+        <div class="dash-panel-icon" style="background:linear-gradient(135deg,#4c1d95,#a78bfa);">💧</div>
+        <div>
+          <div class="dash-panel-title">流動性 · Liquidity</div>
+          <div class="dash-panel-sub">匯率 · 資金動向</div>
+        </div>
+        <div id="liquidityBadge" class="dash-badge" style="margin-left:auto;background:#a78bfa22;color:#a78bfa;">載入中</div>
+      </div>
+      <div class="dash-panel-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <!-- USD/TWD -->
+          <div class="dash-metric-card">
+            <div class="dash-metric-label">💵 美元／台幣</div>
+            <div class="dash-metric-val" id="fx_usdtwd">—</div>
+            <div class="dash-metric-chg" id="fx_usdtwd_chg">—</div>
+            <canvas id="fx_usdtwd_spark" width="120" height="28" style="width:100%;height:28px;margin-top:5px;"></canvas>
+          </div>
+          <!-- JPY/TWD -->
+          <div class="dash-metric-card">
+            <div class="dash-metric-label">🇯🇵 日幣百元／台幣</div>
+            <div class="dash-metric-val" id="fx_jpytwd">—</div>
+            <div class="dash-metric-chg" id="fx_jpytwd_chg">—</div>
+            <canvas id="fx_jpytwd_spark" width="120" height="28" style="width:100%;height:28px;margin-top:5px;"></canvas>
+          </div>
+          <!-- USD/JPY -->
+          <div class="dash-metric-card">
+            <div class="dash-metric-label">🇺🇸 美元／日幣</div>
+            <div class="dash-metric-val" id="fx_usdjpy">—</div>
+            <div class="dash-metric-chg" id="fx_usdjpy_chg">—</div>
+            <canvas id="fx_usdjpy_spark" width="120" height="28" style="width:100%;height:28px;margin-top:5px;"></canvas>
+          </div>
+          <!-- Gold 黃金 -->
+          <div class="dash-metric-card">
+            <div class="dash-metric-label">🥇 黃金 XAU/USD</div>
+            <div class="dash-metric-val" id="fx_gold">—</div>
+            <div class="dash-metric-chg" id="fx_gold_chg">—</div>
+            <canvas id="fx_gold_spark" width="120" height="28" style="width:100%;height:28px;margin-top:5px;"></canvas>
+          </div>
+        </div>
+        <!-- 流動性解讀 -->
+        <div id="liquiditySignal" class="dash-signal-bar" style="margin-top:8px;">分析中…</div>
+      </div>
+    </div>
+
+    <!-- ── 新聞 ── -->
+    <div id="aiIntelPanel" style="margin-bottom:18px;border-radius:14px;border:1px solid rgba(59,130,246,0.2);background:var(--bg-card);overflow:hidden;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px 10px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="font-size:1rem;">📡</div>
+          <div>
+            <div style="font-size:0.72rem;font-weight:600;">市場即時新聞</div>
+            <div style="font-size:0.58rem;color:var(--text-muted);" id="aiIntelTimestamp">—</div>
+          </div>
+        </div>
+        <button onclick="loadMarketNews(true)" style="font-size:0.65rem;color:var(--text-muted);background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;cursor:pointer;font-family:var(--sans);">重新載入</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 12px 12px;" id="aiIntelCols">
+        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(59,130,246,0.1);border-radius:8px;padding:10px;">
+          <div style="font-size:0.58rem;color:var(--accent-blue);letter-spacing:0.1em;margin-bottom:6px;">🌐 國際市場</div>
+          <div id="aiIntelGlobal" style="font-size:0.72rem;color:var(--text-secondary);line-height:1.6;">載入中…</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(167,139,250,0.1);border-radius:8px;padding:10px;">
+          <div style="font-size:0.58rem;color:#a5b4fc;letter-spacing:0.1em;margin-bottom:6px;">📊 台股 · 美股</div>
+          <div id="aiIntelTW" style="font-size:0.72rem;color:var(--text-secondary);line-height:1.6;">載入中…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 市場概覽卡（可自訂） ── -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px;flex-wrap:wrap;">
+      <div style="font-size:0.65rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;">自訂市場格</div>
+      <div style="display:flex;gap:4px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:3px;">
+        <button onclick="switchIntelRange('1d')" id="irBtn_1d" class="ir-btn ir-active">日</button>
+        <button onclick="switchIntelRange('1wk')" id="irBtn_1wk" class="ir-btn">週</button>
+        <button onclick="switchIntelRange('1mo')" id="irBtn_1mo" class="ir-btn">月</button>
+        <button onclick="switchIntelRange('3mo')" id="irBtn_3mo" class="ir-btn">季</button>
+      </div>
+    </div>
+    <div id="intelGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;"></div>
+    <button onclick="openIntelAddModal()" style="width:100%;padding:14px;border:2px dashed rgba(59,130,246,0.3);border-radius:12px;background:rgba(59,130,246,0.04);color:var(--text-muted);font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;font-family:var(--sans);" onmouseover="this.style.borderColor='rgba(59,130,246,0.6)';this.style.color='var(--accent-blue)'" onmouseout="this.style.borderColor='rgba(59,130,246,0.3)';this.style.color='var(--text-muted)'">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      新增情報格
+    </button>
+  </section>
+
 </main>
 
 <!-- ── 手機底部導航列 ── -->
@@ -2342,10 +2643,62 @@ input::placeholder { color: var(--text-muted); }
   <div class="mobile-nav-item"        id="mn-recurring"  onclick="goPage('recurring',  null, 'mn-recurring')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span><span>固定</span>
   </div>
+  <div class="mobile-nav-item"        id="mn-intel"      onclick="goPage('intel',      null, 'mn-intel')">
+    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span>情報</span>
+  </div>
 </nav>
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
+
+<!-- 情報陳列室 Modal -->
+<div id="intelDetailModal" style="display:none;position:fixed;inset:0;z-index:6000;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px 0;" onclick="if(event.target===this)closeIntelDetail()">
+  <div style="width:min(560px,96vw);margin:auto;background:#0f1117;border:1px solid #2e3550;border-radius:20px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,0.8);">
+    <div id="intelDetailInner"></div>
+  </div>
+</div>
+
+<!-- 新增情報格 Modal -->
+<div id="intelAddModal" style="display:none;position:fixed;inset:0;z-index:6000;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);align-items:center;justify-content:center;" onclick="if(event.target===this)closeIntelAddModal()">
+  <div style="width:min(460px,94vw);background:#141720;border:1px solid #2e3550;border-radius:18px;padding:24px;box-shadow:0 32px 80px rgba(0,0,0,0.7);animation:authFadeIn 0.22s ease;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div style="font-size:1rem;font-weight:500;">➕ 新增情報格</div>
+      <button onclick="closeIntelAddModal()" style="background:none;border:none;color:var(--text-muted);font-size:1.2rem;cursor:pointer;padding:4px 8px;border-radius:6px;">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div><label>顯示名稱</label><input type="text" id="ia_name" placeholder="例：標普500" style="font-size:0.88rem;padding:9px 12px;"></div>
+      <div><label>類型</label>
+        <select id="ia_type" style="font-size:0.88rem;padding:9px 12px;" onchange="onIntelTypeChange()">
+          <option value="tw_stock">🇹🇼 台股 / ETF</option>
+          <option value="us_stock">🇺🇸 美股</option>
+          <option value="index">📊 指數（VIX / 油價）</option>
+          <option value="crypto">₿ 加密貨幣</option>
+          <option value="custom">📌 自訂</option>
+        </select>
+      </div>
+      <div id="ia_symbolRow"><label>代號 / Symbol</label><input type="text" id="ia_symbol" placeholder="例：0050、QQQ、^VIX" style="font-size:0.88rem;padding:9px 12px;text-transform:uppercase;"></div>
+      <div style="display:flex;gap:12px;">
+        <div style="flex:0 0 auto;"><label>圖示</label><input type="text" id="ia_emoji" placeholder="🌐" maxlength="4" style="font-size:1.2rem;padding:9px 10px;width:60px;"></div>
+        <div style="flex:1;"><label>卡片顏色</label>
+          <div id="ia_colorRow" style="display:flex;gap:7px;flex-wrap:wrap;padding-top:4px;">
+            <div onclick="selectIntelColor('#3b82f6')" data-color="#3b82f6" style="width:26px;height:26px;border-radius:50%;background:#3b82f6;cursor:pointer;border:2px solid white;transition:transform 0.15s;"></div>
+            <div onclick="selectIntelColor('#00e5a0')" data-color="#00e5a0" style="width:26px;height:26px;border-radius:50%;background:#00e5a0;cursor:pointer;border:2px solid transparent;transition:transform 0.15s;"></div>
+            <div onclick="selectIntelColor('#f59e0b')" data-color="#f59e0b" style="width:26px;height:26px;border-radius:50%;background:#f59e0b;cursor:pointer;border:2px solid transparent;transition:transform 0.15s;"></div>
+            <div onclick="selectIntelColor('#ff4d6d')" data-color="#ff4d6d" style="width:26px;height:26px;border-radius:50%;background:#ff4d6d;cursor:pointer;border:2px solid transparent;transition:transform 0.15s;"></div>
+            <div onclick="selectIntelColor('#a78bfa')" data-color="#a78bfa" style="width:26px;height:26px;border-radius:50%;background:#a78bfa;cursor:pointer;border:2px solid transparent;transition:transform 0.15s;"></div>
+            <div onclick="selectIntelColor('#fb923c')" data-color="#fb923c" style="width:26px;height:26px;border-radius:50%;background:#fb923c;cursor:pointer;border:2px solid transparent;transition:transform 0.15s;"></div>
+          </div>
+        </div>
+      </div>
+      <div><label>備忘筆記（選填）</label><textarea id="ia_notes" rows="2" placeholder="個人觀察、提醒…" style="font-size:0.82rem;padding:9px 12px;resize:vertical;"></textarea></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px;">
+      <button onclick="saveIntelCard()" class="btn btn-primary" style="flex:1;">✓ 新增</button>
+      <button onclick="closeIntelAddModal()" class="btn" style="padding:10px 18px;">取消</button>
+    </div>
+  </div>
+</div>
+
 
 <!-- ── 固定支出快速新增彈窗 ── -->
 <div id="fixedQuickModal" style="display:none;position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,0.72);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
@@ -2986,6 +3339,14 @@ function goPage(name, navEl, mobileNavId) {
   if (name === 'invest')      { loadAssetValues(); switchAssetTab('invest');   renderInvList(); }
   if (name === 'liabilities') { loadAssetValues(); switchAssetTab('debts');    renderLiabList(); }
   if (name === 'recurring')   renderRecurAll();
+  if (name === 'intel') {
+    renderIntelPage();
+    loadMarketNews();
+    loadAllDashboard();
+    document.querySelectorAll('.ir-btn').forEach(b => b.classList.remove('ir-active'));
+    const activeBtn = document.getElementById('irBtn_' + (window._intelRange || '1d'));
+    if (activeBtn) activeBtn.classList.add('ir-active');
+  }
 }
 
 function navItemOf(page) {
@@ -4965,7 +5326,6 @@ async function renderInvList() {
   if (safe('invPageValue')) safe('invPageValue').textContent = '$'+totalValue.toLocaleString('zh-TW');
   if (safe('invPageCount')) safe('invPageCount').textContent = invs.length+' 筆';
   const retEl = safe('invPageReturn');
-  // 台灣慣例：正報酬紅色，負報酬綠色
   if (retEl) { retEl.textContent=(pos?'+':'')+pnl.toLocaleString('zh-TW'); retEl.style.color=pos?'var(--accent-red)':'var(--accent-green)'; }
   const pctEl = safe('invPagePct');
   if (pctEl) { pctEl.textContent=(pos?'▲ +':'▼ ')+pct.toFixed(2)+'%'; pctEl.style.color=pos?'var(--accent-red)':'var(--accent-green)'; }
@@ -4984,12 +5344,41 @@ async function renderInvList() {
   if (!invs.length) {
     list.innerHTML='<div class="empty-state"><div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>尚無投資項目<br>請使用左側表單新增</div>'; return;
   }
+
+  // ── 分組：同代號 或 同名稱 → 疊加群組；無代號且名稱唯一則各自獨立
+  const groups = [];
+  const groupMap = {}; // key → group index
+
+  invs.forEach(i => {
+    const tickerKey = i.ticker ? 'T:' + i.ticker.toUpperCase() : null;
+    const nameKey   = i.name   ? 'N:' + i.name.trim()          : null;
+
+    // 優先用代號匹配，再用名稱匹配
+    const matchKey = (tickerKey && groupMap[tickerKey] !== undefined) ? tickerKey
+                   : (nameKey   && groupMap[nameKey]   !== undefined) ? nameKey
+                   : null;
+
+    if (matchKey !== null) {
+      const g = groups[groupMap[matchKey]];
+      g.items.push(i);
+      // 若這筆有代號，也建立代號索引（方便後續同代號匹配）
+      if (tickerKey && groupMap[tickerKey] === undefined) groupMap[tickerKey] = groupMap[matchKey];
+      if (nameKey   && groupMap[nameKey]   === undefined) groupMap[nameKey]   = groupMap[matchKey];
+    } else {
+      const idx = groups.length;
+      const g = { key: tickerKey || nameKey || i.id, items: [i] };
+      groups.push(g);
+      if (tickerKey) groupMap[tickerKey] = idx;
+      if (nameKey)   groupMap[nameKey]   = idx;
+    }
+  });
+
   const maxCost = Math.max(...invs.map(i=>Math.max(i.cost,i.value)),1);
-  list.innerHTML = invs.map(i=>{
+
+  function renderSingleItem(i, maxCost, isSubItem = false) {
     const ipnl = i.value - i.cost;
     const ipct = i.cost>0?((ipnl/i.cost)*100):0;
     const ipos = ipnl>=0;
-    // 台灣慣例：漲紅跌綠
     const pnlColor = ipos ? 'var(--accent-red)' : 'var(--accent-green)';
     const color = INV_TYPE_COLORS[i.type]||'#6b7280';
     const barW  = Math.round((i.value/maxCost)*100);
@@ -5008,51 +5397,43 @@ async function renderInvList() {
          </div>`
       : (i.ticker ? `<div><button onclick="updateSingleQuote('${i.id}','${i.ticker}')" style="background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.25);color:var(--accent-purple);border-radius:5px;padding:2px 8px;font-size:0.65rem;cursor:pointer;font-family:var(--sans);">📡 取得報價</button></div>` : '');
 
-    return `<div class="tx-item" style="flex-direction:column;align-items:stretch;gap:0;padding:0;overflow:hidden;">
-      <!-- 主列：點擊展開編輯 -->
-      <div onclick="toggleInvEdit('${i.id}')" style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background=''">
-        <div style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;"></div>
+    const bg = isSubItem ? 'background:rgba(255,255,255,0.015);border-left:3px solid rgba(167,139,250,0.25);margin:0 8px 0 20px;border-radius:8px;' : '';
+    return `<div style="${bg}">
+      <div onclick="toggleInvEdit('${i.id}')" style="display:flex;align-items:center;gap:12px;padding:${isSubItem?'10px 12px':'14px 16px'};cursor:pointer;transition:background 0.15s;border-radius:${isSubItem?'8px 8px 0 0':'0'};" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background=''">
+        <div style="width:7px;height:7px;border-radius:50%;background:${color};flex-shrink:0;"></div>
         <div style="flex:1;min-width:0;">
-          <div style="font-size:0.9rem;font-weight:500;display:flex;align-items:center;flex-wrap:wrap;gap:4px;">
-            ${i.name}${tickerBadge}
-            <span style="font-size:0.68rem;padding:1px 7px;border-radius:10px;background:${color}22;color:${color};">${i.type}</span>
+          <div style="font-size:${isSubItem?'0.82':'0.9'}rem;font-weight:500;display:flex;align-items:center;flex-wrap:wrap;gap:4px;">
+            ${i.name}${isSubItem?'':tickerBadge}
+            <span style="font-size:0.65rem;padding:1px 6px;border-radius:10px;background:${color}22;color:${color};">${i.type}</span>
             ${sharesBadge}
           </div>
-          <div style="display:flex;align-items:center;gap:8px;margin-top:3px;flex-wrap:wrap;">
-            <span style="font-size:0.68rem;color:var(--text-muted);">${i.date}</span>
-            ${i.note?`<span style="font-size:0.68rem;color:var(--text-muted);">· ${i.note}</span>`:''}
+          <div style="display:flex;align-items:center;gap:8px;margin-top:2px;flex-wrap:wrap;">
+            <span style="font-size:0.65rem;color:var(--text-muted);">${i.date}</span>
+            ${i.note?`<span style="font-size:0.65rem;color:var(--text-muted);">· ${i.note}</span>`:''}
           </div>
-          ${lastPriceRow}
+          ${isSubItem?'':lastPriceRow}
         </div>
         <div style="text-align:right;flex-shrink:0;">
-          <div style="font-family:var(--mono);font-size:0.82rem;color:var(--text-secondary);">成本 $${i.cost.toLocaleString('zh-TW')}</div>
-          <div style="font-family:var(--mono);font-size:0.9rem;font-weight:500;color:var(--accent-amber);">$${i.value.toLocaleString('zh-TW')}</div>
-          <div style="font-family:var(--mono);font-size:0.78rem;font-weight:500;color:${pnlColor};">
-            ${ipos?'▲ +':'▼ '}${ipct.toFixed(2)}%
-          </div>
+          <div style="font-family:var(--mono);font-size:0.78rem;color:var(--text-secondary);">成本 $${i.cost.toLocaleString('zh-TW')}</div>
+          <div style="font-family:var(--mono);font-size:${isSubItem?'0.82':'0.88'}rem;font-weight:500;color:var(--accent-amber);">$${i.value.toLocaleString('zh-TW')}</div>
+          <div style="font-family:var(--mono);font-size:0.75rem;font-weight:500;color:${pnlColor};">${ipos?'▲ +':'▼ '}${ipct.toFixed(2)}%</div>
         </div>
-        <svg width="12" height="12" id="invChevron_${i.id}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--text-muted);transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>
+        <svg width="11" height="11" id="invChevron_${i.id}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--text-muted);transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-      <!-- 進度條 -->
-      <div style="padding:0 16px 12px;display:flex;flex-direction:column;gap:4px;">
+      <div style="padding:0 ${isSubItem?'12':'16'}px ${isSubItem?'8':'10'}px;display:flex;flex-direction:column;gap:3px;">
         <div style="display:flex;align-items:center;gap:8px;">
           <span style="font-size:0.6rem;color:var(--text-muted);width:28px;">成本</span>
-          <div style="flex:1;height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
-            <div style="height:100%;width:${costW}%;background:#3b82f6;border-radius:3px;"></div>
-          </div>
-          <span style="font-size:0.62rem;font-family:var(--mono);color:var(--text-muted);width:70px;text-align:right;">$${i.cost.toLocaleString('zh-TW')}</span>
+          <div style="flex:1;height:4px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${costW}%;background:#3b82f6;border-radius:3px;"></div></div>
+          <span style="font-size:0.6rem;font-family:var(--mono);color:var(--text-muted);width:70px;text-align:right;">$${i.cost.toLocaleString('zh-TW')}</span>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
           <span style="font-size:0.6rem;color:var(--text-muted);width:28px;">市值</span>
-          <div style="flex:1;height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
-            <div style="height:100%;width:${barW}%;background:${ipos?'#ff4d6d':'#00e5a0'};border-radius:3px;"></div>
-          </div>
-          <span style="font-size:0.62rem;font-family:var(--mono);color:${pnlColor};width:70px;text-align:right;">${ipos?'+':''}$${ipnl.toLocaleString('zh-TW')}</span>
+          <div style="flex:1;height:4px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${barW}%;background:${ipos?'#ff4d6d':'#00e5a0'};border-radius:3px;"></div></div>
+          <span style="font-size:0.6rem;font-family:var(--mono);color:${pnlColor};width:70px;text-align:right;">${ipos?'+':''}$${ipnl.toLocaleString('zh-TW')}</span>
         </div>
       </div>
-      <!-- 展開編輯面板 -->
       <div id="invEdit_${i.id}" style="display:none;border-top:1px solid var(--border);padding:14px 16px;background:rgba(255,255,255,0.015);">
-        <div style="font-size:0.65rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;">✏️ 編輯投資項目</div>
+        <div style="font-size:0.65rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;">✏️ 編輯</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
           <div><label>名稱</label><input type="text" id="ei_name_${i.id}" value="${i.name}" style="font-size:0.82rem;padding:7px 10px;"></div>
           <div><label>類型</label>
@@ -5061,19 +5442,94 @@ async function renderInvList() {
             </select>
           </div>
           <div><label>股票代號</label><input type="text" id="ei_ticker_${i.id}" value="${i.ticker||''}" placeholder="選填" maxlength="6" style="font-size:0.82rem;padding:7px 10px;text-transform:uppercase;"></div>
-          <div><label>持有股數</label><input type="number" id="ei_shares_${i.id}" value="${i.shares||''}" placeholder="0" style="font-size:0.82rem;padding:7px 10px;"></div>
+          <div><label>持有張數</label><input type="number" id="ei_shares_${i.id}" value="${i.shares||''}" placeholder="0" style="font-size:0.82rem;padding:7px 10px;"></div>
           <div><label>投入成本</label><input type="number" id="ei_cost_${i.id}" value="${i.cost}" style="font-size:0.82rem;padding:7px 10px;"></div>
           <div><label>目前市值</label><input type="number" id="ei_value_${i.id}" value="${i.value}" style="font-size:0.82rem;padding:7px 10px;"></div>
           <div class="full"><label>備註</label><input type="text" id="ei_note_${i.id}" value="${i.note||''}" placeholder="選填" style="font-size:0.82rem;padding:7px 10px;"></div>
         </div>
         <div style="display:flex;gap:8px;">
           <button onclick="saveInvEdit('${i.id}')" class="btn btn-primary" style="flex:1;font-size:0.8rem;padding:8px 0;">✓ 儲存</button>
-          <button onclick="updateSingleQuote('${i.id}','${i.ticker||''}')" ${!i.ticker?'disabled':''} style="background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);color:var(--accent-purple);border-radius:7px;padding:8px 12px;font-size:0.78rem;cursor:pointer;font-family:var(--sans);">📡 刷新報價</button>
+          <button onclick="updateSingleQuote('${i.id}','${i.ticker||''}')" ${!i.ticker?'disabled':''} style="background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);color:var(--accent-purple);border-radius:7px;padding:8px 12px;font-size:0.78rem;cursor:pointer;font-family:var(--sans);">📡 刷新</button>
           <button onclick="deleteInvestment('${i.id}')" class="btn btn-danger-ghost" style="font-size:0.8rem;padding:8px 14px;">刪除</button>
         </div>
       </div>
     </div>`;
+  }
+
+  list.innerHTML = groups.map(g => {
+    if (g.items.length === 1) {
+      // 單筆：原本樣式
+      return `<div class="tx-item" style="flex-direction:column;align-items:stretch;gap:0;padding:0;overflow:hidden;">${renderSingleItem(g.items[0], maxCost, false)}</div>`;
+    }
+
+    // 群組：疊加總計 header + 折疊子項
+    const gKey    = g.key; // 含前綴，用於 DOM ID（唯一性）
+    const gLabel  = gKey.startsWith('T:') ? gKey.slice(2)  // 代號
+                  : gKey.startsWith('N:') ? gKey.slice(2)  // 名稱
+                  : gKey;
+    const gDomKey = gKey.replace(/[^a-zA-Z0-9_\-]/g, '_'); // DOM 安全 ID
+    const gCost  = g.items.reduce((s,i)=>s+i.cost, 0);
+    const gValue = g.items.reduce((s,i)=>s+i.value, 0);
+    const gShares= g.items.reduce((s,i)=>s+(i.shares||0), 0);
+    const gPnl   = gValue - gCost;
+    const gPct   = gCost>0?((gPnl/gCost)*100):0;
+    const gPos   = gPnl>=0;
+    const gPnlColor = gPos ? 'var(--accent-red)' : 'var(--accent-green)';
+    const gColor = INV_TYPE_COLORS[g.items[0].type]||'#6b7280';
+    const gBarW  = Math.round((gValue/maxCost)*100);
+    const gCostW = Math.round((gCost/maxCost)*100);
+    const lastPrice = g.items.find(i=>i.lastPrice)?.lastPrice;
+
+    return `<div class="tx-item" style="flex-direction:column;align-items:stretch;gap:0;padding:0;overflow:hidden;border:1px solid rgba(167,139,250,0.2);">
+      <!-- 群組 header -->
+      <div onclick="toggleInvGroup('${gDomKey}')" style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;background:rgba(167,139,250,0.04);transition:background 0.15s;" onmouseover="this.style.background='rgba(167,139,250,0.08)'" onmouseout="this.style.background='rgba(167,139,250,0.04)'">
+        <div style="width:8px;height:8px;border-radius:50%;background:${gColor};flex-shrink:0;box-shadow:0 0 6px ${gColor}88;"></div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:0.9rem;font-weight:500;display:flex;align-items:center;flex-wrap:wrap;gap:5px;">
+            <span style="font-family:var(--mono);color:var(--accent-purple);font-size:0.95rem;">${gLabel}</span>
+            <span style="font-size:0.65rem;padding:1px 8px;border-radius:10px;background:rgba(167,139,250,0.15);color:var(--accent-purple);">${g.items.length} 筆合併</span>
+            ${gShares ? `<span style="font-size:0.65rem;color:var(--text-muted);">共 ${gShares.toLocaleString()} 張</span>` : ''}
+          </div>
+          <div style="font-size:0.7rem;color:var(--text-muted);margin-top:2px;display:flex;align-items:center;gap:8px;">
+            ${g.items.map(i=>i.name).filter((v,idx,a)=>a.indexOf(v)===idx).join(' · ')}
+            ${lastPrice ? `<span style="font-family:var(--mono);color:var(--accent-amber);">@$${lastPrice.toLocaleString('zh-TW')}</span>` : ''}
+          </div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-family:var(--mono);font-size:0.78rem;color:var(--text-secondary);">成本 $${gCost.toLocaleString('zh-TW')}</div>
+          <div style="font-family:var(--mono);font-size:0.95rem;font-weight:600;color:var(--accent-amber);">$${gValue.toLocaleString('zh-TW')}</div>
+          <div style="font-family:var(--mono);font-size:0.78rem;font-weight:500;color:${gPnlColor};">${gPos?'▲ +':'▼ '}${gPct.toFixed(2)}%</div>
+        </div>
+        <svg id="invGroupChevron_${gDomKey}" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--accent-purple);transition:transform 0.25s;"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <!-- 群組進度條 -->
+      <div style="padding:0 16px 10px;display:flex;flex-direction:column;gap:3px;background:rgba(167,139,250,0.04);">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:0.6rem;color:var(--text-muted);width:28px;">成本</span>
+          <div style="flex:1;height:4px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${gCostW}%;background:#3b82f6;border-radius:3px;"></div></div>
+          <span style="font-size:0.6rem;font-family:var(--mono);color:var(--text-muted);width:70px;text-align:right;">$${gCost.toLocaleString('zh-TW')}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:0.6rem;color:var(--text-muted);width:28px;">市值</span>
+          <div style="flex:1;height:4px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${gBarW}%;background:${gPos?'#ff4d6d':'#00e5a0'};border-radius:3px;"></div></div>
+          <span style="font-size:0.6rem;font-family:var(--mono);color:${gPnlColor};width:70px;text-align:right;">${gPos?'+':''}$${gPnl.toLocaleString('zh-TW')}</span>
+        </div>
+      </div>
+      <!-- 子項列表（預設收合） -->
+      <div id="invGroup_${gDomKey}" style="display:none;border-top:1px solid rgba(167,139,250,0.15);padding:8px 0;">
+        ${g.items.map(i => renderSingleItem(i, maxCost, true)).join('')}
+      </div>
+    </div>`;
   }).join('');
+}
+
+function toggleInvGroup(key) {
+  const panel   = document.getElementById('invGroup_' + key);
+  const chevron = document.getElementById('invGroupChevron_' + key);
+  if (!panel) return;
+  const open = panel.style.display === 'none';
+  panel.style.display  = open ? '' : 'none';
+  if (chevron) chevron.style.transform = open ? 'rotate(180deg)' : '';
 }
 
 function toggleInvEdit(id) {
@@ -5330,6 +5786,44 @@ async function deletePledge(id) {
   try { const api = await sb.from('pledges'); await api.delete(id); } catch {}
   _pledgeCache = (_pledgeCache||[]).filter(p => p.id !== id);
   await renderLiabList();
+}
+
+function calcPledgeSim(id, basePrice, lots, loan, warnRate, cutRate) {
+  const slider  = document.getElementById('simSlider_'+ id);
+  const dropEl  = document.getElementById('simDrop_'  + id);
+  const rateEl  = document.getElementById('simRate_'  + id);
+  const resultEl= document.getElementById('simResult_'+ id);
+  if (!slider) return;
+
+  const dropPct   = parseFloat(slider.value);   // 0~70
+  const simPrice  = basePrice * (1 - dropPct / 100);
+  const simValue  = Math.round(simPrice * lots * 1000);
+  const simRate   = loan > 0 ? Math.round((simValue / loan) * 100) : 0;
+  const color     = simRate >= 150 ? 'var(--accent-green)' : simRate >= warnRate ? 'var(--accent-amber)' : 'var(--accent-red)';
+  const status    = simRate >= 150 ? '安全' : simRate >= warnRate ? '⚠ 警戒' : simRate >= cutRate ? '🚨 危險' : '💀 斷頭';
+
+  if (dropEl)  dropEl.textContent  = dropPct === 0 ? '0%' : `-${dropPct}%`;
+  if (dropEl)  dropEl.style.color  = dropPct === 0 ? 'var(--text-secondary)' : 'var(--accent-red)';
+  if (rateEl)  rateEl.textContent  = simRate + '%';
+  if (rateEl)  rateEl.style.color  = color;
+
+  if (resultEl) {
+    if (dropPct === 0) {
+      resultEl.style.display = 'none';
+    } else {
+      const bg = simRate >= 150 ? 'rgba(0,229,160,0.06)' : simRate >= warnRate ? 'rgba(245,158,11,0.06)' : 'rgba(255,77,109,0.06)';
+      const border = simRate >= 150 ? 'rgba(0,229,160,0.2)' : simRate >= warnRate ? 'rgba(245,158,11,0.2)' : 'rgba(255,77,109,0.3)';
+      resultEl.style.display = 'flex';
+      resultEl.style.background = bg;
+      resultEl.style.border = `1px solid ${border}`;
+      resultEl.innerHTML = `
+        <div><span style="font-size:0.6rem;color:var(--text-muted);">模擬股價</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-amber);">$${simPrice.toFixed(2)}</span></div>
+        <div><span style="font-size:0.6rem;color:var(--text-muted);">模擬市值</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-blue);">$${simValue.toLocaleString('zh-TW')}</span></div>
+        <div><span style="font-size:0.6rem;color:var(--text-muted);">維持率</span><br><span style="font-family:var(--mono);font-size:0.88rem;font-weight:600;color:${color};">${simRate}%</span></div>
+        <div><span style="font-size:0.6rem;color:var(--text-muted);">狀態</span><br><span style="font-size:0.78rem;font-weight:500;color:${color};">${status}</span></div>
+      `;
+    }
+  }
 }
 
 let _damWaveTimer = null;
@@ -5594,9 +6088,20 @@ async function renderLiabList() {
         const rate = p.loan > 0 ? Math.round((p.value / p.loan) * 100) : 0;
         const statusColor = rate >= 150 ? 'var(--accent-green)' : rate >= p.warnRate ? 'var(--accent-amber)' : 'var(--accent-red)';
         const statusText  = rate >= 150 ? '安全' : rate >= p.warnRate ? '警戒' : rate >= p.cutRate ? '危險' : '斷頭風險';
-        const lotsDisplay = p.shares ? `${p.shares.toLocaleString()} 張` : '';
-        const priceDisplay = p.price ? `@$${p.price.toLocaleString('zh-TW')}` : '';
-        return `<div style="padding:12px 14px;background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;gap:8px;">
+        const lotsDisplay  = p.shares ? `${p.shares.toLocaleString()} 張` : '';
+        const priceDisplay = p.price  ? `@$${p.price.toLocaleString('zh-TW')}` : '';
+
+        // 計算跌到警戒線/斷頭線需要的跌幅 %
+        // 維持率 = (股價 × 張數 × 1000) / 借款  → 目標股價 = 維持率 × 借款 / (張數×1000)
+        const basePrice = p.price || (p.shares > 0 ? Math.round(p.value / (p.shares * 1000)) : 0);
+        const warnPrice = (p.shares > 0 && p.loan > 0) ? (p.warnRate / 100 * p.loan) / (p.shares * 1000) : 0;
+        const cutPrice  = (p.shares > 0 && p.loan > 0) ? (p.cutRate  / 100 * p.loan) / (p.shares * 1000) : 0;
+        const warnDrop  = basePrice > 0 ? Math.round((1 - warnPrice / basePrice) * 100) : 0;
+        const cutDrop   = basePrice > 0 ? Math.round((1 - cutPrice  / basePrice) * 100) : 0;
+        const hasPrice  = basePrice > 0 && p.shares > 0 && p.loan > 0;
+
+        return `<div style="padding:12px 14px;background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;gap:10px;">
+          <!-- 標題列 -->
           <div style="display:flex;align-items:center;justify-content:space-between;">
             <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
               <span style="font-size:0.88rem;font-weight:500;">${p.name}</span>
@@ -5609,6 +6114,7 @@ async function renderLiabList() {
               <button class="btn btn-danger-ghost" onclick="deletePledge('${p.id}')">✕</button>
             </div>
           </div>
+          <!-- 數據列 -->
           <div style="display:flex;gap:14px;flex-wrap:wrap;">
             <div><span style="font-size:0.6rem;color:var(--text-muted);">質押市值</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-blue);">$${p.value.toLocaleString('zh-TW')}</span></div>
             <div><span style="font-size:0.6rem;color:var(--text-muted);">借款金額</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-red);">$${p.loan.toLocaleString('zh-TW')}</span></div>
@@ -5616,6 +6122,7 @@ async function renderLiabList() {
             <div><span style="font-size:0.6rem;color:var(--text-muted);">警戒線</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-amber);">${p.warnRate}%</span></div>
             <div><span style="font-size:0.6rem;color:var(--text-muted);">斷頭線</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-red);">${p.cutRate}%</span></div>
           </div>
+          <!-- 維持率進度條 -->
           <div>
             <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:var(--text-muted);margin-bottom:3px;">
               <span>斷頭 ${p.cutRate}%</span><span>警戒 ${p.warnRate}%</span><span>安全 150%+</span>
@@ -5626,6 +6133,34 @@ async function renderLiabList() {
               <div style="height:100%;width:${Math.min(100,Math.round(((rate-100)/150)*100))}%;background:${statusColor};border-radius:3px;transition:width 0.5s;"></div>
             </div>
           </div>
+          <!-- 股價模擬滑桿 -->
+          ${hasPrice ? `
+          <div style="border-top:1px solid var(--border);padding-top:10px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+              <span style="font-size:0.65rem;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;">📉 股價跌幅模擬</span>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:0.68rem;color:var(--text-muted);">跌</span>
+                <span style="font-family:var(--mono);font-size:0.95rem;font-weight:500;" id="simDrop_${p.id}">0%</span>
+                <span style="font-size:0.68rem;color:var(--text-muted);">→ 維持率</span>
+                <span style="font-family:var(--mono);font-size:0.95rem;font-weight:500;" id="simRate_${p.id}">${rate}%</span>
+              </div>
+            </div>
+            <input type="range" min="0" max="70" value="0" step="1"
+              id="simSlider_${p.id}"
+              oninput="calcPledgeSim('${p.id}', ${basePrice}, ${p.shares}, ${p.loan}, ${p.warnRate}, ${p.cutRate})"
+              style="width:100%;accent-color:var(--accent-purple);cursor:pointer;margin-bottom:6px;">
+            <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:var(--text-muted);">
+              <span>0%</span>
+              ${warnDrop > 0 && warnDrop <= 70 ? `<span style="color:var(--accent-amber);">▼${warnDrop}% 警戒</span>` : ''}
+              ${cutDrop  > 0 && cutDrop  <= 70 ? `<span style="color:var(--accent-red);">▼${cutDrop}% 斷頭</span>`  : ''}
+              <span>-70%</span>
+            </div>
+            <!-- 模擬結果 -->
+            <div id="simResult_${p.id}" style="display:none;margin-top:8px;padding:8px 12px;border-radius:8px;display:flex;gap:14px;flex-wrap:wrap;"></div>
+          </div>` : `
+          <div style="border-top:1px solid var(--border);padding-top:8px;font-size:0.72rem;color:var(--text-muted);">
+            請填入股價與張數以啟用跌幅模擬
+          </div>`}
         </div>`;
       }).join('');
     }
@@ -5849,6 +6384,763 @@ function renderInstListUI(all) {
   }).join('');
 }
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  情報瀏覽 INTEL PAGE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let _intelCards = null; // cache
+
+const INTEL_DEFAULTS = [
+  { id:'def_vix',    name:'VIX 恐慌指數', emoji:'😱', symbol:'^VIX',  type:'index',    color:'#ff4d6d', notes:'衡量市場恐慌程度，>30 代表高波動' },
+  { id:'def_qqq',    name:'美股 QQQ',     emoji:'🇺🇸', symbol:'QQQ',   type:'us_stock', color:'#3b82f6', notes:'納斯達克100 ETF，科技股重要指標' },
+  { id:'def_0050',   name:'台股 0050',    emoji:'🇹🇼', symbol:'0050',  type:'tw_stock', color:'#00e5a0', notes:'台灣50 ETF，追蹤台股大盤' },
+  { id:'def_oil',    name:'原油期貨',     emoji:'🛢️', symbol:'CL=F',  type:'index',    color:'#f59e0b', notes:'WTI 原油現貨，影響通膨與運輸成本' },
+];
+
+async function getIntelCards() {
+  if (_intelCards) return _intelCards;
+  try {
+    const api = await sb.from('intel_cards');
+    const rows = await api.select();
+    if (rows && rows.length > 0) { _intelCards = rows; return rows; }
+  } catch(e) {}
+  // fallback：使用預設
+  _intelCards = [...INTEL_DEFAULTS];
+  return _intelCards;
+}
+
+async function renderIntelPage() {
+  const grid = document.getElementById('intelGrid');
+  if (!grid) return;
+  grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--text-muted);font-size:0.82rem;">載入中…</div>';
+  const cards = await getIntelCards();
+  if (!cards.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--text-muted);">尚無情報格，請點下方「新增情報格」</div>';
+    return;
+  }
+  grid.innerHTML = cards.map(c => renderIntelCard(c)).join('');
+  // 先套用快取（即時顯示）
+  cards.forEach(c => {
+    const cacheKey = c.id + '_' + (window._intelRange || '1d');
+    const cached = window._intelCache?.[cacheKey];
+    if (cached) {
+      updateIntelCardUI(c.id, cached.price, cached.change, null, cached.spark);
+    }
+  });
+  // 非同步補齊沒有快取的
+  cards.filter(c => c.symbol && c.type !== 'custom').forEach(c => {
+    const cacheKey = c.id + '_' + (window._intelRange || '1d');
+    if (!window._intelCache?.[cacheKey]) fetchIntelQuote(c, window._intelRange);
+  });
+}
+
+function renderIntelCard(c) {
+  const color = c.color || '#3b82f6';
+  return `<div onclick="openIntelDetail('${c.id}')" style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:14px 13px 10px;cursor:pointer;position:relative;overflow:hidden;transition:all 0.2s;min-height:140px;display:flex;flex-direction:column;justify-content:space-between;" onmouseover="this.style.borderColor='${color}66';this.style.transform='translateY(-1px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+    <div style="position:absolute;inset:0;background:linear-gradient(135deg,${color}0a 0%,transparent 60%);pointer-events:none;"></div>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+      <div style="font-size:1.5rem;line-height:1;">${c.emoji||'🌐'}</div>
+      <div style="font-size:0.6rem;padding:2px 6px;border-radius:10px;background:${color}22;color:${color};">${intelTypeLabel(c.type)}</div>
+    </div>
+    <div>
+      <div style="font-size:0.75rem;font-weight:500;color:var(--text-secondary);margin-bottom:2px;">${c.name}</div>
+      <div style="font-family:var(--mono);font-size:1.1rem;font-weight:600;color:${color};" id="intelPrice_${c.id}">—</div>
+      <div style="font-size:0.65rem;display:flex;align-items:center;gap:5px;margin-top:1px;" id="intelChange_${c.id}">
+        <span style="color:var(--text-muted);">${c.symbol||''}</span>
+      </div>
+    </div>
+    <!-- sparkline -->
+    <div style="margin-top:8px;position:relative;">
+      <canvas id="spark_${c.id}" width="200" height="36" style="width:100%;height:36px;display:block;"></canvas>
+    </div>
+  </div>`;
+}
+
+// 畫 sparkline
+function drawSparkline(id, points, positive) {
+  const canvas = document.getElementById('spark_' + id);
+  if (!canvas || !points || points.length < 2) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+  const min = Math.min(...points), max = Math.max(...points);
+  const range = max - min || 1;
+  const xs = points.map((_, i) => (i / (points.length - 1)) * W);
+  const ys = points.map(v => H - ((v - min) / range) * (H - 4) - 2);
+  const color = positive ? '#ff4d6d' : '#00e5a0';
+  // 填色
+  ctx.beginPath();
+  ctx.moveTo(xs[0], H);
+  xs.forEach((x, i) => ctx.lineTo(x, ys[i]));
+  ctx.lineTo(xs[xs.length-1], H);
+  ctx.closePath();
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, color + '40');
+  grad.addColorStop(1, color + '00');
+  ctx.fillStyle = grad;
+  ctx.fill();
+  // 線
+  ctx.beginPath();
+  ctx.moveTo(xs[0], ys[0]);
+  xs.forEach((x, i) => ctx.lineTo(x, ys[i]));
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+}
+
+function intelTypeLabel(type) {
+  return { tw_stock:'台股', us_stock:'美股', index:'指數', crypto:'加密', custom:'自訂' }[type] || type;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  INTEL 報價核心 - stooq JSON + TWSE fallback
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+window._intelRange  = '1d';
+window._intelCache  = {}; // { symbolRange: {price,change,spark} }
+let _intelFetching  = false;
+
+// stooq symbol 轉換
+function toStooqSym(symbol, type) {
+  if (type === 'tw_stock') return symbol.toLowerCase() + '.tw';
+  let s = symbol.toLowerCase();
+  if (s === 'cl=f')      return 'cl.f';      // 油價
+  if (s.startsWith('^')) return s.slice(1);   // ^VIX → vix (stooq 不用^)
+  if (!s.includes('.'))  return s + '.us';    // QQQ → qqq.us
+  return s;
+}
+
+// stooq 歷史 CSV → spark 陣列
+async function stooqHistory(stooqSym, range) {
+  const rangeMap = { '1d':'5', '1wk':'14', '1mo':'30', '3mo':'90' }; // 抓幾天資料
+  const days = rangeMap[range] || '30';
+  // stooq 歷史 URL（無需 CORS proxy，stooq 允許跨域）
+  const url = `https://stooq.com/q/d/l/?s=${stooqSym}&d1=19000101&d2=29991231&i=d`;
+  try {
+    const r = await fetch(url, { signal: AbortSignal.timeout(8000) });
+    const text = await r.text();
+    if (!text || text.includes('No data')) return null;
+    const lines = text.trim().split('\n').slice(1).filter(Boolean);
+    const closes = lines.slice(-parseInt(days)).map(l => {
+      const cols = l.split(',');
+      return parseFloat(cols[4]); // Close column
+    }).filter(v => !isNaN(v) && v > 0);
+    if (closes.length < 2) return null;
+    return closes;
+  } catch(e) { return null; }
+}
+
+// 單一報價取得
+async function fetchIntelQuote(c, range) {
+  range = range || window._intelRange || '1d';
+  const cacheKey = c.id + '_' + range;
+  const stooqSym = toStooqSym(c.symbol, c.type);
+
+  let price = null, change = null, sparkPoints = null;
+
+  // 台股：Edge Function 取即時價
+  if (c.type === 'tw_stock') {
+    try {
+      const r = await fetch(QUOTE_PROXY_URL + '?ticker=' + encodeURIComponent(c.symbol),
+                            { signal: AbortSignal.timeout(6000) });
+      const d = await r.json();
+      if (d?.price) { price = d.price; change = d.change; }
+    } catch(e) {}
+  }
+
+  // stooq 歷史（所有類型都用）→ sparkline + 美股/指數報價
+  const spark = await stooqHistory(stooqSym, range);
+  if (spark && spark.length >= 2) {
+    sparkPoints = spark;
+    const last = spark[spark.length - 1];
+    const prev = spark[spark.length - 2];
+    if (price == null) price = last;
+    if (change == null) change = prev ? ((last - prev) / prev * 100) : null;
+  }
+
+  // 如果 stooq 都失敗，台股用 TWSE 備援
+  if (price == null && c.type === 'tw_stock') {
+    try {
+      const today = new Date();
+      const ym = today.getFullYear() + String(today.getMonth()+1).padStart(2,'0') + '01';
+      const r = await fetch(`https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=${ym}&stockNo=${c.symbol}&response=json`,
+                            { signal: AbortSignal.timeout(5000) });
+      const d = await r.json();
+      if (d?.data?.length) {
+        const rows = d.data;
+        const closes = rows.map(row => parseFloat(row[6].replace(/,/g,''))).filter(v=>!isNaN(v));
+        if (closes.length >= 1) {
+          price = closes[closes.length-1];
+          if (closes.length >= 2) change = ((closes[closes.length-1]-closes[closes.length-2])/closes[closes.length-2]*100);
+          if (!sparkPoints) sparkPoints = closes.slice(-30);
+        }
+      }
+    } catch(e) {}
+  }
+
+  if (price != null) {
+    window._intelCache[cacheKey] = { price, change, spark: sparkPoints };
+    updateIntelCardUI(c.id, price, change, null, sparkPoints);
+  }
+}
+
+function updateIntelCardUI(id, price, changePct, name, sparkPoints) {
+  const priceEl  = document.getElementById('intelPrice_'  + id);
+  const changeEl = document.getElementById('intelChange_' + id);
+  if (!priceEl) return;
+  const fmt = price >= 1000 ? price.toLocaleString('zh-TW',{maximumFractionDigits:2})
+                             : price.toFixed(price < 1 ? 4 : 2);
+  priceEl.textContent = '$' + fmt;
+  const pos = changePct != null ? changePct >= 0 : true;
+  if (changeEl && changePct != null) {
+    const col = pos ? 'var(--accent-red)' : 'var(--accent-green)';
+    const sym = changeEl.querySelector('span')?.textContent || '';
+    changeEl.innerHTML = `<span style="color:var(--text-muted);">${sym}</span><span style="color:${col};font-family:var(--mono);margin-left:4px;">${pos?'▲ +':'▼ '}${Math.abs(changePct).toFixed(2)}%</span>`;
+  }
+  if (sparkPoints && sparkPoints.length >= 2) {
+    // setTimeout 確保 canvas 已渲染
+    setTimeout(() => drawSparkline(id, sparkPoints, pos), 50);
+  }
+  const c = (_intelCards||[]).find(x=>x.id===id);
+  if (c) { c._price = price; c._change = changePct; c._spark = sparkPoints; }
+}
+
+async function refreshAllIntel() {
+  const cards = await getIntelCards();
+  document.querySelectorAll('[id^="intelPrice_"]').forEach(el=>el.textContent='…');
+  document.querySelectorAll('[id^="spark_"]').forEach(el=>{
+    const ctx=el.getContext?.('2d'); if(ctx) ctx.clearRect(0,0,el.width,el.height);
+  });
+  await Promise.all(cards.filter(c=>c.symbol&&c.type!=='custom').map(c=>fetchIntelQuote(c, window._intelRange)));
+  showToast('✓ 報價已更新');
+}
+
+// ─── 日週月季切換 ──────────────────────────
+function switchIntelRange(range) {
+  window._intelRange = range;
+  document.querySelectorAll('.ir-btn').forEach(b => b.classList.remove('ir-active'));
+  const btn = document.getElementById('irBtn_' + range);
+  if (btn) btn.classList.add('ir-active');
+  const cards = (_intelCards||[]).filter(c=>c.symbol&&c.type!=='custom');
+  // 先檢查 cache，有就直接畫，沒有再 fetch
+  cards.forEach(c => {
+    const cacheKey = c.id + '_' + range;
+    const cached = window._intelCache[cacheKey];
+    if (cached) {
+      updateIntelCardUI(c.id, cached.price, cached.change, null, cached.spark);
+    } else {
+      const priceEl = document.getElementById('intelPrice_' + c.id);
+      if (priceEl) priceEl.textContent = '…';
+      fetchIntelQuote(c, range);
+    }
+  });
+}
+
+// ─── 背景預載（啟動時靜默抓取）────────────
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  情報快取層（localStorage 持久化）
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const DASH_CACHE_KEY  = 'fd2026_dashCache';
+const DASH_CACHE_TTL  = 15 * 60 * 1000; // 15 分鐘內不重抓
+
+function dashCacheSave(key, data) {
+  try {
+    const store = JSON.parse(localStorage.getItem(DASH_CACHE_KEY) || '{}');
+    store[key] = { data, ts: Date.now() };
+    localStorage.setItem(DASH_CACHE_KEY, JSON.stringify(store));
+  } catch(e) {}
+}
+
+function dashCacheLoad(key) {
+  try {
+    const store = JSON.parse(localStorage.getItem(DASH_CACHE_KEY) || '{}');
+    const entry = store[key];
+    if (!entry) return null;
+    if (Date.now() - entry.ts > DASH_CACHE_TTL) return null; // 過期
+    return entry.data;
+  } catch(e) { return null; }
+}
+
+function dashCacheLoadAny(key) {
+  // 不管過不過期，只要有資料就回傳（用於立即顯示）
+  try {
+    const store = JSON.parse(localStorage.getItem(DASH_CACHE_KEY) || '{}');
+    return store[key]?.data || null;
+  } catch(e) { return null; }
+}
+
+function dashCacheAge(key) {
+  try {
+    const store = JSON.parse(localStorage.getItem(DASH_CACHE_KEY) || '{}');
+    const ts = store[key]?.ts;
+    if (!ts) return null;
+    const mins = Math.round((Date.now() - ts) / 60000);
+    return mins < 1 ? '剛剛' : mins < 60 ? `${mins} 分鐘前` : `${Math.round(mins/60)} 小時前`;
+  } catch(e) { return null; }
+}
+
+async function preloadIntelData() {
+  try {
+    const cards = await getIntelCards();
+    const active = cards.filter(c=>c.symbol&&c.type!=='custom');
+    await Promise.all(active.map(c => fetchIntelQuote(c, '1d')));
+    active.forEach(c => { if(window._intelRange!=='1d') fetchIntelQuote(c, '1mo'); });
+  } catch(e) {}
+}
+
+// ─── 市場新聞 ──────────────────────────────
+async function loadMarketNews(forceRefresh) {
+  const globalEl = document.getElementById('aiIntelGlobal');
+  const twEl     = document.getElementById('aiIntelTW');
+  const tsEl     = document.getElementById('aiIntelTimestamp');
+  if (!globalEl) return;
+
+  // 立即顯示快取
+  const applyNews = (d) => {
+    globalEl.innerHTML = d.globalHtml;
+    twEl.innerHTML     = d.twHtml;
+    if (tsEl) tsEl.textContent = d.ts ? `更新於 ${d.ts}` + (dashCacheAge('news') ? `（${dashCacheAge('news')}）` : '') : '—';
+  };
+  const newsCache = dashCacheLoadAny('news');
+  if (newsCache) applyNews(newsCache);
+  else { globalEl.innerHTML = '<span style="color:var(--text-muted);font-size:0.72rem;">⏳ 載入中…</span>'; twEl.innerHTML = globalEl.innerHTML; }
+
+  if (!forceRefresh) {
+    // 新聞快取 30 分鐘
+    const fresh = dashCacheLoad('news');
+    if (fresh) return;
+  }
+
+  // rss2json.com - 免費、穩定、有 CORS
+  async function fetchRSS2(rssUrl, count) {
+    try {
+      const r = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}&count=${count}`,
+                            { signal: AbortSignal.timeout(8000) });
+      const d = await r.json();
+      if (d.status !== 'ok') return [];
+      return d.items.map(item => ({ title: item.title?.trim(), link: item.link || '#' }));
+    } catch(e) { return []; }
+  }
+
+  const [globalNews, twNews] = await Promise.all([
+    fetchRSS2('https://feeds.bbci.co.uk/news/business/rss.xml', 6),
+    fetchRSS2('https://udn.com/rssfeed/news/2/6644?ch=news', 6), // 聯合報財經
+  ]);
+
+  const renderNews = (items, fallbackMsg) => {
+    if (!items.length) return `<span style="color:var(--text-muted);font-size:0.72rem;">${fallbackMsg}</span>`;
+    return items.map(n =>
+      `<div style="padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+        <a href="${n.link}" target="_blank" rel="noopener"
+           style="color:var(--text-secondary);text-decoration:none;font-size:0.73rem;line-height:1.5;display:block;"
+           onmouseover="this.style.color='var(--accent-blue)'"
+           onmouseout="this.style.color='var(--text-secondary)'">${n.title}</a>
+      </div>`
+    ).join('');
+  };
+
+  const globalHtml = renderNews(globalNews, 'BBC 新聞暫時無法載入，請稍後重試');
+  const twHtml     = renderNews(twNews,     '台股新聞暫時無法載入，請稍後重試');
+  const ts = new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});
+  globalEl.innerHTML = globalHtml;
+  twEl.innerHTML     = twHtml;
+  if (tsEl) tsEl.textContent = `更新於 ${ts}`;
+  dashCacheSave('news', { globalHtml, twHtml, ts });
+}
+
+// 空殼（舊 onclick 不報錯）
+function saveAiKey(){}
+function initAiKeyRow(){}
+async function fetchAiIntel(){}
+async function askAiQuestion(){}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  四大面向儀表板
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+async function loadAllDashboard(forceRefresh) {
+  await Promise.all([
+    loadBCI(forceRefresh),
+    loadMomentum(forceRefresh),
+    loadSentiment(forceRefresh),
+    loadLiquidity(forceRefresh),
+  ]);
+}
+
+// 通用：stooq 歷史 CSV → close 陣列（含快取）
+async function dashStooq(sym, days) {
+  const cKey = `stooq_${sym}_${days}`;
+  const cached = dashCacheLoad(cKey);
+  if (cached) return cached;
+  try {
+    const url = `https://stooq.com/q/d/l/?s=${encodeURIComponent(sym)}&i=d`;
+    const r = await fetch(url, { signal: AbortSignal.timeout(9000) });
+    const t = await r.text();
+    if (!t || t.includes('No data') || t.includes('Exceeded')) return null;
+    const lines = t.trim().split('\n').slice(1).filter(Boolean);
+    const closes = lines.slice(-(days||30)).map(l => parseFloat(l.split(',')[4])).filter(v => !isNaN(v) && v > 0);
+    if (closes.length < 2) return null;
+    dashCacheSave(cKey, closes);
+    return closes;
+  } catch(e) { return null; }
+}
+
+// 通用：畫 sparkline
+function dashSparkline(canvasId, points, color) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas || !points || points.length < 2) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+  const min = Math.min(...points), max = Math.max(...points), range = max - min || 1;
+  const xs = points.map((_, i) => (i / (points.length - 1)) * W);
+  const ys = points.map(v => H - ((v - min) / range) * (H - 4) - 2);
+  ctx.beginPath(); ctx.moveTo(xs[0], H);
+  xs.forEach((x, i) => ctx.lineTo(x, ys[i]));
+  ctx.lineTo(xs[xs.length-1], H); ctx.closePath();
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, color + '40'); g.addColorStop(1, color + '00');
+  ctx.fillStyle = g; ctx.fill();
+  ctx.beginPath(); ctx.moveTo(xs[0], ys[0]);
+  xs.forEach((x, i) => ctx.lineTo(x, ys[i]));
+  ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.stroke();
+}
+
+// 通用：更新指標卡（val/chg/spark）
+function dashMetric(prefix, closes, unit, invertColor) {
+  if (!closes || closes.length < 2) return null;
+  const val = closes[closes.length - 1], prev = closes[closes.length - 2];
+  const pct = (val - prev) / prev * 100;
+  const isUp = pct >= 0;
+  const goodUp = !invertColor;
+  const color = isUp ? (goodUp ? 'var(--accent-red)' : 'var(--accent-green)')
+                     : (goodUp ? 'var(--accent-green)' : 'var(--accent-red)');
+  const lineCol = isUp ? (goodUp ? '#ff4d6d' : '#00e5a0') : (goodUp ? '#00e5a0' : '#ff4d6d');
+  const fmt = val >= 100 ? val.toLocaleString('zh-TW', {maximumFractionDigits:2}) : val.toFixed(val < 1 ? 4 : 2);
+  const el = document.getElementById(prefix);
+  if (el) { el.textContent = (unit||'') + fmt; el.style.color = color; }
+  const chgEl = document.getElementById(prefix + '_chg');
+  if (chgEl && !chgEl.dataset.static) {
+    chgEl.innerHTML = `<span style="color:${color}">${isUp?'▲ +':'▼ '}${Math.abs(pct).toFixed(2)}%</span>`;
+  }
+  setTimeout(() => dashSparkline(prefix + '_spark', closes, lineCol), 40);
+  return { val, pct, isUp };
+}
+
+// ─── 1. 景氣面 ───────────────────────────
+const BCI_SIGNAL = {
+  '紅燈':  { color:'#ff4d6d', glow:'#ff4d6d55', emoji:'🔴', label:'景氣過熱' },
+  '黃紅燈':{ color:'#ffb347', glow:'#ffb34755', emoji:'🟠', label:'微幅過熱' },
+  '綠燈':  { color:'#00e5a0', glow:'#00e5a055', emoji:'🟢', label:'景氣穩定' },
+  '黃藍燈':{ color:'#00bfff', glow:'#00bfff55', emoji:'🔵', label:'輕微衰退' },
+  '藍燈':  { color:'#4a90e2', glow:'#4a90e255', emoji:'🔵', label:'景氣衰退' },
+};
+const BCI_RECENT = [
+  { month:'113/08', signal:'綠燈',  score:23 },
+  { month:'113/09', signal:'綠燈',  score:22 },
+  { month:'113/10', signal:'黃紅燈', score:27 },
+  { month:'113/11', signal:'黃紅燈', score:26 },
+  { month:'113/12', signal:'綠燈',  score:24 },
+  { month:'114/01', signal:'綠燈',  score:23 },
+];
+
+async function loadBCI(forceRefresh) {
+  const lampEl  = document.getElementById('bciLamp');
+  const nameEl  = document.getElementById('bciSignalName');
+  const scoreEl = document.getElementById('bciScore');
+  const monthEl = document.getElementById('bciMonthLabel');
+  const histEl  = document.getElementById('bciHistory');
+  const badge   = document.getElementById('macroBadge');
+  if (!lampEl) return;
+
+  // ── 1. 立即顯示快取
+  const applyBCI = (latest) => {
+    const sig = BCI_SIGNAL[latest.signal] || BCI_SIGNAL['綠燈'];
+    lampEl.textContent = sig.emoji; lampEl.style.background = sig.color; lampEl.style.boxShadow = `0 0 18px ${sig.glow}`;
+    nameEl.textContent = latest.signal; nameEl.style.color = sig.color;
+    if (monthEl) monthEl.textContent = `最新：${latest.month}` + (latest._age ? `　更新：${latest._age}` : '');
+    if (scoreEl) scoreEl.textContent = `分數 ${latest.score} 分　${sig.label}`;
+    if (badge) { badge.textContent = latest.signal; badge.style.background = sig.color+'22'; badge.style.color = sig.color; }
+    if (histEl) {
+      histEl.innerHTML = BCI_RECENT.map(h => {
+        const s = BCI_SIGNAL[h.signal]||BCI_SIGNAL['綠燈'];
+        return `<div title="${h.month} ${h.signal}" style="display:flex;flex-direction:column;align-items:center;gap:2px;"><div style="width:20px;height:20px;border-radius:50%;background:${s.color};box-shadow:0 0 6px ${s.glow};font-size:0.6rem;display:flex;align-items:center;justify-content:center;">${s.emoji}</div><div style="font-size:0.48rem;color:var(--text-muted);">${h.month.slice(-2)}月</div></div>`;
+      }).join('');
+    }
+  };
+
+  const cached = dashCacheLoadAny('bci');
+  if (cached) { applyBCI({ ...cached, _age: dashCacheAge('bci') }); }
+  else { nameEl.textContent = '載入中…'; }
+
+  // ── 2. 若快取未過期且非強制，跳過網路請求
+  if (!forceRefresh && dashCacheLoad('bci')) return;
+
+  // ── 3. 背景抓最新
+  let latest = BCI_RECENT[BCI_RECENT.length - 1];
+  try {
+    const r = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://index.ndc.gov.tw/n/zh_tw'), { signal: AbortSignal.timeout(7000) });
+    const d = await r.json(); const html = d.contents || '';
+    for (const sig of ['紅燈','黃紅燈','綠燈','黃藍燈','藍燈']) { if (html.includes(sig)) { latest = { ...latest, signal: sig }; break; } }
+    const m = html.match(/(\d{3})\s*年\s*(\d{1,2})\s*月/); if (m) latest = { ...latest, month: m[1]+'/'+m[2].padStart(2,'0') };
+    const s = html.match(/綜合判斷分數[^\d]*(\d{1,2})/); if (s) latest = { ...latest, score: parseInt(s[1]) };
+  } catch(e) {}
+  dashCacheSave('bci', latest);
+  applyBCI(latest);
+}
+
+// ─── 2. 動能面 ───────────────────────────
+async function loadMomentum(forceRefresh) {
+  const badge = document.getElementById('momentumBadge');
+  const sig   = document.getElementById('momentumSignal');
+
+  // 立即顯示快取
+  const applyMomentum = (d) => {
+    const r_qqq  = dashMetric('mom_qqq',  d.qqq,   '$', false);
+    const r_0050 = dashMetric('mom_0050', d.tw0050,'$', false);
+    const r_tnx  = dashMetric('mom_tnx',  d.tnx,   '',  true);
+    const r_dxy  = dashMetric('mom_dxy',  d.dxy,   '',  true);
+    let signals = [];
+    if (r_qqq)  signals.push(r_qqq.isUp  ? '📈 QQQ 多頭延續' : '📉 QQQ 空頭走勢');
+    if (r_0050) signals.push(r_0050.isUp ? '🟢 台股 0050 強勢' : '🔴 台股 0050 偏弱');
+    if (r_tnx)  signals.push(r_tnx.isUp  ? '⚠️ 殖利率上升，科技股承壓' : '✅ 殖利率回落，有利成長股');
+    if (r_dxy)  signals.push(r_dxy.isUp  ? '⚠️ 美元走強，新興市場外流壓力' : '✅ 美元走弱，外資回補台股');
+    if (sig) sig.innerHTML = signals.join('<br>') || '資料不足';
+    const upCnt = [r_qqq, r_0050].filter(r=>r&&r.isUp).length;
+    if (badge) {
+      const [txt,bg,col] = upCnt>=2?['多頭','#10b98122','#10b981']:upCnt===1?['震盪','#f59e0b22','#f59e0b']:['空頭','#ef444422','#ef4444'];
+      badge.textContent=txt; badge.style.background=bg; badge.style.color=col;
+    }
+  };
+
+  const cached = dashCacheLoadAny('momentum');
+  if (cached) applyMomentum(cached);
+  else if (sig) sig.textContent = '資料載入中…';
+  if (!forceRefresh && dashCacheLoad('momentum')) return;
+
+  const [qqq, tw0050, tnx, dxy] = await Promise.all([
+    dashStooq('qqq.us', 60), dashStooq('0050.tw', 60),
+    dashStooq('%5Etnx', 60), dashStooq('dxy.us', 60),
+  ]);
+  const d = { qqq, tw0050, tnx, dxy };
+  dashCacheSave('momentum', d);
+  applyMomentum(d);
+}
+
+// ─── 3. 情緒面 ───────────────────────────
+function drawVixGauge(canvasId, vixVal) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+  const cx = W/2, cy = H - 4, r = H - 10;
+  const zones = [
+    { from:Math.PI,     to:Math.PI*1.33, color:'#00e5a0' },
+    { from:Math.PI*1.33,to:Math.PI*1.66, color:'#f59e0b' },
+    { from:Math.PI*1.66,to:Math.PI*2,    color:'#ff4d6d' },
+  ];
+  zones.forEach(z => { ctx.beginPath(); ctx.arc(cx,cy,r,z.from,z.to); ctx.strokeStyle=z.color; ctx.lineWidth=7; ctx.stroke(); });
+  const angle = Math.PI + (Math.max(10,Math.min(50,vixVal))-10)/40*Math.PI;
+  ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+(r-10)*Math.cos(angle),cy+(r-10)*Math.sin(angle));
+  ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx,cy,4,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.fill();
+}
+
+async function loadSentiment(forceRefresh) {
+  const badge = document.getElementById('sentimentBadge');
+  const sig   = document.getElementById('sentimentSignal');
+
+  const applySentiment = (d) => {
+    const { vix, oil } = d;
+    dashMetric('sent_oil', oil, '$', false);
+    if (!vix || vix.length < 2) return;
+    const cur = vix[vix.length-1], avg = vix.reduce((a,b)=>a+b,0)/vix.length;
+    const valEl=document.getElementById('sent_vix_val'), lblEl=document.getElementById('sent_vix_label');
+    const relEl=document.getElementById('sent_vix_rel'), barEl=document.getElementById('sent_vix_bar');
+    const vColor = cur>25?'#ff4d6d':cur>15?'#f59e0b':'#00e5a0';
+    if (valEl) { valEl.textContent=cur.toFixed(2); valEl.style.color=vColor; }
+    const lbl = cur<15?'😴 市場極度平靜':cur<20?'😊 低波動 樂觀情緒':cur<25?'😐 中性波動':cur<35?'😰 恐慌升溫':'😱 極度恐慌';
+    if (lblEl) { lblEl.textContent=lbl; lblEl.style.color=vColor; }
+    const relTxt = cur>avg?`高於均值 +${((cur-avg)/avg*100).toFixed(1)}%`:`低於均值 ${((cur-avg)/avg*100).toFixed(1)}%`;
+    if (relEl) { relEl.textContent=relTxt; relEl.style.color=cur>avg?'#ff4d6d':'#00e5a0'; }
+    if (barEl) { barEl.style.width=Math.min(100,(cur/50)*100)+'%'; barEl.style.background=vColor; }
+    setTimeout(()=>{ drawVixGauge('vixGauge',cur); dashSparkline('vix_spark',vix,vColor); },40);
+    const vixSig = cur>35?'🚨 VIX 極高，市場恐慌，反彈時機可能接近':cur>25?'⚠️ VIX 偏高，情緒不安，謹慎操作':cur<15?'💤 VIX 極低，市場過度樂觀，注意反轉':'✅ VIX 正常，情緒穩定';
+    if (sig) sig.innerHTML = vixSig;
+    if (badge) {
+      const [txt,bg,col]=cur>30?['恐慌','#ef444422','#ef4444']:cur>20?['警戒','#f59e0b22','#f59e0b']:['平靜','#00e5a022','#00e5a0'];
+      badge.textContent=txt; badge.style.background=bg; badge.style.color=col;
+    }
+  };
+
+  const cached = dashCacheLoadAny('sentiment');
+  if (cached) applySentiment(cached);
+  else if (sig) sig.textContent = '資料載入中…';
+  if (!forceRefresh && dashCacheLoad('sentiment')) return;
+
+  const [vix, oil] = await Promise.all([dashStooq('vix', 30), dashStooq('cl.f', 30)]);
+  const d = { vix, oil };
+  dashCacheSave('sentiment', d);
+  applySentiment(d);
+}
+
+// ─── 4. 流動性面 ─────────────────────────
+async function loadLiquidity(forceRefresh) {
+  const badge = document.getElementById('liquidityBadge');
+  const sig   = document.getElementById('liquiditySignal');
+
+  const applyLiquidity = (d) => {
+    const { usdtwd, usdjpy, gold } = d;
+    let jpytwd = null;
+    if (usdtwd && usdjpy) {
+      const len = Math.min(usdtwd.length, usdjpy.length);
+      jpytwd = usdtwd.slice(-len).map((v, i) => (v / usdjpy.slice(-len)[i]) * 100);
+    }
+    const r_usd  = dashMetric('fx_usdtwd', usdtwd, '', false);
+    const r_jpy  = dashMetric('fx_jpytwd', jpytwd, '', false);
+    const r_ujpy = dashMetric('fx_usdjpy', usdjpy, '', false);
+    const r_gold = dashMetric('fx_gold',   gold,   '$', false);
+    let signals = [];
+    if (r_usd)  signals.push(r_usd.isUp  ? '⚠️ 台幣走弱，外資可能匯出' : '✅ 台幣走強，外資淨流入');
+    if (r_ujpy) signals.push(r_ujpy.isUp ? '📉 美元升值對日幣，套利交易活躍' : '📈 日幣升值，避險需求增加');
+    if (r_gold) signals.push(r_gold.isUp ? '🥇 黃金上漲，避險情緒升溫' : '🥇 黃金回落，風險偏好回升');
+    if (sig) sig.innerHTML = signals.join('<br>') || '資料不足';
+    if (badge && r_usd) {
+      const strong = !r_usd.isUp;
+      badge.textContent = strong?'台幣強':'台幣弱';
+      badge.style.background = strong?'#00e5a022':'#ef444422';
+      badge.style.color = strong?'#00e5a0':'#ef4444';
+    }
+  };
+
+  const cached = dashCacheLoadAny('liquidity');
+  if (cached) applyLiquidity(cached);
+  else if (sig) sig.textContent = '資料載入中…';
+  if (!forceRefresh && dashCacheLoad('liquidity')) return;
+
+  const [usdtwd, usdjpy, gold] = await Promise.all([
+    dashStooq('usdtwd', 30), dashStooq('usdjpy', 30), dashStooq('xauusd', 30),
+  ]);
+  const d = { usdtwd, usdjpy, gold };
+  dashCacheSave('liquidity', d);
+  applyLiquidity(d);
+}
+
+// ─── 陳列室 Modal ────────────────────────────
+async function openIntelDetail(id) {
+  const cards = await getIntelCards();
+  const c = cards.find(x => x.id === id);
+  if (!c) return;
+  const modal = document.getElementById('intelDetailModal');
+  const inner = document.getElementById('intelDetailInner');
+  const color = c.color || '#3b82f6';
+  const priceEl = document.getElementById('intelPrice_' + id);
+  const changeEl= document.getElementById('intelChange_' + id);
+  const price  = priceEl?.textContent  || '—';
+  const change = changeEl?.textContent || '';
+
+  inner.innerHTML = `
+    <div style="background:linear-gradient(135deg,${color}20 0%,transparent 60%);padding:28px 24px 20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <div style="font-size:2.2rem;">${c.emoji||'🌐'}</div>
+        <button onclick="closeIntelDetail()" style="background:rgba(255,255,255,0.07);border:none;color:var(--text-muted);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">✕</button>
+      </div>
+      <div style="font-size:0.68rem;color:${color};letter-spacing:0.14em;text-transform:uppercase;margin-bottom:4px;">${intelTypeLabel(c.type)} · ${c.symbol||''}</div>
+      <div style="font-size:1.4rem;font-weight:600;margin-bottom:2px;">${c.name}</div>
+      <div style="font-family:var(--mono);font-size:2rem;font-weight:700;color:${color};">${price}</div>
+      <div style="font-size:0.82rem;margin-top:4px;">${change}</div>
+    </div>
+    <div style="padding:0 24px 24px;">
+      ${c.notes ? `<div style="margin:16px 0;padding:14px 16px;background:rgba(255,255,255,0.04);border-left:3px solid ${color};border-radius:0 8px 8px 0;">
+        <div style="font-size:0.62rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;">📌 備忘筆記</div>
+        <div style="font-size:0.84rem;color:var(--text-secondary);line-height:1.6;">${c.notes}</div>
+      </div>` : ''}
+      <!-- TradingView 小圖 -->
+      ${c.symbol && c.type !== 'custom' ? `
+      <div style="margin-top:16px;">
+        <div style="font-size:0.62rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">📈 走勢圖</div>
+        <div style="background:#0f1117;border:1px solid #2e3550;border-radius:10px;overflow:hidden;height:220px;display:flex;align-items:center;justify-content:center;">
+          <iframe src="https://s.tradingview.com/widgetembed/?symbol=${encodeURIComponent(c.type==='tw_stock'?'TWSE:'+c.symbol:'NASDAQ:'+c.symbol)}&interval=D&theme=dark&style=1&locale=zh_TW&toolbar_bg=%230f1117&hide_top_toolbar=1&hide_legend=1&save_image=0&hide_volume=0&withdateranges=1"
+            style="width:100%;height:220px;border:none;" loading="lazy"></iframe>
+        </div>
+      </div>` : ''}
+      <div style="display:flex;gap:10px;margin-top:20px;">
+        <button onclick="closeIntelDetail()" class="btn" style="flex:1;">關閉</button>
+        <button onclick="deleteIntelCard('${c.id}')" class="btn btn-danger-ghost" style="padding:10px 16px;">刪除</button>
+      </div>
+    </div>`;
+  modal.style.display = 'flex';
+}
+
+function closeIntelDetail() {
+  document.getElementById('intelDetailModal').style.display = 'none';
+}
+
+// ─── 新增 Modal ──────────────────────────────
+let _selectedIntelColor = '#3b82f6';
+
+function openIntelAddModal() {
+  _selectedIntelColor = '#3b82f6';
+  document.getElementById('ia_name').value   = '';
+  document.getElementById('ia_symbol').value = '';
+  document.getElementById('ia_emoji').value  = '🌐';
+  document.getElementById('ia_notes').value  = '';
+  document.getElementById('ia_type').value   = 'tw_stock';
+  document.querySelectorAll('#ia_colorRow [data-color]').forEach(el=>{
+    el.style.border = el.dataset.color === _selectedIntelColor ? '2px solid white' : '2px solid transparent';
+  });
+  document.getElementById('intelAddModal').style.display = 'flex';
+  setTimeout(()=>document.getElementById('ia_name').focus(), 100);
+}
+
+function closeIntelAddModal() {
+  document.getElementById('intelAddModal').style.display = 'none';
+}
+
+function selectIntelColor(c) {
+  _selectedIntelColor = c;
+  document.querySelectorAll('#ia_colorRow [data-color]').forEach(el=>{
+    el.style.border = el.dataset.color === c ? '2px solid white' : '2px solid transparent';
+  });
+}
+
+function onIntelTypeChange() {
+  const type = document.getElementById('ia_type').value;
+  // emoji 自動建議
+  const emojiMap = { tw_stock:'🇹🇼', us_stock:'🇺🇸', index:'📊', crypto:'₿', custom:'📌' };
+  if (!document.getElementById('ia_emoji').value || Object.values(emojiMap).includes(document.getElementById('ia_emoji').value)) {
+    document.getElementById('ia_emoji').value = emojiMap[type]||'🌐';
+  }
+}
+
+async function saveIntelCard() {
+  const name   = document.getElementById('ia_name').value.trim();
+  const symbol = document.getElementById('ia_symbol').value.trim().toUpperCase();
+  const type   = document.getElementById('ia_type').value;
+  const emoji  = document.getElementById('ia_emoji').value.trim() || '🌐';
+  const notes  = document.getElementById('ia_notes').value.trim();
+  if (!name) { showToast('請輸入名稱', 'warn'); return; }
+
+  const card = { id: 'ic_' + Date.now(), name, symbol, type, emoji, color: _selectedIntelColor, notes };
+  // 嘗試存 Supabase
+  try {
+    const api = await sb.from('intel_cards');
+    const saved = await api.insert(card);
+    if (saved) card.id = saved.id || card.id;
+  } catch(e) {}
+  _intelCards = [...(_intelCards||[]), card];
+  closeIntelAddModal();
+  await renderIntelPage();
+  showToast('✓ 已新增：' + name);
+}
+
+async function deleteIntelCard(id) {
+  if (!confirm('確定刪除此情報格？')) return;
+  try { const api = await sb.from('intel_cards'); await api.delete(id); } catch(e) {}
+  _intelCards = (_intelCards||[]).filter(c => c.id !== id);
+  closeIntelDetail();
+  await renderIntelPage();
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 async function renderRecurAll() {
   const recurring = await getRecurring();
   const installments = await getInstallments();
@@ -6153,6 +7445,8 @@ async function appInit() {
   await Promise.all([loadAssetValues(), renderAll(), renderRecurAll()]);
   await renderHome();
   setStatus(true, getToken() ? '本機資料' : '本機模式');
+  // 背景預載情報資料（靜默，不影響主流程）
+  setTimeout(() => { preloadIntelData(); loadAllDashboard(); }, 1500);
 
   // 背景同步 Supabase
   if (getToken()) {
