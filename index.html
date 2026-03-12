@@ -1144,6 +1144,9 @@ input::placeholder { color: var(--text-muted); }
   <div class="nav-item" onclick="goPage('intel',this)">
     <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span> 情報瀏覽
   </div>
+  <div class="nav-item" onclick="goPage('strategy',this)">
+    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span> 策略追蹤
+  </div>
 
   <div class="sidebar-bottom">
     <div class="sync-status">
@@ -2622,6 +2625,128 @@ input::placeholder { color: var(--text-muted); }
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       新增情報格
     </button>
+  </section>  <!-- ══ 策略追蹤頁 ══ -->
+  <section class="page" id="page-strategy">
+    <div class="page-header">
+      <h1 class="page-title">策略追蹤</h1>
+      <div style="font-size:0.65rem;color:var(--text-muted);">200萬翻身戰略</div>
+    </div>
+
+    <!-- 警示 Banner -->
+    <div id="strategyAlert" style="display:none;margin-bottom:14px;padding:12px 14px;border-radius:12px;background:linear-gradient(135deg,rgba(239,68,68,0.15),rgba(239,68,68,0.05));border:1px solid rgba(239,68,68,0.4);display:flex;align-items:center;gap:10px;">
+      <div style="font-size:1.4rem;flex-shrink:0;">🚨</div>
+      <div>
+        <div style="font-size:0.78rem;font-weight:600;color:#ef4444;">備用金警示</div>
+        <div style="font-size:0.68rem;color:var(--text-secondary);margin-top:2px;">備用金低於 5 萬，請考慮開始分批賣出 0050 以維持 100 萬核心部位</div>
+      </div>
+    </div>
+
+    <!-- 儀表板三格 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+      <!-- 股票市值 -->
+      <div style="background:var(--bg-card);border:1px solid rgba(59,130,246,0.25);border-radius:14px;padding:14px 15px;grid-column:1/-1;">
+        <div style="font-size:0.6rem;color:var(--accent-blue);letter-spacing:0.1em;margin-bottom:6px;">0050 當前市值</div>
+        <div style="font-size:1.6rem;font-weight:700;font-family:var(--mono);color:var(--text-primary);" id="stk_value">—</div>
+        <div style="display:flex;gap:14px;margin-top:6px;">
+          <div><div style="font-size:0.58rem;color:var(--text-muted);">累計損益</div><div style="font-size:0.82rem;font-weight:600;font-family:var(--mono);" id="stk_pnl">—</div></div>
+          <div><div style="font-size:0.58rem;color:var(--text-muted);">報酬率</div><div style="font-size:0.82rem;font-weight:600;font-family:var(--mono);" id="stk_roi">—</div></div>
+          <div><div style="font-size:0.58rem;color:var(--text-muted);">已過月數</div><div style="font-size:0.82rem;font-weight:600;font-family:var(--mono);" id="stk_months">—</div></div>
+        </div>
+      </div>
+      <!-- 備用金 -->
+      <div style="background:var(--bg-card);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px 15px;">
+        <div style="font-size:0.6rem;color:var(--text-muted);letter-spacing:0.1em;margin-bottom:6px;">💰 備用金餘額</div>
+        <div style="font-size:1.2rem;font-weight:700;font-family:var(--mono);" id="buf_remain">—</div>
+        <div style="margin-top:8px;height:5px;border-radius:3px;background:rgba(255,255,255,0.08);overflow:hidden;">
+          <div id="buf_bar" style="height:100%;width:100%;background:#00e5a0;border-radius:3px;transition:width 0.6s;"></div>
+        </div>
+        <div style="font-size:0.58rem;color:var(--text-muted);margin-top:4px;">初始 50萬</div>
+      </div>
+      <!-- 耗盡預估 -->
+      <div style="background:var(--bg-card);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px 15px;">
+        <div style="font-size:0.6rem;color:var(--text-muted);letter-spacing:0.1em;margin-bottom:6px;">⏳ 備用金可撐</div>
+        <div style="font-size:1.2rem;font-weight:700;font-family:var(--mono);" id="buf_months">—</div>
+        <div style="font-size:0.62rem;color:var(--text-muted);margin-top:4px;" id="buf_exhaust_date">—</div>
+      </div>
+    </div>
+
+    <!-- 參數滑桿 -->
+    <div style="background:var(--bg-card);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px 15px;margin-bottom:14px;">
+      <div style="font-size:0.65rem;color:var(--text-muted);letter-spacing:0.1em;margin-bottom:12px;">⚙️ 模擬參數調整</div>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <!-- 年化報酬率 -->
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:0.7rem;margin-bottom:5px;">
+            <span style="color:var(--text-secondary);">0050 年化報酬率</span>
+            <span style="font-weight:600;color:var(--accent-blue);" id="lbl_return">7.0%</span>
+          </div>
+          <input type="range" id="sl_return" min="-10" max="20" step="0.5" value="7"
+            oninput="document.getElementById('lbl_return').textContent=this.value+'%';renderStrategy()"
+            style="width:100%;accent-color:var(--accent-blue);">
+          <div style="display:flex;justify-content:space-between;font-size:0.55rem;color:var(--text-muted);"><span>-10%</span><span>+20%</span></div>
+        </div>
+        <!-- 每月個人投入 -->
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:0.7rem;margin-bottom:5px;">
+            <span style="color:var(--text-secondary);">每月個人投入</span>
+            <span style="font-weight:600;color:#a78bfa;" id="lbl_invest">$10,000</span>
+          </div>
+          <input type="range" id="sl_invest" min="0" max="50000" step="1000" value="10000"
+            oninput="document.getElementById('lbl_invest').textContent='$'+parseInt(this.value).toLocaleString('zh-TW');renderStrategy()"
+            style="width:100%;accent-color:#a78bfa;">
+          <div style="display:flex;justify-content:space-between;font-size:0.55rem;color:var(--text-muted);"><span>$0</span><span>$50,000</span></div>
+        </div>
+        <!-- 配息率 -->
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:0.7rem;margin-bottom:5px;">
+            <span style="color:var(--text-secondary);">年化配息率</span>
+            <span style="font-weight:600;color:#f59e0b;" id="lbl_div">3.8%</span>
+          </div>
+          <input type="range" id="sl_div" min="0" max="8" step="0.1" value="3.8"
+            oninput="document.getElementById('lbl_div').textContent=parseFloat(this.value).toFixed(1)+'%';renderStrategy()"
+            style="width:100%;accent-color:#f59e0b;">
+          <div style="display:flex;justify-content:space-between;font-size:0.55rem;color:var(--text-muted);"><span>0%</span><span>8%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 折線圖 -->
+    <div style="background:var(--bg-card);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px 15px;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:0.65rem;color:var(--text-muted);letter-spacing:0.1em;">84個月模擬走勢</div>
+        <div style="display:flex;gap:10px;font-size:0.6rem;">
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:12px;height:2px;background:#3b82f6;display:inline-block;border-radius:1px;"></span>股票市值</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:12px;height:2px;background:#f59e0b;display:inline-block;border-radius:1px;"></span>備用金</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:12px;height:2px;background:#ef4444;display:inline-block;border-radius:1px;border-top:2px dashed #ef4444;"></span>貸款餘額</span>
+        </div>
+      </div>
+      <canvas id="strategyChart" style="width:100%;height:220px;display:block;"></canvas>
+    </div>
+
+    <!-- 月份明細表（前12個月） -->
+    <div style="background:var(--bg-card);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px 15px;margin-bottom:14px;">
+      <div style="font-size:0.65rem;color:var(--text-muted);letter-spacing:0.1em;margin-bottom:10px;">📋 前 12 個月明細</div>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:0.65rem;">
+          <thead>
+            <tr style="color:var(--text-muted);border-bottom:1px solid rgba(255,255,255,0.06);">
+              <th style="text-align:left;padding:5px 6px;font-weight:500;">月</th>
+              <th style="text-align:right;padding:5px 6px;font-weight:500;">股票市值</th>
+              <th style="text-align:right;padding:5px 6px;font-weight:500;">備用金</th>
+              <th style="text-align:right;padding:5px 6px;font-weight:500;">配息收入</th>
+              <th style="text-align:right;padding:5px 6px;font-weight:500;">貸款餘額</th>
+            </tr>
+          </thead>
+          <tbody id="strategyTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 關鍵時間點 -->
+    <div style="background:var(--bg-card);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px 15px;margin-bottom:16px;">
+      <div style="font-size:0.65rem;color:var(--text-muted);letter-spacing:0.1em;margin-bottom:10px;">🏁 關鍵里程碑</div>
+      <div id="strategyMilestones" style="display:flex;flex-direction:column;gap:8px;"></div>
+    </div>
   </section>
 
 </main>
@@ -2645,6 +2770,9 @@ input::placeholder { color: var(--text-muted); }
   </div>
   <div class="mobile-nav-item"        id="mn-intel"      onclick="goPage('intel',      null, 'mn-intel')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span>情報</span>
+  </div>
+  <div class="mobile-nav-item"        id="mn-strategy"   onclick="goPage('strategy',   null, 'mn-strategy')">
+    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span><span>策略</span>
   </div>
 </nav>
 
@@ -3346,6 +3474,9 @@ function goPage(name, navEl, mobileNavId) {
     document.querySelectorAll('.ir-btn').forEach(b => b.classList.remove('ir-active'));
     const activeBtn = document.getElementById('irBtn_' + (window._intelRange || '1d'));
     if (activeBtn) activeBtn.classList.add('ir-active');
+  }
+  if (name === 'strategy') {
+    setTimeout(() => initStrategyPage(), 50);
   }
 }
 
@@ -6648,16 +6779,35 @@ const _dashMem = {};
 async function dashStooq(sym, days) {
   const key = `${sym}_${days}`;
   if (_dashMem[key]) return _dashMem[key];
+
+  // 先試 proxy（伺服器端，無 CORS 問題）
   try {
     const r = await fetch(`${PROXY_BASE}/stooq?s=${encodeURIComponent(sym)}&days=${days}`, {
-      signal: AbortSignal.timeout(12000),
+      signal: AbortSignal.timeout(8000),
     });
-    if (!r.ok) return null;
-    const d = await r.json();
-    if (!d.closes || d.closes.length < 2) return null;
-    _dashMem[key] = d.closes;
-    return d.closes;
-  } catch(e) { return null; }
+    if (r.ok) {
+      const d = await r.json();
+      if (d.closes && d.closes.length >= 2) {
+        _dashMem[key] = d.closes;
+        return d.closes;
+      }
+    }
+  } catch(e) { console.warn('proxy stooq failed, trying direct:', sym); }
+
+  // Fallback：直接打 stooq（可能有 CORS，但值得一試）
+  try {
+    const r = await fetch(`https://stooq.com/q/d/l/?s=${encodeURIComponent(sym)}&i=d`, {
+      signal: AbortSignal.timeout(8000),
+    });
+    const text = await r.text();
+    if (text && !text.includes('No data') && !text.includes('Exceeded')) {
+      const lines = text.trim().split('\n').slice(1).filter(Boolean);
+      const closes = lines.slice(-Math.max(days,2)).map(l => parseFloat(l.split(',')[4])).filter(v => !isNaN(v) && v > 0);
+      if (closes.length >= 2) { _dashMem[key] = closes; return closes; }
+    }
+  } catch(e) { console.warn('direct stooq also failed:', sym); }
+
+  return null;
 }
 
 async function fetchBCIFromProxy() {
@@ -7453,6 +7603,246 @@ async function appInit() {
   // 無 session → 顯示登入
   showAuthOverlay();
 })();
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  策略追蹤 — 200萬翻身戰略
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const STRAT = {
+  loan:        2000000,   // 貸款總額
+  rate:        0.0301,    // 年利率
+  months:      84,        // 還款期數
+  stock0:      1500000,   // 初始買入 0050
+  buffer0:     500000,    // 初始備用金
+  startYear:   2025,
+  startMonth:  1,         // 開始年月（可調）
+};
+
+// 每月還款額（等額攤還）
+function calcMonthlyPayment(principal, annualRate, months) {
+  const r = annualRate / 12;
+  return principal * r * Math.pow(1+r, months) / (Math.pow(1+r, months) - 1);
+}
+
+// 貸款餘額（第 n 個月後）
+function loanBalance(principal, annualRate, months, n) {
+  const r = annualRate / 12;
+  return principal * (Math.pow(1+r, months) - Math.pow(1+r, n)) / (Math.pow(1+r, months) - 1);
+}
+
+// 核心模擬函式
+function simulateStrategy(annualReturn, monthlyInvest, annualDivRate) {
+  const monthlyPayment = calcMonthlyPayment(STRAT.loan, STRAT.rate, STRAT.months);
+  const monthlyReturn  = annualReturn / 100 / 12;
+  const monthlyDiv     = annualDivRate / 100 / 12;
+  const monthlyDeficit = monthlyPayment - monthlyInvest; // 備用金每月缺口
+
+  let stockVal = STRAT.stock0;
+  let buffer   = STRAT.buffer0;
+  const rows   = [];
+
+  for (let m = 1; m <= STRAT.months; m++) {
+    // 本月配息（月初股票市值 × 月配息率）
+    const divIncome = stockVal * monthlyDiv;
+    // 股票增值
+    stockVal = stockVal * (1 + monthlyReturn) + monthlyInvest;
+    // 備用金：扣還款缺口 + 收配息
+    buffer = buffer - monthlyDeficit + divIncome;
+    // 貸款餘額
+    const loan = m < STRAT.months ? loanBalance(STRAT.loan, STRAT.rate, STRAT.months, m) : 0;
+
+    rows.push({
+      m, stockVal, buffer: Math.max(0, buffer),
+      divIncome, loan,
+      bufferRaw: buffer,
+    });
+  }
+  return { rows, monthlyPayment };
+}
+
+function fmtM(v) {
+  if (Math.abs(v) >= 1e6) return (v/1e6).toFixed(2) + 'M';
+  if (Math.abs(v) >= 1e4) return (v/1e4).toFixed(1) + '萬';
+  return v.toLocaleString('zh-TW', {maximumFractionDigits:0});
+}
+function fmtTW(v) { return '$' + Math.round(v).toLocaleString('zh-TW'); }
+
+let _stratChart = null;
+
+function renderStrategy() {
+  const annualReturn  = parseFloat(document.getElementById('sl_return')?.value  || 7);
+  const monthlyInvest = parseFloat(document.getElementById('sl_invest')?.value  || 10000);
+  const annualDiv     = parseFloat(document.getElementById('sl_div')?.value     || 3.8);
+
+  const { rows, monthlyPayment } = simulateStrategy(annualReturn, monthlyInvest, annualDiv);
+
+  // ── 目前月數（從 2025/1 起算）
+  const now = new Date();
+  const elapsed = Math.max(0, (now.getFullYear() - STRAT.startYear) * 12 + (now.getMonth() + 1 - STRAT.startMonth));
+  const curRow  = rows[Math.min(elapsed, rows.length-1)];
+
+  // ── 儀表板更新
+  const pnl = curRow.stockVal - STRAT.stock0;
+  const roi = pnl / STRAT.stock0 * 100;
+  document.getElementById('stk_value').textContent = fmtTW(curRow.stockVal);
+  document.getElementById('stk_value').style.color = curRow.stockVal >= STRAT.stock0 ? 'var(--accent-red)' : 'var(--accent-green)';
+  document.getElementById('stk_pnl').textContent   = (pnl>=0?'+':'') + fmtTW(pnl);
+  document.getElementById('stk_pnl').style.color   = pnl>=0?'var(--accent-red)':'var(--accent-green)';
+  document.getElementById('stk_roi').textContent   = (roi>=0?'+':'') + roi.toFixed(1) + '%';
+  document.getElementById('stk_roi').style.color   = roi>=0?'var(--accent-red)':'var(--accent-green)';
+  document.getElementById('stk_months').textContent = elapsed + ' / 84 個月';
+
+  const bufPct = Math.max(0, Math.min(100, curRow.buffer / STRAT.buffer0 * 100));
+  document.getElementById('buf_remain').textContent = fmtTW(curRow.buffer);
+  document.getElementById('buf_remain').style.color = curRow.buffer < 50000 ? '#ef4444' : curRow.buffer < 150000 ? '#f59e0b' : 'var(--text-primary)';
+  document.getElementById('buf_bar').style.width    = bufPct + '%';
+  document.getElementById('buf_bar').style.background = curRow.buffer < 50000 ? '#ef4444' : curRow.buffer < 150000 ? '#f59e0b' : '#00e5a0';
+
+  // 備用金耗盡預估
+  const exhaust = rows.findIndex(r => r.bufferRaw <= 0);
+  if (exhaust === -1) {
+    document.getElementById('buf_months').textContent = '84個月+ ✅';
+    document.getElementById('buf_exhaust_date').textContent = '備用金可撐完整7年';
+  } else {
+    const rem = Math.max(0, exhaust - elapsed);
+    document.getElementById('buf_months').textContent = rem + ' 個月';
+    const ed = new Date(STRAT.startYear, STRAT.startMonth - 1 + exhaust);
+    document.getElementById('buf_exhaust_date').textContent = `預估 ${ed.getFullYear()}/${ed.getMonth()+1} 耗盡`;
+  }
+
+  // ── 警示
+  const alertEl = document.getElementById('strategyAlert');
+  if (alertEl) alertEl.style.display = curRow.buffer < 50000 ? 'flex' : 'none';
+
+  // ── 明細表（前12個月）
+  const tbody = document.getElementById('strategyTable');
+  if (tbody) {
+    tbody.innerHTML = rows.slice(0, 12).map((r, i) => {
+      const isNow = i === elapsed;
+      return `<tr style="border-bottom:1px solid rgba(255,255,255,0.04);${isNow?'background:rgba(59,130,246,0.08);':''}">
+        <td style="padding:5px 6px;color:${isNow?'var(--accent-blue)':'var(--text-muted)'};">${r.m}${isNow?' ◀':''}</td>
+        <td style="text-align:right;padding:5px 6px;font-family:var(--mono);">${fmtM(r.stockVal)}</td>
+        <td style="text-align:right;padding:5px 6px;font-family:var(--mono);color:${r.buffer<50000?'#ef4444':r.buffer<150000?'#f59e0b':'var(--text-primary)'};">${fmtM(r.buffer)}</td>
+        <td style="text-align:right;padding:5px 6px;font-family:var(--mono);color:#f59e0b;">${fmtTW(r.divIncome)}</td>
+        <td style="text-align:right;padding:5px 6px;font-family:var(--mono);color:var(--text-muted);">${fmtM(r.loan)}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ── 里程碑
+  const msEl = document.getElementById('strategyMilestones');
+  if (msEl) {
+    const milestones = [];
+    // 備用金耗盡
+    if (exhaust >= 0) milestones.push({ m: exhaust, icon:'⚠️', label:'備用金耗盡', color:'#ef4444' });
+    // 股票市值超過貸款
+    const breakEven = rows.findIndex(r => r.stockVal >= STRAT.loan);
+    if (breakEven >= 0) milestones.push({ m: breakEven, icon:'✅', label:'股票市值 > 貸款總額', color:'#00e5a0' });
+    // 股票市值翻倍
+    const double = rows.findIndex(r => r.stockVal >= STRAT.stock0 * 2);
+    if (double >= 0) milestones.push({ m: double, icon:'🚀', label:'0050 市值翻倍（300萬）', color:'#3b82f6' });
+    // 還清貸款
+    milestones.push({ m: 84, icon:'🏁', label:'貸款還清', color:'#a78bfa' });
+    milestones.sort((a,b) => a.m - b.m);
+
+    msEl.innerHTML = milestones.map(ms => {
+      const date = new Date(STRAT.startYear, STRAT.startMonth - 1 + ms.m);
+      const done = ms.m <= elapsed;
+      return `<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);">
+        <div style="font-size:1.1rem;flex-shrink:0;">${ms.icon}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:0.72rem;font-weight:500;color:${done?ms.color:'var(--text-secondary)'};">${ms.label}</div>
+          <div style="font-size:0.6rem;color:var(--text-muted);">第 ${ms.m} 個月　${date.getFullYear()}/${date.getMonth()+1}</div>
+        </div>
+        <div style="font-size:0.6rem;padding:2px 7px;border-radius:5px;background:${done?ms.color+'22':'rgba(255,255,255,0.05)'};color:${done?ms.color:'var(--text-muted)'};">${done?'✓ 已達成':'待達成'}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── 折線圖
+  drawStrategyChart(rows, elapsed);
+}
+
+function drawStrategyChart(rows, elapsed) {
+  const canvas = document.getElementById('strategyChart');
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.offsetWidth, H = canvas.offsetHeight || 220;
+  canvas.width  = W * dpr;
+  canvas.height = H * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const pad = { top:10, right:10, bottom:28, left:52 };
+  const cW = W - pad.left - pad.right;
+  const cH = H - pad.top  - pad.bottom;
+
+  const stockVals  = rows.map(r => r.stockVal);
+  const bufVals    = rows.map(r => r.buffer);
+  const loanVals   = rows.map(r => r.loan);
+  const allVals    = [...stockVals, ...bufVals, ...loanVals].filter(v => v >= 0);
+  const maxV = Math.max(...allVals) * 1.05;
+  const minV = 0;
+
+  const xOf = m => pad.left + (m / (rows.length - 1)) * cW;
+  const yOf = v => pad.top + cH - ((v - minV) / (maxV - minV)) * cH;
+
+  // 格線
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 1;
+  [0, 0.25, 0.5, 0.75, 1].forEach(t => {
+    const y = pad.top + cH * (1 - t);
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + cW, y); ctx.stroke();
+    const val = minV + (maxV - minV) * t;
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.font = '9px system-ui';
+    ctx.textAlign = 'right';
+    ctx.fillText(fmtM(val), pad.left - 4, y + 3);
+  });
+
+  // X 軸月份
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.textAlign = 'center';
+  [0, 12, 24, 36, 48, 60, 72, 84].forEach(m => {
+    if (m >= rows.length) return;
+    ctx.fillText(m+'M', xOf(m), H - 8);
+  });
+
+  const drawLine = (vals, color, dash=[]) => {
+    ctx.beginPath();
+    ctx.strokeStyle = color; ctx.lineWidth = 1.8;
+    ctx.setLineDash(dash);
+    vals.forEach((v, i) => { i === 0 ? ctx.moveTo(xOf(i), yOf(v)) : ctx.lineTo(xOf(i), yOf(v)); });
+    ctx.stroke(); ctx.setLineDash([]);
+  };
+
+  // 填色區域（股票）
+  ctx.beginPath();
+  stockVals.forEach((v, i) => { i === 0 ? ctx.moveTo(xOf(i), yOf(v)) : ctx.lineTo(xOf(i), yOf(v)); });
+  ctx.lineTo(xOf(rows.length-1), yOf(0)); ctx.lineTo(xOf(0), yOf(0)); ctx.closePath();
+  const g = ctx.createLinearGradient(0, pad.top, 0, pad.top + cH);
+  g.addColorStop(0, 'rgba(59,130,246,0.25)'); g.addColorStop(1, 'rgba(59,130,246,0)');
+  ctx.fillStyle = g; ctx.fill();
+
+  drawLine(stockVals, '#3b82f6');
+  drawLine(bufVals,   '#f59e0b');
+  drawLine(loanVals,  '#ef4444', [4, 3]);
+
+  // 當前月份垂直線
+  if (elapsed > 0 && elapsed < rows.length) {
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.lineWidth = 1; ctx.setLineDash([3,3]);
+    ctx.moveTo(xOf(elapsed), pad.top); ctx.lineTo(xOf(elapsed), pad.top + cH);
+    ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '9px system-ui'; ctx.textAlign = 'center';
+    ctx.fillText('現在', xOf(elapsed), pad.top + 8);
+  }
+}
+
+// ── 頁面初始化
+function initStrategyPage() {
+  renderStrategy();
+}
 
 // ── SVG icon helpers for JS-generated empty states ──
 const SVG_EMPTY = {
