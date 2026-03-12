@@ -6636,10 +6636,44 @@ function switchIntelRange(range) {
 
 // ─── 背景預載（啟動時靜默抓取）────────────
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  情報快取層（localStorage 持久化）
+//  市場資料層 — 透過 quote-proxy 取得
+//  所有 stooq / BCI 請求統一走伺服器端 proxy
+//  前端完全不直連外部 API
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const DASH_CACHE_KEY  = 'fd2026_dashCache';
-const DASH_CACHE_TTL  = 15 * 60 * 1000; // 15 分鐘內不重抓
+const PROXY_BASE = 'https://dlwswwioqbghwpksbnjv.supabase.co/functions/v1/quote-proxy';
+
+// 記憶體快取（同一次開 App 內不重複請求）
+const _dashMem = {};
+
+async function dashStooq(sym, days) {
+  const key = `${sym}_${days}`;
+  if (_dashMem[key]) return _dashMem[key];
+  try {
+    const r = await fetch(`${PROXY_BASE}/stooq?s=${encodeURIComponent(sym)}&days=${days}`, {
+      signal: AbortSignal.timeout(12000),
+    });
+    if (!r.ok) return null;
+    const d = await r.json();
+    if (!d.closes || d.closes.length < 2) return null;
+    _dashMem[key] = d.closes;
+    return d.closes;
+  } catch(e) { return null; }
+}
+
+async function fetchBCIFromProxy() {
+  if (_dashMem['bci']) return _dashMem['bci'];
+  try {
+    const r = await fetch(`${PROXY_BASE}/bci`, { signal: AbortSignal.timeout(12000) });
+    if (!r.ok) return null;
+    const d = await r.json();
+    _dashMem['bci'] = d;
+    return d;
+  } catch(e) { return null; }
+}
+
+// 新聞用 localStorage 快取（30分鐘）
+const DASH_CACHE_KEY = 'fd2026_dashCache';
+const DASH_CACHE_TTL = 30 * 60 * 1000;
 
 function dashCacheSave(key, data) {
   try {
@@ -6648,29 +6682,20 @@ function dashCacheSave(key, data) {
     localStorage.setItem(DASH_CACHE_KEY, JSON.stringify(store));
   } catch(e) {}
 }
-
 function dashCacheLoad(key) {
   try {
     const store = JSON.parse(localStorage.getItem(DASH_CACHE_KEY) || '{}');
     const entry = store[key];
-    if (!entry) return null;
-    if (Date.now() - entry.ts > DASH_CACHE_TTL) return null; // 過期
+    if (!entry || Date.now() - entry.ts > DASH_CACHE_TTL) return null;
     return entry.data;
   } catch(e) { return null; }
 }
-
 function dashCacheLoadAny(key) {
-  // 不管過不過期，只要有資料就回傳（用於立即顯示）
-  try {
-    const store = JSON.parse(localStorage.getItem(DASH_CACHE_KEY) || '{}');
-    return store[key]?.data || null;
-  } catch(e) { return null; }
+  try { return JSON.parse(localStorage.getItem(DASH_CACHE_KEY) || '{}')[key]?.data || null; } catch(e) { return null; }
 }
-
 function dashCacheAge(key) {
   try {
-    const store = JSON.parse(localStorage.getItem(DASH_CACHE_KEY) || '{}');
-    const ts = store[key]?.ts;
+    const ts = JSON.parse(localStorage.getItem(DASH_CACHE_KEY) || '{}')[key]?.ts;
     if (!ts) return null;
     const mins = Math.round((Date.now() - ts) / 60000);
     return mins < 1 ? '剛剛' : mins < 60 ? `${mins} 分鐘前` : `${Math.round(mins/60)} 小時前`;
@@ -6680,9 +6705,8 @@ function dashCacheAge(key) {
 async function preloadIntelData() {
   try {
     const cards = await getIntelCards();
-    const active = cards.filter(c=>c.symbol&&c.type!=='custom');
+    const active = cards.filter(c => c.symbol && c.type !== 'custom');
     await Promise.all(active.map(c => fetchIntelQuote(c, '1d')));
-    active.forEach(c => { if(window._intelRange!=='1d') fetchIntelQuote(c, '1mo'); });
   } catch(e) {}
 }
 
@@ -6756,12 +6780,11 @@ async function askAiQuestion(){}
 //  四大面向儀表板
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 async function loadAllDashboard(forceRefresh) {
-  await Promise.all([
-    loadBCI(forceRefresh),
-    loadMomentum(forceRefresh),
-    loadSentiment(forceRefresh),
-    loadLiquidity(forceRefresh),
-  ]);
+  if (forceRefresh) {
+    // 清除記憶體快取，下次重新從 proxy 抓
+    Object.keys(_dashMem).forEach(k => delete _dashMem[k]);
+  }
+  await Promise.all([loadBCI(), loadMomentum(), loadSentiment(), loadLiquidity()]);
 }
 
 // 通用：stooq 歷史 CSV → close 陣列（含快取）
@@ -6841,7 +6864,7 @@ const BCI_RECENT = [
   { month:'114/01', signal:'綠燈',  score:23 },
 ];
 
-async function loadBCI(forceRefresh) {
+async function loadBCI() {
   const lampEl  = document.getElementById('bciLamp');
   const nameEl  = document.getElementById('bciSignalName');
   const scoreEl = document.getElementById('bciScore');
@@ -6850,53 +6873,38 @@ async function loadBCI(forceRefresh) {
   const badge   = document.getElementById('macroBadge');
   if (!lampEl) return;
 
-  // ── 1. 立即顯示快取
-  const applyBCI = (latest) => {
-    const sig = BCI_SIGNAL[latest.signal] || BCI_SIGNAL['綠燈'];
-    lampEl.textContent = sig.emoji; lampEl.style.background = sig.color; lampEl.style.boxShadow = `0 0 18px ${sig.glow}`;
-    nameEl.textContent = latest.signal; nameEl.style.color = sig.color;
-    if (monthEl) monthEl.textContent = `最新：${latest.month}` + (latest._age ? `　更新：${latest._age}` : '');
-    if (scoreEl) scoreEl.textContent = `分數 ${latest.score} 分　${sig.label}`;
-    if (badge) { badge.textContent = latest.signal; badge.style.background = sig.color+'22'; badge.style.color = sig.color; }
-    if (histEl) {
-      histEl.innerHTML = BCI_RECENT.map(h => {
-        const s = BCI_SIGNAL[h.signal]||BCI_SIGNAL['綠燈'];
-        return `<div title="${h.month} ${h.signal}" style="display:flex;flex-direction:column;align-items:center;gap:2px;"><div style="width:20px;height:20px;border-radius:50%;background:${s.color};box-shadow:0 0 6px ${s.glow};font-size:0.6rem;display:flex;align-items:center;justify-content:center;">${s.emoji}</div><div style="font-size:0.48rem;color:var(--text-muted);">${h.month.slice(-2)}月</div></div>`;
-      }).join('');
-    }
-  };
+  // 從 proxy 抓（伺服器端，無 CORS 問題）
+  const data = await fetchBCIFromProxy();
+  let latest = { ...(BCI_RECENT[BCI_RECENT.length - 1]), ...(data || {}) };
 
-  const cached = dashCacheLoadAny('bci');
-  if (cached) { applyBCI({ ...cached, _age: dashCacheAge('bci') }); }
-  else { nameEl.textContent = '載入中…'; }
+  const updatedAt = data?.updated_at
+    ? new Date(data.updated_at).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' })
+    : null;
 
-  // ── 2. 若快取未過期且非強制，跳過網路請求
-  if (!forceRefresh && dashCacheLoad('bci')) return;
-
-  // ── 3. 背景抓最新
-  let latest = BCI_RECENT[BCI_RECENT.length - 1];
-  try {
-    const r = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://index.ndc.gov.tw/n/zh_tw'), { signal: AbortSignal.timeout(7000) });
-    const d = await r.json(); const html = d.contents || '';
-    for (const sig of ['紅燈','黃紅燈','綠燈','黃藍燈','藍燈']) { if (html.includes(sig)) { latest = { ...latest, signal: sig }; break; } }
-    const m = html.match(/(\d{3})\s*年\s*(\d{1,2})\s*月/); if (m) latest = { ...latest, month: m[1]+'/'+m[2].padStart(2,'0') };
-    const s = html.match(/綜合判斷分數[^\d]*(\d{1,2})/); if (s) latest = { ...latest, score: parseInt(s[1]) };
-  } catch(e) {}
-  dashCacheSave('bci', latest);
-  applyBCI(latest);
+  const sig = BCI_SIGNAL[latest.signal] || BCI_SIGNAL['綠燈'];
+  lampEl.textContent = sig.emoji; lampEl.style.background = sig.color; lampEl.style.boxShadow = `0 0 18px ${sig.glow}`;
+  nameEl.textContent = latest.signal; nameEl.style.color = sig.color;
+  if (monthEl) monthEl.textContent = `最新：${latest.month}` + (updatedAt ? `　更新：${updatedAt}` : '');
+  if (scoreEl) scoreEl.textContent = `分數 ${latest.score} 分　${sig.label}`;
+  if (badge) { badge.textContent = latest.signal; badge.style.background = sig.color+'22'; badge.style.color = sig.color; }
+  if (histEl) {
+    histEl.innerHTML = BCI_RECENT.map(h => {
+      const s = BCI_SIGNAL[h.signal] || BCI_SIGNAL['綠燈'];
+      return `<div title="${h.month} ${h.signal}" style="display:flex;flex-direction:column;align-items:center;gap:2px;"><div style="width:20px;height:20px;border-radius:50%;background:${s.color};box-shadow:0 0 6px ${s.glow};font-size:0.6rem;display:flex;align-items:center;justify-content:center;">${s.emoji}</div><div style="font-size:0.48rem;color:var(--text-muted);">${h.month.slice(-2)}月</div></div>`;
+    }).join('');
+  }
 }
 
 // ─── 2. 動能面 ───────────────────────────
-async function loadMomentum(forceRefresh) {
+async function loadMomentum() {
   const badge = document.getElementById('momentumBadge');
   const sig   = document.getElementById('momentumSignal');
 
-  // 立即顯示快取
   const applyMomentum = (d) => {
-    const r_qqq  = dashMetric('mom_qqq',  d.qqq,   '$', false);
-    const r_0050 = dashMetric('mom_0050', d.tw0050,'$', false);
-    const r_tnx  = dashMetric('mom_tnx',  d.tnx,   '',  true);
-    const r_dxy  = dashMetric('mom_dxy',  d.dxy,   '',  true);
+    const r_qqq  = dashMetric('mom_qqq',  d.qqq,    '$', false);
+    const r_0050 = dashMetric('mom_0050', d.tw0050, '$', false);
+    const r_tnx  = dashMetric('mom_tnx',  d.tnx,    '',  true);
+    const r_dxy  = dashMetric('mom_dxy',  d.dxy,    '',  true);
     let signals = [];
     if (r_qqq)  signals.push(r_qqq.isUp  ? '📈 QQQ 多頭延續' : '📉 QQQ 空頭走勢');
     if (r_0050) signals.push(r_0050.isUp ? '🟢 台股 0050 強勢' : '🔴 台股 0050 偏弱');
@@ -6910,18 +6918,11 @@ async function loadMomentum(forceRefresh) {
     }
   };
 
-  const cached = dashCacheLoadAny('momentum');
-  if (cached) applyMomentum(cached);
-  else if (sig) sig.textContent = '資料載入中…';
-  if (!forceRefresh && dashCacheLoad('momentum')) return;
-
   const [qqq, tw0050, tnx, dxy] = await Promise.all([
     dashStooq('qqq.us', 60), dashStooq('0050.tw', 60),
-    dashStooq('%5Etnx', 60), dashStooq('dxy.us', 60),
+    dashStooq('tnx', 60),    dashStooq('dxy.us', 60),
   ]);
-  const d = { qqq, tw0050, tnx, dxy };
-  dashCacheSave('momentum', d);
-  applyMomentum(d);
+  applyMomentum({ qqq, tw0050, tnx, dxy });
 }
 
 // ─── 3. 情緒面 ───────────────────────────
@@ -6944,84 +6945,60 @@ function drawVixGauge(canvasId, vixVal) {
   ctx.beginPath(); ctx.arc(cx,cy,4,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.fill();
 }
 
-async function loadSentiment(forceRefresh) {
+async function loadSentiment() {
   const badge = document.getElementById('sentimentBadge');
   const sig   = document.getElementById('sentimentSignal');
 
-  const applySentiment = (d) => {
-    const { vix, oil } = d;
-    dashMetric('sent_oil', oil, '$', false);
-    if (!vix || vix.length < 2) return;
-    const cur = vix[vix.length-1], avg = vix.reduce((a,b)=>a+b,0)/vix.length;
-    const valEl=document.getElementById('sent_vix_val'), lblEl=document.getElementById('sent_vix_label');
-    const relEl=document.getElementById('sent_vix_rel'), barEl=document.getElementById('sent_vix_bar');
-    const vColor = cur>25?'#ff4d6d':cur>15?'#f59e0b':'#00e5a0';
-    if (valEl) { valEl.textContent=cur.toFixed(2); valEl.style.color=vColor; }
-    const lbl = cur<15?'😴 市場極度平靜':cur<20?'😊 低波動 樂觀情緒':cur<25?'😐 中性波動':cur<35?'😰 恐慌升溫':'😱 極度恐慌';
-    if (lblEl) { lblEl.textContent=lbl; lblEl.style.color=vColor; }
-    const relTxt = cur>avg?`高於均值 +${((cur-avg)/avg*100).toFixed(1)}%`:`低於均值 ${((cur-avg)/avg*100).toFixed(1)}%`;
-    if (relEl) { relEl.textContent=relTxt; relEl.style.color=cur>avg?'#ff4d6d':'#00e5a0'; }
-    if (barEl) { barEl.style.width=Math.min(100,(cur/50)*100)+'%'; barEl.style.background=vColor; }
-    setTimeout(()=>{ drawVixGauge('vixGauge',cur); dashSparkline('vix_spark',vix,vColor); },40);
-    const vixSig = cur>35?'🚨 VIX 極高，市場恐慌，反彈時機可能接近':cur>25?'⚠️ VIX 偏高，情緒不安，謹慎操作':cur<15?'💤 VIX 極低，市場過度樂觀，注意反轉':'✅ VIX 正常，情緒穩定';
-    if (sig) sig.innerHTML = vixSig;
-    if (badge) {
-      const [txt,bg,col]=cur>30?['恐慌','#ef444422','#ef4444']:cur>20?['警戒','#f59e0b22','#f59e0b']:['平靜','#00e5a022','#00e5a0'];
-      badge.textContent=txt; badge.style.background=bg; badge.style.color=col;
-    }
-  };
-
-  const cached = dashCacheLoadAny('sentiment');
-  if (cached) applySentiment(cached);
-  else if (sig) sig.textContent = '資料載入中…';
-  if (!forceRefresh && dashCacheLoad('sentiment')) return;
-
   const [vix, oil] = await Promise.all([dashStooq('vix', 30), dashStooq('cl.f', 30)]);
-  const d = { vix, oil };
-  dashCacheSave('sentiment', d);
-  applySentiment(d);
+  dashMetric('sent_oil', oil, '$', false);
+  if (!vix || vix.length < 2) return;
+  const cur = vix[vix.length-1], avg = vix.reduce((a,b)=>a+b,0)/vix.length;
+  const valEl=document.getElementById('sent_vix_val'), lblEl=document.getElementById('sent_vix_label');
+  const relEl=document.getElementById('sent_vix_rel'), barEl=document.getElementById('sent_vix_bar');
+  const vColor = cur>25?'#ff4d6d':cur>15?'#f59e0b':'#00e5a0';
+  if (valEl) { valEl.textContent=cur.toFixed(2); valEl.style.color=vColor; }
+  const lbl = cur<15?'😴 市場極度平靜':cur<20?'😊 低波動 樂觀情緒':cur<25?'😐 中性波動':cur<35?'😰 恐慌升溫':'😱 極度恐慌';
+  if (lblEl) { lblEl.textContent=lbl; lblEl.style.color=vColor; }
+  const relTxt = cur>avg?`高於均值 +${((cur-avg)/avg*100).toFixed(1)}%`:`低於均值 ${((cur-avg)/avg*100).toFixed(1)}%`;
+  if (relEl) { relEl.textContent=relTxt; relEl.style.color=cur>avg?'#ff4d6d':'#00e5a0'; }
+  if (barEl) { barEl.style.width=Math.min(100,(cur/50)*100)+'%'; barEl.style.background=vColor; }
+  setTimeout(()=>{ drawVixGauge('vixGauge',cur); dashSparkline('vix_spark',vix,vColor); },40);
+  const vixSig = cur>35?'🚨 VIX 極高，市場恐慌，反彈時機可能接近':cur>25?'⚠️ VIX 偏高，情緒不安，謹慎操作':cur<15?'💤 VIX 極低，市場過度樂觀，注意反轉':'✅ VIX 正常，情緒穩定';
+  if (sig) sig.innerHTML = vixSig;
+  if (badge) {
+    const [txt,bg,col]=cur>30?['恐慌','#ef444422','#ef4444']:cur>20?['警戒','#f59e0b22','#f59e0b']:['平靜','#00e5a022','#00e5a0'];
+    badge.textContent=txt; badge.style.background=bg; badge.style.color=col;
+  }
 }
 
 // ─── 4. 流動性面 ─────────────────────────
-async function loadLiquidity(forceRefresh) {
+async function loadLiquidity() {
   const badge = document.getElementById('liquidityBadge');
   const sig   = document.getElementById('liquiditySignal');
-
-  const applyLiquidity = (d) => {
-    const { usdtwd, usdjpy, gold } = d;
-    let jpytwd = null;
-    if (usdtwd && usdjpy) {
-      const len = Math.min(usdtwd.length, usdjpy.length);
-      jpytwd = usdtwd.slice(-len).map((v, i) => (v / usdjpy.slice(-len)[i]) * 100);
-    }
-    const r_usd  = dashMetric('fx_usdtwd', usdtwd, '', false);
-    const r_jpy  = dashMetric('fx_jpytwd', jpytwd, '', false);
-    const r_ujpy = dashMetric('fx_usdjpy', usdjpy, '', false);
-    const r_gold = dashMetric('fx_gold',   gold,   '$', false);
-    let signals = [];
-    if (r_usd)  signals.push(r_usd.isUp  ? '⚠️ 台幣走弱，外資可能匯出' : '✅ 台幣走強，外資淨流入');
-    if (r_ujpy) signals.push(r_ujpy.isUp ? '📉 美元升值對日幣，套利交易活躍' : '📈 日幣升值，避險需求增加');
-    if (r_gold) signals.push(r_gold.isUp ? '🥇 黃金上漲，避險情緒升溫' : '🥇 黃金回落，風險偏好回升');
-    if (sig) sig.innerHTML = signals.join('<br>') || '資料不足';
-    if (badge && r_usd) {
-      const strong = !r_usd.isUp;
-      badge.textContent = strong?'台幣強':'台幣弱';
-      badge.style.background = strong?'#00e5a022':'#ef444422';
-      badge.style.color = strong?'#00e5a0':'#ef4444';
-    }
-  };
-
-  const cached = dashCacheLoadAny('liquidity');
-  if (cached) applyLiquidity(cached);
-  else if (sig) sig.textContent = '資料載入中…';
-  if (!forceRefresh && dashCacheLoad('liquidity')) return;
 
   const [usdtwd, usdjpy, gold] = await Promise.all([
     dashStooq('usdtwd', 30), dashStooq('usdjpy', 30), dashStooq('xauusd', 30),
   ]);
-  const d = { usdtwd, usdjpy, gold };
-  dashCacheSave('liquidity', d);
-  applyLiquidity(d);
+  let jpytwd = null;
+  if (usdtwd && usdjpy) {
+    const len = Math.min(usdtwd.length, usdjpy.length);
+    jpytwd = usdtwd.slice(-len).map((v, i) => (v / usdjpy.slice(-len)[i]) * 100);
+  }
+  const r_usd  = dashMetric('fx_usdtwd', usdtwd, '', false);
+  const r_jpy  = dashMetric('fx_jpytwd', jpytwd, '', false);
+  const r_ujpy = dashMetric('fx_usdjpy', usdjpy, '', false);
+  const r_gold = dashMetric('fx_gold',   gold,   '$', false);
+  let signals = [];
+  if (r_usd)  signals.push(r_usd.isUp  ? '⚠️ 台幣走弱，外資可能匯出' : '✅ 台幣走強，外資淨流入');
+  if (r_ujpy) signals.push(r_ujpy.isUp ? '📉 美元升值對日幣，套利交易活躍' : '📈 日幣升值，避險需求增加');
+  if (r_gold) signals.push(r_gold.isUp ? '🥇 黃金上漲，避險情緒升溫' : '🥇 黃金回落，風險偏好回升');
+  if (sig) sig.innerHTML = signals.join('<br>') || '資料不足';
+  if (badge && r_usd) {
+    const strong = !r_usd.isUp;
+    badge.textContent = strong?'台幣強':'台幣弱';
+    badge.style.background = strong?'#00e5a022':'#ef444422';
+    badge.style.color = strong?'#00e5a0':'#ef4444';
+  }
 }
 
 // ─── 陳列室 Modal ────────────────────────────
