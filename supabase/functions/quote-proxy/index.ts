@@ -90,4 +90,4 @@ Deno.serve(async (req) => {
   } catch (e) {}
 
   return new Response(JSON.stringify({ error: "not found", ticker }), { status: 404, headers: { ...cors, "Content-Type": "application/json" } });
-});
+}); 
