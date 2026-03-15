@@ -638,6 +638,20 @@ input::placeholder { color: var(--text-muted); }
 .ir-btn:hover:not(.ir-active) { color: var(--text-primary); }
 
 /* ── 四大面向儀表板 ── */
+.ai-score-item {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 8px;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.ai-score-label { font-size: 0.55rem; color: var(--text-muted); letter-spacing: 0.08em; }
+.ai-score-val   { font-size: 0.78rem; font-weight: 700; font-family: var(--mono); color: var(--text-primary); }
+.ai-score-bar-wrap { height: 4px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
+.ai-score-bar-fill { height: 100%; border-radius: 2px; transition: width 0.8s ease; }
+
 .dash-panel {
   border-radius: 14px;
   border: 1px solid rgba(255,255,255,0.07);
@@ -1236,7 +1250,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText" style="color: var(--accent-amber);">載入中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-16 02:07:39</div>
+    <div class="clock-display" id="clockDisplay">2026-03-16 02:20:25</div>
   </div>
 </aside>
 
@@ -2647,15 +2661,15 @@ input::placeholder { color: var(--text-muted); }
           <!-- JPY/TWD -->
           <div class="dash-metric-card">
             <div class="dash-metric-label">🇯🇵 日幣百元／台幣</div>
-            <div class="dash-metric-val" id="fx_jpytwd" style="color: var(--accent-red);">20.08</div>
-            <div class="dash-metric-chg" id="fx_jpytwd_chg"><span style="color:var(--accent-red)">▲ +0.25%</span></div>
+            <div class="dash-metric-val" id="fx_jpytwd" style="color: var(--accent-red);">20.11</div>
+            <div class="dash-metric-chg" id="fx_jpytwd_chg"><span style="color:var(--accent-red)">▲ +0.37%</span></div>
             <canvas id="fx_jpytwd_spark" width="120" height="28" style="width:100%;height:28px;margin-top:5px;"></canvas>
           </div>
           <!-- USD/JPY -->
           <div class="dash-metric-card">
             <div class="dash-metric-label">🇺🇸 美元／日幣</div>
-            <div class="dash-metric-val" id="fx_usdjpy" style="color: var(--accent-red);">159.72</div>
-            <div class="dash-metric-chg" id="fx_usdjpy_chg"><span style="color:var(--accent-red)">▲ +0.32%</span></div>
+            <div class="dash-metric-val" id="fx_usdjpy" style="color: var(--accent-red);">159.53</div>
+            <div class="dash-metric-chg" id="fx_usdjpy_chg"><span style="color:var(--accent-red)">▲ +0.20%</span></div>
             <canvas id="fx_usdjpy_spark" width="120" height="28" style="width:100%;height:28px;margin-top:5px;"></canvas>
           </div>
           <!-- Gold 黃金 -->
@@ -2671,26 +2685,70 @@ input::placeholder { color: var(--text-muted); }
       </div>
     </div>
 
-    <!-- ── 新聞 ── -->
-    <div id="aiIntelPanel" style="margin-bottom:18px;border-radius:14px;border:1px solid rgba(59,130,246,0.2);background:var(--bg-card);overflow:hidden;">
+    <!-- ── AI 投資建議 ── -->
+    <div id="aiAdvicePanel" style="margin-bottom:18px;border-radius:14px;border:1px solid rgba(0,229,160,0.2);background:var(--bg-card);overflow:hidden;">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px 10px;">
         <div style="display:flex;align-items:center;gap:8px;">
-          <div style="font-size:1rem;">📡</div>
+          <div style="font-size:1rem;">🤖</div>
           <div>
-            <div style="font-size:0.72rem;font-weight:600;">市場即時新聞</div>
-            <div style="font-size:0.58rem;color:var(--text-muted);" id="aiIntelTimestamp">更新於 上午02:07</div>
+            <div style="font-size:0.72rem;font-weight:600;">AI 綜合投資建議</div>
+            <div style="font-size:0.58rem;color:var(--text-muted);">景氣燈號 · VIX · 油價 · 大盤 · 匯率 加權分析</div>
           </div>
         </div>
-        <button onclick="loadMarketNews(true)" style="font-size:0.65rem;color:var(--text-muted);background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;cursor:pointer;font-family:var(--sans);">重新載入</button>
+        <button onclick="generateAiAdvice()" style="font-size:0.65rem;color:var(--accent-green);background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.3);border-radius:6px;padding:4px 10px;cursor:pointer;font-family:var(--sans);">重新分析</button>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 12px 12px;" id="aiIntelCols">
-        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(59,130,246,0.1);border-radius:8px;padding:10px;">
-          <div style="font-size:0.58rem;color:var(--accent-blue);letter-spacing:0.1em;margin-bottom:6px;">🌐 國際市場</div>
-          <div id="aiIntelGlobal" style="font-size:0.72rem;color:var(--text-secondary);line-height:1.6;"><span style="color:var(--text-muted);font-size:0.72rem;">BBC 新聞暫時無法載入，請稍後重試</span></div>
+
+      <!-- 分數儀表列 -->
+      <div id="aiScoreBar" style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:0 12px 10px;">
+        <div class="ai-score-item" id="score_bci">
+          <div class="ai-score-label">景氣</div>
+          <div class="ai-score-val">穩定</div>
+          <div class="ai-score-bar-wrap"><div class="ai-score-bar-fill" style="width: 80%; background: rgb(0, 229, 160);"></div></div>
         </div>
-        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(167,139,250,0.1);border-radius:8px;padding:10px;">
-          <div style="font-size:0.58rem;color:#a5b4fc;letter-spacing:0.1em;margin-bottom:6px;">📊 台股 · 美股</div>
-          <div id="aiIntelTW" style="font-size:0.72rem;color:var(--text-secondary);line-height:1.6;"><span style="color:var(--text-muted);font-size:0.72rem;">台股新聞暫時無法載入，請稍後重試</span></div>
+        <div class="ai-score-item" id="score_vix">
+          <div class="ai-score-label">VIX</div>
+          <div class="ai-score-val">高恐慌</div>
+          <div class="ai-score-bar-wrap"><div class="ai-score-bar-fill" style="width: 35%; background: rgb(255, 77, 109);"></div></div>
+        </div>
+        <div class="ai-score-item" id="score_oil">
+          <div class="ai-score-label">油價</div>
+          <div class="ai-score-val">油價漲</div>
+          <div class="ai-score-bar-wrap"><div class="ai-score-bar-fill" style="width: 40%; background: rgb(245, 158, 11);"></div></div>
+        </div>
+        <div class="ai-score-item" id="score_market">
+          <div class="ai-score-label">大盤</div>
+          <div class="ai-score-val">雙多頭</div>
+          <div class="ai-score-bar-wrap"><div class="ai-score-bar-fill" style="width: 90%; background: rgb(0, 229, 160);"></div></div>
+        </div>
+        <div class="ai-score-item" id="score_fx">
+          <div class="ai-score-label">匯率</div>
+          <div class="ai-score-val">台幣弱</div>
+          <div class="ai-score-bar-wrap"><div class="ai-score-bar-fill" style="width: 35%; background: rgb(255, 77, 109);"></div></div>
+        </div>
+      </div>
+
+      <!-- 總分 & 建議 -->
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:10px;padding:0 12px 12px;align-items:start;">
+        <!-- 總分圓環 -->
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 72px; height: 72px; border-radius: 50%; border: 3px solid rgb(245, 158, 11); background: rgba(245, 158, 11, 0.07); flex-shrink: 0;" id="aiTotalScoreCircle">
+          <div style="font-size: 1.4rem; font-weight: 700; font-family: var(--mono); color: rgb(245, 158, 11);" id="aiTotalScore">60</div>
+          <div style="font-size:0.48rem;color:var(--text-muted);">/ 100</div>
+        </div>
+        <!-- 建議文字 -->
+        <div>
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+            <span style="font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgb(245, 158, 11);" id="aiAdviceTitle">📈 偏多操作</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;" id="aiAdviceCols">
+            <div style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.15);border-radius:8px;padding:8px;">
+              <div style="font-size:0.55rem;color:var(--accent-blue);letter-spacing:0.1em;margin-bottom:4px;">🇺🇸 美股建議</div>
+              <div style="font-size:0.7rem;color:var(--text-secondary);line-height:1.5;" id="aiAdviceUS">維持現有倉位<br>避免追高，等待回調再買</div>
+            </div>
+            <div style="background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.15);border-radius:8px;padding:8px;">
+              <div style="font-size:0.55rem;color:#a5b4fc;letter-spacing:0.1em;margin-bottom:4px;">🇹🇼 台股建議</div>
+              <div style="font-size:0.7rem;color:var(--text-secondary);line-height:1.5;" id="aiAdviceTW">0050 持倉觀望<br>台幣偏弱，注意外資動向</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -2744,7 +2802,7 @@ input::placeholder { color: var(--text-muted); }
     <div>
       <div style="font-size:0.75rem;font-weight:500;color:var(--text-secondary);margin-bottom:2px;">台股 0050</div>
       <div style="font-family:var(--mono);font-size:1.1rem;font-weight:600;color:#00e5a0;" id="intelPrice_def_0050">$75.95</div>
-      <div style="font-size:0.65rem;display:flex;align-items:center;gap:5px;margin-top:1px;" id="intelChange_def_0050"><span style="color:var(--text-muted);">0050</span><span style="color:var(--accent-red);font-family:var(--mono);margin-left:4px;">▲ +0.00%</span></div>
+      <div style="font-size:0.65rem;display:flex;align-items:center;gap:5px;margin-top:1px;" id="intelChange_def_0050"><span style="color:var(--text-muted);">0050</span><span style="color:var(--accent-green);font-family:var(--mono);margin-left:4px;">▼ 0.85%</span></div>
     </div>
     <!-- sparkline -->
     <div style="margin-top:8px;position:relative;">
@@ -2766,9 +2824,7 @@ input::placeholder { color: var(--text-muted); }
       <canvas id="spark_def_oil" width="200" height="36" style="width:100%;height:36px;display:block;"></canvas>
     </div>
   </div></div>
-    <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
-      <button onclick="deployToStorage()" id="deploy_btn" style="background:linear-gradient(135deg,#06b6d4,#0891b2);color:#fff;border:none;border-radius:50px;padding:8px 16px;font-size:0.72rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;box-shadow:0 2px 8px rgba(6,182,212,0.3);">☁️ 部署到 GitHub</button>
-    </div>
+
     <button onclick="openIntelAddModal()" style="width:100%;padding:14px;border:2px dashed rgba(59,130,246,0.3);border-radius:12px;background:rgba(59,130,246,0.04);color:var(--text-muted);font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;font-family:var(--sans);" onmouseover="this.style.borderColor='rgba(59,130,246,0.6)';this.style.color='var(--accent-blue)'" onmouseout="this.style.borderColor='rgba(59,130,246,0.3)';this.style.color='var(--text-muted)'">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
       新增情報格
@@ -7107,63 +7163,149 @@ async function preloadIntelData() {
 }
 
 // ─── 市場新聞 ──────────────────────────────
-async function loadMarketNews(forceRefresh) {
-  const globalEl = document.getElementById('aiIntelGlobal');
-  const twEl     = document.getElementById('aiIntelTW');
-  const tsEl     = document.getElementById('aiIntelTimestamp');
-  if (!globalEl) return;
+// ─── AI 投資建議 ─────────────────────────────
+function loadMarketNews() { generateAiAdvice(); } // 相容舊呼叫
 
-  // 立即顯示快取
-  const applyNews = (d) => {
-    globalEl.innerHTML = d.globalHtml;
-    twEl.innerHTML     = d.twHtml;
-    if (tsEl) tsEl.textContent = d.ts ? `更新於 ${d.ts}` + (dashCacheAge('news') ? `（${dashCacheAge('news')}）` : '') : '—';
-  };
-  const newsCache = dashCacheLoadAny('news');
-  if (newsCache) applyNews(newsCache);
-  else { globalEl.innerHTML = '<span style="color:var(--text-muted);font-size:0.72rem;">⏳ 載入中…</span>'; twEl.innerHTML = globalEl.innerHTML; }
+async function generateAiAdvice() {
+  // 收集現有指標數值
+  const bciScoreText = document.getElementById('bciScore')?.textContent || '';
+  const bciMatch     = bciScoreText.match(/\d+/);
+  const bciScore     = bciMatch ? parseInt(bciMatch[0]) : null;
+  const bciSignal    = document.getElementById('bciSignalName')?.textContent || '';
 
-  if (!forceRefresh) {
-    // 新聞快取 30 分鐘
-    const fresh = dashCacheLoad('news');
-    if (fresh) return;
+  const vixText = document.getElementById('sent_vix_val')?.textContent || '';
+  const vixVal  = parseFloat(vixText.replace(/[^\d.]/g, '')) || null;
+
+  const oilText = document.getElementById('sent_oil')?.textContent || '';
+  const oilChg  = document.getElementById('sent_oil_chg')?.textContent || '';
+  const oilUp   = oilChg.includes('+') || oilChg.includes('▲');
+
+  const qqqChg  = document.getElementById('mom_qqq')?.nextElementSibling?.textContent || '';
+  const tw50Chg = document.getElementById('mom_0050')?.nextElementSibling?.textContent || '';
+  const qqqUp   = qqqChg.includes('+') || qqqChg.includes('▲');
+  const twUp    = tw50Chg.includes('+') || tw50Chg.includes('▲');
+
+  const usdChg  = document.getElementById('fx_usdtwd_chg')?.textContent || '';
+  const twdWeak = usdChg.includes('+') || usdChg.includes('▲'); // USD/TWD 上漲 = 台幣走弱
+
+  // 各項評分 (0~100)
+  let scores = {};
+
+  // 1. 景氣燈號分數
+  if (bciScore !== null) {
+    if (bciScore >= 38)      scores.bci = { val: 20, label: '過熱', color: '#ff4d6d' };
+    else if (bciScore >= 32) scores.bci = { val: 55, label: '微熱', color: '#ffb347' };
+    else if (bciScore >= 23) scores.bci = { val: 80, label: '穩定', color: '#00e5a0' };
+    else if (bciScore >= 17) scores.bci = { val: 45, label: '微冷', color: '#00bfff' };
+    else                     scores.bci = { val: 20, label: '衰退', color: '#4a90e2' };
+  } else {
+    scores.bci = { val: 50, label: '未知', color: '#888' };
   }
 
-  // rss2json.com - 免費、穩定、有 CORS
-  async function fetchRSS2(rssUrl, count) {
-    try {
-      const r = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}&count=${count}`,
-                            { signal: AbortSignal.timeout(8000) });
-      const d = await r.json();
-      if (d.status !== 'ok') return [];
-      return d.items.map(item => ({ title: item.title?.trim(), link: item.link || '#' }));
-    } catch(e) { return []; }
+  // 2. VIX 恐慌分數（低VIX = 好）
+  if (vixVal !== null) {
+    if (vixVal < 15)       scores.vix = { val: 90, label: '極低恐慌', color: '#00e5a0' };
+    else if (vixVal < 20)  scores.vix = { val: 75, label: '低恐慌',   color: '#00e5a0' };
+    else if (vixVal < 25)  scores.vix = { val: 55, label: '中性',     color: '#f59e0b' };
+    else if (vixVal < 35)  scores.vix = { val: 35, label: '高恐慌',   color: '#ff4d6d' };
+    else                   scores.vix = { val: 15, label: '極度恐慌', color: '#ff4d6d' };
+  } else {
+    scores.vix = { val: 50, label: '未知', color: '#888' };
   }
 
-  const [globalNews, twNews] = await Promise.all([
-    fetchRSS2('https://feeds.bbci.co.uk/news/business/rss.xml', 6),
-    fetchRSS2('https://udn.com/rssfeed/news/2/6644?ch=news', 6), // 聯合報財經
-  ]);
+  // 3. 油價（穩定/緩跌 = 好）
+  scores.oil = oilUp
+    ? { val: 40, label: '油價漲', color: '#f59e0b' }
+    : { val: 70, label: '油價穩', color: '#00e5a0' };
 
-  const renderNews = (items, fallbackMsg) => {
-    if (!items.length) return `<span style="color:var(--text-muted);font-size:0.72rem;">${fallbackMsg}</span>`;
-    return items.map(n =>
-      `<div style="padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-        <a href="${n.link}" target="_blank" rel="noopener"
-           style="color:var(--text-secondary);text-decoration:none;font-size:0.73rem;line-height:1.5;display:block;"
-           onmouseover="this.style.color='var(--accent-blue)'"
-           onmouseout="this.style.color='var(--text-secondary)'">${n.title}</a>
-      </div>`
-    ).join('');
+  // 4. 大盤動能（QQQ + 0050）
+  const mktScore = (qqqUp ? 40 : 0) + (twUp ? 40 : 0) + 10;
+  scores.market = {
+    val: mktScore,
+    label: mktScore >= 70 ? '雙多頭' : mktScore >= 40 ? '分歧' : '偏空',
+    color: mktScore >= 70 ? '#00e5a0' : mktScore >= 40 ? '#f59e0b' : '#ff4d6d'
   };
 
-  const globalHtml = renderNews(globalNews, 'BBC 新聞暫時無法載入，請稍後重試');
-  const twHtml     = renderNews(twNews,     '台股新聞暫時無法載入，請稍後重試');
-  const ts = new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});
-  globalEl.innerHTML = globalHtml;
-  twEl.innerHTML     = twHtml;
-  if (tsEl) tsEl.textContent = `更新於 ${ts}`;
-  dashCacheSave('news', { globalHtml, twHtml, ts });
+  // 5. 匯率
+  scores.fx = twdWeak
+    ? { val: 35, label: '台幣弱', color: '#ff4d6d' }
+    : { val: 75, label: '台幣強', color: '#00e5a0' };
+
+  // 總分加權（景氣30%、VIX25%、大盤20%、匯率15%、油價10%）
+  const total = Math.round(
+    scores.bci.val * 0.30 +
+    scores.vix.val * 0.25 +
+    scores.market.val * 0.20 +
+    scores.fx.val  * 0.15 +
+    scores.oil.val * 0.10
+  );
+
+  // 更新各分數條
+  const items = [
+    { id: 'score_bci',    s: scores.bci    },
+    { id: 'score_vix',    s: scores.vix    },
+    { id: 'score_oil',    s: scores.oil    },
+    { id: 'score_market', s: scores.market },
+    { id: 'score_fx',     s: scores.fx     },
+  ];
+  items.forEach(({ id, s }) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.querySelector('.ai-score-val').textContent = s.label;
+    const fill = el.querySelector('.ai-score-bar-fill');
+    fill.style.width   = s.val + '%';
+    fill.style.background = s.color;
+  });
+
+  // 更新總分圓環
+  const circle = document.getElementById('aiTotalScoreCircle');
+  const scoreEl = document.getElementById('aiTotalScore');
+  if (scoreEl) scoreEl.textContent = total;
+  if (circle) {
+    const c = total >= 70 ? '#00e5a0' : total >= 45 ? '#f59e0b' : '#ff4d6d';
+    circle.style.borderColor = c;
+    circle.style.background  = c + '12';
+    scoreEl.style.color = c;
+  }
+
+  // 建議標題
+  const titleEl = document.getElementById('aiAdviceTitle');
+  if (titleEl) {
+    if (total >= 75)      titleEl.textContent = '✅ 積極布局';
+    else if (total >= 60) titleEl.textContent = '📈 偏多操作';
+    else if (total >= 45) titleEl.textContent = '⚖️ 中性觀望';
+    else if (total >= 30) titleEl.textContent = '⚠️ 保守為主';
+    else                  titleEl.textContent = '🛡️ 防禦避險';
+    const c = total >= 70 ? '#00e5a0' : total >= 45 ? '#f59e0b' : '#ff4d6d';
+    titleEl.style.color = c;
+  }
+
+  // 美股建議
+  const usEl = document.getElementById('aiAdviceUS');
+  if (usEl) {
+    if (total >= 70)
+      usEl.innerHTML = `QQQ / SPY 可持倉或加碼<br>科技股偏多，留意 VIX 變化`;
+    else if (total >= 50)
+      usEl.innerHTML = `維持現有倉位<br>避免追高，等待回調再買`;
+    else if (total >= 35)
+      usEl.innerHTML = `降低槓桿，縮減持倉<br>可轉向防禦型 ETF（如 VYM）`;
+    else
+      usEl.innerHTML = `減碼或清倉科技股<br>資金移至現金或黃金`;
+  }
+
+  // 台股建議
+  const twEl = document.getElementById('aiAdviceTW');
+  if (twEl) {
+    const twdNote = twdWeak ? '台幣偏弱，注意外資動向' : '台幣偏強，外資有望流入';
+    if (total >= 70)
+      twEl.innerHTML = `0050 / 00878 可定期定額<br>${twdNote}`;
+    else if (total >= 50)
+      twEl.innerHTML = `0050 持倉觀望<br>${twdNote}`;
+    else if (total >= 35)
+      twEl.innerHTML = `降低台股比重<br>${twdNote}`;
+    else
+      twEl.innerHTML = `暫緩進場，觀察景氣回溫<br>${twdNote}`;
+  }
 }
 
 // 空殼（舊 onclick 不報錯）
@@ -7184,6 +7326,7 @@ async function loadAllDashboard(forceRefresh) {
     } catch(e) {}
   }
   await Promise.all([loadBCI(), loadMomentum(), loadSentiment(), loadLiquidity()]);
+  setTimeout(generateAiAdvice, 300); // 資料載入後產生建議
 }
 
 // 通用：畫 sparkline
