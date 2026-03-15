@@ -2702,6 +2702,9 @@ input::placeholder { color: var(--text-muted); }
       </div>
     </div>
     <div id="intelGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;"></div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+      <button onclick="deployToStorage()" id="deploy_btn" style="background:linear-gradient(135deg,#06b6d4,#0891b2);color:#fff;border:none;border-radius:50px;padding:8px 16px;font-size:0.72rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;box-shadow:0 2px 8px rgba(6,182,212,0.3);">☁️ 部署到 GitHub</button>
+    </div>
     <button onclick="openIntelAddModal()" style="width:100%;padding:14px;border:2px dashed rgba(59,130,246,0.3);border-radius:12px;background:rgba(59,130,246,0.04);color:var(--text-muted);font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;font-family:var(--sans);" onmouseover="this.style.borderColor='rgba(59,130,246,0.6)';this.style.color='var(--accent-blue)'" onmouseout="this.style.borderColor='rgba(59,130,246,0.3)';this.style.color='var(--text-muted)'">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       新增情報格
@@ -2838,7 +2841,7 @@ input::placeholder { color: var(--text-muted); }
   </section>
 </main>
 
-<!-- ── 手機底部導航列 ── -->
+
 <nav class="mobile-nav" id="mobileNav">
   <div class="mobile-nav-item active" id="mn-home"       onclick="goPage('home',       null, 'mn-home')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/><path d="M5 10v11h14V10"/></svg></span><span>總覽</span>
@@ -3308,44 +3311,25 @@ async function doRegister() {
 }
 
 async function deployToStorage() {
-  document.getElementById('logoutMenu').style.display = 'none';
-  showToast('⏫ 正在部署...', 'ok');
+  const btn = document.getElementById('deploy_btn');
+  if (btn) btn.textContent = '⏫ 準備中...';
 
   try {
     const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-    const blob = new Blob([html], { type: 'text/html' });
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'index.html';
+    a.click();
+    URL.revokeObjectURL(url);
 
-    const url = `${SUPABASE_URL}/storage/v1/object/App/index-6.html`;
-    const res = await fetch(url, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'apikey': SUPABASE_KEY,
-        'Content-Type': 'text/html',
-        'x-upsert': 'true',
-      },
-      body: blob,
-    });
-
-    if (res.ok) {
-      const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/App/index-6.html`;
-      showToast('✅ 部署成功！', 'ok');
-      try {
-        await navigator.clipboard.writeText(publicUrl);
-        setTimeout(() => showToast('📋 連結已複製！', 'ok'), 1500);
-      } catch(e) {}
-      setTimeout(() => { if(confirm('開啟新版本？\n' + publicUrl)) window.location.href = publicUrl; }, 2000);
-    } else {
-      const err = await res.text();
-      console.error('Deploy error:', res.status, err);
-      if (res.status === 403) {
-        showToast('⚠ 權限不足，請確認 Bucket Policy 允許上傳', 'warn');
-      } else {
-        showToast('❌ 部署失敗：' + res.status, 'warn');
-      }
-    }
+    if (btn) btn.textContent = '✅ 已下載';
+    showToast('✅ 已下載 index.html，請上傳到 GitHub repo', 'ok');
+    setTimeout(() => { if (btn) btn.textContent = '☁️ 部署到 GitHub'; }, 3000);
   } catch(e) {
-    showToast('❌ 部署錯誤：' + e.message, 'warn');
+    if (btn) btn.textContent = '☁️ 部署到 GitHub';
+    showToast('❌ ' + e.message, 'warn');
   }
 }
 
@@ -6780,28 +6764,35 @@ async function stooqHistory(stooqSym, range) {
   const rangeMap = { '1d':'5', '1wk':'14', '1mo':'30', '3mo':'90' };
   const days = parseInt(rangeMap[range] || '30');
 
-  // 嘗試 stooq 直連
-  try {
-    const url = `https://stooq.com/q/d/l/?s=${stooqSym}&d1=19000101&d2=29991231&i=d`;
-    const r = await fetch(url, { signal: AbortSignal.timeout(6000) });
-    const text = await r.text();
-    if (text && !text.includes('No data') && !text.includes('Exceeded')) {
-      const lines = text.trim().split('\n').slice(1).filter(Boolean);
-      const closes = lines.slice(-days).map(l => parseFloat(l.split(',')[4])).filter(v => !isNaN(v) && v > 0);
-      if (closes.length >= 2) return closes;
-    }
-  } catch(e) {}
+  // 指數符號直接走 Yahoo（stooq 不支援 vix, tnx 等）
+  const indexSyms = ['vix','tnx','dxy','spx','ndx'];
+  const isIndex = indexSyms.includes(stooqSym.toLowerCase());
 
-  // Yahoo Finance 備援（CORS 友好）
+  // 非指數先試 stooq
+  if (!isIndex) {
+    try {
+      const url = `https://stooq.com/q/d/l/?s=${stooqSym}&d1=19000101&d2=29991231&i=d`;
+      const r = await fetch(url, { signal: AbortSignal.timeout(6000) });
+      const text = await r.text();
+      if (text && !text.includes('No data') && !text.includes('Exceeded') && !text.includes('<!DOCTYPE')) {
+        const lines = text.trim().split('\n').slice(1).filter(Boolean);
+        const closes = lines.slice(-days).map(l => parseFloat(l.split(',')[4])).filter(v => !isNaN(v) && v > 0);
+        if (closes.length >= 2) return closes;
+      }
+    } catch(e) {}
+  }
+
+  // Yahoo Finance（所有符號備援，指數直接走這裡）
   try {
-    // stooq 符號轉 Yahoo 符號
     let yahooSym = stooqSym;
-    if (stooqSym.endsWith('.us')) yahooSym = stooqSym.replace('.us','').toUpperCase();
+    if (stooqSym.endsWith('.us'))  yahooSym = stooqSym.replace('.us','').toUpperCase();
     else if (stooqSym.endsWith('.tw')) yahooSym = stooqSym.replace('.tw','').toUpperCase() + '.TW';
-    else if (stooqSym === 'vix') yahooSym = '^VIX';
-    else if (stooqSym === 'tnx') yahooSym = '^TNX';
-    else if (stooqSym === 'dxy') yahooSym = 'DX-Y.NYB';
-    else if (stooqSym === 'cl.f') yahooSym = 'CL=F';
+    else if (stooqSym === 'vix')   yahooSym = '^VIX';
+    else if (stooqSym === 'tnx')   yahooSym = '^TNX';
+    else if (stooqSym === 'dxy')   yahooSym = 'DX-Y.NYB';
+    else if (stooqSym === 'cl.f')  yahooSym = 'CL=F';
+    else if (stooqSym === 'spx')   yahooSym = '^GSPC';
+    else if (stooqSym === 'ndx')   yahooSym = '^NDX';
     else yahooSym = stooqSym.toUpperCase();
 
     const yhRange = range === '1d' ? '5d' : range === '1wk' ? '1mo' : range === '1mo' ? '3mo' : '1y';
@@ -6962,23 +6953,26 @@ async function dashStooq(sym, days) {
     }
   } catch(e) { /* proxy unavailable */ }
 
-  // Fallback 1：直接打 stooq（^VIX → vix）
-  try {
-    const stooqSym = sym.startsWith('^') ? sym.slice(1).toLowerCase() : encodeURIComponent(sym);
-    const r = await fetch(`https://stooq.com/q/d/l/?s=${stooqSym}&i=d`, {
-      signal: AbortSignal.timeout(8000),
-    });
-    const text = await r.text();
-    if (text && !text.includes('No data') && !text.includes('Exceeded')) {
-      const lines = text.trim().split('\n').slice(1).filter(Boolean);
-      const closes = lines.slice(-Math.max(days,2)).map(l => parseFloat(l.split(',')[4])).filter(v => !isNaN(v) && v > 0);
-      if (closes.length >= 2) {
-        _dashMem[key] = closes;
-        try { localStorage.setItem('ds_' + key, JSON.stringify({ closes, ts: Date.now() })); } catch(e) {}
-        return closes;
+  // Fallback 1：直接打 stooq（^VIX → vix，但指數不支援時會走 Yahoo）
+  const indexSyms2 = ['^vix','^tnx','^ndx','^spx','vix','tnx'];
+  if (!indexSyms2.includes(sym.toLowerCase())) {
+    try {
+      const stooqSym2 = sym.startsWith('^') ? sym.slice(1).toLowerCase() : encodeURIComponent(sym);
+      const r = await fetch(`https://stooq.com/q/d/l/?s=${stooqSym2}&i=d`, {
+        signal: AbortSignal.timeout(8000),
+      });
+      const text = await r.text();
+      if (text && !text.includes('No data') && !text.includes('Exceeded') && !text.includes('<!DOCTYPE')) {
+        const lines = text.trim().split('\n').slice(1).filter(Boolean);
+        const closes = lines.slice(-Math.max(days,2)).map(l => parseFloat(l.split(',')[4])).filter(v => !isNaN(v) && v > 0);
+        if (closes.length >= 2) {
+          _dashMem[key] = closes;
+          try { localStorage.setItem('ds_' + key, JSON.stringify({ closes, ts: Date.now() })); } catch(e) {}
+          return closes;
+        }
       }
-    }
-  } catch(e) { /* direct also failed */ }
+    } catch(e) { /* direct also failed */ }
+  }
 
   // Fallback 2：Yahoo Finance（適合 ^VIX, ^TNX 等指數）
   try {
