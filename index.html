@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
-<head>
+<html lang="zh-TW"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
@@ -8,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0d0f14">
 <title>2026 理財管理系統</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&amp;family=Noto+Sans+TC:wght@300;400;500;700&amp;display=swap" rel="stylesheet">
 <style>
 :root {
   --bg-base: #0d0f14;
@@ -1130,8 +1129,8 @@ input::placeholder { color: var(--text-muted); }
 
     <!-- 登入 / 註冊 tabs -->
     <div class="auth-tabs">
-      <button class="auth-tab active" id="tabLogin"    onclick="switchTab('login')">登入</button>
-      <button class="auth-tab"        id="tabRegister" onclick="switchTab('register')">建立帳號</button>
+      <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">登入</button>
+      <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">建立帳號</button>
     </div>
 
     <!-- 登入表單 -->
@@ -1168,7 +1167,7 @@ input::placeholder { color: var(--text-muted); }
         <input class="auth-input" type="password" id="regPasswordConfirm" placeholder="再輸入一次" onkeydown="if(event.key==='Enter')doRegister()">
       </div>
       <button class="auth-btn" id="registerBtn" onclick="doRegister()">建立帳號</button>
-      <div class="auth-error"   id="registerError"></div>
+      <div class="auth-error" id="registerError"></div>
       <div class="auth-success" id="registerSuccess"></div>
     </div>
 
@@ -1178,20 +1177,20 @@ input::placeholder { color: var(--text-muted); }
 </div>
 
 <!-- 右上角用戶 badge -->
-<div id="userBadge" class="hidden" onclick="toggleLogoutMenu()">
-  <div class="user-avatar-circle" id="userInitial">?</div>
-  <span id="userName">載入中…</span>
+<div id="userBadge" class="" onclick="toggleLogoutMenu()">
+  <div class="user-avatar-circle" id="userInitial">C</div>
+  <span id="userName">colljacky99</span>
   <span style="color:#3b82f6;font-size:0.6rem;">▾</span>
 </div>
-<div id="logoutMenu">
+<div id="logoutMenu" style="display: block;">
   <div class="logout-user-info">
-    <div class="logout-user-name" id="menuUserName">—</div>
-    <div class="logout-user-email" id="menuUserEmail">—</div>
+    <div class="logout-user-name" id="menuUserName">colljacky99</div>
+    <div class="logout-user-email" id="menuUserEmail">colljacky99@gmail.com</div>
   </div>
   <div class="logout-item" onclick="showChangePassword()">🔑 修改密碼</div>
   <div style="height:1px;background:rgba(255,255,255,0.08);margin:4px 0;"></div>
   <div style="font-size:0.55rem;color:var(--text-muted);padding:5px 16px 2px;letter-spacing:0.1em;text-transform:uppercase;">⚙ 開發者</div>
-  <div class="logout-item" onclick="deployToStorage()" id="deploy_btn" style="color:#06b6d4;">☁️ 推送到 GitHub</div>
+  <div class="logout-item" onclick="deployToStorage()" id="deploy_btn" style="color:#06b6d4;">⏫ 推送中...</div>
   <div style="height:1px;background:rgba(255,255,255,0.08);margin:4px 0;"></div>
   <div class="logout-item danger" onclick="logout()">🚪 登出</div>
 </div>
@@ -1213,51 +1212,51 @@ input::placeholder { color: var(--text-muted); }
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <div class="logo-title"><span class="hex" style="font-size:0;display:inline-flex;align-items:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 7 22 17 12 22 2 17 2 7"/><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="7" x2="22" y2="7"/><line x1="2" y1="17" x2="22" y2="17"/></svg></span> FINLEDGER</div>
+    <div class="logo-title"><span class="hex" style="font-size:0;display:inline-flex;align-items:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 7 22 17 12 22 2 17 2 7"></polygon><line x1="12" y1="2" x2="12" y2="22"></line><line x1="2" y1="7" x2="22" y2="7"></line><line x1="2" y1="17" x2="22" y2="17"></line></svg></span> FINLEDGER</div>
     <div class="logo-sub">2026 專業理財系統</div>
   </div>
 
   <div class="nav-section-label">主頁</div>
   <div class="nav-item active" onclick="goPage('home',this)">
-    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/><path d="M5 10v11h14V10"/></svg></span> 總覽主頁
+    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span> 總覽主頁
   </div>
 
   <div class="nav-section-label">帳務管理</div>
   <div class="nav-item" onclick="goPage('ledger',this)">
-    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></span> 收支流水帳
+    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg></span> 收支流水帳
   </div>
   <div class="nav-item" onclick="goPage('stats',this)">
-    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span> 現金流
+    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></span> 現金流
   </div>
 
   <div class="nav-section-label">資產管理</div>
   <div class="nav-item" onclick="goPage('assets',this)">
-    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span> 資產中心
+    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg></span> 資產中心
   </div>
   <div class="nav-item" onclick="goPage('recurring',this)">
-    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span> 固定支出
+    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg></span> 固定支出
   </div>
 
   <div class="nav-section-label">市場情報</div>
   <div class="nav-item" onclick="goPage('intel',this)">
-    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span> 情報瀏覽
+    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span> 情報瀏覽
   </div>
   <div class="nav-item" onclick="goPage('strategy',this)">
-    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span> 策略追蹤
+    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span> 策略追蹤
   </div>
 
   <div class="sidebar-bottom">
     <div class="sync-status">
       <div class="sync-dot" id="syncDot"></div>
-      <span id="syncStatusText">連線中…</span>
+      <span id="syncStatusText" style="color: var(--accent-amber);">載入中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay"></div>
+    <div class="clock-display" id="clockDisplay">2026-03-17 03:32:22</div>
   </div>
 </aside>
 
 <!-- mobile overlay -->
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
-<button class="hamburger" onclick="toggleSidebar()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+<button class="hamburger" onclick="toggleSidebar()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
 
 <!-- ══════════════════════════════════
      MAIN
@@ -1276,7 +1275,7 @@ input::placeholder { color: var(--text-muted); }
           <select class="year-selector" id="yearSelect" onchange="onYearChange()">
             <option value="2024">2024</option>
             <option value="2025">2025</option>
-            <option value="2026" selected>2026</option>
+            <option value="2026" selected="">2026</option>
             <option value="2027">2027</option>
           </select>
         </div>
@@ -1317,8 +1316,8 @@ input::placeholder { color: var(--text-muted); }
           </div>
           <div style="height:8px;border-radius:4px;background:rgba(255,255,255,0.05);overflow:hidden;display:flex;">
             <div id="h-barAsset" style="height:100%;background:linear-gradient(90deg,#b45309,#f59e0b);transition:width 0.6s ease;width:0%;"></div>
-            <div id="h-barLiab"  style="height:100%;background:linear-gradient(90deg,#be123c,#ff4d6d);transition:width 0.6s ease;width:0%;"></div>
-            <div id="h-barNet"   style="height:100%;background:linear-gradient(90deg,#059669,#00e5a0);transition:width 0.6s ease;flex:1;"></div>
+            <div id="h-barLiab" style="height:100%;background:linear-gradient(90deg,#be123c,#ff4d6d);transition:width 0.6s ease;width:0%;"></div>
+            <div id="h-barNet" style="height:100%;background:linear-gradient(90deg,#059669,#00e5a0);transition:width 0.6s ease;flex:1;"></div>
           </div>
           <div style="display:flex;gap:12px;margin-top:6px;font-size:0.62rem;">
             <span style="display:flex;align-items:center;gap:4px;color:var(--text-muted);"><span style="width:8px;height:8px;border-radius:2px;background:var(--accent-amber);display:inline-block;"></span>資產</span>
@@ -1387,15 +1386,30 @@ input::placeholder { color: var(--text-muted); }
           <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
             <span style="font-size:0.6rem;color:var(--text-muted);font-family:var(--mono);padding:2px 8px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:4px;">銀行＋投資＋負債</span>
             <div style="display:flex;gap:4px;background:var(--bg-card2);border:1px solid var(--border);border-radius:8px;padding:3px;">
-              <button class="wt-btn active" id="wt-all"   onclick="switchWealthChart('all',this)">複合</button>
-              <button class="wt-btn"        id="wt-asset" onclick="switchWealthChart('asset',this)">總資產</button>
-              <button class="wt-btn"        id="wt-liab"  onclick="switchWealthChart('liab',this)">負債</button>
-              <button class="wt-btn"        id="wt-net"   onclick="switchWealthChart('net',this)">淨資產</button>
+              <button class="wt-btn active" id="wt-all" onclick="switchWealthChart('all',this)">複合</button>
+              <button class="wt-btn" id="wt-asset" onclick="switchWealthChart('asset',this)">總資產</button>
+              <button class="wt-btn" id="wt-liab" onclick="switchWealthChart('liab',this)">負債</button>
+              <button class="wt-btn" id="wt-net" onclick="switchWealthChart('net',this)">淨資產</button>
             </div>
           </div>
         </div>
-        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"></div>
-        <canvas id="wealthChart" style="width:100%;display:block;" height="220"></canvas>
+        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#f59e0b;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#ff4d6d;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總負債</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#ff4d6d;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#00e5a0;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">淨資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#00e5a0;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div></div>
+        <canvas id="wealthChart" style="width:100%;display:block;" height="220" width="346"></canvas>
         <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;" id="wealthXLabels"></div>
       </div>
 
@@ -1445,7 +1459,7 @@ input::placeholder { color: var(--text-muted); }
           </div>
         </div>
         <div id="homeLiabProgress" style="display:flex;flex-direction:column;gap:10px;">
-          <div class="empty-state" style="padding:20px 0;font-size:0.78rem;"><div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg></div>尚無負債資料</div>
+          <div class="empty-state" style="padding:20px 0;font-size:0.78rem;"><div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path><line x1="12" y1="12" x2="12" y2="16"></line><line x1="10" y1="14" x2="14" y2="14"></line></svg></div>尚無負債資料</div>
         </div>
       </div>
 
@@ -1510,7 +1524,7 @@ input::placeholder { color: var(--text-muted); }
           <select class="year-selector" id="yearSelectLedger" onchange="onYearChangeLedger()">
             <option value="2024">2024</option>
             <option value="2025">2025</option>
-            <option value="2026" selected>2026</option>
+            <option value="2026" selected="">2026</option>
             <option value="2027">2027</option>
           </select>
         </div>
@@ -1531,20 +1545,14 @@ input::placeholder { color: var(--text-muted); }
               <div style="width:100%">
                 <label>類別</label>
                 <div style="display:flex;gap:0;border-radius:10px;overflow:hidden;border:1px solid var(--border);">
-                  <button type="button" id="toggleIncome"
-                    onclick="setTxType('收入')"
-                    style="flex:1;padding:9px 0;border:none;background:#00e5a022;color:#00e5a0;font-family:var(--sans);font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.15s;border-right:1px solid var(--border);">
+                  <button type="button" id="toggleIncome" onclick="setTxType('收入')" style="flex: 1 1 0%; padding: 9px 0px; border-top: none; border-bottom: none; border-left: none; border-image: initial; background: rgba(0, 229, 160, 0.133); color: rgb(0, 229, 160); font-family: var(--sans); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: 0.15s; border-right: 1px solid var(--border);">
                     ＋ 收入
                   </button>
-                  <button type="button" id="toggleExpense"
-                    onclick="setTxType('支出')"
-                    style="flex:1;padding:9px 0;border:none;background:transparent;color:var(--text-muted);font-family:var(--sans);font-size:0.82rem;font-weight:500;cursor:pointer;transition:all 0.15s;border-right:1px solid var(--border);">
+                  <button type="button" id="toggleExpense" onclick="setTxType('支出')" style="flex:1;padding:9px 0;border:none;background:transparent;color:var(--text-muted);font-family:var(--sans);font-size:0.82rem;font-weight:500;cursor:pointer;transition:all 0.15s;border-right:1px solid var(--border);">
                     － 支出
                   </button>
-                  <button type="button" id="toggleFixed"
-                    onclick="setTxType('固定支出'); openFixedQuickModal();"
-                    style="flex:1;padding:9px 0;border:none;background:transparent;color:var(--text-muted);font-family:var(--sans);font-size:0.82rem;font-weight:500;cursor:pointer;transition:all 0.15s;">
-                    <svg style="display:inline-block;vertical-align:-3px;margin-right:4px;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg> 固定
+                  <button type="button" id="toggleFixed" onclick="setTxType('固定支出'); openFixedQuickModal();" style="flex:1;padding:9px 0;border:none;background:transparent;color:var(--text-muted);font-family:var(--sans);font-size:0.82rem;font-weight:500;cursor:pointer;transition:all 0.15s;">
+                    <svg style="display:inline-block;vertical-align:-3px;margin-right:4px;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg> 固定
                   </button>
                 </div>
               </div>
@@ -1553,14 +1561,14 @@ input::placeholder { color: var(--text-muted); }
             <input type="hidden" id="txCategory" value="收入">
 
             <!-- 收入快速選項 -->
-            <div class="full" id="incomeChipsRow">
+            <div class="full" id="incomeChipsRow" style="display: block;">
               <label>快速選項 <span style="color:var(--text-muted);font-size:0.65rem;font-weight:400;">點選後直接填入項目</span></label>
               <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:6px;">
-                <button type="button" class="tx-chip income-chip" onclick="selectChip(this,'薪資')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg> 薪資</button>
-                <button type="button" class="tx-chip income-chip" onclick="selectChip(this,'三節')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg> 三節</button>
-                <button type="button" class="tx-chip income-chip" onclick="selectChip(this,'衛服部加碼')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> 衛服部加碼</button>
-                <button type="button" class="tx-chip income-chip" onclick="selectChip(this,'獎金')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg> 獎金</button>
-                <button type="button" class="tx-chip income-chip" onclick="selectChip(this,'打工')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> 打工</button>
+                <button type="button" class="tx-chip income-chip" onclick="selectChip(this,'薪資')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path></svg> 薪資</button>
+                <button type="button" class="tx-chip income-chip" onclick="selectChip(this,'三節')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg> 三節</button>
+                <button type="button" class="tx-chip income-chip" onclick="selectChip(this,'衛服部加碼')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg> 衛服部加碼</button>
+                <button type="button" class="tx-chip income-chip" onclick="selectChip(this,'獎金')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"></circle><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"></path></svg> 獎金</button>
+                <button type="button" class="tx-chip income-chip" onclick="selectChip(this,'打工')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg> 打工</button>
               </div>
             </div>
 
@@ -1568,16 +1576,16 @@ input::placeholder { color: var(--text-muted); }
             <div class="full" id="expenseChipsRow" style="display:none;">
               <label>支出類別 <span style="color:var(--text-muted);font-size:0.65rem;font-weight:400;">點選後可再填項目名稱</span></label>
               <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:6px;">
-                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'生活')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> 生活</button>
-                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'餐飲')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg> 餐飲</button>
-                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'交通')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> 交通</button>
-                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'娛樂')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg> 娛樂</button>
-                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'醫療')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 19H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"/><polyline points="9 11 12 14 22 4"/></svg> 醫療</button>
-                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'教育')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> 教育</button>
-                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'股票投資')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> 投資</button>
-                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'其他')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg> 其他</button>
-                <button type="button" class="tx-chip expense-chip" style="background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.3);color:#f59e0b;" onclick="selectExpenseCat(this,'信用卡')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> 信用卡</button>
-                <button type="button" class="tx-chip expense-chip" style="background:rgba(167,139,250,0.08);border-color:rgba(167,139,250,0.3);color:#a78bfa;" onclick="openInstQuickModal(this)"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg> 分期</button>
+                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'生活')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg> 生活</button>
+                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'餐飲')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg> 餐飲</button>
+                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'交通')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg> 交通</button>
+                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'娛樂')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2"></rect></svg> 娛樂</button>
+                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'醫療')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 19H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"></path><polyline points="9 11 12 14 22 4"></polyline></svg> 醫療</button>
+                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'教育')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> 教育</button>
+                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'股票投資')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg> 投資</button>
+                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'其他')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg> 其他</button>
+                <button type="button" class="tx-chip expense-chip" style="background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.3);color:#f59e0b;" onclick="selectExpenseCat(this,'信用卡')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg> 信用卡</button>
+                <button type="button" class="tx-chip expense-chip" style="background:rgba(167,139,250,0.08);border-color:rgba(167,139,250,0.3);color:#a78bfa;" onclick="openInstQuickModal(this)"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg> 分期</button>
               </div>
             </div>
 
@@ -1600,7 +1608,7 @@ input::placeholder { color: var(--text-muted); }
             <!-- 月份選擇器 -->
             <div style="display:flex;gap:4px;background:var(--bg-card2);border:1px solid var(--border);border-radius:8px;padding:3px;">
               <button class="wt-btn active" id="ledger-month-all" onclick="setLedgerMonth('all',this)" style="font-size:0.7rem;">全年</button>
-              <button class="wt-btn" id="ledger-month-sel" onclick="openMonthPicker()" style="font-size:0.7rem;min-width:52px;" id="ledger-month-sel">— 月</button>
+              <button class="wt-btn" id="ledger-month-sel" onclick="openMonthPicker()" style="font-size:0.7rem;min-width:52px;">— 月</button>
             </div>
             <div style="font-family:var(--mono);font-size:0.72rem;color:var(--text-muted)" id="txCount">0 筆</div>
           </div>
@@ -1665,9 +1673,9 @@ input::placeholder { color: var(--text-muted); }
           <span style="font-family:var(--mono);font-size:0.7rem;color:var(--text-muted);" id="chartYear"></span>
           <div style="display:flex;gap:4px;">
             <button class="chart-tab active" id="lineTab-combined" onclick="switchLineChart('combined',this)">複合</button>
-            <button class="chart-tab" id="lineTab-income"   onclick="switchLineChart('income',this)">收入</button>
-            <button class="chart-tab" id="lineTab-expense"  onclick="switchLineChart('expense',this)">支出</button>
-            <button class="chart-tab" id="lineTab-fixed"    onclick="switchLineChart('fixed',this)">固定</button>
+            <button class="chart-tab" id="lineTab-income" onclick="switchLineChart('income',this)">收入</button>
+            <button class="chart-tab" id="lineTab-expense" onclick="switchLineChart('expense',this)">支出</button>
+            <button class="chart-tab" id="lineTab-fixed" onclick="switchLineChart('fixed',this)">固定</button>
           </div>
         </div>
       </div>
@@ -1701,7 +1709,7 @@ input::placeholder { color: var(--text-muted); }
           <select class="year-selector" id="yearSelectStats" onchange="renderStats()">
             <option value="2024">2024</option>
             <option value="2025">2025</option>
-            <option value="2026" selected>2026</option>
+            <option value="2026" selected="">2026</option>
             <option value="2027">2027</option>
           </select>
         </div>
@@ -1816,16 +1824,16 @@ input::placeholder { color: var(--text-muted); }
     <!-- Tab 列 -->
     <div style="display:flex;gap:4px;background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;padding:4px;width:fit-content;margin-bottom:20px;">
       <button class="ac-tab active" id="ac-tab-overview" onclick="switchAssetTab('overview')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>總覽
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>總覽
       </button>
       <button class="ac-tab" id="ac-tab-accounts" onclick="switchAssetTab('accounts')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>帳戶明細
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><rect x="1" y="4" width="22" height="16" rx="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>帳戶明細
       </button>
       <button class="ac-tab" id="ac-tab-invest" onclick="switchAssetTab('invest')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>投資組合
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>投資組合
       </button>
       <button class="ac-tab" id="ac-tab-debts" onclick="switchAssetTab('debts')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>債務追蹤
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>債務追蹤
       </button>
     </div>
 
@@ -1875,7 +1883,7 @@ input::placeholder { color: var(--text-muted); }
             <!-- 比例條 -->
             <div style="height:8px;border-radius:4px;background:rgba(255,255,255,0.04);overflow:hidden;display:flex;">
               <div id="acBarAsset" style="height:100%;background:linear-gradient(90deg,#b45309,#f59e0b);transition:width 0.6s;width:0%;"></div>
-              <div id="acBarLiab"  style="height:100%;background:linear-gradient(90deg,#be123c,#ff4d6d);transition:width 0.6s;width:0%;"></div>
+              <div id="acBarLiab" style="height:100%;background:linear-gradient(90deg,#be123c,#ff4d6d);transition:width 0.6s;width:0%;"></div>
             </div>
             <div style="font-size:0.65rem;color:var(--text-muted);" id="acNetRatio">淨值佔比 0%</div>
           </div>
@@ -1909,8 +1917,7 @@ input::placeholder { color: var(--text-muted); }
           <!-- 其他資產手動輸入 -->
           <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
             <label style="font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);">其他資產 (NTD) <span style="text-transform:none;letter-spacing:0;font-weight:400;">不含銀行＋投資</span></label>
-            <input type="number" id="inputAsset" placeholder="房產、現金…" min="0" step="1000"
-              oninput="updateNetAsset();renderAssetCenter();" onblur="saveAssetValues()">
+            <input type="number" id="inputAsset" placeholder="房產、現金…" min="0" step="1000" oninput="updateNetAsset();renderAssetCenter();" onblur="saveAssetValues()">
           </div>
         </div>
       </div>
@@ -1996,9 +2003,7 @@ input::placeholder { color: var(--text-muted); }
           <div class="form-grid" style="margin-bottom:14px;">
             <div>
               <label>台股代號 <span style="color:var(--text-muted);text-transform:none;letter-spacing:0;font-weight:400;">輸入後自動帶名稱</span></label>
-              <input type="text" id="invTicker" placeholder="例：2330、0050、6547" maxlength="6"
-                style="text-transform:uppercase;"
-                onblur="previewTickerQuote(this.value)">
+              <input type="text" id="invTicker" placeholder="例：2330、0050、6547" maxlength="6" style="text-transform:uppercase;" onblur="previewTickerQuote(this.value)">
             </div>
             <div><label>項目名稱 <span style="color:var(--text-muted);text-transform:none;letter-spacing:0;font-weight:400;">自動填入或手動輸入</span></label><input type="text" id="invName" placeholder="代號查詢後自動帶入…"></div>
             <div>
@@ -2052,12 +2057,12 @@ input::placeholder { color: var(--text-muted); }
           <div class="card-header">
             <div class="card-title">投資清單</div>
             <button onclick="fetchAllQuotes()" style="background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);color:var(--accent-purple);border-radius:7px;padding:5px 12px;font-size:0.72rem;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:5px;" id="quoteBtn">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
               更新報價
             </button>
           </div>
           <div id="invList">
-            <div class="empty-state"><div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg></div>尚無投資項目</div>
+            <div class="empty-state"><div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg></div>尚無投資項目</div>
           </div>
         </div>
       </div>
@@ -2135,9 +2140,7 @@ input::placeholder { color: var(--text-muted); }
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
               <div>
                 <label>台股代號</label>
-                <input type="text" id="pledgeTicker" placeholder="例：2330、0056" maxlength="6"
-                  style="text-transform:uppercase;"
-                  onblur="previewPledgeQuote(this.value)">
+                <input type="text" id="pledgeTicker" placeholder="例：2330、0056" maxlength="6" style="text-transform:uppercase;" onblur="previewPledgeQuote(this.value)">
               </div>
               <div><label>股票名稱 <span style="color:var(--text-muted);text-transform:none;letter-spacing:0;font-weight:400;">自動帶入</span></label><input type="text" id="pledgeName" placeholder="查詢後自動帶入…"></div>
               <div>
@@ -2146,13 +2149,11 @@ input::placeholder { color: var(--text-muted); }
               </div>
               <div>
                 <label>即時報價</label>
-                <input type="number" id="pledgePrice" placeholder="查詢後自動帶入" min="0" readonly
-                  style="background:rgba(167,139,250,0.04);color:var(--accent-purple);">
+                <input type="number" id="pledgePrice" placeholder="查詢後自動帶入" min="0" readonly="" style="background:rgba(167,139,250,0.04);color:var(--accent-purple);">
               </div>
               <div class="full">
                 <label>質押市值 (NTD) <span style="color:var(--text-muted);text-transform:none;letter-spacing:0;font-weight:400;">自動計算</span></label>
-                <input type="number" id="pledgeValue" placeholder="0" min="0"
-                  style="background:rgba(167,139,250,0.04);color:var(--accent-purple);" readonly>
+                <input type="number" id="pledgeValue" placeholder="0" min="0" style="background:rgba(167,139,250,0.04);color:var(--accent-purple);" readonly="">
               </div>
               <div><label>借款金額 (NTD)</label><input type="number" id="pledgeLoan" placeholder="0" min="0" oninput="calcPledgeValue()"></div>
               <div id="pledgeMaintPreview" style="display:none;padding:8px 10px;background:rgba(0,229,160,0.06);border:1px solid rgba(0,229,160,0.2);border-radius:7px;align-self:end;">
@@ -2183,30 +2184,30 @@ input::placeholder { color: var(--text-muted); }
             <div style="flex-shrink:0;position:relative;width:110px;height:160px;">
               <svg id="damSvg" viewBox="0 0 110 160" width="110" height="160" style="display:block;">
                 <!-- 水壩外牆 -->
-                <rect x="8" y="10" width="94" height="130" rx="4" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+                <rect x="8" y="10" width="94" height="130" rx="4" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"></rect>
                 <!-- 危險線 -->
-                <line id="damCutLine" x1="8" y1="116" x2="102" y2="116" stroke="rgba(255,77,109,0.5)" stroke-width="1" stroke-dasharray="3,2"/>
+                <line id="damCutLine" x1="8" y1="116" x2="102" y2="116" stroke="rgba(255,77,109,0.5)" stroke-width="1" stroke-dasharray="3,2"></line>
                 <text x="105" y="119" font-size="6" fill="rgba(255,77,109,0.7)" text-anchor="end" font-family="monospace">斷頭</text>
                 <!-- 警戒線 -->
-                <line id="damWarnLine" x1="8" y1="90" x2="102" y2="90" stroke="rgba(245,158,11,0.5)" stroke-width="1" stroke-dasharray="3,2"/>
+                <line id="damWarnLine" x1="8" y1="90" x2="102" y2="90" stroke="rgba(245,158,11,0.5)" stroke-width="1" stroke-dasharray="3,2"></line>
                 <text x="105" y="93" font-size="6" fill="rgba(245,158,11,0.7)" text-anchor="end" font-family="monospace">警戒</text>
                 <!-- 安全線 -->
-                <line x1="8" y1="44" x2="102" y2="44" stroke="rgba(0,229,160,0.3)" stroke-width="1" stroke-dasharray="3,2"/>
+                <line x1="8" y1="44" x2="102" y2="44" stroke="rgba(0,229,160,0.3)" stroke-width="1" stroke-dasharray="3,2"></line>
                 <text x="105" y="47" font-size="6" fill="rgba(0,229,160,0.6)" text-anchor="end" font-family="monospace">安全</text>
                 <!-- 水體（動態） -->
-                <clipPath id="damClip"><rect x="9" y="11" width="92" height="128" rx="3"/></clipPath>
+                <clipPath id="damClip"><rect x="9" y="11" width="92" height="128" rx="3"></rect></clipPath>
                 <g clip-path="url(#damClip)">
-                  <rect id="damWater" x="9" y="139" width="92" height="0" rx="0"/>
+                  <rect id="damWater" x="9" y="139" width="92" height="0" rx="0"></rect>
                   <!-- 波浪 -->
-                  <path id="damWave" d="" fill-opacity="0.25"/>
+                  <path id="damWave" d="" fill-opacity="0.25"></path>
                 </g>
                 <!-- 水位數字 -->
                 <text id="damRateText" x="55" y="82" font-size="20" font-weight="bold" text-anchor="middle" font-family="monospace" fill="white">—</text>
                 <text x="55" y="96" font-size="7" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-family="monospace">維持率</text>
                 <!-- 底部排水口 -->
-                <rect x="46" y="138" width="18" height="5" rx="1" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+                <rect x="46" y="138" width="18" height="5" rx="1" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" stroke-width="1"></rect>
                 <!-- 頂部溢洪口（安全時出現） -->
-                <rect id="damOverflow" x="44" y="9" width="22" height="4" rx="1" fill="rgba(0,229,160,0)" stroke="rgba(0,229,160,0)" stroke-width="1"/>
+                <rect id="damOverflow" x="44" y="9" width="22" height="4" rx="1" fill="rgba(0,229,160,0)" stroke="rgba(0,229,160,0)" stroke-width="1"></rect>
               </svg>
             </div>
             <!-- 右側數據 -->
@@ -2231,6 +2232,42 @@ input::placeholder { color: var(--text-muted); }
               </div>
             </div>
           </div>
+
+          <!-- ── 市值下跌模擬拉桿 ── -->
+          <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <div style="font-size:0.62rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;">📉 市值下跌模擬</div>
+              <button onclick="resetPledgeSimulator()" style="font-size:0.6rem;color:var(--text-muted);background:none;border:1px solid var(--border);border-radius:5px;padding:3px 8px;cursor:pointer;font-family:var(--sans);">重置</button>
+            </div>
+            <!-- 拉桿 -->
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+              <span style="font-size:0.6rem;color:var(--text-muted);white-space:nowrap;">跌幅</span>
+              <input type="range" id="pledgeDropSlider" min="0" max="60" value="0" step="1" style="flex:1;accent-color:#ff4d6d;cursor:pointer;" oninput="updatePledgeSimulator(this.value)">
+              <span style="font-family:var(--mono);font-size:0.85rem;font-weight:700;color:#ff4d6d;min-width:36px;text-align:right;" id="pledgeDropPct">0%</span>
+            </div>
+            <!-- 模擬結果 -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;" id="pledgeSimResult">
+              <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:7px;padding:8px;">
+                <div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:3px;">模擬市值</div>
+                <div style="font-family:var(--mono);font-size:0.82rem;font-weight:600;color:var(--accent-blue);" id="simTotalValue">—</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:7px;padding:8px;">
+                <div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:3px;">模擬維持率</div>
+                <div style="font-family:var(--mono);font-size:0.82rem;font-weight:600;" id="simMaintRate">—</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:7px;padding:8px;">
+                <div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:3px;">距警戒還差</div>
+                <div style="font-family:var(--mono);font-size:0.82rem;font-weight:600;color:#f59e0b;" id="simWarnGap">—</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:7px;padding:8px;">
+                <div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:3px;">距斷頭還差</div>
+                <div style="font-family:var(--mono);font-size:0.82rem;font-weight:600;color:#ff4d6d;" id="simCutGap">—</div>
+              </div>
+            </div>
+            <!-- 狀態提示 -->
+            <div id="simStatusMsg" style="margin-top:8px;padding:7px 10px;border-radius:7px;font-size:0.68rem;display:none;"></div>
+          </div>
+
         </div>
       </div>
 
@@ -2290,7 +2327,7 @@ input::placeholder { color: var(--text-muted); }
             <button class="filter-btn" onclick="setLiabFilter('其他貸款',this)">📌 其他</button>
           </div>
           <div id="liabList">
-            <div class="empty-state"><div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg></div>尚無負債項目<br>請使用左側表單新增</div>
+            <div class="empty-state"><div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path><line x1="12" y1="12" x2="12" y2="16"></line><line x1="10" y1="14" x2="14" y2="14"></line></svg></div>尚無負債項目<br>請使用左側表單新增</div>
           </div>
         </div>
       </div>
@@ -2314,7 +2351,7 @@ input::placeholder { color: var(--text-muted); }
           <span style="font-family:var(--mono);font-size:0.9rem;font-weight:500;color:var(--accent-amber);" id="recurHeaderYearly">$0</span>
         </div>
         <button class="btn btn-primary" onclick="openFixedQuickModal()" style="background:var(--accent-purple);gap:6px;font-size:0.82rem;padding:8px 16px;white-space:nowrap;">
-          <svg style="display:inline-block;vertical-align:-3px;margin-right:4px;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> 快速新增
+          <svg style="display:inline-block;vertical-align:-3px;margin-right:4px;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> 快速新增
         </button>
       </div>
     </div>
@@ -2352,7 +2389,7 @@ input::placeholder { color: var(--text-muted); }
         <div class="card">
           <div class="card-header">
             <div class="card-title">新增常態支出</div>
-            <button onclick="openFixedQuickModal()" style="background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);color:var(--accent-purple);border-radius:7px;padding:4px 10px;font-size:0.72rem;cursor:pointer;font-family:var(--sans);transition:all 0.15s;" onmouseover="this.style.background='rgba(167,139,250,0.22)'" onmouseout="this.style.background='rgba(167,139,250,0.12)'"><svg style="display:inline-block;vertical-align:-3px;margin-right:4px;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> 快速</button>
+            <button onclick="openFixedQuickModal()" style="background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);color:var(--accent-purple);border-radius:7px;padding:4px 10px;font-size:0.72rem;cursor:pointer;font-family:var(--sans);transition:all 0.15s;" onmouseover="this.style.background='rgba(167,139,250,0.22)'" onmouseout="this.style.background='rgba(167,139,250,0.12)'"><svg style="display:inline-block;vertical-align:-3px;margin-right:4px;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> 快速</button>
           </div>
           <div style="display:flex;flex-direction:column;gap:10px;">
             <div><label>名稱</label><input type="text" id="recurName" placeholder="例：孝親費、手機費…"></div>
@@ -2398,7 +2435,7 @@ input::placeholder { color: var(--text-muted); }
         <div class="card">
           <div class="card-header">
             <div class="card-title">新增短期分期</div>
-            <button onclick="openInstModal()" style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);color:var(--accent-blue);border-radius:7px;padding:4px 10px;font-size:0.72rem;cursor:pointer;font-family:var(--sans);transition:all 0.15s;" onmouseover="this.style.background='rgba(59,130,246,0.2)'" onmouseout="this.style.background='rgba(59,130,246,0.1)'"><svg style="display:inline-block;vertical-align:-3px;margin-right:4px;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> 快速</button>
+            <button onclick="openInstModal()" style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);color:var(--accent-blue);border-radius:7px;padding:4px 10px;font-size:0.72rem;cursor:pointer;font-family:var(--sans);transition:all 0.15s;" onmouseover="this.style.background='rgba(59,130,246,0.2)'" onmouseout="this.style.background='rgba(59,130,246,0.1)'"><svg style="display:inline-block;vertical-align:-3px;margin-right:4px;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> 快速</button>
           </div>
           <div style="display:flex;flex-direction:column;gap:10px;">
             <div><label>名稱</label><input type="text" id="instName" placeholder="例：iPhone 24期、家電分期…"></div>
@@ -2471,7 +2508,7 @@ input::placeholder { color: var(--text-muted); }
             <button class="filter-btn" onclick="setRecurFilter('其他',this)">其他</button>
           </div>
           <div id="recurList">
-            <div class="empty-state"><div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></div>尚無常態支出項目</div>
+            <div class="empty-state"><div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg></div>尚無常態支出項目</div>
           </div>
         </div>
 
@@ -2482,7 +2519,7 @@ input::placeholder { color: var(--text-muted); }
             <div style="font-family:var(--mono);font-size:0.72rem;color:var(--text-muted);" id="instListCount">0 項</div>
           </div>
           <div id="instList">
-            <div class="empty-state"><div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>尚無分期項目</div>
+            <div class="empty-state"><div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg></div>尚無分期項目</div>
           </div>
         </div>
 
@@ -2498,7 +2535,7 @@ input::placeholder { color: var(--text-muted); }
         <h1 class="page-title">情報瀏覽</h1>
       </div>
       <button onclick="refreshAllIntel()" style="display:flex;align-items:center;gap:6px;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.3);color:var(--accent-blue);border-radius:8px;padding:8px 14px;font-size:0.78rem;cursor:pointer;font-family:var(--sans);">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
         更新報價
       </button>
     </div>
@@ -2508,7 +2545,7 @@ input::placeholder { color: var(--text-muted); }
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
       <div style="font-size:0.65rem;color:var(--text-muted);letter-spacing:0.12em;text-transform:uppercase;">市場分析儀表板</div>
       <button onclick="loadAllDashboard(true)" style="font-size:0.65rem;color:var(--text-muted);background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:4px;">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>全部更新
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>全部更新
       </button>
     </div>
 
@@ -2788,7 +2825,7 @@ input::placeholder { color: var(--text-muted); }
     <div id="intelGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;"></div>
 
     <button onclick="openIntelAddModal()" style="width:100%;padding:14px;border:2px dashed rgba(59,130,246,0.3);border-radius:12px;background:rgba(59,130,246,0.04);color:var(--text-muted);font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;font-family:var(--sans);" onmouseover="this.style.borderColor='rgba(59,130,246,0.6)';this.style.color='var(--accent-blue)'" onmouseout="this.style.borderColor='rgba(59,130,246,0.3)';this.style.color='var(--text-muted)'">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
       新增情報格
     </button>
   </section>  <!-- ══ 策略追蹤頁 ══ -->
@@ -2848,6 +2885,7 @@ input::placeholder { color: var(--text-muted); }
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><div style="width:6px;height:6px;border-radius:50%;background:var(--accent-amber);flex-shrink:0;"></div><span style="font-size:0.65rem;font-weight:600;color:var(--accent-amber);">第二階段</span></div>
       <div class="s-param-grid">
         <div class="s-param-item"><label>贖回基金金額</label><div class="s-input-wrap"><input type="number" id="st_redeem_amt" value="1000000" step="50000" oninput="runStrategy()"><span>元</span></div></div>
+        <div class="s-param-item"><label>超額還款每月 <span style="font-size:0.5rem;color:var(--text-muted);">閒錢直接打本金</span></label><div class="s-input-wrap"><input type="number" id="st_extra_cash_p2" value="0" step="1000" min="0" oninput="runStrategy()"><span>元</span></div></div>
       </div>
       <div style="height:1px;background:var(--border);margin:12px 0;"></div>
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><div style="width:6px;height:6px;border-radius:50%;background:#06b6d4;flex-shrink:0;"></div><span style="font-size:0.65rem;font-weight:600;color:#06b6d4;">第三階段</span></div>
@@ -2925,31 +2963,31 @@ input::placeholder { color: var(--text-muted); }
 
 
 <nav class="mobile-nav" id="mobileNav">
-  <div class="mobile-nav-item active" id="mn-home"       onclick="goPage('home',       null, 'mn-home')">
-    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/><path d="M5 10v11h14V10"/></svg></span><span>總覽</span>
+  <div class="mobile-nav-item active" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
+    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span><span>總覽</span>
   </div>
-  <div class="mobile-nav-item"        id="mn-ledger"     onclick="goPage('ledger',     null, 'mn-ledger')">
-    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></span><span>帳務</span>
+  <div class="mobile-nav-item" id="mn-ledger" onclick="goPage('ledger',     null, 'mn-ledger')">
+    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg></span><span>帳務</span>
   </div>
-  <div class="mobile-nav-item"        id="mn-stats"      onclick="goPage('stats',      null, 'mn-stats')">
-    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span><span>統計</span>
+  <div class="mobile-nav-item" id="mn-stats" onclick="goPage('stats',      null, 'mn-stats')">
+    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></span><span>統計</span>
   </div>
-  <div class="mobile-nav-item"        id="mn-assets"     onclick="goPage('assets',     null, 'mn-assets')">
-    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg></span><span>資產</span>
+  <div class="mobile-nav-item" id="mn-assets" onclick="goPage('assets',     null, 'mn-assets')">
+    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path><line x1="12" y1="12" x2="12" y2="16"></line><line x1="10" y1="14" x2="14" y2="14"></line></svg></span><span>資產</span>
   </div>
-  <div class="mobile-nav-item"        id="mn-recurring"  onclick="goPage('recurring',  null, 'mn-recurring')">
-    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span><span>固定</span>
+  <div class="mobile-nav-item" id="mn-recurring" onclick="goPage('recurring',  null, 'mn-recurring')">
+    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg></span><span>固定</span>
   </div>
-  <div class="mobile-nav-item"        id="mn-intel"      onclick="goPage('intel',      null, 'mn-intel')">
-    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span>情報</span>
+  <div class="mobile-nav-item" id="mn-intel" onclick="goPage('intel',      null, 'mn-intel')">
+    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span><span>情報</span>
   </div>
-  <div class="mobile-nav-item"        id="mn-strategy"   onclick="goPage('strategy',   null, 'mn-strategy')">
-    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span><span>策略</span>
+  <div class="mobile-nav-item" id="mn-strategy" onclick="goPage('strategy',   null, 'mn-strategy')">
+    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span><span>策略</span>
   </div>
 </nav>
 
 <!-- TOAST -->
-<div class="toast" id="toast"></div>
+<div class="toast show" id="toast" style="border-color: var(--accent-green); color: var(--accent-green);">⏫ 正在推送到 GitHub...</div>
 
 <!-- 情報陳列室 Modal -->
 <div id="intelDetailModal" style="display:none;position:fixed;inset:0;z-index:6000;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px 0;" onclick="if(event.target===this)closeIntelDetail()">
@@ -3016,18 +3054,18 @@ input::placeholder { color: var(--text-muted); }
     <!-- 類別格子 -->
     <div style="font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">選擇類別</div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px;" id="fqCatGrid">
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'保險','保險')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span>保險</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'電話費','電話')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span><span>電話費</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'網路費','網路')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span>網路費</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'孝親費','孝親')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span><span>孝親費</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'投資','其他')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span><span>投資</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'水電費','水電')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span><span>水電費</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'房租','房租')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/><path d="M5 10v11h14V10"/></svg></span><span>房租</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'訂閱','訂閱')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg></span><span>訂閱</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'瓦斯費','瓦斯')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></span><span>瓦斯費</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'交通月票','交通')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span><span>交通</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'健身房','健身')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M6 8H5a4 4 0 0 0 0 8h1"/><line x1="6" y1="12" x2="18" y2="12"/></svg></span><span>健身</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'其他','其他')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span><span>其他</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'保險','保險')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></span><span>保險</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'電話費','電話')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg></span><span>電話費</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'網路費','網路')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span><span>網路費</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'孝親費','孝親')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></span><span>孝親費</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'投資','其他')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span><span>投資</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'水電費','水電')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></span><span>水電費</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'房租','房租')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span><span>房租</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'訂閱','訂閱')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2"></rect><polyline points="17 2 12 7 7 2"></polyline></svg></span><span>訂閱</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'瓦斯費','瓦斯')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg></span><span>瓦斯費</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'交通月票','交通')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg></span><span>交通</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'健身房','健身')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M6 8H5a4 4 0 0 0 0 8h1"></path><line x1="6" y1="12" x2="18" y2="12"></line></svg></span><span>健身</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'其他','其他')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg></span><span>其他</span></button>
     </div>
 
     <div style="height:1px;background:var(--border);margin-bottom:18px;"></div>
@@ -3101,14 +3139,14 @@ input::placeholder { color: var(--text-muted); }
     <div style="margin-bottom:18px;">
       <div style="font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">選擇分期類別</div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;" id="iqCatGrid">
-        <button class="iq-cat-btn" data-cat="房貸" onclick="selectIQCat(this,'房貸')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/><path d="M5 10v11h14V10"/></svg></span><span>房貸</span></button>
-        <button class="iq-cat-btn" data-cat="信貸" onclick="selectIQCat(this,'信貸')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></span><span>信貸</span></button>
-        <button class="iq-cat-btn" data-cat="信用卡分期" onclick="selectIQCat(this,'信用卡分期')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span><span>信用卡分期</span></button>
-        <button class="iq-cat-btn" data-cat="保險" onclick="selectIQCat(this,'保險')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span>保險</span></button>
-        <button class="iq-cat-btn" data-cat="電話費" onclick="selectIQCat(this,'電話費')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span><span>電話費</span></button>
-        <button class="iq-cat-btn" data-cat="網路費" onclick="selectIQCat(this,'網路費')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span>網路費</span></button>
-        <button class="iq-cat-btn" data-cat="孝親費" onclick="selectIQCat(this,'孝親費')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span><span>孝親費</span></button>
-        <button class="iq-cat-btn" data-cat="投資" onclick="selectIQCat(this,'投資')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span><span>投資</span></button>
+        <button class="iq-cat-btn" data-cat="房貸" onclick="selectIQCat(this,'房貸')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span><span>房貸</span></button>
+        <button class="iq-cat-btn" data-cat="信貸" onclick="selectIQCat(this,'信貸')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path></svg></span><span>信貸</span></button>
+        <button class="iq-cat-btn" data-cat="信用卡分期" onclick="selectIQCat(this,'信用卡分期')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg></span><span>信用卡分期</span></button>
+        <button class="iq-cat-btn" data-cat="保險" onclick="selectIQCat(this,'保險')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></span><span>保險</span></button>
+        <button class="iq-cat-btn" data-cat="電話費" onclick="selectIQCat(this,'電話費')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg></span><span>電話費</span></button>
+        <button class="iq-cat-btn" data-cat="網路費" onclick="selectIQCat(this,'網路費')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span><span>網路費</span></button>
+        <button class="iq-cat-btn" data-cat="孝親費" onclick="selectIQCat(this,'孝親費')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></span><span>孝親費</span></button>
+        <button class="iq-cat-btn" data-cat="投資" onclick="selectIQCat(this,'投資')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span><span>投資</span></button>
       </div>
     </div>
 
@@ -3683,7 +3721,7 @@ function goPage(name, navEl, mobileNavId) {
     if (activeBtn) activeBtn.classList.add('ir-active');
   }
   if (name === 'strategy') {
-    setTimeout(function(){ runStrategy(); }, 50);
+    setTimeout(function(){ stLoadSettings(); runStrategy(); }, 50);
   }
 }
 
@@ -6126,6 +6164,110 @@ async function deletePledge(id) {
   await renderLiabList();
 }
 
+// ─── 整體市值下跌模擬器 ──────────────────────
+function updatePledgeSimulator(dropPct) {
+  const pct = parseInt(dropPct) || 0;
+  document.getElementById('pledgeDropPct').textContent = pct + '%';
+
+  // 取得目前整體數值
+  const valText  = document.getElementById('pledgeTotalValue')?.textContent || '$0';
+  const loanText = document.getElementById('pledgeTotalLoan')?.textContent  || '$0';
+  const totalValue = parseInt(valText.replace(/[^\d]/g, '')) || 0;
+  const totalLoan  = parseInt(loanText.replace(/[^\d]/g, '')) || 0;
+
+  if (totalLoan === 0) {
+    ['simTotalValue','simMaintRate','simWarnGap','simCutGap'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = '尚無借款';
+    });
+    return;
+  }
+
+  // 取得各質押的警戒/斷頭設定（取平均值作為整體標準）
+  const warnRateInputs = document.querySelectorAll('[id^="pledgeWarnRate"]');
+  const cutRateInputs  = document.querySelectorAll('[id^="pledgeCutRate"]');
+  // 從渲染出來的卡片裡抓，如果沒有就用預設值 130/120
+  const warnRate = 130;
+  const cutRate  = 120;
+
+  // 計算模擬市值
+  const simValue = Math.round(totalValue * (1 - pct / 100));
+  const simRate  = totalLoan > 0 ? Math.round((simValue / totalLoan) * 100) : 0;
+
+  // 距離警戒/斷頭所需市值
+  const warnNeedValue = Math.round(totalLoan * warnRate / 100);
+  const cutNeedValue  = Math.round(totalLoan * cutRate  / 100);
+  const warnGap = simValue - warnNeedValue;
+  const cutGap  = simValue - cutNeedValue;
+
+  // 更新 UI
+  const simValEl  = document.getElementById('simTotalValue');
+  const simRateEl = document.getElementById('simMaintRate');
+  const warnEl    = document.getElementById('simWarnGap');
+  const cutEl     = document.getElementById('simCutGap');
+  const msgEl     = document.getElementById('simStatusMsg');
+
+  if (simValEl) simValEl.textContent = '$' + simValue.toLocaleString('zh-TW');
+
+  if (simRateEl) {
+    simRateEl.textContent = simRate + '%';
+    simRateEl.style.color = simRate >= 150 ? '#00e5a0' : simRate >= 130 ? '#f59e0b' : '#ff4d6d';
+  }
+
+  if (warnEl) {
+    warnEl.textContent = (warnGap >= 0 ? '+$' : '-$') + Math.abs(warnGap).toLocaleString('zh-TW');
+    warnEl.style.color = warnGap >= 0 ? '#f59e0b' : '#ff4d6d';
+  }
+
+  if (cutEl) {
+    cutEl.textContent = (cutGap >= 0 ? '+$' : '-$') + Math.abs(cutGap).toLocaleString('zh-TW');
+    cutEl.style.color = cutGap >= 0 ? '#00e5a0' : '#ff4d6d';
+  }
+
+  // 狀態訊息
+  if (msgEl) {
+    if (pct === 0) {
+      msgEl.style.display = 'none';
+    } else if (simRate < cutRate) {
+      msgEl.style.display = 'block';
+      msgEl.style.background = 'rgba(255,77,109,0.1)';
+      msgEl.style.border = '1px solid rgba(255,77,109,0.3)';
+      msgEl.style.color = '#ff4d6d';
+      msgEl.textContent = `🚨 跌幅 ${pct}% → 維持率 ${simRate}%，已低於斷頭線 ${cutRate}%，須補繳或減碼！`;
+    } else if (simRate < warnRate) {
+      msgEl.style.display = 'block';
+      msgEl.style.background = 'rgba(245,158,11,0.1)';
+      msgEl.style.border = '1px solid rgba(245,158,11,0.3)';
+      msgEl.style.color = '#f59e0b';
+      msgEl.textContent = `⚠️ 跌幅 ${pct}% → 維持率 ${simRate}%，已進入警戒區間，建議提前因應`;
+    } else {
+      msgEl.style.display = 'block';
+      msgEl.style.background = 'rgba(0,229,160,0.07)';
+      msgEl.style.border = '1px solid rgba(0,229,160,0.2)';
+      msgEl.style.color = '#00e5a0';
+      msgEl.textContent = `✅ 跌幅 ${pct}% → 維持率 ${simRate}%，仍在安全範圍`;
+    }
+  }
+
+  // 同步更新水壩 SVG 顯示模擬水位
+  if (pct > 0) drawDamWater(simRate);
+}
+
+function resetPledgeSimulator() {
+  const slider = document.getElementById('pledgeDropSlider');
+  if (slider) { slider.value = 0; updatePledgeSimulator(0); }
+  // 恢復原本維持率水壩
+  const valText  = document.getElementById('pledgeTotalValue')?.textContent || '$0';
+  const loanText = document.getElementById('pledgeTotalLoan')?.textContent  || '$0';
+  const totalValue = parseInt(valText.replace(/[^\d]/g, '')) || 0;
+  const totalLoan  = parseInt(loanText.replace(/[^\d]/g, '')) || 0;
+  if (totalLoan > 0) drawDamWater(Math.round((totalValue / totalLoan) * 100));
+  ['simTotalValue','simMaintRate','simWarnGap','simCutGap'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '—';
+  });
+}
+
 function calcPledgeSim(id, basePrice, lots, loan, warnRate, cutRate) {
   const slider  = document.getElementById('simSlider_'+ id);
   const dropEl  = document.getElementById('simDrop_'  + id);
@@ -7963,6 +8105,12 @@ async function appInit() {
 // ═══════════════════════════════════════════════════════
 var stRows=[];var stShowAll=false;var stCurMonth=0;
 function stV(id){var el=document.getElementById(id);return el?(parseFloat(el.value)||0):0;}
+
+// ── 策略設定 自動儲存 / 載入 ──────────────────────────────────
+var ST_SAVE_KEY='fd2026_strategy_settings';
+var ST_INPUT_IDS=['st_loan_amt','st_loan_rate','st_loan_years','st_fund_amt','st_fund_rate','st_etf_amt','st_etf_rate','st_pledge_rate','st_pledge_cap','st_extra_pledge','st_extra_cash','st_extra_cash_p2','st_redeem_amt','st_p3_monthly','st_start_date'];
+function stSaveSettings(){var data={};ST_INPUT_IDS.forEach(function(id){var el=document.getElementById(id);if(el)data[id]=el.value;});try{localStorage.setItem(ST_SAVE_KEY,JSON.stringify(data));}catch(e){}}
+function stLoadSettings(){try{var raw=localStorage.getItem(ST_SAVE_KEY);if(!raw)return false;var data=JSON.parse(raw);ST_INPUT_IDS.forEach(function(id){var el=document.getElementById(id);if(el&&data[id]!==undefined)el.value=data[id];});return true;}catch(e){return false;}}
 function stCalcPMT(P,r,n){if(n<=0||P<=0)return 0;var mo=r/100/12;if(mo<1e-9)return P/n;return P*mo*Math.pow(1+mo,n)/(Math.pow(1+mo,n)-1);}
 function stFmtD(v){if(!v&&v!==0)return'—';return'$'+Math.round(v).toLocaleString();}
 function stFmtM(v){if(v===null||v===undefined||isNaN(v))return'—';var a=Math.abs(v),s=v<0?'-':'';if(a>=1e8)return s+(a/1e8).toFixed(2)+'億';if(a>=1e4)return s+(a/1e4).toFixed(1)+'萬';return s+Math.round(a).toLocaleString();}
@@ -7976,9 +8124,10 @@ function stResetToNow(){var sl=document.getElementById('st_timeline');if(sl){sl.
 function stOnTimeline(val){stCurMonth=parseInt(val);updateStDashboard();}
 function runStrategy(){
   stInitDate();
+  stSaveSettings();
   var loanAmt=stV('st_loan_amt'),loanRate=stV('st_loan_rate'),loanYears=stV('st_loan_years');
   var fundAmt=stV('st_fund_amt'),fundRate=stV('st_fund_rate'),etfAmt=stV('st_etf_amt'),etfRate=stV('st_etf_rate');
-  var pledgeRate=stV('st_pledge_rate'),pledgeCap=stV('st_pledge_cap'),extraPledge=stV('st_extra_pledge'),redeemAmt=stV('st_redeem_amt'),extraCash=stV('st_extra_cash');
+  var pledgeRate=stV('st_pledge_rate'),pledgeCap=stV('st_pledge_cap'),extraPledge=stV('st_extra_pledge'),redeemAmt=stV('st_redeem_amt'),extraCash=stV('st_extra_cash'),extraCashP2=stV('st_extra_cash_p2');
   var totalMonths=loanYears*12,lrMo=loanRate/100/12,prMo=pledgeRate/100/12;
   var initPMT=stCalcPMT(loanAmt,loanRate,totalMonths);
   stEl('st_pmt_display',stFmtD(initPMT));
@@ -7992,7 +8141,7 @@ function runStrategy(){
     var fundDiv=fundBal*(fundRate/100)/12,etfDiv=etfAmt*(etfRate/100)/12;
     var curExtraPledge = phase===1 ? extraPledge : 0;
     var divPool = phase===1 ? (fundDiv+etfDiv) : etfDiv;
-    var cashPool = phase===1 ? extraCash : 0;
+    var cashPool = phase===1 ? extraCash : extraCashP2;
     var pledgeInt = pledgeBal * prMo;
     var pmt=0, totalCost=0, fundPayoff=0;
 
@@ -8013,8 +8162,8 @@ function runStrategy(){
       totalCost = pmt;
       if(pledgeBal>=pledgeCap-1){pledgeBal=pledgeCap;fundPayoff=Math.min(redeemAmt,Math.min(fundBal,loanBal));loanBal=Math.max(0,loanBal-fundPayoff);fundBal=Math.max(0,fundBal-redeemAmt);phase=2;phase2Month=m;}
     }else{
-      // Step1: 0050配息直接打信貸本金
-      loanBal = Math.max(0, loanBal - divPool);
+      // Step1: 0050配息＋超額還款直接打信貸本金
+      loanBal = Math.max(0, loanBal - divPool - cashPool);
       // Step2: PMT 從質押借出還信貸本利
       if(loanBal>1&&remN>0){
         pmt = stCalcPMT(loanBal,loanRate,remN);
@@ -8110,5 +8259,6 @@ function stSyncP3Rate(v){
 }
 
 </script>
-</body>
-</html>
+
+
+<div style="position: fixed; pointer-events: none; padding: 8px 12px; background: rgb(30, 35, 53); border: 1px solid rgb(46, 53, 80); border-radius: 8px; font-size: 0.75rem; color: rgb(232, 236, 245); display: none; z-index: 999; line-height: 1.8; font-family: &quot;DM Mono&quot;, monospace; box-shadow: rgba(0, 0, 0, 0.5) 0px 8px 24px;"></div></body></html>
