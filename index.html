@@ -1285,7 +1285,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText" style="color: var(--accent-amber);">載入中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-17 05:35:46</div>
+    <div class="clock-display" id="clockDisplay">2026-03-17 05:43:28</div>
   </div>
 </aside>
 
@@ -1368,41 +1368,43 @@ input::placeholder { color: var(--text-muted); }
           <div class="card-title">當月現金流</div>
           <div class="home-block-arrow" style="font-size:0.68rem;">現金流詳情 →</div>
         </div>
-        <div style="display:flex;gap:18px;align-items:center;">
-          <!-- 圓餅圖 -->
-          <div style="position:relative;width:110px;height:110px;flex-shrink:0;">
-            <canvas id="homeCFDonut" width="110" height="110"></canvas>
-            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
-              <div style="font-size:0.5rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;">可用</div>
-              <div style="font-family:var(--mono);font-size:0.88rem;font-weight:500;color:var(--accent-green);" id="h-cfPct">—%</div>
+        <div style="display:flex;gap:14px;align-items:center;">
+          <!-- 水位圖（單柱）-->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;">
+            <div style="font-family:var(--mono);font-size:0.72rem;font-weight:700;" id="h-cfPct">—%</div>
+            <div style="position:relative;width:52px;height:90px;border-radius:26px;border:2px solid rgba(0,229,160,0.4);overflow:hidden;background:rgba(0,229,160,0.05);">
+              <div id="h-wFill" style="position:absolute;bottom:0;left:0;right:0;height:0%;border-radius:0 0 24px 24px;transition:height 1.4s cubic-bezier(0.4,0,0.2,1);">
+                <div style="position:absolute;top:0;left:0;right:0;height:7px;background:rgba(255,255,255,0.22);border-radius:4px 4px 0 0;animation:wave 2s ease-in-out infinite;"></div>
+              </div>
             </div>
+            <div style="font-size:0.5rem;color:var(--text-muted);">可用率</div>
           </div>
           <!-- 右側數字明細 -->
-          <div style="flex:1;display:flex;flex-direction:column;gap:10px;">
+          <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
             <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div style="display:flex;align-items:center;gap:7px;font-size:0.78rem;color:var(--text-secondary);">
-                <span style="width:10px;height:10px;border-radius:2px;background:var(--accent-green);display:inline-block;flex-shrink:0;"></span>可用現金
+              <div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-secondary);">
+                <span style="width:8px;height:8px;border-radius:2px;background:var(--accent-green);display:inline-block;flex-shrink:0;"></span>可用現金
               </div>
-              <div style="font-family:var(--mono);font-size:0.88rem;" id="h-cfFree">$0</div>
+              <div style="font-family:var(--mono);font-size:0.82rem;" id="h-cfFree">$0</div>
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div style="display:flex;align-items:center;gap:7px;font-size:0.78rem;color:var(--text-secondary);">
-                <span style="width:10px;height:10px;border-radius:2px;background:var(--accent-green);opacity:0.5;display:inline-block;flex-shrink:0;"></span>當月收入
+              <div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-secondary);">
+                <span style="width:8px;height:8px;border-radius:2px;background:var(--accent-green);opacity:0.5;display:inline-block;flex-shrink:0;"></span>當月收入
               </div>
-              <div style="font-family:var(--mono);font-size:0.78rem;color:var(--accent-green);" id="h-totalIncome">$0</div>
+              <div style="font-family:var(--mono);font-size:0.75rem;color:var(--accent-green);" id="h-totalIncome">$0</div>
             </div>
             <div style="height:1px;background:var(--border);"></div>
             <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div style="display:flex;align-items:center;gap:7px;font-size:0.78rem;color:var(--text-secondary);">
-                <span style="width:10px;height:10px;border-radius:2px;background:var(--accent-purple);display:inline-block;flex-shrink:0;"></span>固定支出
+              <div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-secondary);">
+                <span style="width:8px;height:8px;border-radius:2px;background:var(--accent-purple);display:inline-block;flex-shrink:0;"></span>固定支出
               </div>
-              <div style="font-family:var(--mono);font-size:0.78rem;color:var(--accent-purple);" id="h-cfFixed">$0</div>
+              <div style="font-family:var(--mono);font-size:0.75rem;color:var(--accent-purple);" id="h-cfFixed">$0</div>
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div style="display:flex;align-items:center;gap:7px;font-size:0.78rem;color:var(--text-secondary);">
-                <span style="width:10px;height:10px;border-radius:2px;background:var(--accent-red);display:inline-block;flex-shrink:0;"></span>一般支出
+              <div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-secondary);">
+                <span style="width:8px;height:8px;border-radius:2px;background:var(--accent-red);display:inline-block;flex-shrink:0;"></span>一般支出
               </div>
-              <div style="font-family:var(--mono);font-size:0.78rem;color:var(--accent-red);" id="h-totalExpense">$0</div>
+              <div style="font-family:var(--mono);font-size:0.75rem;color:var(--accent-red);" id="h-totalExpense">$0</div>
             </div>
           </div>
         </div>
@@ -1428,23 +1430,8 @@ input::placeholder { color: var(--text-muted); }
             </div>
           </div>
         </div>
-        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">總資產</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#f59e0b;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#ff4d6d;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">總負債</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#ff4d6d;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#00e5a0;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">淨資產</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#00e5a0;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div></div>
-        <canvas id="wealthChart" style="width:100%;display:block;" height="220" width="346"></canvas>
+        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"></div>
+        <canvas id="wealthChart" style="width:100%;display:block;" height="220"></canvas>
         <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;" id="wealthXLabels"></div>
       </div>
 
@@ -1758,49 +1745,21 @@ input::placeholder { color: var(--text-muted); }
         <div style="font-family:var(--mono);font-size:2.2rem;font-weight:500;" id="cf-freeCash">$0</div>
         <div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;" id="cf-formula">收入 $0 − 固定支出 $0 − 一般支出 $0</div>
       </div>
-      <!-- 水位圖 -->
-      <div style="display:flex;align-items:center;gap:14px;">
-        <div id="cf-water-wrap" style="display:flex;gap:10px;align-items:flex-end;">
-          <!-- 三個水位柱 -->
-          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
-            <div style="font-family:var(--mono);font-size:0.62rem;font-weight:600;color:var(--accent-green);" id="cf-wPct">—%</div>
-            <div style="position:relative;width:44px;height:80px;border-radius:22px;border:2px solid rgba(0,229,160,0.4);overflow:hidden;background:rgba(0,229,160,0.06);">
-              <div id="cf-wFill" style="position:absolute;bottom:0;left:0;right:0;height:0%;background:linear-gradient(180deg,rgba(0,229,160,0.9),rgba(0,229,160,0.5));border-radius:0 0 20px 20px;transition:height 1.2s cubic-bezier(0.4,0,0.2,1);">
-                <div style="position:absolute;top:0;left:0;right:0;height:6px;background:rgba(255,255,255,0.25);border-radius:4px 4px 0 0;animation:wave 2s ease-in-out infinite;"></div>
-              </div>
+      <!-- 水位圖（單柱）-->
+      <div style="display:flex;gap:18px;align-items:center;">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;">
+          <div style="font-family:var(--mono);font-size:0.75rem;font-weight:700;" id="cf-wPct">—%</div>
+          <div style="position:relative;width:56px;height:100px;border-radius:28px;border:2px solid rgba(0,229,160,0.4);overflow:hidden;background:rgba(0,229,160,0.05);">
+            <div id="cf-wFill" style="position:absolute;bottom:0;left:0;right:0;height:0%;border-radius:0 0 26px 26px;transition:height 1.4s cubic-bezier(0.4,0,0.2,1);">
+              <div style="position:absolute;top:0;left:0;right:0;height:7px;background:rgba(255,255,255,0.22);border-radius:4px 4px 0 0;animation:wave 2s ease-in-out infinite;"></div>
             </div>
-            <div style="font-size:0.52rem;color:var(--accent-green);letter-spacing:0.06em;">可用</div>
           </div>
-          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
-            <div style="font-family:var(--mono);font-size:0.62rem;font-weight:600;color:var(--accent-purple);" id="cf-wFixPct">—%</div>
-            <div style="position:relative;width:44px;height:80px;border-radius:22px;border:2px solid rgba(167,139,250,0.4);overflow:hidden;background:rgba(167,139,250,0.06);">
-              <div id="cf-wFixFill" style="position:absolute;bottom:0;left:0;right:0;height:0%;background:linear-gradient(180deg,rgba(167,139,250,0.6),rgba(167,139,250,0.9));border-radius:0 0 20px 20px;transition:height 1.2s cubic-bezier(0.4,0,0.2,1) 0.15s;">
-                <div style="position:absolute;top:0;left:0;right:0;height:6px;background:rgba(255,255,255,0.15);border-radius:4px 4px 0 0;animation:wave 2.4s ease-in-out infinite;"></div>
-              </div>
-              <!-- 漏水粒子 -->
-              <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:3px;height:100%;pointer-events:none;overflow:hidden;">
-                <div style="position:absolute;top:-4px;left:0;width:3px;height:3px;border-radius:50%;background:rgba(167,139,250,0.7);animation:drip 1.8s ease-in infinite 0.3s;"></div>
-              </div>
-            </div>
-            <div style="font-size:0.52rem;color:var(--accent-purple);letter-spacing:0.06em;">固定</div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
-            <div style="font-family:var(--mono);font-size:0.62rem;font-weight:600;color:var(--accent-red);" id="cf-wExPct">—%</div>
-            <div style="position:relative;width:44px;height:80px;border-radius:22px;border:2px solid rgba(255,77,109,0.4);overflow:hidden;background:rgba(255,77,109,0.06);">
-              <div id="cf-wExFill" style="position:absolute;bottom:0;left:0;right:0;height:0%;background:linear-gradient(180deg,rgba(255,77,109,0.6),rgba(255,77,109,0.9));border-radius:0 0 20px 20px;transition:height 1.2s cubic-bezier(0.4,0,0.2,1) 0.3s;">
-                <div style="position:absolute;top:0;left:0;right:0;height:6px;background:rgba(255,255,255,0.15);border-radius:4px 4px 0 0;animation:wave 1.8s ease-in-out infinite;"></div>
-              </div>
-              <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:3px;height:100%;pointer-events:none;overflow:hidden;">
-                <div style="position:absolute;top:-4px;left:0;width:3px;height:3px;border-radius:50%;background:rgba(255,77,109,0.7);animation:drip 1.4s ease-in infinite;"></div>
-              </div>
-            </div>
-            <div style="font-size:0.52rem;color:var(--accent-red);letter-spacing:0.06em;">支出</div>
-          </div>
+          <div style="font-size:0.52rem;color:var(--text-muted);">可用率</div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:6px;font-size:0.72rem;">
-          <div style="display:flex;align-items:center;gap:7px;"><span style="width:8px;height:8px;border-radius:2px;background:var(--accent-green);display:inline-block;flex-shrink:0;"></span><span style="color:var(--text-secondary);">可用現金</span><span style="font-family:var(--mono);color:var(--accent-green);margin-left:auto;" id="cf-wIncome">$0</span></div>
-          <div style="display:flex;align-items:center;gap:7px;"><span style="width:8px;height:8px;border-radius:2px;background:var(--accent-purple);display:inline-block;flex-shrink:0;"></span><span style="color:var(--text-secondary);">固定支出</span><span style="font-family:var(--mono);color:var(--accent-purple);margin-left:auto;" id="cf-wFixed">$0</span></div>
-          <div style="display:flex;align-items:center;gap:7px;"><span style="width:8px;height:8px;border-radius:2px;background:var(--accent-red);display:inline-block;flex-shrink:0;"></span><span style="color:var(--text-secondary);">一般支出</span><span style="font-family:var(--mono);color:var(--accent-red);margin-left:auto;" id="cf-wExpense">$0</span></div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:0.72rem;">
+          <div style="display:flex;align-items:center;gap:7px;"><span style="width:8px;height:8px;border-radius:2px;background:var(--accent-green);display:inline-block;flex-shrink:0;"></span><span style="color:var(--text-secondary);">可用現金</span><span style="font-family:var(--mono);color:var(--accent-green);margin-left:8px;" id="cf-wIncome">$0</span></div>
+          <div style="display:flex;align-items:center;gap:7px;"><span style="width:8px;height:8px;border-radius:2px;background:var(--accent-purple);display:inline-block;flex-shrink:0;"></span><span style="color:var(--text-secondary);">固定支出</span><span style="font-family:var(--mono);color:var(--accent-purple);margin-left:8px;" id="cf-wFixed">$0</span></div>
+          <div style="display:flex;align-items:center;gap:7px;"><span style="width:8px;height:8px;border-radius:2px;background:var(--accent-red);display:inline-block;flex-shrink:0;"></span><span style="color:var(--text-secondary);">一般支出</span><span style="font-family:var(--mono);color:var(--accent-red);margin-left:8px;" id="cf-wExpense">$0</span></div>
         </div>
       </div>
     </div>
@@ -4995,22 +4954,24 @@ async function renderHome() {
   cfPctEl.style.color = freeCash>=0?'var(--accent-green)':'var(--accent-red)';
   safe('h-cfFormula').textContent = `${mnName} 收入 ${fmtMoney(mIncome)} − 固定 ${fmtMoney(fixedTotal)} − 支出 ${fmtMoney(mExpense)}`;
 
-  // CF 圓餅
-  (function drawCFD() {
-    const canvas = document.getElementById('homeCFDonut');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const W=110, cx=55, cy=55, r=46, inner=r*0.58;
-    ctx.clearRect(0,0,W,W);
-    const free = Math.max(0, freeCash);
-    const tot  = fixedTotal + mExpense + free || 1;
-    [{v:free,c:'#00e5a0'},{v:fixedTotal,c:'#a78bfa'},{v:mExpense,c:'#ff4d6d'}].reduce((ang,sg)=>{
-      const sl=(sg.v/tot)*Math.PI*2; if(sl<0.005) return ang;
-      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,ang,ang+sl); ctx.closePath();
-      ctx.fillStyle=sg.c; ctx.fill(); ctx.strokeStyle='#141720'; ctx.lineWidth=2; ctx.stroke();
-      return ang+sl;
-    }, -Math.PI/2);
-    ctx.beginPath(); ctx.arc(cx,cy,inner,0,Math.PI*2); ctx.fillStyle='#141720'; ctx.fill();
+  // 水位圖（單柱）
+  (function drawHomeWater() {
+    const free  = Math.max(0, freeCash);
+    const base  = mIncome || 1;
+    const pct   = Math.min(100, Math.max(0, Math.round((free / base) * 100)));
+    const color = pct >= 50 ? '#00e5a0' : pct >= 25 ? '#f59e0b' : '#ff4d6d';
+    const fill  = document.getElementById('h-wFill');
+    const pctEl = document.getElementById('h-cfPct');
+    if (fill) {
+      setTimeout(() => {
+        fill.style.height = Math.max(2, pct) + '%';
+        fill.style.background = `linear-gradient(180deg,${color}dd,${color}88)`;
+      }, 80);
+    }
+    if (pctEl) { pctEl.textContent = pct + '%'; pctEl.style.color = color; }
+    // 更新外框顏色
+    const wrap = fill && fill.parentElement;
+    if (wrap) wrap.style.borderColor = color + '66';
   })();
 
   // ══════════════════════════════════════
@@ -5258,30 +5219,23 @@ async function renderStats() {
 
 // ── 現金流水位圖
 function drawCFDonut(freeCash, fixed, expense, income) {
-  const free   = Math.max(0, freeCash);
-  const base   = income || (free + fixed + expense) || 1;
-  const fmtM   = v => v>=10000 ? (v/10000).toFixed(1)+'萬' : '$'+Math.round(v).toLocaleString('zh-TW');
+  const free  = Math.max(0, freeCash);
+  const base  = income || 1;
+  const pct   = Math.min(100, Math.max(0, Math.round((free / base) * 100)));
+  const color = pct >= 50 ? '#00e5a0' : pct >= 25 ? '#f59e0b' : '#ff4d6d';
+  const fmtM  = v => v>=10000 ? (v/10000).toFixed(1)+'萬' : '$'+Math.round(v).toLocaleString('zh-TW');
 
-  // 可用現金：佔收入比 = 儲蓄率，100% = 全滿
-  const freePct = Math.min(100, Math.round((free / base) * 100));
-
-  // 固定/一般支出：佔收入比越高 → 水位越低（漏水）
-  // 水位 = 100% - 佔收入比（最低顯示 2%）
-  const fixPct  = Math.min(100, Math.round((fixed   / base) * 100));
-  const exPct   = Math.min(100, Math.round((expense / base) * 100));
-  const fixWater = Math.max(2, 100 - fixPct);
-  const exWater  = Math.max(2, 100 - exPct);
-
-  function setWater(fillId, pctId, waterPct, labelPct) {
-    const el = document.getElementById(fillId);
-    const pe = document.getElementById(pctId);
-    if (el) setTimeout(()=>{ el.style.height = waterPct + '%'; }, 60);
-    if (pe) pe.textContent = labelPct + '%';
+  const fill  = document.getElementById('cf-wFill');
+  const pctEl = document.getElementById('cf-wPct');
+  if (fill) {
+    setTimeout(() => {
+      fill.style.height = Math.max(2, pct) + '%';
+      fill.style.background = `linear-gradient(180deg,${color}dd,${color}88)`;
+    }, 60);
+    const wrap = fill.parentElement;
+    if (wrap) wrap.style.borderColor = color + '66';
   }
-
-  setWater('cf-wFill',    'cf-wPct',    Math.max(2, freePct), freePct);
-  setWater('cf-wFixFill', 'cf-wFixPct', fixWater, fixPct);
-  setWater('cf-wExFill',  'cf-wExPct',  exWater,  exPct);
+  if (pctEl) { pctEl.textContent = pct + '%'; pctEl.style.color = color; }
 
   const wI = document.getElementById('cf-wIncome');
   const wF = document.getElementById('cf-wFixed');
@@ -5291,7 +5245,7 @@ function drawCFDonut(freeCash, fixed, expense, income) {
   if (wE) wE.textContent = fmtM(expense);
 
   const dp = document.getElementById('cf-donutPct');
-  if (dp) dp.textContent = freePct + '%';
+  if (dp) dp.textContent = pct + '%';
 }
 
 // ── 全年每月現金流趨勢 bar chart（現金流正負）
