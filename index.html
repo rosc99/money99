@@ -437,6 +437,7 @@ input::placeholder { color: var(--text-muted); }
 }
 @keyframes fadeUp { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
 @keyframes wave { 0%,100%{transform:scaleX(1) translateY(0)} 50%{transform:scaleX(0.96) translateY(2px)} }
+@keyframes drip { 0%{transform:translateY(0);opacity:1} 80%{opacity:0.6} 100%{transform:translateY(90px);opacity:0} }
 .tx-item:hover { border-color: var(--border-hover); background: #1d2133; }
 .tx-item.swiped { transform: translateX(-80px); }
 .tx-cat-dot { width:8px;height:8px;border-radius:50%;flex-shrink:0; }
@@ -1284,7 +1285,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText" style="color: var(--accent-amber);">載入中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-17 05:32:10</div>
+    <div class="clock-display" id="clockDisplay">2026-03-17 05:35:46</div>
   </div>
 </aside>
 
@@ -1773,8 +1774,12 @@ input::placeholder { color: var(--text-muted); }
           <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
             <div style="font-family:var(--mono);font-size:0.62rem;font-weight:600;color:var(--accent-purple);" id="cf-wFixPct">—%</div>
             <div style="position:relative;width:44px;height:80px;border-radius:22px;border:2px solid rgba(167,139,250,0.4);overflow:hidden;background:rgba(167,139,250,0.06);">
-              <div id="cf-wFixFill" style="position:absolute;bottom:0;left:0;right:0;height:0%;background:linear-gradient(180deg,rgba(167,139,250,0.9),rgba(167,139,250,0.5));border-radius:0 0 20px 20px;transition:height 1.2s cubic-bezier(0.4,0,0.2,1) 0.15s;">
-                <div style="position:absolute;top:0;left:0;right:0;height:6px;background:rgba(255,255,255,0.2);border-radius:4px 4px 0 0;animation:wave 2.4s ease-in-out infinite;"></div>
+              <div id="cf-wFixFill" style="position:absolute;bottom:0;left:0;right:0;height:0%;background:linear-gradient(180deg,rgba(167,139,250,0.6),rgba(167,139,250,0.9));border-radius:0 0 20px 20px;transition:height 1.2s cubic-bezier(0.4,0,0.2,1) 0.15s;">
+                <div style="position:absolute;top:0;left:0;right:0;height:6px;background:rgba(255,255,255,0.15);border-radius:4px 4px 0 0;animation:wave 2.4s ease-in-out infinite;"></div>
+              </div>
+              <!-- 漏水粒子 -->
+              <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:3px;height:100%;pointer-events:none;overflow:hidden;">
+                <div style="position:absolute;top:-4px;left:0;width:3px;height:3px;border-radius:50%;background:rgba(167,139,250,0.7);animation:drip 1.8s ease-in infinite 0.3s;"></div>
               </div>
             </div>
             <div style="font-size:0.52rem;color:var(--accent-purple);letter-spacing:0.06em;">固定</div>
@@ -1782,8 +1787,11 @@ input::placeholder { color: var(--text-muted); }
           <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
             <div style="font-family:var(--mono);font-size:0.62rem;font-weight:600;color:var(--accent-red);" id="cf-wExPct">—%</div>
             <div style="position:relative;width:44px;height:80px;border-radius:22px;border:2px solid rgba(255,77,109,0.4);overflow:hidden;background:rgba(255,77,109,0.06);">
-              <div id="cf-wExFill" style="position:absolute;bottom:0;left:0;right:0;height:0%;background:linear-gradient(180deg,rgba(255,77,109,0.9),rgba(255,77,109,0.5));border-radius:0 0 20px 20px;transition:height 1.2s cubic-bezier(0.4,0,0.2,1) 0.3s;">
-                <div style="position:absolute;top:0;left:0;right:0;height:6px;background:rgba(255,255,255,0.2);border-radius:4px 4px 0 0;animation:wave 1.8s ease-in-out infinite;"></div>
+              <div id="cf-wExFill" style="position:absolute;bottom:0;left:0;right:0;height:0%;background:linear-gradient(180deg,rgba(255,77,109,0.6),rgba(255,77,109,0.9));border-radius:0 0 20px 20px;transition:height 1.2s cubic-bezier(0.4,0,0.2,1) 0.3s;">
+                <div style="position:absolute;top:0;left:0;right:0;height:6px;background:rgba(255,255,255,0.15);border-radius:4px 4px 0 0;animation:wave 1.8s ease-in-out infinite;"></div>
+              </div>
+              <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:3px;height:100%;pointer-events:none;overflow:hidden;">
+                <div style="position:absolute;top:-4px;left:0;width:3px;height:3px;border-radius:50%;background:rgba(255,77,109,0.7);animation:drip 1.4s ease-in infinite;"></div>
               </div>
             </div>
             <div style="font-size:0.52rem;color:var(--accent-red);letter-spacing:0.06em;">支出</div>
@@ -5250,28 +5258,40 @@ async function renderStats() {
 
 // ── 現金流水位圖
 function drawCFDonut(freeCash, fixed, expense, income) {
-  const free  = Math.max(0, freeCash);
-  const total = free + fixed + expense || 1;
-  const fmtM  = v => v>=10000 ? (v/10000).toFixed(1)+'萬' : '$'+Math.round(v).toLocaleString('zh-TW');
-  function setPct(fillId, pctId, val) {
-    const pct = Math.round((val/total)*100);
-    const el  = document.getElementById(fillId);
-    const pe  = document.getElementById(pctId);
-    if (el) setTimeout(()=>{ el.style.height = Math.max(2, pct)+'%'; }, 60);
-    if (pe) pe.textContent = pct+'%';
+  const free   = Math.max(0, freeCash);
+  const base   = income || (free + fixed + expense) || 1;
+  const fmtM   = v => v>=10000 ? (v/10000).toFixed(1)+'萬' : '$'+Math.round(v).toLocaleString('zh-TW');
+
+  // 可用現金：佔收入比 = 儲蓄率，100% = 全滿
+  const freePct = Math.min(100, Math.round((free / base) * 100));
+
+  // 固定/一般支出：佔收入比越高 → 水位越低（漏水）
+  // 水位 = 100% - 佔收入比（最低顯示 2%）
+  const fixPct  = Math.min(100, Math.round((fixed   / base) * 100));
+  const exPct   = Math.min(100, Math.round((expense / base) * 100));
+  const fixWater = Math.max(2, 100 - fixPct);
+  const exWater  = Math.max(2, 100 - exPct);
+
+  function setWater(fillId, pctId, waterPct, labelPct) {
+    const el = document.getElementById(fillId);
+    const pe = document.getElementById(pctId);
+    if (el) setTimeout(()=>{ el.style.height = waterPct + '%'; }, 60);
+    if (pe) pe.textContent = labelPct + '%';
   }
-  setPct('cf-wFill',    'cf-wPct',    free);
-  setPct('cf-wFixFill', 'cf-wFixPct', fixed);
-  setPct('cf-wExFill',  'cf-wExPct',  expense);
+
+  setWater('cf-wFill',    'cf-wPct',    Math.max(2, freePct), freePct);
+  setWater('cf-wFixFill', 'cf-wFixPct', fixWater, fixPct);
+  setWater('cf-wExFill',  'cf-wExPct',  exWater,  exPct);
+
   const wI = document.getElementById('cf-wIncome');
   const wF = document.getElementById('cf-wFixed');
   const wE = document.getElementById('cf-wExpense');
   if (wI) wI.textContent = fmtM(free);
   if (wF) wF.textContent = fmtM(fixed);
   if (wE) wE.textContent = fmtM(expense);
-  // 相容舊 cf-donutPct
+
   const dp = document.getElementById('cf-donutPct');
-  if (dp) dp.textContent = Math.round((free/total)*100)+'%';
+  if (dp) dp.textContent = freePct + '%';
 }
 
 // ── 全年每月現金流趨勢 bar chart（現金流正負）
