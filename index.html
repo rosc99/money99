@@ -1262,7 +1262,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText" style="color: var(--accent-amber);">載入中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-17 04:48:51</div>
+    <div class="clock-display" id="clockDisplay">2026-03-17 05:02:00</div>
   </div>
 </aside>
 
@@ -3658,6 +3658,12 @@ const CAT_COLORS = {
   '生活':'#3b82f6','餐飲':'#f59e0b',
   '交通':'#a78bfa','股票投資':'#06b6d4','娛樂':'#ec4899',
   '醫療':'#f97316','教育':'#84cc16','其他':'#6b7280',
+  // 固定支出類別
+  '分期':'#7c3aed','信貸':'#7c3aed','房貸':'#6366f1',
+  '保險':'#06b6d4','孝親':'#f59e0b','電話':'#10b981',
+  '電話費':'#10b981','網路':'#0ea5e9','網路費':'#0ea5e9',
+  '孝親費':'#f59e0b','投資':'#00e5a0','信用卡':'#ec4899',
+  '信用卡分期':'#ec4899','固定支出':'#a78bfa',
 };
 const INV_TYPE_COLORS = {
   '股票':'#3b82f6','ETF':'#06b6d4','基金':'#a78bfa',
@@ -4377,6 +4383,27 @@ function drawMonthLineChart(yearTxs, recurVirtual, mode) {
   const legendKeys = mode === 'combined'
     ? ['income','expense','fixed','net']
     : activeSeries;
+
+  // 固定支出模式：顯示每月明細 + 年總和
+  if (mode === 'fixed') {
+    const s = SERIES['fixed'];
+    const yearTotal = s.data.reduce((a,b)=>a+b,0);
+    const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+    const monthRows = s.data.map((v, i) =>
+      v > 0 ? `<span style="color:var(--text-muted);font-size:0.62rem;">${monthNames[i]}<span style="font-family:var(--mono);color:#a78bfa;margin-left:3px;">$${v.toLocaleString('zh-TW')}</span></span>` : ''
+    ).filter(Boolean).join('');
+    legendEl.innerHTML = `
+      <div style="width:100%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">${monthRows}</div>
+        <div style="display:flex;align-items:center;gap:6px;white-space:nowrap;">
+          <span style="display:inline-block;width:18px;border-bottom:2px dashed #a78bfa;background:none;height:0;border-radius:2px;"></span>
+          <span style="color:var(--text-secondary);">固定支出</span>
+          <span style="font-family:var(--mono);color:#a78bfa;font-weight:600;">年總 $${yearTotal.toLocaleString('zh-TW')}</span>
+        </div>
+      </div>`;
+    return;
+  }
+
   legendEl.innerHTML = legendKeys.map(key => {
     const s     = SERIES[key];
     const total = s.data.reduce((a,b)=>a+b,0);
