@@ -1755,7 +1755,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot ok" id="syncDot"></div>
       <span id="syncStatusText" style="color: var(--accent-green);">已同步</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-18 18:04:00</div>
+    <div class="clock-display" id="clockDisplay">2026-03-18 18:11:59</div>
   </div>
 </aside>
 
@@ -1900,23 +1900,8 @@ input::placeholder { color: var(--text-muted); }
             </div>
           </div>
         </div>
-        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">總資產</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#f59e0b;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#ff4d6d;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">總負債</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#ff4d6d;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#00e5a0;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">淨資產</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#00e5a0;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div></div>
-        <canvas id="wealthChart" style="width:100%;display:block;" height="220" width="346"></canvas>
+        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"></div>
+        <canvas id="wealthChart" style="width:100%;display:block;" height="220"></canvas>
         <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;" id="wealthXLabels"></div>
       </div>
 
@@ -2335,15 +2320,15 @@ input::placeholder { color: var(--text-muted); }
     <div id="cf-cashCard" style="margin-bottom:20px;padding:20px 24px;border-radius:14px;background:linear-gradient(135deg,rgba(0,229,160,0.08),rgba(59,130,246,0.06));border:1px solid rgba(0,229,160,0.25);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
       <div>
         <div style="font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">當月可用現金</div>
-        <div style="font-family: var(--mono); font-size: 2.2rem; font-weight: 500; color: var(--accent-green);" id="cf-freeCash">+$0</div>
+        <div style="font-family:var(--mono);font-size:2.2rem;font-weight:500;" id="cf-freeCash">$0</div>
         <div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;" id="cf-formula">收入 $0 − 固定支出 $0 − 一般支出 $0</div>
       </div>
       <!-- 水位圖（單柱）-->
       <div style="display:flex;gap:18px;align-items:center;">
         <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;">
-          <div style="font-family: var(--mono); font-size: 0.75rem; font-weight: 700; color: rgb(255, 77, 109);" id="cf-wPct">0%</div>
-          <div style="position: relative; width: 56px; height: 100px; border-radius: 28px; border: 2px solid rgba(255, 77, 109, 0.4); overflow: hidden; background: rgba(0, 229, 160, 0.05);">
-            <div id="cf-wFill" style="position: absolute; bottom: 0px; left: 0px; right: 0px; height: 2%; border-radius: 0px 0px 26px 26px; transition: height 1.4s cubic-bezier(0.4, 0, 0.2, 1); background: linear-gradient(rgba(255, 77, 109, 0.867), rgba(255, 77, 109, 0.533));">
+          <div style="font-family:var(--mono);font-size:0.75rem;font-weight:700;" id="cf-wPct">—%</div>
+          <div style="position:relative;width:56px;height:100px;border-radius:28px;border:2px solid rgba(0,229,160,0.4);overflow:hidden;background:rgba(0,229,160,0.05);">
+            <div id="cf-wFill" style="position:absolute;bottom:0;left:0;right:0;height:0%;border-radius:0 0 26px 26px;transition:height 1.4s cubic-bezier(0.4,0,0.2,1);">
               <div style="position:absolute;top:0;left:0;right:0;height:7px;background:rgba(255,255,255,0.22);border-radius:4px 4px 0 0;animation:wave 2s ease-in-out infinite;"></div>
             </div>
           </div>
@@ -2367,7 +2352,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="stat-card c-purple">
         <div class="stat-label">固定支出</div>
         <div class="stat-value c-purple" id="cf-fixedEx">$0</div>
-        <div class="stat-sub" id="cf-fixedCount">固定 $0 ＋ 分期 $0</div>
+        <div class="stat-sub" id="cf-fixedCount">固定＋分期</div>
       </div>
       <div class="stat-card c-red">
         <div class="stat-label">一般支出</div>
@@ -2376,8 +2361,8 @@ input::placeholder { color: var(--text-muted); }
       </div>
       <div class="stat-card c-blue">
         <div class="stat-label">月儲蓄率</div>
-        <div class="stat-value c-blue" id="cf-saveRate" style="color: var(--accent-blue);">0%</div>
-        <div class="stat-sub" id="s-balanceLabel">尚有餘裕 ✓</div>
+        <div class="stat-value c-blue" id="cf-saveRate">0%</div>
+        <div class="stat-sub" id="s-balanceLabel">可用 / 收入</div>
       </div>
     </div>
 
@@ -2387,45 +2372,9 @@ input::placeholder { color: var(--text-muted); }
       <div class="card">
         <div class="card-header">
           <div class="card-title">全年每月現金流</div>
-          <div style="font-size:0.65rem;font-family:var(--mono);color:var(--text-muted);" id="cf-yearLabel">2026 年度</div>
+          <div style="font-size:0.65rem;font-family:var(--mono);color:var(--text-muted);" id="cf-yearLabel"></div>
         </div>
-        <div class="month-chart" id="s-monthChart" style="height:90px;"><div class="month-bar-wrap">
-      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
-      <span class="month-label">1</span>
-    </div><div class="month-bar-wrap">
-      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
-      <span class="month-label">2</span>
-    </div><div class="month-bar-wrap">
-      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
-      <span class="month-label">3</span>
-    </div><div class="month-bar-wrap">
-      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
-      <span class="month-label">4</span>
-    </div><div class="month-bar-wrap">
-      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
-      <span class="month-label">5</span>
-    </div><div class="month-bar-wrap">
-      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
-      <span class="month-label">6</span>
-    </div><div class="month-bar-wrap">
-      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
-      <span class="month-label">7</span>
-    </div><div class="month-bar-wrap">
-      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
-      <span class="month-label">8</span>
-    </div><div class="month-bar-wrap">
-      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
-      <span class="month-label">9</span>
-    </div><div class="month-bar-wrap">
-      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
-      <span class="month-label">10</span>
-    </div><div class="month-bar-wrap">
-      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
-      <span class="month-label">11</span>
-    </div><div class="month-bar-wrap">
-      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
-      <span class="month-label">12</span>
-    </div></div>
+        <div class="month-chart" id="s-monthChart" style="height:90px;"></div>
         <!-- 年度小結 -->
         <div style="display:flex;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
           <div style="flex:1;text-align:center;">
@@ -2447,9 +2396,9 @@ input::placeholder { color: var(--text-muted); }
       <div class="card">
         <div class="card-header">
           <div class="card-title">當月支出類別</div>
-          <div style="font-size:0.65rem;font-family:var(--mono);color:var(--text-muted);" id="cf-catMonthLabel">2026年 3月</div>
+          <div style="font-size:0.65rem;font-family:var(--mono);color:var(--text-muted);" id="cf-catMonthLabel"></div>
         </div>
-        <div id="s-catList" style="display:flex;flex-direction:column;gap:10px;max-height:260px;overflow-y:auto;padding-right:2px;"><div style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:20px;">本月無支出記錄</div></div>
+        <div id="s-catList" style="display:flex;flex-direction:column;gap:10px;max-height:260px;overflow-y:auto;padding-right:2px;"></div>
       </div>
     </div>
   </section>
@@ -4775,13 +4724,8 @@ function openTxModal(type) {
   document.getElementById('txAmount').style.borderColor = 'var(--border)';
   document.querySelectorAll('#txModal .tx-chip').forEach(b => b.classList.remove('active'));
 
-  // 預設日期為當月選擇的月份第一天或今天
-  const now = new Date();
-  const selM = currentLedgerMonth;
-  const y = currentYear;
-  const defaultDate = selM !== 'all'
-    ? `${y}-${selM}-${String(now.getDate()).padStart(2,'0')}`
-    : now.toISOString().slice(0,10);
+  // 預設日期為今天
+  const defaultDate = new Date().toISOString().slice(0, 10);
   document.getElementById('txDate').value = defaultDate;
 
   // 隱藏舊的 txCategory
@@ -4823,6 +4767,7 @@ function txModalTouchEnd(e) {
 function selectModalChip(btn, name, type) {
   document.querySelectorAll('#txModal .tx-chip').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  btn.dataset.cat = name;
   const nameEl = document.getElementById('txName');
   if (nameEl && !nameEl.value) nameEl.value = name;
   const catEl = document.getElementById('txCategory');
@@ -4831,15 +4776,22 @@ function selectModalChip(btn, name, type) {
 
 async function addTransactionFromModal() {
   const date     = document.getElementById('txDate').value;
-  const name     = document.getElementById('txName').value.trim();
+  const rawName  = document.getElementById('txName').value.trim();
   const amount   = parseFloat(document.getElementById('txAmount').value);
-  const category = document.getElementById('txCategory')?.value || _txModalType;
   const note     = document.getElementById('txNote').value.trim();
 
-  if (!date || !name || isNaN(amount) || amount <= 0) {
-    showToast('⚠ 請填寫日期、項目名稱及有效金額', 'warn');
-    return;
-  }
+  // 取得已選類別（從 active chip 或 hidden input）
+  const activeChip = document.querySelector('#txModal .tx-chip.active');
+  const chipCat    = activeChip ? activeChip.dataset.cat || activeChip.textContent.replace(/\s/g,'').replace(/[^\u4e00-\u9fa5a-zA-Z]/g,'') : '';
+  const catEl      = document.getElementById('txCategory');
+  const category   = chipCat || catEl?.value || _txModalType;
+
+  // 名稱：有選類別就用類別名，否則用輸入的
+  const name = rawName || chipCat || '';
+
+  if (!date)                          { showToast('⚠ 請選擇日期', 'warn'); return; }
+  if (isNaN(amount) || amount <= 0)   { showToast('⚠ 請填寫有效金額', 'warn'); return; }
+  if (!name)                          { showToast('⚠ 請填寫項目名稱或選擇類別', 'warn'); return; }
 
   const tx = { id: Date.now().toString(), date, name, amount, category, note, year: date.slice(0,4) };
   _txCache = [...(_txCache || []), tx];
