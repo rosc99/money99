@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW" style="--txModalAccent: #ff4d6d;"><head>
+<html lang="zh-TW"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
@@ -44,6 +44,14 @@ body {
   overflow: hidden;
 }
 
+/* 手機：允許頁面隨鍵盤自然捲動 */
+@media (max-width: 768px) {
+  body {
+    overflow-y: auto;
+    height: auto;
+  }
+}
+
 /* grid bg */
 body::before {
   content: '';
@@ -62,14 +70,14 @@ body::before {
 ══════════════════════════════════ */
 .db-card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 10px;
 }
 .db-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 18px 20px;
+  border-radius: 12px;
+  padding: 13px 15px;
   transition: border-color 0.2s;
   position: relative;
 }
@@ -85,12 +93,12 @@ body::before {
 .db-card-header {
   display: flex;
   align-items: center;
-  gap: 9px;
-  margin-bottom: 16px;
+  gap: 7px;
+  margin-bottom: 11px;
 }
-.db-card-icon { font-size: 1.05rem; }
+.db-card-icon { font-size: 0.9rem; }
 .db-card-title {
-  font-size: 0.72rem;
+  font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -99,15 +107,15 @@ body::before {
 
 .db-field-row {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 7px;
 }
 .db-field label {
-  font-size: 0.6rem;
-  letter-spacing: 0.08em;
+  font-size: 0.54rem;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--text-muted);
-  margin-bottom: 5px;
+  margin-bottom: 3px;
   display: block;
 }
 .db-input-wrap {
@@ -116,7 +124,7 @@ body::before {
   gap: 0;
   background: var(--bg-input);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -128,46 +136,46 @@ body::before {
   flex: 1;
   background: transparent;
   border: none;
-  padding: 8px 10px;
+  padding: 5px 8px;
   font-family: var(--mono);
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   color: var(--text-primary);
   outline: none;
   min-width: 0;
 }
 .db-input-wrap input:focus { box-shadow: none; border: none; }
 .db-input-wrap span {
-  font-size: 0.65rem;
+  font-size: 0.58rem;
   color: var(--text-muted);
-  padding: 0 9px;
+  padding: 0 7px;
   border-left: 1px solid var(--border);
   background: rgba(255,255,255,0.02);
   white-space: nowrap;
-  line-height: 34px;
+  line-height: 27px;
 }
 .db-input-wrap select {
   flex: 1;
   background: transparent;
   border: none;
-  padding: 8px 10px;
+  padding: 5px 8px;
   font-family: var(--mono);
-  font-size: 0.82rem;
+  font-size: 0.74rem;
   color: var(--text-primary);
   outline: none;
   cursor: pointer;
 }
 
 .db-derived {
-  font-size: 0.62rem;
+  font-size: 0.56rem;
   color: var(--text-muted);
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 8px;
+  gap: 6px;
+  margin-top: 6px;
 }
 .db-derived-val {
   font-family: var(--mono);
-  font-size: 0.85rem;
+  font-size: 0.76rem;
   font-weight: 600;
   color: var(--accent-green);
   margin-left: auto;
@@ -176,39 +184,39 @@ body::before {
 /* DB row items (stocks, funds, debts) */
 .db-row-item {
   display: grid;
-  gap: 8px;
-  padding: 12px 14px;
+  gap: 6px;
+  padding: 9px 11px;
   background: var(--bg-card2);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 8px;
   position: relative;
 }
 .db-row-item .db-row-name {
-  font-size: 0.7rem;
+  font-size: 0.63rem;
   font-weight: 600;
   color: var(--text-primary);
   font-family: var(--mono);
   letter-spacing: 0.06em;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 .db-row-fields {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 6px;
 }
 .db-row-delete {
   position: absolute;
-  top: 8px; right: 8px;
+  top: 6px; right: 6px;
   background: none;
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  font-size: 0.7rem;
-  padding: 2px 6px;
-  border-radius: 5px;
+  font-size: 0.62rem;
+  padding: 2px 5px;
+  border-radius: 4px;
   transition: all 0.15s;
   line-height: 1;
 }
@@ -218,13 +226,13 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.62rem;
+  font-size: 0.56rem;
   color: var(--text-muted);
-  padding: 2px 0;
+  padding: 1px 0;
 }
 .db-derived-row span:last-child {
   font-family: var(--mono);
-  font-size: 0.78rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: var(--accent-amber);
 }
@@ -233,20 +241,20 @@ body::before {
 .db-expense-row {
   display: grid;
   grid-template-columns: 1fr 1fr auto auto;
-  gap: 8px;
+  gap: 6px;
   align-items: center;
-  padding: 8px 10px;
+  padding: 6px 8px;
   background: var(--bg-card2);
   border: 1px solid var(--border);
-  border-radius: 9px;
+  border-radius: 7px;
   transition: border-color 0.2s;
 }
 .db-expense-row:hover { border-color: var(--border-hover); }
 
 .db-add-btn {
-  font-size: 0.62rem;
-  padding: 4px 10px;
-  border-radius: 7px;
+  font-size: 0.57rem;
+  padding: 3px 8px;
+  border-radius: 6px;
   border: 1px solid var(--border);
   background: transparent;
   color: var(--text-muted);
@@ -679,7 +687,8 @@ body::before {
   height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
-  overscroll-behavior: none;
+  overscroll-behavior-x: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* PAGE */
@@ -1295,11 +1304,23 @@ input::placeholder { color: var(--text-muted); }
 @media (max-width: 600px) {
   /* Layout */
   :root { --nav-w: 0px; }
-  body { overflow-x: hidden; }
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: auto;
+    min-height: 100vh;
+  }
   .sidebar { display: none !important; }
   .hamburger { display: none !important; }
   .sidebar-overlay { display: none !important; }
-  .main-content { margin-left: 0; padding-bottom: 60px; }
+  .main-content {
+    margin-left: 0;
+    padding-bottom: 80px;
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
   .mobile-nav { display: flex; }
 
   /* Page spacing */
@@ -1605,7 +1626,7 @@ input::placeholder { color: var(--text-muted); }
 .expense-chip.active { background: #3b82f6; color: #fff; border-color: #3b82f6; font-weight: 700; box-shadow: 0 2px 10px rgba(59,130,246,0.35); }
 </style>
 </head>
-<body style="">
+<body>
 
 <!-- ── 登入 / 註冊 Overlay ── -->
 <div id="authOverlay" class="hidden">
@@ -1727,16 +1748,12 @@ input::placeholder { color: var(--text-muted); }
   <div class="nav-item" onclick="goPage('stats',this)">
     <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></span> 現金流
   </div>
+  <div class="nav-item" onclick="goPage('invest',this)">
+    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span> 投資組合
+  </div>
 
   <div class="nav-section-label">資產管理</div>
-  <div class="nav-item" onclick="goPage('assets',this)">
-    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg></span> 資產中心
-  </div>
-  <div class="nav-item" onclick="goPage('recurring',this)">
-    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg></span> 固定支出
-  </div>
-
-  <div class="nav-section-label">市場情報</div>
+<div class="nav-section-label">市場情報</div>
   <div class="nav-item" onclick="goPage('intel',this)">
     <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span> 情報瀏覽
   </div>
@@ -1755,7 +1772,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot ok" id="syncDot"></div>
       <span id="syncStatusText" style="color: var(--accent-green);">已同步</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-18 18:54:03</div>
+    <div class="clock-display" id="clockDisplay">2026-03-19 01:26:18</div>
   </div>
 </aside>
 
@@ -1766,7 +1783,7 @@ input::placeholder { color: var(--text-muted); }
 <!-- ══════════════════════════════════
      MAIN
 ══════════════════════════════════ -->
-<main class="main-content">
+<main class="main-content" style="overflow-y: auto;">
 
   <!-- ── 主頁 ── -->
   <section class="page" id="page-home">
@@ -1956,17 +1973,30 @@ input::placeholder { color: var(--text-muted); }
         </div>
       </div>
 
-      <!-- 負債還款進度：進度條（視覺）在左，數字在右 -->
-      <div class="card" style="padding:18px 20px;cursor:pointer;" onclick="goPage('liabilities',navItemOf('liabilities'))">
+      <!-- 負債還款進度 -->
+      <div class="card" style="padding:18px 20px;cursor:pointer;" onclick="goToDbLoans()">
         <div class="card-header" style="margin-bottom:12px;">
           <div class="card-title">負債還款進度</div>
           <div style="display:flex;align-items:center;gap:6px;">
-            <span style="font-size:0.6rem;color:var(--accent-red);font-family:var(--mono);padding:2px 6px;background:rgba(255,77,109,0.08);border:1px solid rgba(255,77,109,0.2);border-radius:4px;">負債管理</span>
-            <div class="home-block-arrow">→</div>
+            <span style="font-size:0.6rem;color:var(--accent-red);font-family:var(--mono);padding:2px 6px;background:rgba(255,77,109,0.08);border:1px solid rgba(255,77,109,0.2);border-radius:4px;">編輯 →</span>
           </div>
         </div>
+        <!-- KPI 小列 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;">
+          <div style="padding:7px 10px;background:var(--bg-card2);border-radius:8px;">
+            <div style="font-size:0.52rem;color:var(--text-muted);margin-bottom:2px;">負債總額</div>
+            <div style="font-family:var(--mono);font-size:0.82rem;font-weight:600;color:var(--accent-red);" id="h-liab-total">$0</div>
+          </div>
+          <div style="padding:7px 10px;background:var(--bg-card2);border-radius:8px;">
+            <div style="font-size:0.52rem;color:var(--text-muted);margin-bottom:2px;">月攤還合計</div>
+            <div style="font-family:var(--mono);font-size:0.82rem;font-weight:600;color:var(--accent-purple);" id="h-liab-monthly">$0</div>
+          </div>
+        </div>
+        <!-- 各筆負債進度條 -->
         <div id="homeLiabProgress" style="display:flex;flex-direction:column;gap:10px;">
-          <div class="empty-state" style="padding:20px 0;font-size:0.78rem;"><div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path><line x1="12" y1="12" x2="12" y2="16"></line><line x1="10" y1="14" x2="14" y2="14"></line></svg></div>尚無負債資料</div>
+          <div class="empty-state" style="padding:12px 0;font-size:0.78rem;">
+            <div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path><line x1="12" y1="12" x2="12" y2="16"></line><line x1="10" y1="14" x2="14" y2="14"></line></svg></div>尚無負債資料
+          </div>
         </div>
       </div>
 
@@ -2020,7 +2050,7 @@ input::placeholder { color: var(--text-muted); }
   </section>
 
   <!-- ── 收支流水帳 ── -->
-  <section class="page active" id="page-ledger">
+  <section class="page" id="page-ledger">
 
     <!-- ══ 頂部：月份切換 + 當月摘要 ══ -->
     <div style="position:sticky;top:0;z-index:50;background:var(--bg-base);padding-bottom:12px;margin-bottom:4px;">
@@ -2032,7 +2062,7 @@ input::placeholder { color: var(--text-muted); }
             <option value="2026" selected="">2026</option>
             <option value="2027">2027</option>
           </select>
-          <div style="font-family:var(--mono);font-size:1.1rem;font-weight:500;color:var(--text-primary);" id="ledger-month-title">3月</div>
+          <div style="font-family:var(--mono);font-size:1.1rem;font-weight:500;color:var(--text-primary);" id="ledger-month-title">—</div>
         </div>
         <button class="btn btn-ghost" onclick="exportCSV()" style="font-size:0.75rem;padding:6px 12px;">↓ CSV</button>
       </div>
@@ -2041,7 +2071,7 @@ input::placeholder { color: var(--text-muted); }
       <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:3px;margin-top:10px;" id="ledger-month-grid">
         <button onclick="setLedgerMonth('01',this)" class="lm-btn" id="lm-01">1</button>
         <button onclick="setLedgerMonth('02',this)" class="lm-btn" id="lm-02">2</button>
-        <button onclick="setLedgerMonth('03',this)" class="lm-btn active" id="lm-03">3</button>
+        <button onclick="setLedgerMonth('03',this)" class="lm-btn" id="lm-03">3</button>
         <button onclick="setLedgerMonth('04',this)" class="lm-btn" id="lm-04">4</button>
         <button onclick="setLedgerMonth('05',this)" class="lm-btn" id="lm-05">5</button>
         <button onclick="setLedgerMonth('06',this)" class="lm-btn" id="lm-06">6</button>
@@ -2061,11 +2091,11 @@ input::placeholder { color: var(--text-muted); }
         </div>
         <div style="padding:10px 12px;background:var(--bg-card);border:1px solid rgba(0,229,160,0.2);border-radius:10px;">
           <div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:3px;">收入</div>
-          <div style="font-family:var(--mono);font-size:0.88rem;font-weight:600;color:var(--accent-green);" id="ledger-kpi-income">$15,151</div>
+          <div style="font-family:var(--mono);font-size:0.88rem;font-weight:600;color:var(--accent-green);" id="ledger-kpi-income">$0</div>
         </div>
         <div style="padding:10px 12px;background:var(--bg-card);border:1px solid rgba(59,130,246,0.2);border-radius:10px;">
           <div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:3px;">結餘</div>
-          <div style="font-family: var(--mono); font-size: 0.88rem; font-weight: 600; color: var(--accent-green);" id="ledger-kpi-net">+$15,151</div>
+          <div style="font-family:var(--mono);font-size:0.88rem;font-weight:600;" id="ledger-kpi-net">+$0</div>
         </div>
       </div>
     </div>
@@ -2076,7 +2106,7 @@ input::placeholder { color: var(--text-muted); }
       <!-- 左：圓形波浪 -->
       <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;">
         <div style="position:relative;width:160px;height:160px;">
-          <canvas id="ledgerWaveCanvas" width="160" height="160" style="width:160px;height:160px;display:block;border-radius:50%;" data-income="15151" data-expense="0"></canvas>
+          <canvas id="ledgerWaveCanvas" width="160" height="160" style="width:160px;height:160px;display:block;border-radius:50%;"></canvas>
           <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
             <div style="font-size:0.55rem;color:var(--text-muted);letter-spacing:0.08em;margin-bottom:2px;">月支出合計</div>
             <div style="font-family:var(--mono);font-size:0.95rem;font-weight:700;color:var(--accent-amber);" id="ledger-kpi-total-exp">$0</div>
@@ -2097,20 +2127,20 @@ input::placeholder { color: var(--text-muted); }
           <div style="font-size:0.58rem;color:var(--text-muted);margin-top:2px;" id="ledger-kpi-fixed-sub">尚未設定</div>
         </div>
         <!-- 有期限負債 -->
-        <div onclick="goToDbLoans()" style="padding: 11px 14px; background: var(--bg-card); border: 1px solid rgba(255, 77, 109, 0.2); border-radius: 12px; flex: 1 1 0%; cursor: pointer; transition: border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,77,109,0.6)'" onmouseout="this.style.borderColor='rgba(255,77,109,0.2)'">
+        <div onclick="goToDbLoans()" style="padding:11px 14px;background:var(--bg-card);border:1px solid rgba(255,77,109,0.2);border-radius:12px;flex:1;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,77,109,0.6)'" onmouseout="this.style.borderColor='rgba(255,77,109,0.2)'">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
             <div style="font-size:0.58rem;color:var(--text-muted);">有期限負債</div>
             <div style="font-size:0.55rem;color:var(--accent-red);font-family:var(--mono);">編輯 →</div>
           </div>
           <div style="font-family:var(--mono);font-size:0.95rem;font-weight:600;color:var(--accent-red);" id="ledger-kpi-loan">$0</div>
-          <div style="font-size:0.58rem;color:var(--text-muted);margin-top:2px;" id="ledger-kpi-loan-sub">尚未設定</div>
+          <div style="font-size:0.58rem;color:var(--text-muted);margin-top:2px;" id="ledger-kpi-loan-sub">月攤還</div>
         </div>
         <div style="padding:11px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;flex:1;">
           <div style="font-size:0.58rem;color:var(--text-muted);margin-bottom:6px;">儲蓄率</div>
           <div style="height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;margin-bottom:5px;">
-            <div id="ledger-save-bar" style="height: 100%; width: 100%; background: linear-gradient(90deg, rgb(5, 150, 105), rgb(0, 229, 160)); border-radius: 3px; transition: width 0.6s;"></div>
+            <div id="ledger-save-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#059669,#00e5a0);border-radius:3px;transition:width 0.6s;"></div>
           </div>
-          <div style="font-family:var(--mono);font-size:0.88rem;font-weight:600;color:var(--accent-green);" id="ledger-save-pct">100%</div>
+          <div style="font-family:var(--mono);font-size:0.88rem;font-weight:600;color:var(--accent-green);" id="ledger-save-pct">0%</div>
         </div>
       </div>
     </div>
@@ -2123,20 +2153,20 @@ input::placeholder { color: var(--text-muted); }
         <!-- 橫排兩按鈕 -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
           <!-- 支出 -->
-          <button onclick="openTxModal('支出')" style="border-radius: 14px; border: none; background: linear-gradient(135deg, rgb(229, 62, 62), rgb(255, 77, 109)); color: rgb(255, 255, 255); font-family: var(--sans); cursor: pointer; padding: 16px 18px; text-align: left; transition: 0.18s; box-shadow: rgba(255, 77, 109, 0.3) 0px 4px 16px;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(255,77,109,0.45)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(255,77,109,0.3)'">
+          <button onclick="openTxModal('支出')" style="border-radius:14px;border:none;background:linear-gradient(135deg,#e53e3e,#ff4d6d);color:#fff;font-family:var(--sans);cursor:pointer;padding:16px 18px;text-align:left;transition:all 0.18s;box-shadow:0 4px 16px rgba(255,77,109,0.3);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(255,77,109,0.45)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(255,77,109,0.3)'">
             <div style="font-size:0.78rem;font-weight:600;letter-spacing:0.04em;margin-bottom:6px;">支出</div>
             <div style="font-family:var(--mono);font-size:1rem;font-weight:700;" id="ledger-btn-expense">NT$0</div>
           </button>
           <!-- 收入 -->
           <button onclick="openTxModal('收入')" style="border-radius:14px;border:none;background:linear-gradient(135deg,#059669,#00e5a0);color:#001a0f;font-family:var(--sans);cursor:pointer;padding:16px 18px;text-align:left;transition:all 0.18s;box-shadow:0 4px 16px rgba(0,229,160,0.25);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,229,160,0.4)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(0,229,160,0.25)'">
             <div style="font-size:0.78rem;font-weight:600;letter-spacing:0.04em;margin-bottom:6px;">收入</div>
-            <div style="font-family:var(--mono);font-size:1rem;font-weight:700;" id="ledger-btn-income">NT$15,151</div>
+            <div style="font-family:var(--mono);font-size:1rem;font-weight:700;" id="ledger-btn-income">NT$0</div>
           </button>
         </div>
         <!-- 結餘小字 -->
-        <div style="text-align: center; font-size: 0.72rem; color: var(--accent-green); font-family: var(--mono);" id="ledger-btn-net">結餘：+NT$15,151</div>
+        <div style="text-align:center;font-size:0.72rem;color:var(--text-muted);font-family:var(--mono);" id="ledger-btn-net">結餘：$0</div>
         <!-- 提示 -->
-        <div style="padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;font-size:0.68rem;color:var(--text-muted);" id="ledger-form-month-hint">記錄 3月 的帳務</div>
+        <div style="padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;font-size:0.68rem;color:var(--text-muted);" id="ledger-form-month-hint">點擊按鈕新增帳務</div>
       </div>
 
       <!-- 右：流水帳列表 -->
@@ -2150,24 +2180,10 @@ input::placeholder { color: var(--text-muted); }
                 <button class="filter-btn" onclick="setFilter('收入',this)">收入</button>
                 <button class="filter-btn" onclick="setFilter('支出',this)">支出</button>
               </div>
-              <div style="font-family:var(--mono);font-size:0.72rem;color:var(--text-muted);" id="txCount">1 筆</div>
+              <div style="font-family:var(--mono);font-size:0.72rem;color:var(--text-muted);" id="txCount">0 筆</div>
             </div>
           </div>
-          <div class="tx-list" id="txList"><div class="tx-item-wrap" id="wrap_1773695523973" data-del-id="1773695523973" data-del-type="tx">
-        <div class="tx-item-delete-bg">🗑 刪除</div>
-        <div class="tx-item" ontouchstart="txSwipeStart(event,'1773695523973')" ontouchmove="txSwipeMove(event,'1773695523973')" ontouchend="txSwipeEnd(event,'1773695523973')">
-          <div class="tx-cat-dot" style="background:#00e5a0"></div>
-          <div class="tx-info">
-            <div class="tx-name">參觀參觀</div>
-            <div class="tx-meta">
-              <span>2026-03</span>
-              <span class="tx-cat-badge" style="background:#00e5a022;color:#00e5a0">收入</span>
-              
-            </div>
-          </div>
-          <div class="tx-amount up">+$15,151</div>
-        </div>
-      </div></div>
+          <div class="tx-list" id="txList"></div>
         </div>
       </div>
     </div>
@@ -2190,7 +2206,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="card-header">
         <div class="card-title">月份收支趨勢</div>
         <div style="display:flex;align-items:center;gap:10px;">
-          <span style="font-family:var(--mono);font-size:0.7rem;color:var(--text-muted);" id="chartYear">2026</span>
+          <span style="font-family:var(--mono);font-size:0.7rem;color:var(--text-muted);" id="chartYear"></span>
           <div style="display:flex;gap:4px;">
             <button class="chart-tab active" id="lineTab-combined" onclick="switchLineChart('combined',this)">複合</button>
             <button class="chart-tab" id="lineTab-income" onclick="switchLineChart('income',this)">收入</button>
@@ -2200,41 +2216,17 @@ input::placeholder { color: var(--text-muted); }
         </div>
       </div>
       <div style="position:relative;height:220px;margin-top:4px;">
-        <canvas id="monthLineChart" style="width: 358px; height: 220px; display: block;" width="939" height="577"></canvas>
+        <canvas id="monthLineChart" style="width:100%;height:220px;display:block;"></canvas>
       </div>
-      <div id="monthLineChartLegend" style="display:flex;gap:20px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:0.68rem;"><div style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);">
-      <span style="display:inline-block;width:18px;background:#00e5a0;height:2px;border-radius:2px;"></span>
-      <span>收入</span>
-      <span style="font-family:var(--mono);color:#00e5a0;font-weight:500;">$15,151</span>
-    </div><div style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);">
-      <span style="display:inline-block;width:18px;background:#ff4d6d;height:2px;border-radius:2px;"></span>
-      <span>支出</span>
-      <span style="font-family:var(--mono);color:#ff4d6d;font-weight:500;">$0</span>
-    </div><div style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);">
-      <span style="display:inline-block;width:18px;border-bottom:2px dashed #a78bfa;background:none;height:0;border-radius:2px;"></span>
-      <span>固定支出</span>
-      <span style="font-family:var(--mono);color:#a78bfa;font-weight:500;">$0</span>
-    </div><div style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);">
-      <span style="display:inline-block;width:18px;border-bottom:2px dashed #f59e0b;background:none;height:0;border-radius:2px;"></span>
-      <span>淨結餘</span>
-      <span style="font-family:var(--mono);color:#f59e0b;font-weight:500;">+$15,151</span>
-    </div></div>
+      <div id="monthLineChartLegend" style="display:flex;gap:20px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:0.68rem;"></div>
     </div>
 
     <!-- hidden 舊元素相容 -->
     <div style="display:none;">
       <canvas id="ledgerPieCanvas" width="100" height="100"></canvas>
-      <span id="ledgerPieCenter" style="color: var(--accent-green);">+$15,151</span><span id="ledgerPieLabel">結餘</span>
-      <span id="ledger-stat-income">$15,151</span><span id="ledger-stat-expense">$0</span><span id="ledger-stat-net" style="color: var(--accent-green);">+$15,151</span>
-      <div id="ledgerPieLegend"><div style="display:flex;align-items:center;gap:5px;font-size:0.68rem;">
-        <span style="width:7px;height:7px;border-radius:2px;background:#00e5a0;display:inline-block;flex-shrink:0;"></span>
-        <span style="flex:1;color:var(--text-secondary);">收入</span>
-        <span style="font-family:var(--mono);color:#00e5a0;font-weight:500;">$15,151</span>
-      </div><div style="display:flex;align-items:center;gap:5px;font-size:0.68rem;">
-        <span style="width:7px;height:7px;border-radius:2px;background:#ff4d6d;display:inline-block;flex-shrink:0;"></span>
-        <span style="flex:1;color:var(--text-secondary);">支出</span>
-        <span style="font-family:var(--mono);color:#ff4d6d;font-weight:500;">$0</span>
-      </div></div><div id="ledgerPieSection"></div>
+      <span id="ledgerPieCenter"></span><span id="ledgerPieLabel"></span>
+      <span id="ledger-stat-income"></span><span id="ledger-stat-expense"></span><span id="ledger-stat-net"></span>
+      <div id="ledgerPieLegend"></div><div id="ledgerPieSection"></div>
       <button id="ledger-month-all"></button><button id="ledger-month-sel"></button>
       <button id="toggleFixed"></button>
     </div>
@@ -2242,7 +2234,106 @@ input::placeholder { color: var(--text-muted); }
   </section>
 
   <!-- ══ 收支新增 Modal ══ -->
-  <div id="txModal" style="display: none; position: fixed; inset: 0px; z-index: 6000; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(6px); align-items: flex-end; justify-content: center;" onclick="if(event.target===this)closeTxModal()">
+  <!-- ══ 新增/編輯交易 Modal ══ -->
+  <div id="tradeEditModal" style="display:none;position:fixed;inset:0;z-index:6500;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);align-items:center;justify-content:center;" onclick="if(event.target===this)closeTradeEditModal()">
+    <div style="width:min(480px,94vw);background:var(--bg-card);border:1px solid var(--border);border-radius:18px;padding:24px 20px;box-shadow:0 32px 80px rgba(0,0,0,0.7);animation:authFadeIn 0.22s ease;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <div style="font-size:1rem;font-weight:600;" id="tradeEditModalTitle">新增交易</div>
+        <button onclick="closeTradeEditModal()" style="background:rgba(255,255,255,0.07);border:none;color:var(--text-muted);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:0.9rem;">✕</button>
+      </div>
+
+      <!-- 買入/賣出 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+        <div>
+          <label style="font-size:0.62rem;color:var(--text-muted);display:block;margin-bottom:6px;">類型</label>
+          <div class="db-input-wrap">
+            <select id="te_action">
+              <option value="buy">📈 買入</option>
+              <option value="sell">📉 賣出</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label style="font-size:0.62rem;color:var(--text-muted);display:block;margin-bottom:6px;">代碼</label>
+          <div class="db-input-wrap">
+            <select id="te_ticker" onchange="autoFillTradePrice()"></select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 報價狀態列 -->
+      <div id="te_quote_info" style="display:none;padding:8px 12px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:8px;margin-bottom:12px;display:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <span style="font-size:0.6rem;color:var(--text-muted);">即時報價</span>
+            <span style="font-family:var(--mono);font-size:0.88rem;font-weight:600;color:var(--accent-blue);margin-left:8px;" id="te_quote_price">—</span>
+            <span style="font-size:0.65rem;margin-left:6px;" id="te_quote_change"></span>
+          </div>
+          <button onclick="applyQuoteToPrice()" style="font-size:0.65rem;padding:3px 10px;border-radius:6px;border:1px solid rgba(59,130,246,0.4);background:rgba(59,130,246,0.12);color:var(--accent-blue);cursor:pointer;">套用</button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;">
+        <div>
+          <label style="font-size:0.62rem;color:var(--text-muted);display:block;margin-bottom:6px;">日期</label>
+          <div class="db-input-wrap"><input type="date" id="te_date"></div>
+        </div>
+        <div>
+          <label style="font-size:0.62rem;color:var(--text-muted);display:block;margin-bottom:6px;">張數</label>
+          <div class="db-input-wrap"><input type="number" id="te_shares" placeholder="0" min="0" step="0.1" inputmode="decimal"><span>張</span></div>
+        </div>
+        <div>
+          <label style="font-size:0.62rem;color:var(--text-muted);display:block;margin-bottom:6px;">成交價</label>
+          <div class="db-input-wrap"><input type="number" id="te_price" placeholder="查詢中…" min="0" step="0.01" inputmode="decimal"><span>元</span></div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <label style="font-size:0.62rem;color:var(--text-muted);display:block;margin-bottom:6px;">備註（選填）</label>
+        <div class="db-input-wrap"><input type="text" id="te_note" placeholder="定期定額、逢低加碼…"></div>
+      </div>
+
+      <div style="display:flex;gap:10px;">
+        <button onclick="saveTradeEdit()" class="btn btn-primary" style="flex:1;">✓ 儲存</button>
+        <button onclick="closeTradeEditModal()" class="btn btn-ghost" style="padding:10px 18px;">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 全部交易記錄 Modal ══ -->
+  <div id="tradeHistoryModal" style="display:none;position:fixed;inset:0;z-index:6500;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px 0;" onclick="if(event.target===this)closeTradeHistoryModal()">
+    <div style="width:min(600px,96vw);margin:auto;background:var(--bg-card);border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,0.8);">
+      <!-- 標題 -->
+      <div style="padding:20px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-size:1rem;font-weight:600;">📋 全部交易記錄</div>
+        <button onclick="closeTradeHistoryModal()" style="background:rgba(255,255,255,0.07);border:none;color:var(--text-muted);width:30px;height:30px;border-radius:50%;cursor:pointer;">✕</button>
+      </div>
+      <!-- 篩選列 -->
+      <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;gap:10px;flex-wrap:wrap;">
+        <div class="db-input-wrap" style="flex:1;min-width:120px;">
+          <select id="th_ticker_filter" onchange="renderTradeHistory(this.value, document.getElementById('th_year_filter').value)">
+            <option value="all">所有代碼</option>
+          </select>
+        </div>
+        <div class="db-input-wrap" style="width:100px;">
+          <select id="th_year_filter" onchange="renderTradeHistory(document.getElementById('th_ticker_filter').value, this.value)">
+            <option value="">所有年份</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026" selected="">2026</option>
+            <option value="2027">2027</option>
+          </select>
+        </div>
+      </div>
+      <!-- 記錄列表 -->
+      <div id="th_list" style="max-height:60vh;overflow-y:auto;"></div>
+      <div style="padding:14px 20px;border-top:1px solid var(--border);text-align:center;">
+        <button onclick="closeTradeHistoryModal()" class="btn btn-ghost">關閉</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="txModal" style="display:none;position:fixed;inset:0;z-index:6000;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;" onclick="if(event.target===this)closeTxModal()">
     <div id="txModalInner" style="width:min(520px,100vw);background:var(--bg-card);border-radius:20px 20px 0 0;display:flex;flex-direction:column;max-height:92vh;animation:slideUp 0.28s cubic-bezier(0.4,0,0.2,1);" ontouchstart="txModalTouchStart(event)" ontouchmove="txModalTouchMove(event)" ontouchend="txModalTouchEnd(event)">
 
       <!-- 固定頂部：拖曳條 + 標題 -->
@@ -2250,7 +2341,7 @@ input::placeholder { color: var(--text-muted); }
         <div style="width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,0.12);margin:0 auto 16px;"></div>
         <div style="display:flex;align-items:center;justify-content:space-between;">
           <div style="display:flex;align-items:center;gap:10px;">
-            <div id="txModalDot" style="width: 12px; height: 12px; border-radius: 50%; background: rgb(255, 77, 109); flex-shrink: 0;"></div>
+            <div id="txModalDot" style="width:12px;height:12px;border-radius:50%;background:var(--accent-red);flex-shrink:0;"></div>
             <div style="font-size:1.05rem;font-weight:600;" id="txModalTitle">新增支出</div>
           </div>
           <button onclick="closeTxModal()" style="background:rgba(255,255,255,0.07);border:none;color:var(--text-muted);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">✕</button>
@@ -2268,7 +2359,7 @@ input::placeholder { color: var(--text-muted); }
           </div>
           <div>
             <label style="font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:6px;">金額 (NTD)</label>
-            <input type="number" id="txAmount" placeholder="0" min="0" step="1" inputmode="decimal" style="width: 100%; background: var(--bg-input); border-color: var(--border); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ; border-radius: 10px; padding: 10px 12px; color: var(--text-primary); font-size: 1rem; font-family: var(--mono); font-weight: 600; outline: none;" oninput="this.style.borderColor=this.value?'var(--txModalAccent,var(--accent-red))':'var(--border)'">
+            <input type="number" id="txAmount" placeholder="0" min="0" step="1" inputmode="decimal" style="width:100%;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text-primary);font-size:1rem;font-family:var(--mono);font-weight:600;outline:none;" oninput="this.style.borderColor=this.value?'var(--txModalAccent,var(--accent-red))':'var(--border)'">
           </div>
         </div>
 
@@ -2284,7 +2375,7 @@ input::placeholder { color: var(--text-muted); }
             <button type="button" class="tx-chip income-chip" onclick="selectModalChip(this,'其他收入','收入')">➕ 其他</button>
           </div>
         </div>
-        <div id="txModal-expense-cats" style="display: block; margin-bottom: 14px;">
+        <div id="txModal-expense-cats" style="display:none;margin-bottom:14px;">
           <label style="font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:8px;">類別</label>
           <div style="display:flex;flex-wrap:wrap;gap:7px;">
             <button type="button" class="tx-chip expense-chip" onclick="selectModalChip(this,'生活','支出')">🛍 生活</button>
@@ -2314,7 +2405,7 @@ input::placeholder { color: var(--text-muted); }
 
       <!-- 固定底部：確認按鈕 -->
       <div style="padding:12px 20px;padding-bottom:calc(16px + env(safe-area-inset-bottom, 0px) + 60px);flex-shrink:0;background:var(--bg-card);border-top:1px solid var(--border);">
-        <button id="txModalConfirmBtn" onclick="addTransactionFromModal()" style="width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: 0.18s; font-family: var(--sans); background: linear-gradient(135deg, rgb(229, 62, 62), rgb(255, 77, 109)); color: rgb(255, 255, 255);">＋ 新增</button>
+        <button id="txModalConfirmBtn" onclick="addTransactionFromModal()" style="width:100%;padding:14px;border:none;border-radius:12px;font-size:0.95rem;font-weight:700;cursor:pointer;transition:all 0.18s;font-family:var(--sans);">＋ 新增</button>
       </div>
     </div>
   </div>
@@ -2326,8 +2417,100 @@ input::placeholder { color: var(--text-muted); }
   }
   </style>
 
+  <!-- ── 投資組合 ── -->
+  <section class="page" id="page-invest">
+
+    <!-- 頂部標題 -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-top:4px;">
+      <div>
+        <div style="font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);font-family:var(--mono);margin-bottom:3px;">INVESTMENT</div>
+        <h1 style="font-size:1.3rem;font-weight:500;margin:0;">投資組合</h1>
+      </div>
+      <button onclick="goToDbInvest()" style="font-size:0.72rem;padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;font-family:var(--sans);">編輯資料 →</button>
+    </div>
+
+    <!-- KPI 列 -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
+      <div style="padding:12px 14px;background:var(--bg-card);border:1px solid rgba(245,158,11,0.2);border-radius:12px;">
+        <div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:4px;">總投入成本</div>
+        <div style="font-family:var(--mono);font-size:0.95rem;font-weight:600;color:var(--accent-amber);" id="inv-kpi-cost">$0</div>
+      </div>
+      <div style="padding:12px 14px;background:var(--bg-card);border:1px solid rgba(0,229,160,0.2);border-radius:12px;">
+        <div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:4px;">月配息估計</div>
+        <div style="font-family:var(--mono);font-size:0.95rem;font-weight:600;color:var(--accent-green);" id="inv-kpi-div">$0</div>
+      </div>
+      <div style="padding:12px 14px;background:var(--bg-card);border:1px solid rgba(59,130,246,0.2);border-radius:12px;">
+        <div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:4px;">年配息估計</div>
+        <div style="font-family:var(--mono);font-size:0.95rem;font-weight:600;color:var(--accent-blue);" id="inv-kpi-yearly">$0</div>
+      </div>
+    </div>
+
+    <!-- 圓餅圖 + 資產明細 -->
+    <div style="display:grid;grid-template-columns:180px 1fr;gap:14px;margin-bottom:16px;align-items:start;">
+      <!-- 圓餅 -->
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+        <div style="font-size:0.62rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;align-self:flex-start;">資產配置</div>
+        <div style="position:relative;width:130px;height:130px;">
+          <canvas id="invPieCanvas" width="130" height="130"></canvas>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
+            <div style="font-size:0.5rem;color:var(--text-muted);">合計</div>
+            <div style="font-family:var(--mono);font-size:0.82rem;font-weight:600;color:var(--accent-amber);" id="inv-pie-total">$0</div>
+          </div>
+        </div>
+        <div id="inv-pie-legend" style="width:100%;display:flex;flex-direction:column;gap:5px;"></div>
+      </div>
+
+      <!-- 各資產小卡列表 -->
+      <div style="display:flex;flex-direction:column;gap:8px;" id="inv-asset-cards"></div>
+    </div>
+
+    <!-- 報價狀態列 -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <div style="font-size:0.62rem;color:var(--text-muted);" id="inv-quote-status">載入中…</div>
+      <button onclick="refreshInvestQuotes()" style="font-size:0.65rem;padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:5px;">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg> 更新報價
+      </button>
+    </div>
+
+    <!-- 月配息長條圖 -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div style="font-size:0.68rem;font-weight:600;color:var(--text-primary);">月配息估計（12個月）</div>
+        <div style="font-size:0.6rem;color:var(--text-muted);font-family:var(--mono);">以成本計算</div>
+      </div>
+      <canvas id="invBarChart" style="width:100%;display:block;" height="120"></canvas>
+    </div>
+
+    <!-- 績效快照折線圖 -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <div style="font-size:0.68rem;font-weight:600;color:var(--text-primary);">投資成本趨勢</div>
+        <div style="display:flex;gap:4px;">
+          <button onclick="setSnapshotRange(30,this)" class="wt-btn active" id="snp-30">1月</button>
+          <button onclick="setSnapshotRange(90,this)" class="wt-btn" id="snp-90">3月</button>
+          <button onclick="setSnapshotRange(180,this)" class="wt-btn" id="snp-180">6月</button>
+          <button onclick="setSnapshotRange(365,this)" class="wt-btn" id="snp-365">1年</button>
+        </div>
+      </div>
+      <div style="font-size:0.58rem;color:var(--text-muted);margin-bottom:10px;">每次開啟投資分頁自動記錄一筆快照</div>
+      <canvas id="invSnapshotChart" style="width:100%;display:block;" height="140"></canvas>
+      <div style="display:flex;gap:16px;margin-top:8px;font-size:0.62rem;">
+        <span style="display:flex;align-items:center;gap:4px;color:var(--text-muted);"><span style="width:8px;height:3px;border-radius:1px;background:var(--accent-amber);display:inline-block;"></span>投入成本</span>
+        <span style="display:flex;align-items:center;gap:4px;color:var(--text-muted);"><span style="width:8px;height:3px;border-radius:1px;background:var(--accent-green);display:inline-block;"></span>月配息（右軸）</span>
+      </div>
+    </div>
+
+    <!-- 銀行存款小卡 -->
+    <div style="margin-bottom:8px;display:flex;align-items:center;gap:8px;">
+      <div style="width:3px;height:14px;border-radius:2px;background:var(--accent-green);"></div>
+      <span style="font-size:0.68rem;font-weight:600;color:var(--accent-green);letter-spacing:0.1em;text-transform:uppercase;">銀行 / 定存</span>
+    </div>
+    <div id="inv-bank-cards" style="display:flex;flex-direction:column;gap:8px;margin-bottom:80px;"></div>
+
+  </section>
+
   <!-- ── 現金流 ── -->
-  <section class="page" id="page-stats">
+  <section class="page active" id="page-stats">
     <div class="page-header">
       <div class="page-title-block">
         <div class="page-label">Cash Flow</div>
@@ -2359,15 +2542,15 @@ input::placeholder { color: var(--text-muted); }
     <div id="cf-cashCard" style="margin-bottom:20px;padding:20px 24px;border-radius:14px;background:linear-gradient(135deg,rgba(0,229,160,0.08),rgba(59,130,246,0.06));border:1px solid rgba(0,229,160,0.25);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
       <div>
         <div style="font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">當月可用現金</div>
-        <div style="font-family:var(--mono);font-size:2.2rem;font-weight:500;" id="cf-freeCash">$0</div>
+        <div style="font-family: var(--mono); font-size: 2.2rem; font-weight: 500; color: var(--accent-green);" id="cf-freeCash">+$0</div>
         <div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;" id="cf-formula">收入 $0 − 固定支出 $0 − 一般支出 $0</div>
       </div>
       <!-- 水位圖（單柱）-->
       <div style="display:flex;gap:18px;align-items:center;">
         <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;">
-          <div style="font-family:var(--mono);font-size:0.75rem;font-weight:700;" id="cf-wPct">—%</div>
-          <div style="position:relative;width:56px;height:100px;border-radius:28px;border:2px solid rgba(0,229,160,0.4);overflow:hidden;background:rgba(0,229,160,0.05);">
-            <div id="cf-wFill" style="position:absolute;bottom:0;left:0;right:0;height:0%;border-radius:0 0 26px 26px;transition:height 1.4s cubic-bezier(0.4,0,0.2,1);">
+          <div style="font-family: var(--mono); font-size: 0.75rem; font-weight: 700; color: rgb(255, 77, 109);" id="cf-wPct">0%</div>
+          <div style="position: relative; width: 56px; height: 100px; border-radius: 28px; border: 2px solid rgba(255, 77, 109, 0.4); overflow: hidden; background: rgba(0, 229, 160, 0.05);">
+            <div id="cf-wFill" style="position: absolute; bottom: 0px; left: 0px; right: 0px; height: 2%; border-radius: 0px 0px 26px 26px; transition: height 1.4s cubic-bezier(0.4, 0, 0.2, 1); background: linear-gradient(rgba(255, 77, 109, 0.867), rgba(255, 77, 109, 0.533));">
               <div style="position:absolute;top:0;left:0;right:0;height:7px;background:rgba(255,255,255,0.22);border-radius:4px 4px 0 0;animation:wave 2s ease-in-out infinite;"></div>
             </div>
           </div>
@@ -2391,7 +2574,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="stat-card c-purple">
         <div class="stat-label">固定支出</div>
         <div class="stat-value c-purple" id="cf-fixedEx">$0</div>
-        <div class="stat-sub" id="cf-fixedCount">固定＋分期</div>
+        <div class="stat-sub" id="cf-fixedCount">固定 $0 ＋ 分期 $0</div>
       </div>
       <div class="stat-card c-red">
         <div class="stat-label">一般支出</div>
@@ -2400,8 +2583,8 @@ input::placeholder { color: var(--text-muted); }
       </div>
       <div class="stat-card c-blue">
         <div class="stat-label">月儲蓄率</div>
-        <div class="stat-value c-blue" id="cf-saveRate">0%</div>
-        <div class="stat-sub" id="s-balanceLabel">可用 / 收入</div>
+        <div class="stat-value c-blue" id="cf-saveRate" style="color: var(--accent-blue);">0%</div>
+        <div class="stat-sub" id="s-balanceLabel">尚有餘裕 ✓</div>
       </div>
     </div>
 
@@ -2411,9 +2594,45 @@ input::placeholder { color: var(--text-muted); }
       <div class="card">
         <div class="card-header">
           <div class="card-title">全年每月現金流</div>
-          <div style="font-size:0.65rem;font-family:var(--mono);color:var(--text-muted);" id="cf-yearLabel"></div>
+          <div style="font-size:0.65rem;font-family:var(--mono);color:var(--text-muted);" id="cf-yearLabel">2026 年度</div>
         </div>
-        <div class="month-chart" id="s-monthChart" style="height:90px;"></div>
+        <div class="month-chart" id="s-monthChart" style="height:90px;"><div class="month-bar-wrap">
+      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
+      <span class="month-label">1</span>
+    </div><div class="month-bar-wrap">
+      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
+      <span class="month-label">2</span>
+    </div><div class="month-bar-wrap">
+      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
+      <span class="month-label">3</span>
+    </div><div class="month-bar-wrap">
+      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
+      <span class="month-label">4</span>
+    </div><div class="month-bar-wrap">
+      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
+      <span class="month-label">5</span>
+    </div><div class="month-bar-wrap">
+      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
+      <span class="month-label">6</span>
+    </div><div class="month-bar-wrap">
+      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
+      <span class="month-label">7</span>
+    </div><div class="month-bar-wrap">
+      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
+      <span class="month-label">8</span>
+    </div><div class="month-bar-wrap">
+      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
+      <span class="month-label">9</span>
+    </div><div class="month-bar-wrap">
+      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
+      <span class="month-label">10</span>
+    </div><div class="month-bar-wrap">
+      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
+      <span class="month-label">11</span>
+    </div><div class="month-bar-wrap">
+      <div class="month-bar" style="height:2px;background:var(--accent-green);opacity:0.85;"></div>
+      <span class="month-label">12</span>
+    </div></div>
         <!-- 年度小結 -->
         <div style="display:flex;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
           <div style="flex:1;text-align:center;">
@@ -2435,738 +2654,17 @@ input::placeholder { color: var(--text-muted); }
       <div class="card">
         <div class="card-header">
           <div class="card-title">當月支出類別</div>
-          <div style="font-size:0.65rem;font-family:var(--mono);color:var(--text-muted);" id="cf-catMonthLabel"></div>
+          <div style="font-size:0.65rem;font-family:var(--mono);color:var(--text-muted);" id="cf-catMonthLabel">2026年 3月</div>
         </div>
-        <div id="s-catList" style="display:flex;flex-direction:column;gap:10px;max-height:260px;overflow-y:auto;padding-right:2px;"></div>
+        <div id="s-catList" style="display:flex;flex-direction:column;gap:10px;max-height:260px;overflow-y:auto;padding-right:2px;"><div style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:20px;">本月無支出記錄</div></div>
       </div>
     </div>
   </section>
 
   <!-- ── 資產中心 ── -->
-  <section class="page" id="page-assets">
-    <div class="page-header">
-      <div class="page-title-block">
-        <div class="page-label">Asset Center</div>
-        <h1>資產中心</h1>
-      </div>
-      <!-- 淨資產大標 -->
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-        <div style="display:flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(0,229,160,0.07);border:1px solid rgba(0,229,160,0.22);border-radius:10px;">
-          <span style="font-size:0.65rem;color:var(--text-muted);letter-spacing:0.08em;">淨資產 NET WORTH</span>
-          <span style="font-family:var(--mono);font-size:1.1rem;font-weight:600;color:var(--accent-green);" id="acNetWorth">$0</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(167,139,250,0.07);border:1px solid rgba(167,139,250,0.2);border-radius:10px;">
-          <span style="font-size:0.65rem;color:var(--text-muted);">負債合計</span>
-          <span style="font-family:var(--mono);font-size:0.9rem;color:var(--accent-red);" id="acLiabTotal">$0</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tab 列 -->
-    <div style="display:flex;gap:4px;background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;padding:4px;width:fit-content;margin-bottom:20px;">
-      <button class="ac-tab active" id="ac-tab-overview" onclick="switchAssetTab('overview')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>總覽
-      </button>
-      <button class="ac-tab" id="ac-tab-accounts" onclick="switchAssetTab('accounts')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><rect x="1" y="4" width="22" height="16" rx="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>帳戶明細
-      </button>
-      <button class="ac-tab" id="ac-tab-invest" onclick="switchAssetTab('invest')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>投資組合
-      </button>
-      <button class="ac-tab" id="ac-tab-debts" onclick="switchAssetTab('debts')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>債務追蹤
-      </button>
-    </div>
-
-    <!-- ══ TAB: 總覽 ══ -->
-    <div id="ac-panel-overview">
-      <!-- 資產圓餅 + 淨資產指標 -->
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;" id="acOverviewGrid" class="ac-overview-grid">
-
-        <!-- 資產配置圓餅 -->
-        <div class="card" style="padding:20px;">
-          <div class="card-title" style="margin-bottom:14px;">資產配置</div>
-          <div style="display:flex;flex-direction:column;align-items:center;gap:14px;">
-            <div style="position:relative;width:150px;height:150px;">
-              <canvas id="acAllocationPie" width="150" height="150"></canvas>
-              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
-                <div style="font-size:0.5rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;">總資產</div>
-                <div style="font-family:var(--mono);font-size:0.9rem;font-weight:500;color:var(--accent-amber);" id="acPieCenter">$0</div>
-              </div>
-            </div>
-            <div id="acPieLegend" style="width:100%;display:flex;flex-direction:column;gap:7px;"></div>
-          </div>
-        </div>
-
-        <!-- 淨資產卡 -->
-        <div class="card" style="padding:20px;display:flex;flex-direction:column;gap:14px;">
-          <div class="card-title">淨資產分析</div>
-          <!-- 大數字 -->
-          <div style="text-align:center;padding:18px;background:rgba(0,229,160,0.05);border:1px solid rgba(0,229,160,0.2);border-radius:10px;">
-            <div style="font-size:0.6rem;color:var(--text-muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;">NET WORTH</div>
-            <div style="font-family:var(--mono);font-size:1.8rem;font-weight:600;" id="acNetBig">$0</div>
-            <div style="font-size:0.65rem;color:var(--text-muted);margin-top:5px;" id="acNetSubtitle">資產 − 負債</div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;">
-              <div style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);">
-                <span style="width:8px;height:8px;background:var(--accent-amber);border-radius:2px;display:inline-block;"></span>總資產
-              </div>
-              <span style="font-family:var(--mono);color:var(--accent-amber);" id="acSumAsset">$0</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;">
-              <div style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);">
-                <span style="width:8px;height:8px;background:var(--accent-red);border-radius:2px;display:inline-block;"></span>總負債
-              </div>
-              <span style="font-family:var(--mono);color:var(--accent-red);" id="acSumLiab">$0</span>
-            </div>
-            <div style="height:1px;background:var(--border);"></div>
-            <!-- 比例條 -->
-            <div style="height:8px;border-radius:4px;background:rgba(255,255,255,0.04);overflow:hidden;display:flex;">
-              <div id="acBarAsset" style="height:100%;background:linear-gradient(90deg,#b45309,#f59e0b);transition:width 0.6s;width:0%;"></div>
-              <div id="acBarLiab" style="height:100%;background:linear-gradient(90deg,#be123c,#ff4d6d);transition:width 0.6s;width:0%;"></div>
-            </div>
-            <div style="font-size:0.65rem;color:var(--text-muted);" id="acNetRatio">淨值佔比 0%</div>
-          </div>
-        </div>
-
-        <!-- 資產結構橫條 -->
-        <div class="card" style="padding:20px;">
-          <div class="card-title" style="margin-bottom:14px;">資產結構</div>
-          <div class="asset-hbars">
-            <div class="asset-hbar-row">
-              <div class="asset-hbar-name">現金存款</div>
-              <div class="asset-hbar-track"><div class="asset-hbar-fill" id="acBarFillBank" style="background:linear-gradient(90deg,#059669,#00e5a0);"></div></div>
-              <div class="asset-hbar-val" id="acBarValBank">$0</div>
-            </div>
-            <div class="asset-hbar-row">
-              <div class="asset-hbar-name">投資市值</div>
-              <div class="asset-hbar-track"><div class="asset-hbar-fill" id="acBarFillInv" style="background:linear-gradient(90deg,#7c3aed,#a78bfa);"></div></div>
-              <div class="asset-hbar-val" id="acBarValInv">$0</div>
-            </div>
-            <div class="asset-hbar-row">
-              <div class="asset-hbar-name">其他資產</div>
-              <div class="asset-hbar-track"><div class="asset-hbar-fill fill-asset" id="acBarFillOther"></div></div>
-              <div class="asset-hbar-val" id="acBarValOther">$0</div>
-            </div>
-            <div class="asset-hbar-row">
-              <div class="asset-hbar-name" style="color:var(--accent-red);">貸款負債</div>
-              <div class="asset-hbar-track"><div class="asset-hbar-fill fill-liab" id="acBarFillLiab"></div></div>
-              <div class="asset-hbar-val" style="color:var(--accent-red);" id="acBarValLiab">$0</div>
-            </div>
-          </div>
-          <!-- 其他資產手動輸入 -->
-          <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
-            <label style="font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);">其他資產 (NTD) <span style="text-transform:none;letter-spacing:0;font-weight:400;">不含銀行＋投資</span></label>
-            <input type="number" id="inputAsset" placeholder="房產、現金…" min="0" step="1000" oninput="updateNetAsset();renderAssetCenter();" onblur="saveAssetValues()">
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ TAB: 帳戶明細 ══ -->
-    <div id="ac-panel-accounts" style="display:none;">
-      <!-- KPI row -->
-      <div class="stats-row" style="margin-bottom:20px;">
-        <div class="stat-card c-green">
-          <div class="stat-label">銀行存款</div>
-          <div class="stat-value c-green" id="acBankTotal">$0</div>
-          <div class="stat-sub" id="acBankCount">0 個帳戶</div>
-        </div>
-        <div class="stat-card c-blue">
-          <div class="stat-label">帳戶合計</div>
-          <div class="stat-value c-blue" id="acAccTotal">$0</div>
-          <div class="stat-sub">所有帳戶</div>
-        </div>
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr;gap:18px;">
-
-        <!-- 銀行帳戶 -->
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">💳 銀行帳戶</div>
-            <div style="font-family:var(--mono);font-size:0.72rem;color:var(--text-muted);" id="bankCountLabel">0 個</div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;">
-            <div><label>銀行名稱</label><input type="text" id="bankName" placeholder="例：玉山銀行"></div>
-            <div><label>帳號後四碼</label><input type="text" id="bankAcct" placeholder="例：1234" maxlength="4"></div>
-            <div><label>餘額 (NTD)</label><input type="number" id="bankBalance" placeholder="0" min="0"></div>
-          </div>
-          <div class="form-actions" style="margin-bottom:14px;">
-            <button class="btn btn-primary" onclick="addBankAccount()" style="flex:1">＋ 新增帳戶</button>
-          </div>
-          <div class="bank-list" id="bankListPage">
-            <div class="bank-empty">尚未新增任何銀行帳戶</div>
-          </div>
-          <div class="bank-total-row" id="bankTotalRowPage" style="display:none;">
-            <div class="bank-total-label">📋 帳戶合計</div>
-            <div class="bank-total-val" id="bankTotalValPage">$0</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ TAB: 投資組合 ══ -->
-    <div id="ac-panel-invest" style="display:none;">
-      <!-- KPI row -->
-      <div class="stats-row" style="margin-bottom:20px;">
-        <div class="stat-card c-purple">
-          <div class="stat-label">投資市值</div>
-          <div class="stat-value c-purple" id="acInvValue">$0</div>
-          <div class="stat-sub" id="acInvCount">0 筆</div>
-        </div>
-        <div class="stat-card c-amber">
-          <div class="stat-label">投資損益</div>
-          <div class="stat-value" id="acInvPnl">$0</div>
-          <div class="stat-sub" id="acInvPct">0.00%</div>
-        </div>
-        <div class="stat-card c-blue">
-          <div class="stat-label">投入成本</div>
-          <div class="stat-value c-blue" id="acInvCost">$0</div>
-          <div class="stat-sub">總投入</div>
-        </div>
-        <!-- 更新報價按鈕 -->
-        <div class="stat-card" style="justify-content:center;align-items:center;display:flex;flex-direction:column;gap:8px;cursor:pointer;" onclick="fetchAllQuotes()" id="quoteRefreshCard">
-          <div style="font-size:1.5rem;" id="quoteRefreshIcon">📡</div>
-          <div style="font-size:0.72rem;color:var(--text-muted);text-align:center;" id="quoteRefreshLabel">更新即時報價</div>
-          <div style="font-size:0.62rem;color:var(--text-muted);" id="quoteLastTime">—</div>
-        </div>
-      </div>
-
-      <div style="display:grid;grid-template-columns:minmax(0,360px) 1fr;gap:18px;" class="inv-main-grid">
-        <!-- 新增表單 -->
-        <div class="card" style="align-self:start;">
-          <div class="card-header">
-            <div class="card-title">新增投資項目</div>
-            <div style="font-family:var(--mono);font-size:0.72rem;color:var(--text-muted);" id="invListCount">0 筆</div>
-          </div>
-          <div class="form-grid" style="margin-bottom:14px;">
-            <div>
-              <label>台股代號 <span style="color:var(--text-muted);text-transform:none;letter-spacing:0;font-weight:400;">輸入後自動帶名稱</span></label>
-              <input type="text" id="invTicker" placeholder="例：2330、0050、6547" maxlength="6" style="text-transform:uppercase;" onblur="previewTickerQuote(this.value)">
-            </div>
-            <div><label>項目名稱 <span style="color:var(--text-muted);text-transform:none;letter-spacing:0;font-weight:400;">自動填入或手動輸入</span></label><input type="text" id="invName" placeholder="代號查詢後自動帶入…"></div>
-            <div>
-              <label>類型</label>
-              <select id="invType">
-                <option value="股票">📈 股票</option>
-                <option value="ETF">🏦 ETF</option>
-                <option value="基金">💼 基金</option>
-                <option value="加密貨幣">🪙 加密貨幣</option>
-                <option value="債券">📋 債券</option>
-                <option value="房地產">🏠 房地產</option>
-                <option value="其他">📌 其他</option>
-              </select>
-            </div>
-            <div>
-              <label>持有股數 <span style="color:var(--text-muted);text-transform:none;letter-spacing:0;font-weight:400;">張×1000</span></label>
-              <input type="number" id="invShares" placeholder="0" min="0" oninput="calcInvValue()">
-            </div>
-            <div>
-              <label>投入成本 (NTD)</label>
-              <input type="number" id="invCost" placeholder="0" min="0">
-            </div>
-            <div>
-              <label>目前市值 (NTD) <span style="color:var(--text-muted);text-transform:none;letter-spacing:0;font-weight:400;">或自動計算</span></label>
-              <input type="number" id="invValue" placeholder="0" min="0">
-            </div>
-            <!-- 報價預覽 -->
-            <div class="full" id="tickerPreviewBox" style="display:none;padding:12px 14px;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.2);border-radius:8px;">
-              <div style="font-size:0.65rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">📡 即時報價</div>
-              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
-                <span style="font-size:0.82rem;flex:1;" id="tickerPreviewName">—</span>
-                <span style="font-family:var(--mono);font-size:1.1rem;font-weight:500;color:var(--accent-amber);" id="tickerPreviewPrice">—</span>
-              </div>
-              <div style="font-size:0.65rem;color:var(--text-muted);margin-top:3px;" id="tickerPreviewChange">—</div>
-              <!-- 套用 / 手動修改 按鈕 -->
-              <div id="tickerPreviewActions" style="display:none;margin-top:10px;display:flex;gap:8px;">
-                <button onclick="applyQuoteToValue()" style="flex:1;padding:7px 0;background:rgba(167,139,250,0.2);border:1px solid rgba(167,139,250,0.4);color:var(--accent-purple);border-radius:7px;font-size:0.78rem;cursor:pointer;font-family:var(--sans);">✓ 套用報價</button>
-                <button onclick="unlockInvValue()" style="flex:1;padding:7px 0;background:transparent;border:1px solid var(--border);color:var(--text-secondary);border-radius:7px;font-size:0.78rem;cursor:pointer;font-family:var(--sans);">✏️ 手動修改</button>
-              </div>
-            </div>
-            <div class="full"><label>備註</label><input type="text" id="invNote" placeholder="例：長期持有、定期定額…"></div>
-          </div>
-          <div class="form-actions">
-            <button class="btn btn-primary" onclick="addInvestment()" style="flex:1">＋ 新增投資</button>
-            <button class="btn btn-ghost" onclick="clearInvForm()">清除</button>
-          </div>
-        </div>
-
-        <!-- 投資清單 -->
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">投資清單</div>
-            <button onclick="fetchAllQuotes()" style="background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);color:var(--accent-purple);border-radius:7px;padding:5px 12px;font-size:0.72rem;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:5px;" id="quoteBtn">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-              更新報價
-            </button>
-          </div>
-          <div id="invList">
-            <div class="empty-state"><div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg></div>尚無投資項目</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ TAB: 債務追蹤 ══ -->
-    <div id="ac-panel-debts" style="display:none;">
-
-      <!-- KPI Row -->
-      <div class="stats-row stats-row-4" style="margin-bottom:16px;">
-        <div class="stat-card c-red">
-          <div class="stat-label">負債總額</div>
-          <div class="stat-value c-red" id="liabStatTotal">$0</div>
-          <div class="stat-sub" id="liabStatCount">0 筆</div>
-        </div>
-        <div class="stat-card c-amber">
-          <div class="stat-label">每月還款</div>
-          <div class="stat-value c-amber" id="liabStatMonthly">$0</div>
-          <div class="stat-sub">固定月支出</div>
-        </div>
-        <div class="stat-card c-purple">
-          <div class="stat-label">剩餘期數</div>
-          <div class="stat-value c-purple" id="liabStatPeriods">—</div>
-          <div class="stat-sub">加權平均</div>
-        </div>
-        <div class="stat-card c-blue">
-          <div class="stat-label">已繳比例</div>
-          <div class="stat-value c-blue" id="liabStatPaidPct">—</div>
-          <div class="stat-sub">整體進度</div>
-        </div>
-      </div>
-
-      <!-- 分布圖 Row -->
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px;" id="debtDistRow">
-
-        <!-- 貸款總額分布 -->
-        <div class="card" style="padding:16px 18px;">
-          <div class="card-header" style="margin-bottom:12px;">
-            <div class="card-title">貸款總額分布</div>
-            <span style="font-size:0.62rem;color:var(--text-muted);font-family:var(--mono);" id="loanDistTotal">$0</span>
-          </div>
-          <div id="loanDistBars" style="display:flex;flex-direction:column;gap:8px;"></div>
-        </div>
-
-        <!-- 分期付款分布 -->
-        <div class="card" style="padding:16px 18px;">
-          <div class="card-header" style="margin-bottom:12px;">
-            <div class="card-title">分期付款分布</div>
-            <span style="font-size:0.62rem;color:var(--text-muted);font-family:var(--mono);" id="instDistTotal">$0/月</span>
-          </div>
-          <div id="instDistBars" style="display:flex;flex-direction:column;gap:8px;"></div>
-        </div>
-
-        <!-- 固定支出分布 -->
-        <div class="card" style="padding:16px 18px;">
-          <div class="card-header" style="margin-bottom:12px;">
-            <div class="card-title">固定支出分布</div>
-            <span style="font-size:0.62rem;color:var(--text-muted);font-family:var(--mono);" id="recurDistTotal">$0/月</span>
-          </div>
-          <div id="recurDistBars" style="display:flex;flex-direction:column;gap:8px;"></div>
-        </div>
-      </div>
-
-      <!-- 股票質押 & 維持率 -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;" id="pledgeRow">
-
-        <!-- 股票質押管理 -->
-        <div class="card" style="padding:16px 18px;">
-          <div class="card-header" style="margin-bottom:14px;">
-            <div class="card-title">股票質押管理</div>
-            <button onclick="addPledge()" style="background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.3);color:var(--accent-blue);border-radius:7px;padding:4px 12px;font-size:0.72rem;cursor:pointer;font-family:var(--sans);">＋ 新增</button>
-          </div>
-          <!-- 新增表單 -->
-          <div id="pledgeForm" style="display:none;margin-bottom:14px;padding:12px;background:var(--bg-card2);border:1px solid var(--border);border-radius:8px;">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-              <div>
-                <label>台股代號</label>
-                <input type="text" id="pledgeTicker" placeholder="例：2330、0056" maxlength="6" style="text-transform:uppercase;" onblur="previewPledgeQuote(this.value)">
-              </div>
-              <div><label>股票名稱 <span style="color:var(--text-muted);text-transform:none;letter-spacing:0;font-weight:400;">自動帶入</span></label><input type="text" id="pledgeName" placeholder="查詢後自動帶入…"></div>
-              <div>
-                <label>質押張數 <span style="color:var(--text-muted);text-transform:none;letter-spacing:0;font-weight:400;">1張=1000股</span></label>
-                <input type="number" id="pledgeShares" placeholder="0" min="0" oninput="calcPledgeValue()">
-              </div>
-              <div>
-                <label>即時報價</label>
-                <input type="number" id="pledgePrice" placeholder="查詢後自動帶入" min="0" readonly="" style="background:rgba(167,139,250,0.04);color:var(--accent-purple);">
-              </div>
-              <div class="full">
-                <label>質押市值 (NTD) <span style="color:var(--text-muted);text-transform:none;letter-spacing:0;font-weight:400;">自動計算</span></label>
-                <input type="number" id="pledgeValue" placeholder="0" min="0" style="background:rgba(167,139,250,0.04);color:var(--accent-purple);" readonly="">
-              </div>
-              <div><label>借款金額 (NTD)</label><input type="number" id="pledgeLoan" placeholder="0" min="0" oninput="calcPledgeValue()"></div>
-              <div id="pledgeMaintPreview" style="display:none;padding:8px 10px;background:rgba(0,229,160,0.06);border:1px solid rgba(0,229,160,0.2);border-radius:7px;align-self:end;">
-                <div style="font-size:0.6rem;color:var(--text-muted);">預估維持率</div>
-                <div style="font-family:var(--mono);font-size:1rem;font-weight:500;" id="pledgeMaintPct">—</div>
-              </div>
-              <div><label>警戒維持率 (%)</label><input type="number" id="pledgeWarnRate" placeholder="130" min="100" value="130"></div>
-              <div><label>斷頭維持率 (%)</label><input type="number" id="pledgeCutRate" placeholder="120" min="100" value="120"></div>
-            </div>
-            <div style="display:flex;gap:8px;">
-              <button onclick="savePledge()" class="btn btn-primary" style="flex:1;font-size:0.8rem;padding:8px 0;">儲存</button>
-              <button onclick="document.getElementById('pledgeForm').style.display='none'" class="btn btn-ghost" style="font-size:0.8rem;padding:8px 16px;">取消</button>
-            </div>
-          </div>
-          <div id="pledgeList" style="display:flex;flex-direction:column;gap:8px;">
-            <div class="empty-state" style="padding:20px 0;font-size:0.78rem;">尚無質押資料</div>
-          </div>
-        </div>
-
-        <!-- 整體維持率 水壩水位 -->
-        <div class="card" style="padding:16px 18px;">
-          <div class="card-header" style="margin-bottom:14px;">
-            <div class="card-title">整體維持率</div>
-            <span style="font-size:0.68rem;color:var(--text-muted);">質押市值 ÷ 借款金額</span>
-          </div>
-          <div style="display:flex;gap:18px;align-items:flex-start;">
-            <!-- 水壩 SVG -->
-            <div style="flex-shrink:0;position:relative;width:110px;height:160px;">
-              <svg id="damSvg" viewBox="0 0 110 160" width="110" height="160" style="display:block;">
-                <!-- 水壩外牆 -->
-                <rect x="8" y="10" width="94" height="130" rx="4" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"></rect>
-                <!-- 危險線 -->
-                <line id="damCutLine" x1="8" y1="116" x2="102" y2="116" stroke="rgba(255,77,109,0.5)" stroke-width="1" stroke-dasharray="3,2"></line>
-                <text x="105" y="119" font-size="6" fill="rgba(255,77,109,0.7)" text-anchor="end" font-family="monospace">斷頭</text>
-                <!-- 警戒線 -->
-                <line id="damWarnLine" x1="8" y1="90" x2="102" y2="90" stroke="rgba(245,158,11,0.5)" stroke-width="1" stroke-dasharray="3,2"></line>
-                <text x="105" y="93" font-size="6" fill="rgba(245,158,11,0.7)" text-anchor="end" font-family="monospace">警戒</text>
-                <!-- 安全線 -->
-                <line x1="8" y1="44" x2="102" y2="44" stroke="rgba(0,229,160,0.3)" stroke-width="1" stroke-dasharray="3,2"></line>
-                <text x="105" y="47" font-size="6" fill="rgba(0,229,160,0.6)" text-anchor="end" font-family="monospace">安全</text>
-                <!-- 水體（動態） -->
-                <clipPath id="damClip"><rect x="9" y="11" width="92" height="128" rx="3"></rect></clipPath>
-                <g clip-path="url(#damClip)">
-                  <rect id="damWater" x="9" y="139" width="92" height="0" rx="0"></rect>
-                  <!-- 波浪 -->
-                  <path id="damWave" d="" fill-opacity="0.25"></path>
-                </g>
-                <!-- 水位數字 -->
-                <text id="damRateText" x="55" y="82" font-size="20" font-weight="bold" text-anchor="middle" font-family="monospace" fill="white">—</text>
-                <text x="55" y="96" font-size="7" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-family="monospace">維持率</text>
-                <!-- 底部排水口 -->
-                <rect x="46" y="138" width="18" height="5" rx="1" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" stroke-width="1"></rect>
-                <!-- 頂部溢洪口（安全時出現） -->
-                <rect id="damOverflow" x="44" y="9" width="22" height="4" rx="1" fill="rgba(0,229,160,0)" stroke="rgba(0,229,160,0)" stroke-width="1"></rect>
-              </svg>
-            </div>
-            <!-- 右側數據 -->
-            <div style="flex:1;display:flex;flex-direction:column;gap:10px;padding-top:4px;">
-              <div>
-                <div style="font-family:var(--mono);font-size:1.8rem;font-weight:500;line-height:1;" id="maintRateDisplay">—</div>
-                <div style="font-size:0.7rem;margin-top:4px;" id="maintRateStatus">尚無質押資料</div>
-              </div>
-              <div style="display:flex;flex-direction:column;gap:6px;padding-top:6px;border-top:1px solid var(--border);">
-                <div style="display:flex;justify-content:space-between;font-size:0.72rem;">
-                  <span style="color:var(--text-secondary);">質押總市值</span>
-                  <span style="font-family:var(--mono);color:var(--accent-blue);" id="pledgeTotalValue">$0</span>
-                </div>
-                <div style="display:flex;justify-content:space-between;font-size:0.72rem;">
-                  <span style="color:var(--text-secondary);">借款總額</span>
-                  <span style="font-family:var(--mono);color:var(--accent-red);" id="pledgeTotalLoan">$0</span>
-                </div>
-                <div style="display:flex;justify-content:space-between;font-size:0.72rem;">
-                  <span style="color:var(--text-secondary);">安全墊</span>
-                  <span style="font-family:var(--mono);" id="pledgeSafetyBuffer">$0</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- ── 市值下跌模擬拉桿 ── -->
-          <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-              <div style="font-size:0.62rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;">📉 市值下跌模擬</div>
-              <button onclick="resetPledgeSimulator()" style="font-size:0.6rem;color:var(--text-muted);background:none;border:1px solid var(--border);border-radius:5px;padding:3px 8px;cursor:pointer;font-family:var(--sans);">重置</button>
-            </div>
-            <!-- 拉桿 -->
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-              <span style="font-size:0.6rem;color:var(--text-muted);white-space:nowrap;">跌幅</span>
-              <input type="range" id="pledgeDropSlider" min="0" max="60" value="0" step="1" style="flex:1;accent-color:#ff4d6d;cursor:pointer;" oninput="updatePledgeSimulator(this.value)">
-              <span style="font-family:var(--mono);font-size:0.85rem;font-weight:700;color:#ff4d6d;min-width:36px;text-align:right;" id="pledgeDropPct">0%</span>
-            </div>
-            <!-- 模擬結果 -->
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;" id="pledgeSimResult">
-              <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:7px;padding:8px;">
-                <div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:3px;">模擬市值</div>
-                <div style="font-family:var(--mono);font-size:0.82rem;font-weight:600;color:var(--accent-blue);" id="simTotalValue">—</div>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:7px;padding:8px;">
-                <div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:3px;">模擬維持率</div>
-                <div style="font-family:var(--mono);font-size:0.82rem;font-weight:600;" id="simMaintRate">—</div>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:7px;padding:8px;">
-                <div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:3px;">距警戒還差</div>
-                <div style="font-family:var(--mono);font-size:0.82rem;font-weight:600;color:#f59e0b;" id="simWarnGap">—</div>
-              </div>
-              <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:7px;padding:8px;">
-                <div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:3px;">距斷頭還差</div>
-                <div style="font-family:var(--mono);font-size:0.82rem;font-weight:600;color:#ff4d6d;" id="simCutGap">—</div>
-              </div>
-            </div>
-            <!-- 狀態提示 -->
-            <div id="simStatusMsg" style="margin-top:8px;padding:7px 10px;border-radius:7px;font-size:0.68rem;display:none;"></div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- 負債清單 -->
-      <div style="display:grid;grid-template-columns:minmax(0,360px) 1fr;gap:18px;" id="liabMainGrid">
-        <!-- 新增表單 -->
-        <div class="card" style="align-self:start;">
-          <div class="card-header"><div class="card-title">新增負債項目</div></div>
-          <div style="display:flex;flex-direction:column;gap:12px;">
-            <div><label>項目名稱</label><input type="text" id="liabName" placeholder="例：玉山房貸、車貸…"></div>
-            <div><label>類型</label>
-              <select id="liabType">
-                <option value="房貸">🏠 房貸</option>
-                <option value="車貸">🚗 車貸</option>
-                <option value="信貸">💼 信貸</option>
-                <option value="學貸">🎓 學貸</option>
-                <option value="信用卡分期">💳 信用卡分期</option>
-                <option value="其他貸款">📌 其他貸款</option>
-              </select>
-            </div>
-            <div><label>貸款總額 (NTD)</label><input type="number" id="liabTotal" placeholder="0" min="0" oninput="calcLiabPeriods()"></div>
-            <div><label>每月還款 (NTD)</label><input type="number" id="liabMonthly" placeholder="0" min="0" oninput="calcLiabPeriods()"></div>
-            <div><label>已還金額 (NTD) <span style="color:var(--text-muted);text-transform:none;letter-spacing:0;">(選填)</span></label>
-              <input type="number" id="liabPaid" placeholder="0" min="0" oninput="calcLiabPeriods()"></div>
-            <div><label>開始日期</label><input type="date" id="liabStart"></div>
-            <div><label>備註</label><input type="text" id="liabNote" placeholder="例：利率2.5%…"></div>
-            <div id="liabCalcPreview" style="padding:10px 12px;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.2);border-radius:8px;display:none;">
-              <div style="font-size:0.65rem;color:var(--text-muted);margin-bottom:6px;letter-spacing:0.1em;text-transform:uppercase;">自動計算預覽</div>
-              <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:3px;">
-                <span style="color:var(--text-secondary);">剩餘金額</span>
-                <span style="font-family:var(--mono);color:var(--accent-red);" id="liabPreviewRemain">$0</span>
-              </div>
-              <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:3px;">
-                <span style="color:var(--text-secondary);">剩餘期數</span>
-                <span style="font-family:var(--mono);color:var(--accent-amber);" id="liabPreviewPeriods">— 期</span>
-              </div>
-              <div style="display:flex;justify-content:space-between;font-size:0.8rem;">
-                <span style="color:var(--text-secondary);">預計還清</span>
-                <span style="font-family:var(--mono);color:var(--accent-green);" id="liabPreviewEnd">—</span>
-              </div>
-            </div>
-          </div>
-          <div class="form-actions">
-            <button class="btn btn-primary" onclick="addLiability()" style="flex:1;">＋ 新增</button>
-            <button class="btn btn-ghost" onclick="clearLiabForm()">清除</button>
-          </div>
-        </div>
-
-        <!-- 列表 -->
-        <div style="display:flex;flex-direction:column;gap:14px;">
-          <div class="filter-bar" id="liabFilterBar">
-            <button class="filter-btn active" onclick="setLiabFilter('all',this)">全部</button>
-            <button class="filter-btn" onclick="setLiabFilter('房貸',this)">🏠 房貸</button>
-            <button class="filter-btn" onclick="setLiabFilter('車貸',this)">🚗 車貸</button>
-            <button class="filter-btn" onclick="setLiabFilter('信貸',this)">💼 信貸</button>
-            <button class="filter-btn" onclick="setLiabFilter('信用卡分期',this)">💳 分期</button>
-            <button class="filter-btn" onclick="setLiabFilter('其他貸款',this)">📌 其他</button>
-          </div>
-          <div id="liabList">
-            <div class="empty-state"><div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path><line x1="12" y1="12" x2="12" y2="16"></line><line x1="10" y1="14" x2="14" y2="14"></line></svg></div>尚無負債項目<br>請使用左側表單新增</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </section>
 
 
   <!-- ── 固定支出 ── -->
-  <section class="page" id="page-recurring">
-    <div class="page-header" style="flex-wrap:wrap;gap:10px;">
-      <div class="page-title-block">
-        <div class="page-label">Recurring</div>
-        <h1>固定支出管理</h1>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-        <div style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(167,139,250,0.07);border:1px solid rgba(167,139,250,0.22);border-radius:8px;white-space:nowrap;">
-          <span style="font-size:0.65rem;color:var(--text-muted);">每月固定</span>
-          <span style="font-family:var(--mono);font-size:0.9rem;font-weight:500;color:var(--accent-purple);" id="recurHeaderMonthly">$0</span>
-          <span style="font-size:0.65rem;color:var(--text-muted);">｜年合計</span>
-          <span style="font-family:var(--mono);font-size:0.9rem;font-weight:500;color:var(--accent-amber);" id="recurHeaderYearly">$0</span>
-        </div>
-        <button class="btn btn-primary" onclick="openFixedQuickModal()" style="background:var(--accent-purple);gap:6px;font-size:0.82rem;padding:8px 16px;white-space:nowrap;">
-          <svg style="display:inline-block;vertical-align:-3px;margin-right:4px;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> 快速新增
-        </button>
-      </div>
-    </div>
-
-    <!-- stats -->
-    <div class="stats-row stats-row-4" style="margin-bottom:20px;">
-      <div class="stat-card c-purple">
-        <div class="stat-label">常態月支出</div>
-        <div class="stat-value c-purple" id="recurStatMonthly">$0</div>
-        <div class="stat-sub" id="recurStatCount">0 項</div>
-      </div>
-      <div class="stat-card c-amber">
-        <div class="stat-label">年合計支出</div>
-        <div class="stat-value c-amber" id="recurStatYearly">$0</div>
-        <div class="stat-sub">換算全年</div>
-      </div>
-      <div class="stat-card c-blue">
-        <div class="stat-label">短期分期合計</div>
-        <div class="stat-value c-blue" id="recurStatInstallMonthly">$0</div>
-        <div class="stat-sub" id="recurStatInstallCount">0 項進行中</div>
-      </div>
-      <div class="stat-card c-red">
-        <div class="stat-label">本月總固定支出</div>
-        <div class="stat-value c-red" id="recurStatThisMonth">$0</div>
-        <div class="stat-sub">常態＋分期</div>
-      </div>
-    </div>
-
-    <div style="display:grid;grid-template-columns:minmax(0,360px) 1fr;gap:18px;" id="recurMainGrid">
-
-      <!-- 新增表單 -->
-      <div style="display:flex;flex-direction:column;gap:14px;">
-
-        <!-- 常態固定支出 -->
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">新增常態支出</div>
-            <button onclick="openFixedQuickModal()" style="background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);color:var(--accent-purple);border-radius:7px;padding:4px 10px;font-size:0.72rem;cursor:pointer;font-family:var(--sans);transition:all 0.15s;" onmouseover="this.style.background='rgba(167,139,250,0.22)'" onmouseout="this.style.background='rgba(167,139,250,0.12)'"><svg style="display:inline-block;vertical-align:-3px;margin-right:4px;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> 快速</button>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:10px;">
-            <div><label>名稱</label><input type="text" id="recurName" placeholder="例：孝親費、手機費…"></div>
-            <div>
-              <label>類別</label>
-              <select id="recurCat">
-                <option value="孝親">❤️ 孝親費</option>
-                <option value="保險">🛡 保險</option>
-                <option value="電話">📱 電話費</option>
-                <option value="網路">🌐 網路費</option>
-                <option value="訂閱">📺 訂閱服務</option>
-                <option value="交通">🚌 交通月票</option>
-                <option value="房租">🏠 房租</option>
-                <option value="水電">💡 水電費</option>
-                <option value="瓦斯">🔥 瓦斯費</option>
-                <option value="健身">🏋 健身房</option>
-                <option value="其他">📌 其他</option>
-              </select>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-              <div>
-                <label>金額 (NTD)</label>
-                <input type="number" id="recurAmount" placeholder="0" min="0">
-              </div>
-              <div>
-                <label>頻率</label>
-                <select id="recurFreq">
-                  <option value="monthly">每月</option>
-                  <option value="yearly">每年</option>
-                  <option value="quarterly">每季</option>
-                </select>
-              </div>
-            </div>
-            <div><label>備註</label><input type="text" id="recurNote" placeholder="例：中華電信、國泰人壽…"></div>
-          </div>
-          <div class="form-actions">
-            <button class="btn btn-primary" onclick="addRecurring()" style="flex:1;">＋ 新增</button>
-            <button class="btn btn-ghost" onclick="clearRecurForm()">清除</button>
-          </div>
-        </div>
-
-        <!-- 短期分期 -->
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">新增短期分期</div>
-            <button onclick="openInstModal()" style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);color:var(--accent-blue);border-radius:7px;padding:4px 10px;font-size:0.72rem;cursor:pointer;font-family:var(--sans);transition:all 0.15s;" onmouseover="this.style.background='rgba(59,130,246,0.2)'" onmouseout="this.style.background='rgba(59,130,246,0.1)'"><svg style="display:inline-block;vertical-align:-3px;margin-right:4px;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> 快速</button>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:10px;">
-            <div><label>名稱</label><input type="text" id="instName" placeholder="例：iPhone 24期、家電分期…"></div>
-            <div>
-              <label>類別</label>
-              <select id="instCat">
-                <option value="3C">📱 3C 電子</option>
-                <option value="家電">🏠 家電</option>
-                <option value="醫療">🏥 醫療美容</option>
-                <option value="旅遊">✈️ 旅遊</option>
-                <option value="教育">📚 課程/教育</option>
-                <option value="其他">📌 其他分期</option>
-              </select>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-              <div>
-                <label>每月金額 (NTD)</label>
-                <input type="number" id="instAmount" placeholder="0" min="0" oninput="calcInstPreview()">
-              </div>
-              <div>
-                <label>總期數</label>
-                <input type="number" id="instTotal" placeholder="例：24" min="1" oninput="calcInstPreview()">
-              </div>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-              <div>
-                <label>已繳期數</label>
-                <input type="number" id="instPaid" placeholder="0" min="0" oninput="calcInstPreview()">
-              </div>
-              <div>
-                <label>開始月份</label>
-                <input type="month" id="instStart">
-              </div>
-            </div>
-            <div id="instPreview" style="padding:9px 12px;background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.18);border-radius:8px;display:none;">
-              <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:3px;">
-                <span style="color:var(--text-secondary);">剩餘期數</span>
-                <span style="font-family:var(--mono);color:var(--accent-amber);" id="instPreviewRemain">—</span>
-              </div>
-              <div style="display:flex;justify-content:space-between;font-size:0.78rem;">
-                <span style="color:var(--text-secondary);">預計結束</span>
-                <span style="font-family:var(--mono);color:var(--accent-green);" id="instPreviewEnd">—</span>
-              </div>
-            </div>
-            <div><label>備註</label><input type="text" id="instNote" placeholder="例：Apple Card、哪家商品…"></div>
-          </div>
-          <div class="form-actions">
-            <button class="btn btn-primary" onclick="addInstallment()" style="flex:1;">＋ 新增分期</button>
-            <button class="btn btn-ghost" onclick="clearInstForm()">清除</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 右側列表 -->
-      <div style="display:flex;flex-direction:column;gap:14px;">
-
-        <!-- 常態固定支出列表 -->
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">常態固定支出</div>
-            <div style="font-family:var(--mono);font-size:0.72rem;color:var(--text-muted);" id="recurListCount">0 項</div>
-          </div>
-          <!-- tab -->
-          <div class="filter-bar" id="recurFilterBar">
-            <button class="filter-btn active" onclick="setRecurFilter('all',this)">全部</button>
-            <button class="filter-btn" onclick="setRecurFilter('孝親',this)">❤️ 孝親</button>
-            <button class="filter-btn" onclick="setRecurFilter('保險',this)">🛡 保險</button>
-            <button class="filter-btn" onclick="setRecurFilter('電話',this)">📱 電話</button>
-            <button class="filter-btn" onclick="setRecurFilter('訂閱',this)">📺 訂閱</button>
-            <button class="filter-btn" onclick="setRecurFilter('其他',this)">其他</button>
-          </div>
-          <div id="recurList">
-            <div class="empty-state"><div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg></div>尚無常態支出項目</div>
-          </div>
-        </div>
-
-        <!-- 短期分期列表 -->
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">短期分期付款</div>
-            <div style="font-family:var(--mono);font-size:0.72rem;color:var(--text-muted);" id="instListCount">0 項</div>
-          </div>
-          <div id="instList">
-            <div class="empty-state"><div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg></div>尚無分期項目</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
 
   <!-- 情報瀏覽 PAGE -->
   <section class="page" id="page-intel">
@@ -3477,7 +2975,7 @@ input::placeholder { color: var(--text-muted); }
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <h1 style="font-size:1.4rem;font-weight:500;margin:0;">200萬貸款計畫</h1>
         <div style="display:flex;align-items:center;gap:8px;">
-          <div style="text-align:right;"><div style="font-size:0.55rem;color:var(--text-muted);">階段</div><div style="font-family:var(--mono);font-size:0.75rem;font-weight:600;color:var(--accent-green);" id="st_phase_label">—</div></div>
+          <div style="text-align:right;"><div style="font-size:0.55rem;color:var(--text-muted);">階段</div><div style="font-family:var(--mono);font-size:0.75rem;font-weight:600;color:var(--accent-green);" id="st_phase_label">① 質押累積中</div></div>
           <button onclick="stToggleSettings()" id="st_gear_btn" style="width:44px;height:44px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card2);font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">⚙️</button>
         </div>
       </div>
@@ -3565,7 +3063,7 @@ input::placeholder { color: var(--text-muted); }
         <div class="s-param-item"><label>信貸本金</label><div class="s-input-wrap"><input type="number" id="st_loan_amt" value="2000000" step="100000" oninput="runStrategy()"><span>元</span></div></div>
         <div class="s-param-item"><label>年利率</label><div class="s-input-wrap"><input type="number" id="st_loan_rate" value="2.39" step="0.01" oninput="runStrategy()"><span>%</span></div></div>
         <div class="s-param-item"><label>貸款年限</label><div class="s-input-wrap"><input type="number" id="st_loan_years" value="7" min="1" max="20" step="1" oninput="runStrategy()"><span>年</span></div></div>
-        <div class="s-param-item"><label>初始 PMT</label><div class="s-input-readonly" id="st_pmt_display">—</div></div>
+        <div class="s-param-item"><label>初始 PMT</label><div class="s-input-readonly" id="st_pmt_display">$25,880</div></div>
       </div>
       <div class="s-param-group-label" style="color:var(--accent-amber);margin-top:10px;">📈 預期股票配息收益</div>
       <div class="s-param-grid">
@@ -3579,15 +3077,15 @@ input::placeholder { color: var(--text-muted); }
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;text-align:center;">
           <div>
             <div style="font-size:0.5rem;color:var(--text-muted);margin-bottom:3px;">基金月配息</div>
-            <div style="font-family:var(--mono);font-size:0.75rem;font-weight:600;color:var(--accent-amber);" id="st_div_fund">—</div>
+            <div style="font-family:var(--mono);font-size:0.75rem;font-weight:600;color:var(--accent-amber);" id="st_div_fund">$5,000</div>
           </div>
           <div>
             <div style="font-size:0.5rem;color:var(--text-muted);margin-bottom:3px;">0050月配息</div>
-            <div style="font-family:var(--mono);font-size:0.75rem;font-weight:600;color:var(--accent-amber);" id="st_div_etf">—</div>
+            <div style="font-family:var(--mono);font-size:0.75rem;font-weight:600;color:var(--accent-amber);" id="st_div_etf">$2,500</div>
           </div>
           <div style="border-left:1px solid rgba(245,158,11,0.2);">
             <div style="font-size:0.5rem;color:var(--text-muted);margin-bottom:3px;">合計月配息</div>
-            <div style="font-family:var(--mono);font-size:0.75rem;font-weight:700;color:var(--accent-green);" id="st_div_total">—</div>
+            <div style="font-family:var(--mono);font-size:0.75rem;font-weight:700;color:var(--accent-green);" id="st_div_total">$7,500</div>
           </div>
         </div>
       </div>
@@ -3612,37 +3110,37 @@ input::placeholder { color: var(--text-muted); }
       <div class="s-param-grid"><div class="s-param-item"><label>開始日期</label><div class="s-input-wrap"><input type="month" id="st_start_date" oninput="runStrategy()" style="background:var(--bg-input);border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text-primary);font-size:0.82rem;width:100%;outline:none;font-family:var(--sans);"></div></div></div>
     </div></div>
     <div class="s-card" style="margin-bottom:14px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><div style="font-family:var(--mono);font-size:0.75rem;color:var(--accent-blue);" id="st_timeline_label">第 1 月</div><button onclick="stResetToNow()" style="font-size:0.6rem;padding:3px 10px;border-radius:6px;background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);color:var(--accent-green);cursor:pointer;">📍 現在</button></div>
-      <input type="range" id="st_timeline" min="0" max="84" step="1" value="0" oninput="stOnTimeline(this.value)" style="width:100%;accent-color:var(--accent-blue);cursor:pointer;">
-      <div style="display:flex;justify-content:space-between;font-size:0.55rem;color:var(--text-muted);margin-top:4px;"><span id="st_tl_start">開始</span><span id="st_tl_p2" style="color:var(--accent-amber);"></span><span id="st_tl_end">結束</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><div style="font-family:var(--mono);font-size:0.75rem;color:var(--accent-blue);" id="st_timeline_label">2026/03　第 1 月</div><button onclick="stResetToNow()" style="font-size:0.6rem;padding:3px 10px;border-radius:6px;background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);color:var(--accent-green);cursor:pointer;">📍 現在</button></div>
+      <input type="range" id="st_timeline" min="0" max="68" step="1" value="0" oninput="stOnTimeline(this.value)" style="width:100%;accent-color:var(--accent-blue);cursor:pointer;">
+      <div style="display:flex;justify-content:space-between;font-size:0.55rem;color:var(--text-muted);margin-top:4px;"><span id="st_tl_start">2026/03</span><span id="st_tl_p2" style="color:var(--accent-amber);">② 2028/07</span><span id="st_tl_end">2031/11</span></div>
     </div>
     <div class="s-card" style="margin-bottom:14px;text-align:center;padding:20px;">
-      <div style="font-size:0.55rem;color:var(--text-muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:4px;" id="st_cur_month_label">—</div>
+      <div style="font-size:0.55rem;color:var(--text-muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:4px;" id="st_cur_month_label">2026/03　第 1 月</div>
       <div style="font-size:0.58rem;color:var(--text-muted);margin-bottom:6px;">本月實質支出</div>
-      <div style="font-family:var(--mono);font-size:2.4rem;font-weight:700;line-height:1;color:var(--accent-red);" id="st_cur_cost">—</div>
+      <div style="font-family:var(--mono);font-size:2.4rem;font-weight:700;line-height:1;color:var(--accent-red);" id="st_cur_cost">$25,783</div>
       <div style="display:flex;justify-content:center;gap:20px;margin-top:10px;flex-wrap:wrap;">
-        <span style="font-size:0.62rem;color:var(--text-muted);">信貸本息 <span style="color:var(--accent-blue);font-family:var(--mono);font-weight:600;" id="st_cur_pmt">—</span></span>
-        <span style="font-size:0.62rem;color:var(--text-muted);">質押利息 <span style="color:var(--accent-amber);font-family:var(--mono);font-weight:600;" id="st_cur_pledgeint">—</span></span>
+        <span style="font-size:0.62rem;color:var(--text-muted);">信貸本息 <span style="color:var(--accent-blue);font-family:var(--mono);font-weight:600;" id="st_cur_pmt">$25,783</span></span>
+        <span style="font-size:0.62rem;color:var(--text-muted);">質押利息 <span style="color:var(--accent-amber);font-family:var(--mono);font-weight:600;" id="st_cur_pledgeint">$0</span></span>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
-      <div class="s-card" style="padding:14px;"><div style="font-size:0.6rem;color:var(--text-muted);margin-bottom:6px;">💳 信貸餘額</div><div style="font-family:var(--mono);font-size:1.2rem;font-weight:700;color:var(--accent-red);margin-bottom:8px;" id="st_loan_val">—</div><div style="height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;margin-bottom:4px;"><div id="st_loan_bar" style="height:100%;width:100%;background:linear-gradient(90deg,#ff4d6d,#ff8fa3);border-radius:4px;transition:width 0.6s;"></div></div><div style="display:flex;justify-content:space-between;font-size:0.52rem;color:var(--text-muted);"><span>剩餘本金</span><span id="st_loan_pct">100%</span></div></div>
-      <div class="s-card" style="padding:14px;"><div style="font-size:0.6rem;color:var(--text-muted);margin-bottom:6px;">🏦 質押累積</div><div style="font-family:var(--mono);font-size:1.2rem;font-weight:700;color:var(--accent-purple);margin-bottom:8px;" id="st_pledge_val">—</div><div style="height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;margin-bottom:4px;"><div id="st_pledge_bar" style="height:100%;width:0%;background:linear-gradient(90deg,#a78bfa,#7c3aed);border-radius:4px;transition:width 0.6s;"></div></div><div style="display:flex;justify-content:space-between;font-size:0.52rem;color:var(--text-muted);"><span id="st_pledge_sub">— / —</span><span id="st_pledge_pct">0%</span></div></div>
-      <div class="s-card" style="padding:14px;"><div style="font-size:0.6rem;color:var(--text-muted);margin-bottom:6px;">📊 基金水位</div><div style="font-family:var(--mono);font-size:1.2rem;font-weight:700;color:var(--accent-amber);margin-bottom:8px;" id="st_fund_val">—</div><div style="height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;margin-bottom:4px;"><div id="st_fund_bar" style="height:100%;width:100%;background:linear-gradient(90deg,#f59e0b,#fbbf24);border-radius:4px;transition:width 0.6s;"></div></div><div style="display:flex;justify-content:space-between;font-size:0.52rem;color:var(--text-muted);"><span>基金餘額</span><span id="st_fund_pct">100%</span></div></div>
+      <div class="s-card" style="padding:14px;"><div style="font-size:0.6rem;color:var(--text-muted);margin-bottom:6px;">💳 信貸餘額</div><div style="font-family:var(--mono);font-size:1.2rem;font-weight:700;color:var(--accent-red);margin-bottom:8px;" id="st_loan_val">197.1萬</div><div style="height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;margin-bottom:4px;"><div id="st_loan_bar" style="height: 100%; width: 99%; background: linear-gradient(90deg, rgb(255, 77, 109), rgb(255, 143, 163)); border-radius: 4px; transition: width 0.6s;"></div></div><div style="display:flex;justify-content:space-between;font-size:0.52rem;color:var(--text-muted);"><span>剩餘本金</span><span id="st_loan_pct">99%</span></div></div>
+      <div class="s-card" style="padding:14px;"><div style="font-size:0.6rem;color:var(--text-muted);margin-bottom:6px;">🏦 質押累積</div><div style="font-family:var(--mono);font-size:1.2rem;font-weight:700;color:var(--accent-purple);margin-bottom:8px;" id="st_pledge_val">2.6萬</div><div style="height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;margin-bottom:4px;"><div id="st_pledge_bar" style="height: 100%; width: 4%; background: linear-gradient(90deg, rgb(167, 139, 250), rgb(124, 58, 237)); border-radius: 4px; transition: width 0.6s;"></div></div><div style="display:flex;justify-content:space-between;font-size:0.52rem;color:var(--text-muted);"><span id="st_pledge_sub">2.6萬 / 70.0萬</span><span id="st_pledge_pct">4%</span></div></div>
+      <div class="s-card" style="padding:14px;"><div style="font-size:0.6rem;color:var(--text-muted);margin-bottom:6px;">📊 基金水位</div><div style="font-family:var(--mono);font-size:1.2rem;font-weight:700;color:var(--accent-amber);margin-bottom:8px;" id="st_fund_val">100.0萬</div><div style="height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;margin-bottom:4px;"><div id="st_fund_bar" style="height:100%;width:100%;background:linear-gradient(90deg,#f59e0b,#fbbf24);border-radius:4px;transition:width 0.6s;"></div></div><div style="display:flex;justify-content:space-between;font-size:0.52rem;color:var(--text-muted);"><span>基金餘額</span><span id="st_fund_pct">100%</span></div></div>
       <div class="s-card" style="padding:14px;border-color:rgba(0,229,160,0.25);">
         <div style="font-size:0.6rem;color:var(--text-muted);margin-bottom:8px;">💰 累計已還款</div>
         <div style="display:flex;align-items:center;gap:10px;">
-          <div style="position:relative;flex-shrink:0;width:70px;height:70px;"><canvas id="st_pie_canvas" width="70" height="70"></canvas><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;"><div style="font-family:var(--mono);font-size:0.62rem;font-weight:700;color:var(--text-primary);" id="st_pie_total">—</div></div></div>
+          <div style="position:relative;flex-shrink:0;width:70px;height:70px;"><canvas id="st_pie_canvas" width="70" height="70"></canvas><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;"><div style="font-family:var(--mono);font-size:0.62rem;font-weight:700;color:var(--text-primary);" id="st_pie_total">3.3萬</div></div></div>
           <div style="flex:1;min-width:0;">
-            <div style="display:flex;align-items:center;gap:5px;margin-bottom:5px;"><div style="width:8px;height:8px;border-radius:50%;background:#3b82f6;flex-shrink:0;"></div><div><div style="font-size:0.5rem;color:var(--text-muted);">已還款本利</div><div style="font-family:var(--mono);font-size:0.65rem;font-weight:600;color:#3b82f6;" id="st_pie_pmt_val">—</div></div></div>
-            <div style="display:flex;align-items:center;gap:5px;margin-bottom:5px;"><div style="width:8px;height:8px;border-radius:50%;background:#f59e0b;flex-shrink:0;"></div><div><div style="font-size:0.5rem;color:var(--text-muted);">基金贖回還債</div><div style="font-family:var(--mono);font-size:0.65rem;font-weight:600;color:#f59e0b;" id="st_pie_fp_val">—</div></div></div>
-            <div style="display:flex;align-items:center;gap:5px;margin-bottom:5px;"><div style="width:8px;height:8px;border-radius:50%;background:#00e5a0;flex-shrink:0;"></div><div><div style="font-size:0.5rem;color:var(--text-muted);">配息累積還款</div><div style="font-family:var(--mono);font-size:0.65rem;font-weight:600;color:#00e5a0;" id="st_pie_extra_val">—</div></div></div>
-            <div style="display:flex;align-items:center;gap:5px;"><div style="width:8px;height:8px;border-radius:50%;background:#a78bfa;flex-shrink:0;"></div><div><div style="font-size:0.5rem;color:var(--text-muted);">質押超額還款</div><div style="font-family:var(--mono);font-size:0.65rem;font-weight:600;color:#a78bfa;" id="st_pie_pledge_extra_val">—</div></div></div>
+            <div style="display:flex;align-items:center;gap:5px;margin-bottom:5px;"><div style="width:8px;height:8px;border-radius:50%;background:#3b82f6;flex-shrink:0;"></div><div><div style="font-size:0.5rem;color:var(--text-muted);">已還款本利</div><div style="font-family:var(--mono);font-size:0.65rem;font-weight:600;color:#3b82f6;" id="st_pie_pmt_val">2.6萬</div></div></div>
+            <div style="display:flex;align-items:center;gap:5px;margin-bottom:5px;"><div style="width:8px;height:8px;border-radius:50%;background:#f59e0b;flex-shrink:0;"></div><div><div style="font-size:0.5rem;color:var(--text-muted);">基金贖回還債</div><div style="font-family:var(--mono);font-size:0.65rem;font-weight:600;color:#f59e0b;" id="st_pie_fp_val">0</div></div></div>
+            <div style="display:flex;align-items:center;gap:5px;margin-bottom:5px;"><div style="width:8px;height:8px;border-radius:50%;background:#00e5a0;flex-shrink:0;"></div><div><div style="font-size:0.5rem;color:var(--text-muted);">配息累積還款</div><div style="font-family:var(--mono);font-size:0.65rem;font-weight:600;color:#00e5a0;" id="st_pie_extra_val">7,500</div></div></div>
+            <div style="display:flex;align-items:center;gap:5px;"><div style="width:8px;height:8px;border-radius:50%;background:#a78bfa;flex-shrink:0;"></div><div><div style="font-size:0.5rem;color:var(--text-muted);">質押超額還款</div><div style="font-family:var(--mono);font-size:0.65rem;font-weight:600;color:#a78bfa;" id="st_pie_pledge_extra_val">0</div></div></div>
           </div>
         </div>
       </div>
     </div>
-    <div class="s-summary-grid" id="st_summary" style="margin-bottom:14px;"></div>
+    <div class="s-summary-grid" id="st_summary" style="margin-bottom:14px;"><div class="s-summary-card" style=""><div class="s-summary-icon">💳</div><div class="s-summary-label">初始月還款</div><div class="s-summary-val" style="color:var(--accent-red);">$25,880</div><div class="s-summary-sub">7年 84期</div></div><div class="s-summary-card" style=""><div class="s-summary-icon">💰</div><div class="s-summary-label">每月大額還款</div><div class="s-summary-val" style="color:var(--accent-green);">$7,500</div><div class="s-summary-sub">配息＋超額</div></div><div class="s-summary-card" style=""><div class="s-summary-icon">①</div><div class="s-summary-label">第一階段結束</div><div class="s-summary-val" style="color:var(--accent-amber);">第29月</div><div class="s-summary-sub">2028/07</div></div><div class="s-summary-card" style=""><div class="s-summary-icon">🏁</div><div class="s-summary-label">預計還清</div><div class="s-summary-val" style="color:var(--accent-blue);">第69月</div><div class="s-summary-sub">2031/11</div></div></div>
     <div class="s-card" style="margin-bottom:14px;border-color:rgba(6,182,212,0.3);">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
         <div style="display:flex;align-items:center;gap:8px;"><div style="width:6px;height:6px;border-radius:50%;background:#06b6d4;flex-shrink:0;"></div><span style="font-size:0.65rem;font-weight:600;color:#06b6d4;">③ 第三階段：還清質押</span></div>
@@ -3656,24 +3154,24 @@ input::placeholder { color: var(--text-muted); }
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div style="background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.2);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:4px;">質押起始餘額</div><div style="font-family:var(--mono);font-size:1rem;font-weight:700;color:#06b6d4;" id="p3_start_bal">—</div></div>
-        <div style="background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.2);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:4px;">每月還款</div><div style="font-family:var(--mono);font-size:1rem;font-weight:700;color:#06b6d4;" id="p3_monthly_disp">—</div></div>
-        <div style="background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.2);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:4px;">預計還清</div><div style="font-family:var(--mono);font-size:1.1rem;font-weight:700;color:var(--accent-green);" id="p3_clear_month">—</div><div style="font-size:0.5rem;color:var(--text-muted);margin-top:2px;" id="p3_clear_date">—</div></div>
-        <div style="background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.2);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:4px;">累計質押利息</div><div style="font-family:var(--mono);font-size:1rem;font-weight:700;color:var(--accent-amber);" id="p3_total_int">—</div></div>
+        <div style="background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.2);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:4px;">質押起始餘額</div><div style="font-family:var(--mono);font-size:1rem;font-weight:700;color:#06b6d4;" id="p3_start_bal">$700,000</div></div>
+        <div style="background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.2);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:4px;">每月還款</div><div style="font-family:var(--mono);font-size:1rem;font-weight:700;color:#06b6d4;" id="p3_monthly_disp">$7,500</div></div>
+        <div style="background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.2);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:4px;">預計還清</div><div style="font-family:var(--mono);font-size:1.1rem;font-weight:700;color:var(--accent-green);" id="p3_clear_month">第 105 個月</div><div style="font-size:0.5rem;color:var(--text-muted);margin-top:2px;" id="p3_clear_date">8年9個月後還清</div></div>
+        <div style="background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.2);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:4px;">累計質押利息</div><div style="font-family:var(--mono);font-size:1rem;font-weight:700;color:var(--accent-amber);" id="p3_total_int">$82,157</div></div>
       </div>
       <div style="margin-top:10px;padding:10px 12px;background:rgba(255,255,255,0.02);border-radius:8px;">
         <div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:6px;">每月實質支出 = 還款 ＋ 質押利息</div>
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-          <span style="font-size:0.6rem;color:var(--text-muted);">還款 <span style="color:#06b6d4;font-family:var(--mono);font-weight:600;" id="p3_payment">—</span></span>
-          <span style="font-size:0.6rem;color:var(--text-muted);">+ 利息 <span style="color:var(--accent-amber);font-family:var(--mono);font-weight:600;" id="p3_int_first">—</span></span>
-          <span style="font-size:0.6rem;color:var(--text-muted);">= <span style="color:var(--accent-red);font-family:var(--mono);font-weight:700;" id="p3_total_monthly">—</span></span>
+          <span style="font-size:0.6rem;color:var(--text-muted);">還款 <span style="color:#06b6d4;font-family:var(--mono);font-weight:600;" id="p3_payment">$7,500</span></span>
+          <span style="font-size:0.6rem;color:var(--text-muted);">+ 利息 <span style="color:var(--accent-amber);font-family:var(--mono);font-weight:600;" id="p3_int_first">$1,505</span></span>
+          <span style="font-size:0.6rem;color:var(--text-muted);">= <span style="color:var(--accent-red);font-family:var(--mono);font-weight:700;" id="p3_total_monthly">$9,005</span></span>
         </div>
       </div>
     </div>
     <div class="s-card" style="margin-bottom:80px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><div class="s-section-label" style="margin-bottom:0;">📅 每月明細</div><button onclick="stShowAll=!stShowAll;renderStTable()" class="s-toggle-btn" id="st_toggle_btn">顯示全部</button></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><div class="s-section-label" style="margin-bottom:0;">📅 每月明細</div><button onclick="stShowAll=!stShowAll;renderStTable()" class="s-toggle-btn" id="st_toggle_btn">顯示全部 (69個月)</button></div>
       <div class="s-table-head" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div>月</div><div></div><div>信貸餘額</div><div>信貸本息</div><div>配息+閒錢</div><div>質押超額</div><div>本月質押</div><div>質押累計</div><div>實質支出</div></div>
-      <div id="st_table_body"></div>
+      <div id="st_table_body"><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.4);"><div style="color:var(--accent-green);font-weight:600;">1</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-red);">197.1萬</div><div style="color:var(--accent-red);">2.6萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.6萬</div><div style="color:var(--accent-purple);">2.6萬</div><div style="color:var(--accent-red);font-weight:600;">2.6萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">2</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-red);">194.1萬</div><div style="color:var(--accent-red);">2.6萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.6萬</div><div style="color:var(--accent-purple);">5.1萬</div><div style="color:var(--accent-red);font-weight:600;">2.6萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">3</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-red);">191.2萬</div><div style="color:var(--accent-red);">2.6萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.6萬</div><div style="color:var(--accent-purple);">7.7萬</div><div style="color:var(--accent-red);font-weight:600;">2.6萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">4</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-red);">188.3萬</div><div style="color:var(--accent-red);">2.5萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.5萬</div><div style="color:var(--accent-purple);">10.3萬</div><div style="color:var(--accent-red);font-weight:600;">2.5萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">5</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-red);">185.4萬</div><div style="color:var(--accent-red);">2.5萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.5萬</div><div style="color:var(--accent-purple);">12.8萬</div><div style="color:var(--accent-red);font-weight:600;">2.5萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">6</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-red);">182.5萬</div><div style="color:var(--accent-red);">2.5萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.5萬</div><div style="color:var(--accent-purple);">15.3萬</div><div style="color:var(--accent-red);font-weight:600;">2.5萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">7</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-red);">179.6萬</div><div style="color:var(--accent-red);">2.5萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.5萬</div><div style="color:var(--accent-purple);">17.8萬</div><div style="color:var(--accent-red);font-weight:600;">2.5萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">8</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-red);">176.7萬</div><div style="color:var(--accent-red);">2.5萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.5萬</div><div style="color:var(--accent-purple);">20.3萬</div><div style="color:var(--accent-red);font-weight:600;">2.5萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">9</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-red);">173.8萬</div><div style="color:var(--accent-red);">2.5萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.5萬</div><div style="color:var(--accent-purple);">22.8萬</div><div style="color:var(--accent-red);font-weight:600;">2.5萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">10</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-red);">170.9萬</div><div style="color:var(--accent-red);">2.5萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.5萬</div><div style="color:var(--accent-purple);">25.3萬</div><div style="color:var(--accent-red);font-weight:600;">2.5萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">11</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-red);">168.0萬</div><div style="color:var(--accent-red);">2.5萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.5萬</div><div style="color:var(--accent-purple);">27.8萬</div><div style="color:var(--accent-red);font-weight:600;">2.5萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">12</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-red);">165.1萬</div><div style="color:var(--accent-red);">2.5萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.5萬</div><div style="color:var(--accent-purple);">30.3萬</div><div style="color:var(--accent-red);font-weight:600;">2.5萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">13</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-red);">162.2萬</div><div style="color:var(--accent-red);">2.5萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.5萬</div><div style="color:var(--accent-purple);">32.7萬</div><div style="color:var(--accent-red);font-weight:600;">2.5萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">14</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-red);">159.4萬</div><div style="color:var(--accent-red);">2.4萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.4萬</div><div style="color:var(--accent-purple);">35.2萬</div><div style="color:var(--accent-red);font-weight:600;">2.4萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">15</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-red);">156.5萬</div><div style="color:var(--accent-red);">2.4萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.4萬</div><div style="color:var(--accent-purple);">37.6萬</div><div style="color:var(--accent-red);font-weight:600;">2.4萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">16</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-red);">153.6萬</div><div style="color:var(--accent-red);">2.4萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.4萬</div><div style="color:var(--accent-purple);">40.0萬</div><div style="color:var(--accent-red);font-weight:600;">2.4萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">17</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-red);">150.8萬</div><div style="color:var(--accent-red);">2.4萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.4萬</div><div style="color:var(--accent-purple);">42.4萬</div><div style="color:var(--accent-red);font-weight:600;">2.4萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">18</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-amber);">147.9萬</div><div style="color:var(--accent-red);">2.4萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.4萬</div><div style="color:var(--accent-purple);">44.8萬</div><div style="color:var(--accent-red);font-weight:600;">2.4萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">19</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-amber);">145.1萬</div><div style="color:var(--accent-red);">2.4萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.4萬</div><div style="color:var(--accent-purple);">47.2萬</div><div style="color:var(--accent-red);font-weight:600;">2.4萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">20</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-amber);">142.3萬</div><div style="color:var(--accent-red);">2.4萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.4萬</div><div style="color:var(--accent-purple);">49.6萬</div><div style="color:var(--accent-red);font-weight:600;">2.4萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">21</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-amber);">139.5萬</div><div style="color:var(--accent-red);">2.4萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.4萬</div><div style="color:var(--accent-purple);">51.9萬</div><div style="color:var(--accent-red);font-weight:600;">2.4萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">22</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-amber);">136.6萬</div><div style="color:var(--accent-red);">2.3萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.3萬</div><div style="color:var(--accent-purple);">54.3萬</div><div style="color:var(--accent-red);font-weight:600;">2.3萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">23</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-amber);">133.8萬</div><div style="color:var(--accent-red);">2.3萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.3萬</div><div style="color:var(--accent-purple);">56.6萬</div><div style="color:var(--accent-red);font-weight:600;">2.3萬</div></div><div class="s-table-row" style="grid-template-columns:2.2rem 0.5rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr;"><div style="color:var(--accent-green);font-weight:600;">24</div><div style="width:3px;border-radius:2px;background:var(--accent-green);margin:2px 0;"></div><div style="color:var(--accent-amber);">131.0萬</div><div style="color:var(--accent-red);">2.3萬</div><div style="color:var(--accent-green);">7,500</div><div style="color:var(--accent-amber);">0</div><div style="color:var(--accent-blue);font-weight:600;">2.3萬</div><div style="color:var(--accent-purple);">58.9萬</div><div style="color:var(--accent-red);font-weight:600;">2.3萬</div></div></div>
     </div>
   </section>
 
@@ -3723,7 +3221,7 @@ input::placeholder { color: var(--text-muted); }
       <div style="flex:1;height:1px;background:rgba(167,139,250,0.15);"></div>
       <button onclick="dbAddLoan()" class="db-add-btn" style="border-color:rgba(167,139,250,0.3);color:var(--accent-purple);">+ 新增</button>
     </div>
-    <div class="db-card" style="margin-bottom: 6px; transition: box-shadow 0.3s;">
+    <div class="db-card" style="margin-bottom:6px;">
       <div id="db_loan_list" style="display:flex;flex-direction:column;gap:10px;min-height:40px;"><div style="color:var(--text-muted);font-size:0.7rem;text-align:center;padding:14px 0;">尚未新增負債</div></div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
         <div class="db-derived" style="margin-top:0;">月攤還合計 <span id="db_loan_monthly_preview" class="db-derived-val" style="color:var(--accent-purple);">$0</span></div>
@@ -3739,41 +3237,79 @@ input::placeholder { color: var(--text-muted); }
       <span style="font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent-amber);">投資資產</span>
       <div style="flex:1;height:1px;background:rgba(245,158,11,0.15);"></div>
     </div>
-    <div class="db-card-grid" style="margin-bottom:22px;">
 
-      <!-- 股票 -->
-      <div class="db-card" data-section="stocks">
-        <div class="db-card-header">
-          <span class="db-card-icon">📈</span>
-          <span class="db-card-title">股票持股</span>
-          <button onclick="dbAddStock()" class="db-add-btn" style="margin-left:auto;">+ 新增</button>
+    <!-- 股票代碼清單 -->
+    <div class="db-card" style="margin-bottom:14px;">
+      <div class="db-card-header">
+        <span class="db-card-icon">📈</span>
+        <span class="db-card-title">股票 / ETF 代碼清單</span>
+        <button onclick="dbAddTicker()" class="db-add-btn" style="margin-left:auto;border-color:rgba(59,130,246,0.3);color:var(--accent-blue);">+ 新增</button>
+      </div>
+      <div style="font-size:0.6rem;color:var(--text-muted);margin-bottom:10px;">只需填代碼，系統自動抓報價。持股數量由下方交易記錄計算。</div>
+      <div id="db_ticker_list" style="display:flex;flex-direction:column;gap:8px;min-height:36px;"><div style="color:var(--text-muted);font-size:0.7rem;text-align:center;padding:10px 0;">點右上角 + 新增代碼</div></div>
+      <div class="db-derived" id="db_stock_div_preview" style="margin-top:10px;"></div>
+    </div>
+
+    <!-- 交易記錄 -->
+    <div class="db-card" style="margin-bottom:14px;">
+      <div class="db-card-header">
+        <span class="db-card-icon">🔄</span>
+        <span class="db-card-title">交易記錄</span>
+        <div style="display:flex;align-items:center;gap:8px;margin-left:auto;">
+          <button onclick="openTradeHistoryModal()" class="db-add-btn" style="border-color:rgba(245,158,11,0.3);color:var(--accent-amber);">📋 全部記錄</button>
+          <button onclick="dbAddTrade()" class="db-add-btn" style="border-color:rgba(0,229,160,0.3);color:var(--accent-green);">+ 新增</button>
         </div>
-        <div id="db_stock_list" style="display:flex;flex-direction:column;gap:8px;"><div style="color:var(--text-muted);font-size:0.7rem;padding:8px 0;">尚未新增</div></div>
-        <div class="db-derived" id="db_stock_div_preview" style="margin-top:10px;"></div>
       </div>
 
-      <!-- 基金 -->
-      <div class="db-card" data-section="funds">
-        <div class="db-card-header">
-          <span class="db-card-icon">🏦</span>
-          <span class="db-card-title">基金</span>
-          <button onclick="dbAddFund()" class="db-add-btn" style="margin-left:auto;">+ 新增</button>
-        </div>
-        <div id="db_fund_list" style="display:flex;flex-direction:column;gap:8px;"><div style="color:var(--text-muted);font-size:0.7rem;padding:8px 0;">尚未新增</div></div>
-        <div class="db-derived" id="db_fund_div_preview" style="margin-top:10px;"></div>
+      <!-- 月份切換 -->
+      <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:3px;margin-bottom:12px;" id="trade-month-grid">
+        <button onclick="setTradeMonth('01',this)" class="lm-btn" id="tm-01">1</button>
+        <button onclick="setTradeMonth('02',this)" class="lm-btn" id="tm-02">2</button>
+        <button onclick="setTradeMonth('03',this)" class="lm-btn active" id="tm-03">3</button>
+        <button onclick="setTradeMonth('04',this)" class="lm-btn" id="tm-04">4</button>
+        <button onclick="setTradeMonth('05',this)" class="lm-btn" id="tm-05">5</button>
+        <button onclick="setTradeMonth('06',this)" class="lm-btn" id="tm-06">6</button>
+        <button onclick="setTradeMonth('07',this)" class="lm-btn" id="tm-07">7</button>
+        <button onclick="setTradeMonth('08',this)" class="lm-btn" id="tm-08">8</button>
+        <button onclick="setTradeMonth('09',this)" class="lm-btn" id="tm-09">9</button>
+        <button onclick="setTradeMonth('10',this)" class="lm-btn" id="tm-10">10</button>
+        <button onclick="setTradeMonth('11',this)" class="lm-btn" id="tm-11">11</button>
+        <button onclick="setTradeMonth('12',this)" class="lm-btn" id="tm-12">12</button>
       </div>
 
-      <!-- 銀行 / 定存 -->
-      <div class="db-card" data-section="bank">
-        <div class="db-card-header">
-          <span class="db-card-icon">🏛️</span>
-          <span class="db-card-title">銀行 / 定存</span>
-          <button onclick="dbAddBank()" class="db-add-btn" style="margin-left:auto;">+ 新增</button>
-        </div>
-        <div id="db_bank_list" style="display:flex;flex-direction:column;gap:8px;"><div style="color:var(--text-muted);font-size:0.7rem;padding:8px 0;">尚未新增</div></div>
-        <div class="db-derived" id="db_bank_int_preview" style="margin-top:10px;"></div>
+      <div id="db_trade_list" style="display:flex;flex-direction:column;gap:6px;min-height:36px;"><div style="color:var(--text-muted);font-size:0.7rem;text-align:center;padding:10px 0;">本月尚無交易記錄</div></div>
+
+      <!-- 當月小計 -->
+      <div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+        <div class="db-derived" style="margin-top:0;">當月買入 <span id="db_trade_buy_preview" class="db-derived-val" style="color:var(--accent-blue);">—</span></div>
+        <div class="db-derived" style="margin-top:0;">當月賣出 <span id="db_trade_sell_preview" class="db-derived-val" style="color:var(--accent-green);">—</span></div>
       </div>
     </div>
+
+    <!-- 基金 -->
+    <div class="db-card" style="margin-bottom:14px;">
+      <div class="db-card-header">
+        <span class="db-card-icon">🏦</span>
+        <span class="db-card-title">基金</span>
+        <button onclick="dbAddFund()" class="db-add-btn" style="margin-left:auto;">+ 新增</button>
+      </div>
+      <div id="db_fund_list" style="display:flex;flex-direction:column;gap:8px;min-height:36px;"><div style="color:var(--text-muted);font-size:0.7rem;padding:8px 0;">尚未新增</div></div>
+      <div class="db-derived" id="db_fund_div_preview" style="margin-top:10px;"></div>
+    </div>
+
+    <!-- 銀行 / 定存 -->
+    <div class="db-card" style="margin-bottom:22px;">
+      <div class="db-card-header">
+        <span class="db-card-icon">🏛️</span>
+        <span class="db-card-title">銀行 / 定存</span>
+        <button onclick="dbAddBank()" class="db-add-btn" style="margin-left:auto;">+ 新增</button>
+      </div>
+      <div id="db_bank_list" style="display:flex;flex-direction:column;gap:8px;min-height:36px;"><div style="color:var(--text-muted);font-size:0.7rem;padding:8px 0;">尚未新增</div></div>
+      <div class="db-derived" id="db_bank_int_preview" style="margin-top:10px;"></div>
+    </div>
+
+    <!-- 隱藏舊的 db_stock_list 保持相容 -->
+    <div style="display:none;" id="db_stock_list"></div>
 
     <!-- 舊有 hidden inputs 保持相容 -->
     <input type="hidden" id="db_salary">
@@ -3798,19 +3334,16 @@ input::placeholder { color: var(--text-muted); }
   <div class="mobile-nav-item" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span><span>總覽</span>
   </div>
-  <div class="mobile-nav-item active" id="mn-ledger" onclick="goPage('ledger',     null, 'mn-ledger')">
+  <div class="mobile-nav-item" id="mn-ledger" onclick="goPage('ledger', null, 'mn-ledger')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg></span><span>帳務</span>
   </div>
-  <div class="mobile-nav-item" id="mn-stats" onclick="goPage('stats',      null, 'mn-stats')">
+  <div class="mobile-nav-item" id="mn-invest" onclick="goPage('invest', null, 'mn-invest')">
+    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span><span>投資</span>
+  </div>
+  <div class="mobile-nav-item active" id="mn-stats" onclick="goPage('stats',      null, 'mn-stats')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></span><span>統計</span>
   </div>
-  <div class="mobile-nav-item" id="mn-assets" onclick="goPage('assets',     null, 'mn-assets')">
-    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path><line x1="12" y1="12" x2="12" y2="16"></line><line x1="10" y1="14" x2="14" y2="14"></line></svg></span><span>資產</span>
-  </div>
-  <div class="mobile-nav-item" id="mn-recurring" onclick="goPage('recurring',  null, 'mn-recurring')">
-    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg></span><span>固定</span>
-  </div>
-  <div class="mobile-nav-item" id="mn-intel" onclick="goPage('intel',      null, 'mn-intel')">
+<div class="mobile-nav-item" id="mn-intel" onclick="goPage('intel',      null, 'mn-intel')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span><span>情報</span>
   </div>
   <div class="mobile-nav-item" id="mn-strategy" onclick="goPage('strategy',   null, 'mn-strategy')">
@@ -4520,9 +4053,10 @@ function goPage(name, navEl, mobileNavId) {
   if (navEl) navEl.classList.add('active');
   currentPage = name;
   closeSidebar();
-  // 切頁時捲回頂部
+  // 切頁時捲回頂部，並確保捲動不被鎖死
   const mc = document.querySelector('.main-content');
-  if (mc) mc.scrollTop = 0;
+  if (mc) { mc.scrollTop = 0; mc.style.overflowY = 'auto'; }
+  document.body.style.overflow = '';
 
   // Sync mobile bottom nav
   document.querySelectorAll('.mobile-nav-item').forEach(n => n.classList.remove('active'));
@@ -4559,11 +4093,9 @@ function goPage(name, navEl, mobileNavId) {
     renderStats();
   }
   if (name === 'asset')       { loadAssetValues(); switchAssetTab('overview'); }
-  if (name === 'assets')      { loadAssetValues(); switchAssetTab('overview'); renderAssetCenter(); }
-  if (name === 'banks')       { loadAssetValues(); switchAssetTab('accounts'); renderBankListPage(); }
-  if (name === 'invest')      { loadAssetValues(); switchAssetTab('invest');   renderInvList(); }
-  if (name === 'liabilities') { loadAssetValues(); switchAssetTab('debts');    renderLiabList(); }
-  if (name === 'recurring')   renderRecurAll();
+  if (name === 'assets')      { goPage('database', document.querySelector('.nav-item[onclick*="database"]')); return; }
+  if (name === 'recurring')   { goPage('database', document.querySelector('.nav-item[onclick*="database"]')); return; }
+  if (name === 'invest')      renderInvestPage();
   if (name === 'intel') {
     renderIntelPage();
     loadMarketNews();
@@ -4796,6 +4328,408 @@ function goToDbLoans() {
   }, 150);
 }
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 投資組合分頁
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const INV_COLORS = {
+  stocks: '#3b82f6',
+  funds:  '#a78bfa',
+  bank:   '#00e5a0',
+};
+
+function renderInvestPage() {
+  const holdingsMap = calcHoldings();
+  const holdingsArr = Object.values(holdingsMap).filter(h => (h.shares||0) > 0 || (h.totalCost||0) > 0);
+  // 補上avgCost
+  holdingsArr.forEach(h => {
+    h.avgCost = h.shares > 0 ? Math.round(h.totalCost / h.shares / 1000) : 0;
+  });
+
+  const funds  = AppState.assets.funds || [];
+  const banks  = AppState.assets.bank  || [];
+
+  // ── KPI ──
+  const stockCost  = holdingsArr.reduce((s,h) => s + (h.totalCost||0), 0);
+  const fundCost   = funds.reduce((s,f)  => s + (f.principal||0), 0);
+  const bankTotal  = banks.reduce((s,b)  => s + (b.amount||0), 0);
+  const totalCost  = stockCost + fundCost + bankTotal;
+
+  const stockDiv   = holdingsArr.reduce((s,h) => s + (h.totalCost||0)*((h.div_yield||0)/100/12), 0);
+  const fundDiv    = funds.reduce((s,f)  => s + (f.principal||0)*((f.annual_rate||0)/100/12), 0);
+  const bankInt    = banks.reduce((s,b)  => s + (b.amount||0)*((b.rate||0)/100/12), 0);
+  const monthlyDiv = stockDiv + fundDiv + bankInt;
+  const yearlyDiv  = monthlyDiv * 12;
+
+  const safe = id => document.getElementById(id);
+  if (safe('inv-kpi-cost'))   safe('inv-kpi-cost').textContent   = '$' + Math.round(totalCost).toLocaleString('zh-TW');
+  if (safe('inv-kpi-div'))    safe('inv-kpi-div').textContent    = '$' + Math.round(monthlyDiv).toLocaleString('zh-TW');
+  if (safe('inv-kpi-yearly')) safe('inv-kpi-yearly').textContent = '$' + Math.round(yearlyDiv).toLocaleString('zh-TW');
+
+  // ── 圓餅圖 ──
+  const pieData = [
+    { label:'股票/ETF', value: stockCost, color: INV_COLORS.stocks },
+    { label:'基金',     value: fundCost,  color: INV_COLORS.funds  },
+    { label:'銀行',     value: bankTotal, color: INV_COLORS.bank   },
+  ].filter(d => d.value > 0);
+  drawInvPie(pieData, totalCost);
+
+  const legendEl = safe('inv-pie-legend');
+  if (legendEl) {
+    legendEl.innerHTML = pieData.map(d => {
+      const pct = totalCost > 0 ? Math.round(d.value/totalCost*100) : 0;
+      return `<div style="display:flex;align-items:center;gap:6px;font-size:0.65rem;">
+        <span style="width:8px;height:8px;border-radius:2px;background:${d.color};flex-shrink:0;display:inline-block;"></span>
+        <span style="color:var(--text-secondary);flex:1;">${d.label}</span>
+        <span style="font-family:var(--mono);color:${d.color};font-weight:600;">${pct}%</span>
+      </div>`;
+    }).join('');
+  }
+  if (safe('inv-pie-total')) safe('inv-pie-total').textContent = '$' + Math.round(totalCost).toLocaleString('zh-TW');
+
+  // ── 股票持倉小卡 ──
+  const cardsEl = safe('inv-asset-cards');
+  if (cardsEl) {
+    if (!holdingsArr.length) {
+      cardsEl.innerHTML = '<div style="color:var(--text-muted);font-size:0.72rem;padding:12px 0;">尚無持股，請至資料庫新增交易記錄</div>';
+    } else {
+      cardsEl.innerHTML = holdingsArr.map(h => {
+        const moDiv = (h.totalCost||0) * ((h.div_yield||0)/100/12);
+        return invAssetCard({
+          icon:'📈',
+          title: `${h.ticker}${h.name && h.name !== h.ticker ? ' · '+h.name : ''}`,
+          sub: `${h.shares} 張・均成本 $${h.avgCost.toLocaleString('zh-TW')}`,
+          cost: h.totalCost||0, moDiv, color: INV_COLORS.stocks,
+          onclick: `goToDbSection('db_ticker_list', '0 0 0 2px rgba(59,130,246,0.6)')`
+        });
+      }).join('');
+      fetchInvestQuotes(holdingsArr);
+    }
+    // 基金小卡
+    funds.forEach(f => {
+      const moDiv = (f.principal||0)*((f.annual_rate||0)/100/12);
+      cardsEl.innerHTML += invAssetCard({
+        icon:'🏦', title: f.name||'基金', sub:`年化 ${f.annual_rate||0}%`,
+        cost: f.principal||0, moDiv, color: INV_COLORS.funds,
+        onclick: `goToDbSection('db_fund_list', '0 0 0 2px rgba(167,139,250,0.6)')`
+      });
+    });
+  }
+
+  // 銀行小卡
+  const bankEl = safe('inv-bank-cards');
+  if (bankEl) {
+    bankEl.innerHTML = banks.map(b => {
+      const moInt = (b.amount||0)*((b.rate||0)/100/12);
+      return invAssetCard({
+        icon:'🏛️', title: b.name||'銀行帳戶', sub:`${b.currency||'TWD'}・利率 ${b.rate||0}%`,
+        cost: b.amount||0, moDiv: moInt, color: INV_COLORS.bank,
+        onclick: `goToDbSection('db_bank_list', '0 0 0 2px rgba(0,229,160,0.6)')`
+      });
+    }).join('') || '<div style="color:var(--text-muted);font-size:0.72rem;padding:12px 0;">尚未設定銀行帳戶</div>';
+  }
+
+  // 月配息折線圖
+  drawInvBarChart(monthlyDiv);
+
+  // 快照折線圖
+  drawInvSnapshotChart();
+
+  // 報價狀態
+  const statusEl = document.getElementById('inv-quote-status');
+  if (statusEl) {
+    const count = holdingsArr.length;
+    statusEl.textContent = count > 0 ? `正在抓取 ${count} 檔報價…` : '尚無持股';
+  }
+
+  // 自動快照
+  saveInvestSnapshot(totalCost, monthlyDiv);
+}
+
+async function fetchInvestQuotes(holdings) {
+  let done = 0;
+  for (const h of holdings) {
+    if (!h.ticker) continue;
+    const q = await fetchQuote(h.ticker);
+    done++;
+    const statusEl = document.getElementById('inv-quote-status');
+    if (statusEl) statusEl.textContent = `已更新 ${done}/${holdings.length} 檔`;
+    if (!q) continue;
+    const curVal = h.shares * q.price * 1000;
+    const pnl    = curVal - (h.totalCost||0);
+    const pnlPct = (h.totalCost||0) > 0 ? (pnl / h.totalCost * 100) : 0;
+    const pnlColor = pnl >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+    // 找對應卡片更新
+    document.querySelectorAll('#inv-asset-cards > div').forEach(card => {
+      if (card.textContent.includes(h.ticker)) {
+        let pnlEl = card.querySelector('.inv-pnl');
+        if (!pnlEl) {
+          pnlEl = document.createElement('div');
+          pnlEl.className = 'inv-pnl';
+          pnlEl.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-top:6px;';
+          card.appendChild(pnlEl);
+        }
+        pnlEl.innerHTML = `
+          <div style="padding:5px 8px;background:var(--bg-card2);border-radius:6px;">
+            <div style="font-size:0.5rem;color:var(--text-muted);margin-bottom:1px;">現價</div>
+            <div style="font-family:var(--mono);font-size:0.72rem;font-weight:600;color:var(--text-primary);">$${q.price.toLocaleString('zh-TW')}</div>
+          </div>
+          <div style="padding:5px 8px;background:var(--bg-card2);border-radius:6px;">
+            <div style="font-size:0.5rem;color:var(--text-muted);margin-bottom:1px;">現值</div>
+            <div style="font-family:var(--mono);font-size:0.72rem;font-weight:600;color:var(--accent-amber);">$${Math.round(curVal/1000).toLocaleString('zh-TW')}k</div>
+          </div>
+          <div style="padding:5px 8px;background:var(--bg-card2);border-radius:6px;">
+            <div style="font-size:0.5rem;color:var(--text-muted);margin-bottom:1px;">損益</div>
+            <div style="font-family:var(--mono);font-size:0.72rem;font-weight:600;color:${pnlColor};">${pnl>=0?'+':''}${Math.round(pnl/1000).toLocaleString('zh-TW')}k<br><span style="font-size:0.6rem;">(${pnlPct.toFixed(1)}%)</span></div>
+          </div>`;
+      }
+    });
+  }
+  const statusEl = document.getElementById('inv-quote-status');
+  if (statusEl) statusEl.textContent = `✓ 已更新 ${done} 檔報價・${new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'})}`;
+}
+
+// 快照資料範圍
+let _snapshotDays = 30;
+
+// 每日快照
+function saveInvestSnapshot(totalCost, monthlyDiv) {
+  const today = new Date().toISOString().slice(0,10);
+  if (!AppState.investSnapshots) AppState.investSnapshots = [];
+  const existing = AppState.investSnapshots.find(s => s.date === today);
+  if (!existing) {
+    AppState.investSnapshots.push({ date: today, cost: Math.round(totalCost), monthlyDiv: Math.round(monthlyDiv) });
+    if (AppState.investSnapshots.length > 365) AppState.investSnapshots = AppState.investSnapshots.slice(-365);
+    appStateSave();
+  }
+}
+
+function setSnapshotRange(days, btn) {
+  _snapshotDays = days;
+  document.querySelectorAll('#snp-30,#snp-90,#snp-180,#snp-365').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  drawInvSnapshotChart();
+}
+
+function drawInvSnapshotChart() {
+  const cv = document.getElementById('invSnapshotChart');
+  if (!cv) return;
+  const ctx = cv.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const W   = cv.parentElement.clientWidth || 400;
+  const H   = 140;
+  cv.width  = W * dpr; cv.height = H * dpr;
+  cv.style.width = W + 'px';
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+
+  const snapshots = (AppState.investSnapshots || [])
+    .slice(-_snapshotDays)
+    .sort((a,b) => a.date.localeCompare(b.date));
+
+  if (snapshots.length < 2) {
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.font = '12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('資料累積中，每次開啟投資分頁自動記錄', W/2, H/2);
+    return;
+  }
+
+  const PAD = { top:14, right:14, bottom:22, left:56 };
+  const cW  = W - PAD.left - PAD.right;
+  const cH  = H - PAD.top  - PAD.bottom;
+
+  const costs = snapshots.map(s => s.cost || 0);
+  const divs  = snapshots.map(s => s.monthlyDiv || 0);
+  const maxCost = Math.max(...costs, 1);
+  const maxDiv  = Math.max(...divs, 1);
+  const n = snapshots.length;
+
+  const xOf = i => PAD.left + (i / (n-1)) * cW;
+  const yCost = v => PAD.top + cH * (1 - v / maxCost);
+  const yDiv  = v => PAD.top + cH * (1 - v / maxDiv);
+
+  // 格線
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 1;
+  [0, 0.5, 1].forEach(r => {
+    const y = PAD.top + cH * (1 - r);
+    ctx.beginPath(); ctx.moveTo(PAD.left, y); ctx.lineTo(W - PAD.right, y); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+    ctx.font = '9px monospace'; ctx.textAlign = 'right';
+    ctx.fillText('$' + Math.round(maxCost * r / 10000) + 'w', PAD.left - 4, y + 3);
+  });
+
+  // 成本填充區
+  ctx.beginPath();
+  ctx.moveTo(xOf(0), yCost(costs[0]));
+  for (let i = 1; i < n; i++) ctx.lineTo(xOf(i), yCost(costs[i]));
+  ctx.lineTo(xOf(n-1), PAD.top + cH);
+  ctx.lineTo(xOf(0),   PAD.top + cH);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(245,158,11,0.1)';
+  ctx.fill();
+
+  // 成本折線
+  ctx.beginPath();
+  ctx.moveTo(xOf(0), yCost(costs[0]));
+  for (let i = 1; i < n; i++) ctx.lineTo(xOf(i), yCost(costs[i]));
+  ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2; ctx.stroke();
+
+  // 月配息折線（右軸比例）
+  ctx.beginPath();
+  ctx.moveTo(xOf(0), yDiv(divs[0]));
+  for (let i = 1; i < n; i++) ctx.lineTo(xOf(i), yDiv(divs[i]));
+  ctx.strokeStyle = '#00e5a0'; ctx.lineWidth = 1.5;
+  ctx.setLineDash([4, 3]); ctx.stroke(); ctx.setLineDash([]);
+
+  // X 軸標籤（首尾）
+  ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText(snapshots[0].date.slice(5), xOf(0), H - 4);
+  ctx.fillText(snapshots[n-1].date.slice(5), xOf(n-1), H - 4);
+  if (n > 4) {
+    const mid = Math.floor(n/2);
+    ctx.fillText(snapshots[mid].date.slice(5), xOf(mid), H - 4);
+  }
+}
+
+async function refreshInvestQuotes() {
+  const btn = document.querySelector('[onclick="refreshInvestQuotes()"]');
+  if (btn) { btn.textContent = '⏳ 更新中…'; btn.disabled = true; }
+  // 清除快取強制重抓
+  const tickers = AppState.assets.tickers || [];
+  tickers.forEach(tk => { delete _quoteCache[tk.ticker]; });
+  await renderInvestPage();
+  if (btn) { btn.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> 更新報價'; btn.disabled = false; }
+  showToast('✓ 報價已更新');
+}
+
+
+function invAssetCard({ icon, title, sub, cost, moDiv, color, onclick }) {
+  return `
+  <div onclick="${onclick}" style="background:var(--bg-card);border:1px solid var(--border);border-left:3px solid ${color};border-radius:12px;padding:12px 14px;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='${color}'" onmouseout="this.style.borderColor='var(--border)';this.style.borderLeftColor='${color}'">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:1rem;">${icon}</span>
+        <div>
+          <div style="font-size:0.82rem;font-weight:600;color:var(--text-primary);">${title}</div>
+          <div style="font-size:0.6rem;color:var(--text-muted);">${sub}</div>
+        </div>
+      </div>
+      <span style="font-size:0.55rem;color:${color};font-family:var(--mono);">編輯 →</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+      <div style="padding:6px 10px;background:var(--bg-card2);border-radius:8px;">
+        <div style="font-size:0.52rem;color:var(--text-muted);margin-bottom:2px;">成本 / 餘額</div>
+        <div style="font-family:var(--mono);font-size:0.78rem;font-weight:600;color:var(--accent-amber);">$${Math.round(cost).toLocaleString('zh-TW')}</div>
+      </div>
+      <div style="padding:6px 10px;background:var(--bg-card2);border-radius:8px;">
+        <div style="font-size:0.52rem;color:var(--text-muted);margin-bottom:2px;">月配息 / 利息</div>
+        <div style="font-family:var(--mono);font-size:0.78rem;font-weight:600;color:var(--accent-green);">$${Math.round(moDiv).toLocaleString('zh-TW')}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function drawInvPie(data, total) {
+  const cv = document.getElementById('invPieCanvas');
+  if (!cv) return;
+  const ctx = cv.getContext('2d');
+  const W = 130, cx = 65, cy = 65, r = 58, ir = r * 0.55;
+  ctx.clearRect(0, 0, W, W);
+  if (!total || !data.length) {
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,255,255,0.04)'; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx, cy, ir, 0, Math.PI*2);
+    ctx.fillStyle = '#141720'; ctx.fill();
+    return;
+  }
+  let angle = -Math.PI / 2;
+  data.forEach(d => {
+    const slice = (d.value / total) * Math.PI * 2;
+    ctx.beginPath(); ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, angle, angle + slice); ctx.closePath();
+    ctx.fillStyle = d.color; ctx.fill();
+    ctx.strokeStyle = '#141720'; ctx.lineWidth = 2; ctx.stroke();
+    angle += slice;
+  });
+  ctx.beginPath(); ctx.arc(cx, cy, ir, 0, Math.PI*2);
+  ctx.fillStyle = '#141720'; ctx.fill();
+}
+
+function drawInvBarChart(monthlyDiv) {
+  const cv = document.getElementById('invBarChart');
+  if (!cv) return;
+  const ctx = cv.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const W = cv.parentElement.clientWidth || 400;
+  const H = 120;
+  cv.width = W * dpr; cv.height = H * dpr;
+  cv.style.width = W + 'px';
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+
+  // 模擬12個月配息（固定值，實際可接歷史資料）
+  const months = ['1','2','3','4','5','6','7','8','9','10','11','12'];
+  const now = new Date().getMonth();
+  const values = months.map((_, i) => i <= now ? monthlyDiv : 0);
+  const maxV = Math.max(...values, 1);
+
+  const PAD = { top: 10, right: 10, bottom: 24, left: 50 };
+  const cW = W - PAD.left - PAD.right;
+  const cH = H - PAD.top - PAD.bottom;
+  const barW = cW / 12 * 0.6;
+  const gap   = cW / 12;
+
+  // Y 軸格線
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 1;
+  [0, 0.5, 1].forEach(r => {
+    const y = PAD.top + cH * (1 - r);
+    ctx.beginPath(); ctx.moveTo(PAD.left, y); ctx.lineTo(W - PAD.right, y); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.font = `${10 * dpr / dpr}px monospace`;
+    ctx.textAlign = 'right';
+    ctx.fillText('$' + Math.round(maxV * r / 1000) + 'k', PAD.left - 4, y + 4);
+  });
+
+  // 長條
+  values.forEach((v, i) => {
+    const x = PAD.left + i * gap + (gap - barW) / 2;
+    const bH = v > 0 ? Math.max(3, (v / maxV) * cH) : 2;
+    const y = PAD.top + cH - bH;
+    const isNow = i === now;
+    const grad = ctx.createLinearGradient(0, y, 0, y + bH);
+    grad.addColorStop(0, isNow ? '#00e5a0' : 'rgba(0,229,160,0.5)');
+    grad.addColorStop(1, isNow ? 'rgba(0,229,160,0.3)' : 'rgba(0,229,160,0.15)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.roundRect ? ctx.roundRect(x, y, barW, bH, 3) : ctx.rect(x, y, barW, bH);
+    ctx.fill();
+    // X 標籤
+    ctx.fillStyle = isNow ? 'var(--accent-green)' : 'rgba(255,255,255,0.3)';
+    ctx.font = `${9}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText(months[i], x + barW/2, H - 6);
+  });
+}
+
+function goToDbSection(elId, shadow) {
+  goPage('database', document.querySelector('.nav-item[onclick*="database"]'));
+  setTimeout(() => {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const card = el.closest('.db-card');
+    if (card) {
+      card.style.transition = 'box-shadow 0.3s';
+      card.style.boxShadow = shadow + ', 0 0 20px rgba(59,130,246,0.15)';
+      setTimeout(() => { card.style.boxShadow = ''; }, 2000);
+    }
+  }, 150);
+}
+
+function goToDbInvest() { goToDbSection('db_stock_list', '0 0 0 2px rgba(245,158,11,0.6)'); }
+
 function goToDbRecurring() {
   goPage('database', document.querySelector('.nav-item[onclick*="database"]'));
   setTimeout(() => {
@@ -4815,6 +4749,9 @@ function goToDbRecurring() {
 function closeTxModal() {
   document.getElementById('txModal').style.display = 'none';
   document.body.style.overflow = '';
+  // 確保 main-content 捲動不被鎖死
+  const mc = document.querySelector('.main-content');
+  if (mc) mc.style.overflow = 'auto';
 }
 
 // 往下滑關閉 modal
@@ -6080,27 +6017,51 @@ async function renderHome() {
   // ══════════════════════════════════════
   // 5. 負債還款進度（來源：負債管理）
   // ══════════════════════════════════════
+  // ── 負債還款進度（來源：AppState.loans）──
+  const loans = AppState.loans || [];
   const liabEl = document.getElementById('homeLiabProgress');
-  if (liabEl) {
-    if (!liabilities.length) {
-      liabEl.innerHTML='<div class="empty-state" style="padding:12px 0;font-size:0.78rem;"><div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg></div>尚無負債資料</div>';
-    } else {
-      liabEl.innerHTML = liabilities.slice(0,4).map(l=>{
-        const remain = Math.max(0, l.total-l.paid);
-        const pct    = l.total>0?Math.min(100,Math.round((l.paid/l.total)*100)):0;
-        const color  = LIAB_COLORS[l.type]||'#6b7280';
-        return `<div>
-          <div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:3px;">
-            <span style="color:var(--text-secondary);">${l.name}</span>
-            <span style="font-family:var(--mono);color:${color};">剩 ${fmtMoney(remain)}</span>
+  const hLiabTotal   = document.getElementById('h-liab-total');
+  const hLiabMonthly = document.getElementById('h-liab-monthly');
+
+  if (loans.length === 0) {
+    if (liabEl) liabEl.innerHTML = '<div class="empty-state" style="padding:12px 0;font-size:0.78rem;"><div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg></div>前往資料庫新增負債</div>';
+    if (hLiabTotal)   hLiabTotal.textContent   = '$0';
+    if (hLiabMonthly) hLiabMonthly.textContent = '$0';
+  } else {
+    const LOAN_COLORS = { mortgage:'#3b82f6', personal:'#a78bfa', pledge:'#f59e0b', other:'#6b7280' };
+    let totalBal = 0, totalPmt = 0;
+    const rows = loans.map(l => {
+      const rem   = dbCalcLoanRemaining(l);
+      const color = LOAN_COLORS[l.type] || '#6b7280';
+      // 還款進度 = 已還 / 原始本金
+      const origPrincipal = l.principal || 1;
+      const paid    = origPrincipal - rem.balance;
+      const pct     = Math.min(100, Math.round((paid / origPrincipal) * 100));
+      totalBal += rem.balance;
+      totalPmt += rem.pmt;
+      const clearStr = rem.clearDate
+        ? rem.clearDate.getFullYear() + '/' + (rem.clearDate.getMonth()+1)
+        : '—';
+      return `<div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.72rem;margin-bottom:4px;">
+          <div style="display:flex;align-items:center;gap:5px;">
+            <span style="width:7px;height:7px;border-radius:50%;background:${color};flex-shrink:0;display:inline-block;"></span>
+            <span style="color:var(--text-secondary);">${l.name||l.type}</span>
           </div>
-          <div style="height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
-            <div style="height:100%;width:${pct}%;background:${color};border-radius:3px;transition:width 0.5s;"></div>
-          </div>
-          <div style="font-size:0.62rem;color:var(--text-muted);margin-top:2px;">已還 ${pct}% ｜月還 ${fmtMoney(l.monthly)}</div>
-        </div>`;
-      }).join('');
-    }
+          <span style="font-family:var(--mono);color:${color};font-weight:600;">$${rem.balance.toLocaleString('zh-TW')}</span>
+        </div>
+        <div style="height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;margin-bottom:3px;">
+          <div style="height:100%;width:${pct}%;background:${color};border-radius:3px;transition:width 0.6s;opacity:0.85;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.58rem;color:var(--text-muted);">
+          <span>已還 ${pct}%　月付 $${rem.pmt.toLocaleString('zh-TW')}</span>
+          <span>${rem.remMonths} 個月後還清・${clearStr}</span>
+        </div>
+      </div>`;
+    });
+    if (liabEl)       liabEl.innerHTML           = rows.join('');
+    if (hLiabTotal)   hLiabTotal.textContent     = '$' + Math.round(totalBal).toLocaleString('zh-TW');
+    if (hLiabMonthly) hLiabMonthly.textContent   = '$' + Math.round(totalPmt).toLocaleString('zh-TW');
   }
 
   // ══════════════════════════════════════
@@ -9704,10 +9665,16 @@ const AppState = {
   //   override_balance, override_date }
   loans: [],
 
+  // ── 投資交易記錄 ──
+  // { id, ticker, type:'stock'|'fund'|'etf', action:'buy'|'sell', date, shares, price, note }
+  trades: [],
+
   assets: {
-    stocks: [],  // { id, ticker, shares, cost_per_share, div_yield }
+    stocks: [],  // 舊結構保留相容，新流程用 trades
     funds:  [],  // { id, name, principal, annual_rate }
     bank:   [],  // { id, name, amount, rate, currency }
+    // 股票代碼清單（只存代碼，持股數從 trades 算）
+    tickers: [], // { id, ticker, name, div_yield }
   },
 };
 
@@ -9724,10 +9691,13 @@ function appStateLoad() {
     if (saved.expenses)  AppState.expenses  = saved.expenses;
     if (saved.recurring) AppState.recurring = saved.recurring;
     if (saved.loans)     AppState.loans     = saved.loans;
+    if (saved.investSnapshots) AppState.investSnapshots = saved.investSnapshots;
+    if (saved.trades)    AppState.trades = saved.trades;
     if (saved.assets) {
-      if (saved.assets.stocks) AppState.assets.stocks = saved.assets.stocks;
-      if (saved.assets.funds)  AppState.assets.funds  = saved.assets.funds;
-      if (saved.assets.bank)   AppState.assets.bank   = saved.assets.bank;
+      if (saved.assets.stocks)  AppState.assets.stocks  = saved.assets.stocks;
+      if (saved.assets.funds)   AppState.assets.funds   = saved.assets.funds;
+      if (saved.assets.bank)    AppState.assets.bank    = saved.assets.bank;
+      if (saved.assets.tickers) AppState.assets.tickers = saved.assets.tickers;
     }
     if (saved.debts) {
       if (saved.debts.mortgage) AppState.debts.mortgage = saved.debts.mortgage;
@@ -9788,10 +9758,16 @@ function dbLoad() {
   appStateLoad();
   dbRenderRecurring();
   dbRenderLoans();
-  dbRenderStocks();
+  dbRenderTickers();
+  dbRenderTrades();
   dbRenderFunds();
   dbRenderBanks();
   dbUpdatePreviews();
+  // 初始化交易記錄月份格
+  _tradeYear = currentYear;
+  document.querySelectorAll('#trade-month-grid .lm-btn').forEach(b => b.classList.remove('active'));
+  const tmBtn = document.getElementById('tm-' + _tradeMonth);
+  if (tmBtn) tmBtn.classList.add('active');
   if (AppState.meta.last_updated) {
     const d = new Date(AppState.meta.last_updated);
     const el = document.getElementById('db_last_saved');
@@ -10116,29 +10092,347 @@ function dbDeleteExpense(i) {
   dbMarkDirty();
 }
 
-// ── STOCKS ──
-function dbRenderStocks() {
-  const c = document.getElementById('db_stock_list');
-  if (!c) return;
-  if (!AppState.assets.stocks.length) { c.innerHTML = '<div style="color:var(--text-muted);font-size:0.7rem;padding:8px 0;">尚未新增</div>'; return; }
-  c.innerHTML = AppState.assets.stocks.map((s,i) => `
-    <div class="db-row-item">
-      <button class="db-row-delete" onclick="dbDeleteStock(${i})">✕</button>
-      <div class="db-row-fields">
-        <div class="db-field"><label>代碼</label><div class="db-input-wrap"><input type="text" placeholder="0050" value="${s.ticker||''}" oninput="AppState.assets.stocks[${i}].ticker=this.value;dbMarkDirty()" style="font-family:var(--mono);font-weight:600;"></div></div>
-        <div class="db-field"><label>持股數（張）</label><div class="db-input-wrap"><input type="number" placeholder="0" value="${s.shares||''}" step="1" oninput="AppState.assets.stocks[${i}].shares=parseFloat(this.value)||0;dbMarkDirty()"><span>張</span></div></div>
-        <div class="db-field"><label>成本均價</label><div class="db-input-wrap"><input type="number" placeholder="0" value="${s.cost_per_share||''}" step="0.1" oninput="AppState.assets.stocks[${i}].cost_per_share=parseFloat(this.value)||0;dbMarkDirty()"><span>元</span></div></div>
-        <div class="db-field"><label>殖利率</label><div class="db-input-wrap"><input type="number" placeholder="3" value="${s.div_yield||''}" step="0.1" oninput="AppState.assets.stocks[${i}].div_yield=parseFloat(this.value)||0;dbMarkDirty()"><span>%</span></div></div>
-      </div>
-    </div>
-  `).join('');
-}
-function dbAddStock() {
-  AppState.assets.stocks.push({ id:'s'+Date.now(), ticker:'', shares:0, cost_per_share:0, div_yield:0 });
-  dbRenderStocks(); dbMarkDirty();
-}
-function dbDeleteStock(i) { AppState.assets.stocks.splice(i,1); dbRenderStocks(); dbMarkDirty(); }
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 股票代碼清單 CRUD
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 投資交易記錄 — 狀態
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let _tradeMonth = String(new Date().getMonth()+1).padStart(2,'0');
+let _tradeYear  = String(new Date().getFullYear());
 
+// ── 從交易記錄計算各代碼持倉 ──
+function calcHoldings() {
+  const map = {};
+  (AppState.trades || []).forEach(t => {
+    if (!map[t.ticker]) map[t.ticker] = { shares: 0, totalCost: 0 };
+    const qty = t.shares || 0;
+    const px  = t.price  || 0;
+    if (t.action === 'buy') {
+      map[t.ticker].totalCost += qty * px * 1000;
+      map[t.ticker].shares    += qty;
+    } else {
+      // 賣出：按比例扣成本
+      const avgCost = map[t.ticker].shares > 0
+        ? map[t.ticker].totalCost / map[t.ticker].shares
+        : 0;
+      map[t.ticker].totalCost -= avgCost * qty;
+      map[t.ticker].shares    -= qty;
+    }
+    map[t.ticker].shares    = Math.max(0, map[t.ticker].shares);
+    map[t.ticker].totalCost = Math.max(0, map[t.ticker].totalCost);
+  });
+  // 加入代碼清單的 div_yield
+  (AppState.assets.tickers || []).forEach(tk => {
+    if (!map[tk.ticker]) map[tk.ticker] = { shares:0, totalCost:0 };
+    map[tk.ticker].name      = tk.name || tk.ticker;
+    map[tk.ticker].div_yield = tk.div_yield || 0;
+    map[tk.ticker].ticker    = tk.ticker;
+  });
+  return map;
+}
+
+// ── 股票代碼清單 CRUD ──
+function dbRenderTickers() {
+  const c = document.getElementById('db_ticker_list');
+  if (!c) return;
+  const tickers = AppState.assets.tickers || [];
+  if (!tickers.length) {
+    c.innerHTML = '<div style="color:var(--text-muted);font-size:0.7rem;text-align:center;padding:10px 0;">點右上角 + 新增代碼</div>';
+    return;
+  }
+  const holdings = calcHoldings();
+  c.innerHTML = tickers.map((tk, i) => {
+    const h = holdings[tk.ticker] || {};
+    return `
+    <div style="display:grid;grid-template-columns:90px 1fr auto auto auto;gap:8px;align-items:center;padding:8px 10px;background:var(--bg-card2);border:1px solid var(--border);border-radius:9px;">
+      <div class="db-input-wrap">
+        <input type="text" placeholder="代碼" value="${tk.ticker||''}"
+          style="font-family:var(--mono);font-size:0.82rem;font-weight:700;color:var(--accent-blue);text-transform:uppercase;"
+          oninput="AppState.assets.tickers[${i}].ticker=this.value.toUpperCase();dbMarkDirty()"
+          onblur="dbRenderTickers()">
+      </div>
+      <input type="text" placeholder="名稱（選填）" value="${tk.name||''}"
+        oninput="AppState.assets.tickers[${i}].name=this.value;dbMarkDirty()"
+        style="background:transparent;border:none;color:var(--text-secondary);font-size:0.75rem;outline:none;width:100%;">
+      <div style="font-size:0.6rem;color:var(--text-muted);white-space:nowrap;">
+        ${h.shares > 0 ? `<span style="color:var(--accent-amber);font-family:var(--mono);">${h.shares}張</span>` : ''}
+      </div>
+      <div class="db-input-wrap" style="width:76px;">
+        <input type="number" placeholder="殖利率" value="${tk.div_yield||''}" step="0.1"
+          inputmode="decimal"
+          oninput="AppState.assets.tickers[${i}].div_yield=parseFloat(this.value)||0;dbMarkDirty()">
+        <span>%</span>
+      </div>
+      <button class="db-row-delete" onclick="dbDeleteTicker(${i})">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function dbAddTicker() {
+  if (!AppState.assets.tickers) AppState.assets.tickers = [];
+  AppState.assets.tickers.push({ id: 'tk'+Date.now(), ticker: '', name: '', div_yield: 0 });
+  dbRenderTickers();
+  dbMarkDirty();
+}
+
+function dbDeleteTicker(i) {
+  const tk = AppState.assets.tickers[i];
+  if (!confirm(`確定刪除 ${tk.ticker}？（交易記錄不會刪除）`)) return;
+  AppState.assets.tickers.splice(i, 1);
+  dbRenderTickers(); dbMarkDirty();
+}
+
+// ── 交易記錄月份切換 ──
+function setTradeMonth(month, btn) {
+  _tradeMonth = month;
+  document.querySelectorAll('#trade-month-grid .lm-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  dbRenderTrades();
+}
+
+// ── 交易記錄 CRUD ──
+function dbRenderTrades() {
+  const c = document.getElementById('db_trade_list');
+  if (!c) return;
+  const all = AppState.trades || [];
+  const filtered = all.filter(t => {
+    const d = t.date || '';
+    return d.slice(0,4) === _tradeYear && d.slice(5,7) === _tradeMonth;
+  }).sort((a,b) => b.date.localeCompare(a.date));
+
+  if (!filtered.length) {
+    c.innerHTML = '<div style="color:var(--text-muted);font-size:0.7rem;text-align:center;padding:10px 0;">本月尚無交易記錄</div>';
+    dbUpdateTradePreviews([], []);
+    return;
+  }
+
+  c.innerHTML = filtered.map(t => {
+    const idx    = all.findIndex(x => x.id === t.id);
+    const isBuy  = t.action === 'buy';
+    const color  = isBuy ? 'var(--accent-blue)' : 'var(--accent-green)';
+    const label  = isBuy ? '買入' : '賣出';
+    const total  = (t.shares||0) * (t.price||0) * 1000;
+    return `
+    <div style="display:grid;grid-template-columns:auto auto 1fr auto auto auto;gap:8px;align-items:center;padding:9px 12px;background:var(--bg-card2);border:1px solid var(--border);border-left:3px solid ${color};border-radius:9px;">
+      <span style="font-size:0.6rem;padding:2px 7px;border-radius:6px;background:${isBuy?'rgba(59,130,246,0.15)':'rgba(0,229,160,0.12)'};color:${color};font-weight:600;white-space:nowrap;">${label}</span>
+      <span style="font-family:var(--mono);font-size:0.82rem;font-weight:700;color:var(--accent-amber);">${t.ticker}</span>
+      <div style="font-size:0.7rem;color:var(--text-muted);">
+        ${t.date} ・ ${t.shares}張 × $${(t.price||0).toLocaleString('zh-TW')}
+        ${t.note ? `<span style="color:var(--text-muted);"> ・ ${t.note}</span>` : ''}
+      </div>
+      <span style="font-family:var(--mono);font-size:0.72rem;color:${color};white-space:nowrap;">$${Math.round(total).toLocaleString('zh-TW')}</span>
+      <button onclick="openEditTradeModal(${idx})" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;color:var(--text-muted);font-size:0.65rem;padding:3px 8px;cursor:pointer;">編輯</button>
+      <button class="db-row-delete" onclick="dbDeleteTrade('${t.id}')">✕</button>
+    </div>`;
+  }).join('');
+
+  const buys  = filtered.filter(t => t.action === 'buy');
+  const sells = filtered.filter(t => t.action === 'sell');
+  dbUpdateTradePreviews(buys, sells);
+}
+
+function dbUpdateTradePreviews(buys, sells) {
+  const buyTotal  = buys.reduce((s,t)  => s + (t.shares||0)*(t.price||0)*1000, 0);
+  const sellTotal = sells.reduce((s,t) => s + (t.shares||0)*(t.price||0)*1000, 0);
+  const bEl = document.getElementById('db_trade_buy_preview');
+  const sEl = document.getElementById('db_trade_sell_preview');
+  if (bEl) bEl.textContent = buyTotal  > 0 ? '$'+Math.round(buyTotal).toLocaleString('zh-TW')  : '—';
+  if (sEl) sEl.textContent = sellTotal > 0 ? '$'+Math.round(sellTotal).toLocaleString('zh-TW') : '—';
+}
+
+function dbDeleteTrade(id) {
+  if (!confirm('確定刪除此筆交易？')) return;
+  AppState.trades = AppState.trades.filter(t => t.id !== id);
+  dbRenderTrades(); dbMarkDirty();
+}
+
+// ── 新增/編輯交易 Modal ──
+let _editTradeIdx = -1;
+
+function dbAddTrade() { openEditTradeModal(-1); }
+
+function openEditTradeModal(idx) {
+  _editTradeIdx = idx;
+  const t = idx >= 0 ? AppState.trades[idx] : null;
+  const tickers = (AppState.assets.tickers || []).map(tk =>
+    `<option value="${tk.ticker}" ${t&&t.ticker===tk.ticker?'selected':''}>${tk.ticker}${tk.name?' - '+tk.name:''}</option>`
+  ).join('');
+
+  const modal = document.getElementById('tradeEditModal');
+  if (!modal) return;
+
+  document.getElementById('te_action').value  = t ? t.action  : 'buy';
+  document.getElementById('te_ticker').innerHTML = tickers || '<option value="">— 先在代碼清單新增 —</option>';
+  if (t) document.getElementById('te_ticker').value = t.ticker;
+  document.getElementById('te_date').value    = t ? t.date    : new Date().toISOString().slice(0,10);
+  document.getElementById('te_shares').value  = t ? t.shares  : '';
+  document.getElementById('te_price').value   = t ? t.price   : '';
+  document.getElementById('te_note').value    = t ? (t.note||'') : '';
+  document.getElementById('tradeEditModalTitle').textContent = idx >= 0 ? '編輯交易' : '新增交易';
+
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  // 重置報價
+  _teCurrentQuote = null;
+  const infoEl = document.getElementById('te_quote_info');
+  if (infoEl) infoEl.style.display = 'none';
+  // 若是新增且有代碼，自動查報價
+  setTimeout(() => {
+    if (idx < 0) autoFillTradePrice();
+    document.getElementById('te_shares').focus();
+  }, 200);
+}
+
+let _teCurrentQuote = null;
+
+async function autoFillTradePrice() {
+  const ticker = document.getElementById('te_ticker')?.value?.trim().toUpperCase();
+  const infoEl = document.getElementById('te_quote_info');
+  const priceEl = document.getElementById('te_price');
+  const qPriceEl = document.getElementById('te_quote_price');
+  const qChangeEl = document.getElementById('te_quote_change');
+
+  _teCurrentQuote = null;
+  if (!ticker || ticker === '') {
+    if (infoEl) infoEl.style.display = 'none';
+    return;
+  }
+
+  if (infoEl) infoEl.style.display = 'flex';
+  if (qPriceEl) qPriceEl.textContent = '查詢中…';
+  if (qChangeEl) qChangeEl.textContent = '';
+
+  const q = await fetchQuote(ticker);
+  if (!q) {
+    if (qPriceEl) { qPriceEl.textContent = '找不到代號'; qPriceEl.style.color = 'var(--accent-red)'; }
+    return;
+  }
+
+  _teCurrentQuote = q;
+  if (qPriceEl) { qPriceEl.textContent = '$' + q.price.toLocaleString('zh-TW'); qPriceEl.style.color = 'var(--accent-blue)'; }
+  if (qChangeEl) {
+    const sign = q.change >= 0 ? '▲ +' : '▼ ';
+    qChangeEl.textContent = sign + q.change.toFixed(2);
+    qChangeEl.style.color = q.change >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+  }
+
+  // 成交價若空白，自動帶入
+  if (priceEl && !priceEl.value) {
+    priceEl.value = q.price;
+  }
+}
+
+function applyQuoteToPrice() {
+  if (!_teCurrentQuote) return;
+  const priceEl = document.getElementById('te_price');
+  if (priceEl) priceEl.value = _teCurrentQuote.price;
+}
+
+function closeTradeEditModal() {
+  document.getElementById('tradeEditModal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function saveTradeEdit() {
+  const action = document.getElementById('te_action').value;
+  const ticker = document.getElementById('te_ticker').value.trim().toUpperCase();
+  const date   = document.getElementById('te_date').value;
+  const shares = parseFloat(document.getElementById('te_shares').value);
+  const price  = parseFloat(document.getElementById('te_price').value);
+  const note   = document.getElementById('te_note').value.trim();
+
+  if (!ticker || !date || isNaN(shares) || shares <= 0 || isNaN(price) || price <= 0) {
+    showToast('⚠ 請填寫代碼、日期、張數、價格', 'warn'); return;
+  }
+
+  const trade = { id: _editTradeIdx >= 0 ? AppState.trades[_editTradeIdx].id : 'tr'+Date.now(),
+    action, ticker, date, shares, price, note };
+
+  if (_editTradeIdx >= 0) {
+    AppState.trades[_editTradeIdx] = trade;
+  } else {
+    AppState.trades.push(trade);
+  }
+
+  closeTradeEditModal();
+  dbRenderTrades();
+  dbRenderTickers();
+  dbMarkDirty();
+  showToast('✓ 已儲存交易記錄');
+}
+
+// ── 全部記錄 Modal ──
+function openTradeHistoryModal() {
+  const modal = document.getElementById('tradeHistoryModal');
+  if (!modal) return;
+  // 填入代碼篩選
+  const tickerSel = document.getElementById('th_ticker_filter');
+  if (tickerSel) {
+    const tickers = AppState.assets.tickers || [];
+    tickerSel.innerHTML = '<option value="all">所有代碼</option>' +
+      tickers.map(tk => `<option value="${tk.ticker}">${tk.ticker}${tk.name?' - '+tk.name:''}</option>`).join('');
+  }
+  renderTradeHistory('all', String(new Date().getFullYear()));
+  const yearSel = document.getElementById('th_year_filter');
+  if (yearSel) yearSel.value = String(new Date().getFullYear());
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeTradeHistoryModal() {
+  document.getElementById('tradeHistoryModal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function renderTradeHistory(tickerFilter, yearFilter) {
+  const all = [...(AppState.trades||[])].sort((a,b) => b.date.localeCompare(a.date));
+  const filtered = all.filter(t => {
+    const okTicker = tickerFilter === 'all' || t.ticker === tickerFilter;
+    const okYear   = !yearFilter || t.date.slice(0,4) === yearFilter;
+    return okTicker && okYear;
+  });
+
+  const listEl = document.getElementById('th_list');
+  if (!listEl) return;
+
+  if (!filtered.length) {
+    listEl.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">尚無記錄</div>';
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(t => {
+    const isBuy  = t.action === 'buy';
+    const color  = isBuy ? 'var(--accent-blue)' : 'var(--accent-green)';
+    const total  = (t.shares||0) * (t.price||0) * 1000;
+    const idx    = AppState.trades.findIndex(x => x.id === t.id);
+    return `
+    <div style="display:grid;grid-template-columns:auto auto 1fr auto auto;gap:8px;align-items:center;padding:9px 12px;border-bottom:1px solid var(--border);">
+      <span style="font-size:0.58rem;padding:1px 6px;border-radius:5px;background:${isBuy?'rgba(59,130,246,0.15)':'rgba(0,229,160,0.12)'};color:${color};font-weight:600;">${isBuy?'買':'賣'}</span>
+      <span style="font-family:var(--mono);font-size:0.78rem;font-weight:700;color:var(--accent-amber);">${t.ticker}</span>
+      <div>
+        <div style="font-size:0.72rem;color:var(--text-secondary);">${t.date}　${t.shares}張 × $${(t.price||0).toLocaleString()}</div>
+        ${t.note ? `<div style="font-size:0.6rem;color:var(--text-muted);">${t.note}</div>` : ''}
+      </div>
+      <span style="font-family:var(--mono);font-size:0.7rem;color:${color};">$${Math.round(total).toLocaleString('zh-TW')}</span>
+      <button onclick="dbDeleteTradeFromHistory('${t.id}')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.75rem;padding:2px 6px;border-radius:4px;" onmouseover="this.style.color='var(--accent-red)'" onmouseout="this.style.color='var(--text-muted)'">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function dbDeleteTradeFromHistory(id) {
+  if (!confirm('確定刪除？')) return;
+  AppState.trades = AppState.trades.filter(t => t.id !== id);
+  dbMarkDirty();
+  renderTradeHistory(
+    document.getElementById('th_ticker_filter')?.value || 'all',
+    document.getElementById('th_year_filter')?.value   || ''
+  );
+  dbRenderTrades();
+  dbRenderTickers();
+}
+
+// ── FUNDS ──
 // ── FUNDS ──
 function dbRenderFunds() {
   const c = document.getElementById('db_fund_list');
@@ -10264,6 +10558,54 @@ function dbDeletePledge(i) { AppState.debts.pledge.splice(i,1); dbRenderPledges(
 // ── Init on load ──
 (function() {
   appStateLoad();
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 手機鍵盤彈出時 Modal 自動上移
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  if (window.visualViewport) {
+    // 需要跟隨鍵盤的 Modal 內容容器 id 清單
+    const MODAL_INNER_IDS = [
+      'txModalInner',      // 收支新增
+      'tradeEditModal',    // 交易記錄新增/編輯
+    ];
+
+    const onViewportChange = () => {
+      const vv = window.visualViewport;
+      // 鍵盤佔據的高度
+      const keyboardH = window.innerHeight - vv.height;
+      // 頁面被捲動的偏移
+      const offsetY   = vv.offsetTop;
+
+      MODAL_INNER_IDS.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const modal = el.closest('[style*="position:fixed"]') || el;
+        // 只在 Modal 顯示時處理
+        if (modal.style.display === 'none') return;
+
+        if (keyboardH > 50) {
+          // 鍵盤彈出：把 Modal 整體上移，讓輸入框不被擋住
+          el.style.transform = `translateY(-${Math.round(keyboardH * 0.5)}px)`;
+          el.style.transition = 'transform 0.2s ease';
+        } else {
+          // 鍵盤收回：還原
+          el.style.transform = '';
+        }
+      });
+    };
+
+    window.visualViewport.addEventListener('resize', onViewportChange);
+    window.visualViewport.addEventListener('scroll', onViewportChange);
+  }
+
+  // 資料庫頁面輸入框失焦時 scroll 回原位（防止頁面偏移）
+  document.addEventListener('focusout', () => {
+    setTimeout(() => {
+      if (!document.activeElement || document.activeElement.tagName === 'BODY') {
+        window.scrollTo({ top: window.scrollY, behavior: 'instant' });
+      }
+    }, 100);
+  });
 })();
 
 </script>
