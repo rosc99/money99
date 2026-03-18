@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW"><head>
+<html lang="zh-TW" style="--txModalAccent: #ff4d6d;"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
@@ -55,6 +55,470 @@ body::before {
   background-size: 40px 40px;
   pointer-events: none;
   z-index: 0;
+}
+
+/* ══════════════════════════════════
+   DATABASE PAGE
+══════════════════════════════════ */
+.db-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 14px;
+}
+.db-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  transition: border-color 0.2s;
+  position: relative;
+}
+.db-card:hover { border-color: var(--border-hover); }
+.db-card[data-section="income"]   { border-top: 2px solid rgba(0,229,160,0.4); }
+.db-card[data-section="stocks"]   { border-top: 2px solid rgba(245,158,11,0.4); }
+.db-card[data-section="funds"]    { border-top: 2px solid rgba(245,158,11,0.4); }
+.db-card[data-section="bank"]     { border-top: 2px solid rgba(245,158,11,0.4); }
+.db-card[data-section="mortgage"] { border-top: 2px solid rgba(167,139,250,0.4); }
+.db-card[data-section="personal"] { border-top: 2px solid rgba(167,139,250,0.4); }
+.db-card[data-section="pledge"]   { border-top: 2px solid rgba(167,139,250,0.4); }
+
+.db-card-header {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 16px;
+}
+.db-card-icon { font-size: 1.05rem; }
+.db-card-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.db-field-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+.db-field label {
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+  display: block;
+}
+.db-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.db-input-wrap:focus-within {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+}
+.db-input-wrap input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 8px 10px;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  outline: none;
+  min-width: 0;
+}
+.db-input-wrap input:focus { box-shadow: none; border: none; }
+.db-input-wrap span {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  padding: 0 9px;
+  border-left: 1px solid var(--border);
+  background: rgba(255,255,255,0.02);
+  white-space: nowrap;
+  line-height: 34px;
+}
+.db-input-wrap select {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 8px 10px;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  outline: none;
+  cursor: pointer;
+}
+
+.db-derived {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.db-derived-val {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-green);
+  margin-left: auto;
+}
+
+/* DB row items (stocks, funds, debts) */
+.db-row-item {
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  position: relative;
+}
+.db-row-item .db-row-name {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--mono);
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.db-row-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+.db-row-delete {
+  position: absolute;
+  top: 8px; right: 8px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 5px;
+  transition: all 0.15s;
+  line-height: 1;
+}
+.db-row-delete:hover { color: var(--accent-red); background: rgba(255,77,109,0.1); }
+
+.db-derived-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  padding: 2px 0;
+}
+.db-derived-row span:last-child {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-amber);
+}
+
+/* Expense list rows */
+.db-expense-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto auto;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 10px;
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  transition: border-color 0.2s;
+}
+.db-expense-row:hover { border-color: var(--border-hover); }
+
+.db-add-btn {
+  font-size: 0.62rem;
+  padding: 4px 10px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  font-family: var(--sans);
+}
+.db-add-btn:hover {
+  border-color: var(--accent-blue);
+  color: var(--text-primary);
+  background: rgba(59,130,246,0.08);
+}
+
+/* Source tag shown in other pages */
+.db-source-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.5rem;
+  padding: 1px 7px;
+  border-radius: 8px;
+  background: rgba(0,229,160,0.08);
+  border: 1px solid rgba(0,229,160,0.2);
+  color: var(--accent-green);
+  cursor: pointer;
+  transition: all 0.15s;
+  vertical-align: middle;
+  margin-left: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: var(--mono);
+  text-decoration: none;
+}
+.db-source-tag:hover {
+  background: rgba(0,229,160,0.15);
+  border-color: var(--accent-green);
+}
+/* ══════════════════════════════════
+   DATABASE PAGE
+══════════════════════════════════ */
+.tsunami-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(135deg, rgba(20,12,12,0.95) 0%, rgba(30,10,18,0.95) 100%);
+  border: 1px solid rgba(255,77,109,0.35);
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.tsunami-bar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,77,109,0.04), transparent);
+  pointer-events: none;
+}
+.tsunami-bar.active {
+  border-color: rgba(255,77,109,0.7);
+  box-shadow: 0 0 24px rgba(255,77,109,0.18), inset 0 0 30px rgba(255,77,109,0.04);
+  animation: tsunamiPulse 3s ease-in-out infinite;
+}
+@keyframes tsunamiPulse {
+  0%, 100% { box-shadow: 0 0 24px rgba(255,77,109,0.18), inset 0 0 30px rgba(255,77,109,0.04); }
+  50% { box-shadow: 0 0 38px rgba(255,77,109,0.32), inset 0 0 40px rgba(255,77,109,0.08); }
+}
+.tsunami-icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 6px rgba(255,77,109,0.5));
+}
+.tsunami-info { flex: 1; min-width: 0; }
+.tsunami-title {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent-red);
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+.tsunami-badge {
+  font-size: 0.5rem;
+  background: rgba(255,77,109,0.15);
+  border: 1px solid rgba(255,77,109,0.3);
+  color: var(--accent-red);
+  padding: 1px 7px;
+  border-radius: 20px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.tsunami-desc {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.tsunami-toggle-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.tsunami-toggle {
+  position: relative;
+  width: 52px;
+  height: 28px;
+  cursor: pointer;
+}
+.tsunami-toggle input { display: none; }
+.tsunami-slider {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.tsunami-slider::before {
+  content: '';
+  position: absolute;
+  width: 20px; height: 20px;
+  left: 3px; top: 3px;
+  background: var(--text-muted);
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+.tsunami-toggle input:checked + .tsunami-slider {
+  background: rgba(255,77,109,0.2);
+  border-color: rgba(255,77,109,0.6);
+  box-shadow: 0 0 12px rgba(255,77,109,0.4), inset 0 0 8px rgba(255,77,109,0.1);
+}
+.tsunami-toggle input:checked + .tsunami-slider::before {
+  transform: translateX(24px);
+  background: var(--accent-red);
+  box-shadow: 0 0 10px rgba(255,77,109,0.7);
+}
+.tsunami-toggle-label {
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: var(--mono);
+}
+.tsunami-toggle input:checked ~ .tsunami-toggle-label { color: var(--accent-red); }
+
+/* Tsunami shadow panel */
+.tsunami-shadow-panel {
+  display: none;
+  background: rgba(255,30,60,0.04);
+  border: 1px solid rgba(255,77,109,0.25);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+.tsunami-shadow-panel.visible { display: block; }
+.tsunami-shadow-title {
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-red);
+  font-family: var(--mono);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tsunami-params {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.tsunami-param-item label {
+  font-size: 0.6rem;
+  color: rgba(255,77,109,0.7);
+  margin-bottom: 5px;
+}
+.tsunami-param-item .s-input-wrap input {
+  border-color: rgba(255,77,109,0.25);
+  background: rgba(255,20,50,0.05);
+  color: var(--accent-red);
+}
+.tsunami-param-item .s-input-wrap input:focus {
+  border-color: var(--accent-red);
+  box-shadow: 0 0 0 3px rgba(255,77,109,0.1);
+}
+.tsunami-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+.tsunami-result-card {
+  background: rgba(255,77,109,0.05);
+  border: 1px solid rgba(255,77,109,0.15);
+  border-radius: 8px;
+  padding: 10px 12px;
+  text-align: center;
+}
+.tsunami-result-label {
+  font-size: 0.55rem;
+  color: rgba(255,77,109,0.6);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.tsunami-result-val {
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent-red);
+}
+.tsunami-result-sub {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+.slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.slider-wrap input[type=range] {
+  flex: 1;
+  accent-color: var(--accent-red);
+  cursor: pointer;
+}
+.slider-val {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--accent-red);
+  min-width: 36px;
+  text-align: right;
+}
+
+/* Tsunami mode: affected values turn red */
+.tsunami-val {
+  color: var(--accent-red) !important;
+  text-shadow: 0 0 8px rgba(255,77,109,0.4);
+}
+
+/* ── 帳務月份格選擇器 ── */
+.lm-btn {
+  padding: 5px 2px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+}
+.lm-btn:hover {
+  border-color: var(--accent-blue);
+  color: var(--text-primary);
+  background: rgba(59,130,246,0.08);
+}
+.lm-btn.active {
+  border-color: var(--accent-blue);
+  background: rgba(59,130,246,0.18);
+  color: var(--accent-blue);
+  font-weight: 600;
 }
 
 /* ══════════════════════════════════
@@ -1141,7 +1605,7 @@ input::placeholder { color: var(--text-muted); }
 .expense-chip.active { background: #3b82f6; color: #fff; border-color: #3b82f6; font-weight: 700; box-shadow: 0 2px 10px rgba(59,130,246,0.35); }
 </style>
 </head>
-<body>
+<body style="">
 
 <!-- ── 登入 / 註冊 Overlay ── -->
 <div id="authOverlay" class="hidden">
@@ -1252,7 +1716,7 @@ input::placeholder { color: var(--text-muted); }
   </div>
 
   <div class="nav-section-label">主頁</div>
-  <div class="nav-item active" onclick="goPage('home',this)">
+  <div class="nav-item" onclick="goPage('home',this)">
     <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span> 總覽主頁
   </div>
 
@@ -1280,12 +1744,18 @@ input::placeholder { color: var(--text-muted); }
     <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span> 策略追蹤
   </div>
 
+  <div class="nav-section-label">系統</div>
+  <div class="nav-item" onclick="goPage('database',this)" id="nav-database">
+    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"></path><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"></path></svg></span> 資料庫
+    <span class="nav-badge" style="background:rgba(0,229,160,0.12);color:var(--accent-green);">核心</span>
+  </div>
+
   <div class="sidebar-bottom">
     <div class="sync-status">
-      <div class="sync-dot" id="syncDot"></div>
-      <span id="syncStatusText" style="color: var(--accent-amber);">載入中…</span>
+      <div class="sync-dot ok" id="syncDot"></div>
+      <span id="syncStatusText" style="color: var(--accent-green);">已同步</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-17 05:43:28</div>
+    <div class="clock-display" id="clockDisplay">2026-03-18 10:46:47</div>
   </div>
 </aside>
 
@@ -1299,7 +1769,7 @@ input::placeholder { color: var(--text-muted); }
 <main class="main-content">
 
   <!-- ── 主頁 ── -->
-  <section class="page active" id="page-home">
+  <section class="page" id="page-home">
     <div class="page-header">
       <div class="page-title-block">
         <div class="page-label">Dashboard</div>
@@ -1430,8 +1900,23 @@ input::placeholder { color: var(--text-muted); }
             </div>
           </div>
         </div>
-        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"></div>
-        <canvas id="wealthChart" style="width:100%;display:block;" height="220"></canvas>
+        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#f59e0b;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#ff4d6d;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總負債</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#ff4d6d;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#00e5a0;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">淨資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#00e5a0;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div></div>
+        <canvas id="wealthChart" style="width:100%;display:block;" height="220" width="346"></canvas>
         <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;" id="wealthXLabels"></div>
       </div>
 
@@ -1535,164 +2020,167 @@ input::placeholder { color: var(--text-muted); }
   </section>
 
   <!-- ── 收支流水帳 ── -->
-  <section class="page" id="page-ledger">
-    <div class="page-header">
-      <div class="page-title-block">
-        <div class="page-label">Ledger</div>
-        <h1>收支流水帳</h1>
-      </div>
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-        <div class="year-wrap">
-          <select class="year-selector" id="yearSelectLedger" onchange="onYearChangeLedger()">
+  <section class="page active" id="page-ledger">
+
+    <!-- ══ 頂部：月份切換 + 當月摘要 ══ -->
+    <div style="position:sticky;top:0;z-index:50;background:var(--bg-base);padding-bottom:12px;margin-bottom:4px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding-top:4px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <select class="year-selector" id="yearSelectLedger" onchange="onYearChangeLedger()" style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text-primary);font-family:var(--mono);font-size:0.82rem;outline:none;cursor:pointer;">
             <option value="2024">2024</option>
             <option value="2025">2025</option>
             <option value="2026" selected="">2026</option>
             <option value="2027">2027</option>
           </select>
+          <div style="font-family:var(--mono);font-size:1.1rem;font-weight:500;color:var(--text-primary);" id="ledger-month-title">3月</div>
         </div>
-        <button class="btn btn-ghost" onclick="exportCSV()" style="font-size:0.8rem;">↓ 匯出 CSV</button>
-      </div>
-    </div>
-
-    <div class="two-col">
-      <!-- 新增表單 -->
-      <div>
-        <div class="card">
-          <div class="card-header"><div class="card-title">新增帳務</div></div>
-          <div class="form-grid">
-            <div><label>日期</label><input type="date" id="txDate"></div>
-
-            <!-- 收入 / 支出 / 固定支出 toggle -->
-            <div style="display:flex;align-items:flex-end;">
-              <div style="width:100%">
-                <label>類別</label>
-                <div style="display:flex;gap:0;border-radius:10px;overflow:hidden;border:1px solid var(--border);">
-                  <button type="button" id="toggleIncome" onclick="setTxType('收入')" style="flex: 1 1 0%; padding: 9px 0px; border-top: none; border-bottom: none; border-left: none; border-image: initial; background: rgba(0, 229, 160, 0.133); color: rgb(0, 229, 160); font-family: var(--sans); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: 0.15s; border-right: 1px solid var(--border);">
-                    ＋ 收入
-                  </button>
-                  <button type="button" id="toggleExpense" onclick="setTxType('支出')" style="flex:1;padding:9px 0;border:none;background:transparent;color:var(--text-muted);font-family:var(--sans);font-size:0.82rem;font-weight:500;cursor:pointer;transition:all 0.15s;border-right:1px solid var(--border);">
-                    － 支出
-                  </button>
-                  <button type="button" id="toggleFixed" onclick="setTxType('固定支出'); openFixedQuickModal();" style="flex:1;padding:9px 0;border:none;background:transparent;color:var(--text-muted);font-family:var(--sans);font-size:0.82rem;font-weight:500;cursor:pointer;transition:all 0.15s;">
-                    <svg style="display:inline-block;vertical-align:-3px;margin-right:4px;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"></line><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path></svg> 固定
-                  </button>
-                </div>
-              </div>
-            </div>
-            <!-- 隱藏 select 供 JS 讀值用 -->
-            <input type="hidden" id="txCategory" value="收入">
-
-            <!-- 收入快速選項 -->
-            <div class="full" id="incomeChipsRow" style="display: block;">
-              <label>快速選項 <span style="color:var(--text-muted);font-size:0.65rem;font-weight:400;">點選後直接填入項目</span></label>
-              <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:6px;">
-                <button type="button" class="tx-chip income-chip" onclick="selectChip(this,'薪資')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path></svg> 薪資</button>
-                <button type="button" class="tx-chip income-chip" onclick="selectChip(this,'三節')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg> 三節</button>
-                <button type="button" class="tx-chip income-chip" onclick="selectChip(this,'衛服部加碼')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg> 衛服部加碼</button>
-                <button type="button" class="tx-chip income-chip" onclick="selectChip(this,'獎金')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"></circle><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"></path></svg> 獎金</button>
-                <button type="button" class="tx-chip income-chip" onclick="selectChip(this,'打工')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg> 打工</button>
-              </div>
-            </div>
-
-            <!-- 支出子類別選項 -->
-            <div class="full" id="expenseChipsRow" style="display:none;">
-              <label>支出類別 <span style="color:var(--text-muted);font-size:0.65rem;font-weight:400;">點選後可再填項目名稱</span></label>
-              <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:6px;">
-                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'生活')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg> 生活</button>
-                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'餐飲')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg> 餐飲</button>
-                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'交通')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg> 交通</button>
-                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'娛樂')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2"></rect></svg> 娛樂</button>
-                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'醫療')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 19H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"></path><polyline points="9 11 12 14 22 4"></polyline></svg> 醫療</button>
-                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'教育')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> 教育</button>
-                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'股票投資')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg> 投資</button>
-                <button type="button" class="tx-chip expense-chip" onclick="selectExpenseCat(this,'其他')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg> 其他</button>
-                <button type="button" class="tx-chip expense-chip" style="background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.3);color:#f59e0b;" onclick="selectExpenseCat(this,'信用卡')"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg> 信用卡</button>
-                <button type="button" class="tx-chip expense-chip" style="background:rgba(167,139,250,0.08);border-color:rgba(167,139,250,0.3);color:#a78bfa;" onclick="openInstQuickModal(this)"><svg class="chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg> 分期</button>
-              </div>
-            </div>
-
-            <div class="full"><label>項目名稱</label><input type="text" id="txName" placeholder="輸入或點快速選項…"></div>
-            <div class="full"><label>金額 (NTD)</label><input type="number" id="txAmount" placeholder="0" min="0" step="1"></div>
-            <div class="full"><label>備註（選填）</label><input type="text" id="txNote" placeholder="備註說明…"></div>
-          </div>
-          <div class="form-actions">
-            <button class="btn btn-primary" onclick="addTransaction()" style="flex:1">＋ 新增記錄</button>
-            <button class="btn btn-ghost" onclick="clearForm()">清除</button>
-          </div>
-        </div>
+        <button class="btn btn-ghost" onclick="exportCSV()" style="font-size:0.75rem;padding:6px 12px;">↓ CSV</button>
       </div>
 
-      <!-- 列表 -->
-      <div class="card" style="height:100%;">
-        <div class="card-header" style="flex-wrap:wrap;gap:8px;">
-          <div class="card-title">帳務記錄</div>
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-            <!-- 月份選擇器 -->
-            <div style="display:flex;gap:4px;background:var(--bg-card2);border:1px solid var(--border);border-radius:8px;padding:3px;">
-              <button class="wt-btn active" id="ledger-month-all" onclick="setLedgerMonth('all',this)" style="font-size:0.7rem;">全年</button>
-              <button class="wt-btn" id="ledger-month-sel" onclick="openMonthPicker()" style="font-size:0.7rem;min-width:52px;">— 月</button>
-            </div>
-            <div style="font-family:var(--mono);font-size:0.72rem;color:var(--text-muted)" id="txCount">0 筆</div>
-          </div>
-        </div>
+      <!-- 月份 12 格 -->
+      <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:3px;margin-top:10px;" id="ledger-month-grid">
+        <button onclick="setLedgerMonth('01',this)" class="lm-btn" id="lm-01">1</button>
+        <button onclick="setLedgerMonth('02',this)" class="lm-btn" id="lm-02">2</button>
+        <button onclick="setLedgerMonth('03',this)" class="lm-btn active" id="lm-03">3</button>
+        <button onclick="setLedgerMonth('04',this)" class="lm-btn" id="lm-04">4</button>
+        <button onclick="setLedgerMonth('05',this)" class="lm-btn" id="lm-05">5</button>
+        <button onclick="setLedgerMonth('06',this)" class="lm-btn" id="lm-06">6</button>
+        <button onclick="setLedgerMonth('07',this)" class="lm-btn" id="lm-07">7</button>
+        <button onclick="setLedgerMonth('08',this)" class="lm-btn" id="lm-08">8</button>
+        <button onclick="setLedgerMonth('09',this)" class="lm-btn" id="lm-09">9</button>
+        <button onclick="setLedgerMonth('10',this)" class="lm-btn" id="lm-10">10</button>
+        <button onclick="setLedgerMonth('11',this)" class="lm-btn" id="lm-11">11</button>
+        <button onclick="setLedgerMonth('12',this)" class="lm-btn" id="lm-12">12</button>
+      </div>
 
-        <!-- 圓餅圖區：左餅右統計 -->
-        <div id="ledgerPieSection" style="display:flex;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);margin-bottom:12px;">
-          <div style="position:relative;width:100px;height:100px;flex-shrink:0;">
-            <canvas id="ledgerPieCanvas" width="100" height="100"></canvas>
+      <!-- 當月 KPI：圓形波浪設計 -->
+      <div style="display:flex;gap:16px;align-items:center;margin-top:14px;">
+
+        <!-- 左：支出 + 收入 文字 + 中間大圓 -->
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0;">
+          <!-- 支出 / 收入 左右標題 -->
+          <div style="display:flex;justify-content:space-between;width:200px;margin-bottom:6px;">
+            <div>
+              <div style="font-size:0.75rem;color:var(--text-secondary);">支出</div>
+              <div style="font-family:var(--mono);font-size:1rem;font-weight:600;color:var(--accent-red);" id="ledger-kpi-expense">$0</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:0.75rem;color:var(--text-secondary);">收入</div>
+              <div style="font-family:var(--mono);font-size:1rem;font-weight:600;color:var(--accent-green);" id="ledger-kpi-income">$15,151</div>
+            </div>
+          </div>
+
+          <!-- 大圓形波浪 -->
+          <div style="position:relative;width:200px;height:200px;">
+            <canvas id="ledgerWaveCanvas" width="200" height="200" style="width:200px;height:200px;display:block;" data-income="15151" data-expense="0"></canvas>
             <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
-              <div style="font-size:0.5rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;" id="ledgerPieLabel">支出</div>
-              <div style="font-family:var(--mono);font-size:0.78rem;font-weight:500;color:var(--accent-red);" id="ledgerPieCenter">$0</div>
+              <div style="font-size:0.6rem;color:var(--text-muted);letter-spacing:0.1em;margin-bottom:4px;">結餘</div>
+              <div style="font-family: var(--mono); font-size: 1.2rem; font-weight: 700; color: var(--accent-green);" id="ledger-kpi-net">+$15,151</div>
+              <div style="font-size:0.58rem;color:var(--text-muted);margin-top:2px;" id="ledger-kpi-net-sub">收入 − 支出</div>
             </div>
-          </div>
-          <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0;">
-            <!-- 收入行 -->
-            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.75rem;">
-              <div style="display:flex;align-items:center;gap:6px;">
-                <span style="width:8px;height:8px;border-radius:2px;background:var(--accent-green);display:inline-block;flex-shrink:0;"></span>
-                <span style="color:var(--text-secondary);">收入</span>
-              </div>
-              <span style="font-family:var(--mono);color:var(--accent-green);" id="ledger-stat-income">$0</span>
-            </div>
-            <!-- 支出行 -->
-            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.75rem;">
-              <div style="display:flex;align-items:center;gap:6px;">
-                <span style="width:8px;height:8px;border-radius:2px;background:var(--accent-red);display:inline-block;flex-shrink:0;"></span>
-                <span style="color:var(--text-secondary);">支出</span>
-              </div>
-              <span style="font-family:var(--mono);color:var(--accent-red);" id="ledger-stat-expense">$0</span>
-            </div>
-            <div style="height:1px;background:var(--border);"></div>
-            <!-- 結餘 -->
-            <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.75rem;">
-              <div style="display:flex;align-items:center;gap:6px;">
-                <span style="width:8px;height:8px;border-radius:2px;background:var(--accent-blue);display:inline-block;flex-shrink:0;"></span>
-                <span style="color:var(--text-secondary);">結餘</span>
-              </div>
-              <span style="font-family:var(--mono);" id="ledger-stat-net">$0</span>
-            </div>
-            <!-- 類別圖例（前3項） -->
-            <div id="ledgerPieLegend" style="display:flex;flex-direction:column;gap:3px;margin-top:2px;"></div>
           </div>
         </div>
 
-        <div class="filter-bar">
-          <button class="filter-btn active" onclick="setFilter('all',this)">全部</button>
-          <button class="filter-btn" onclick="setFilter('收入',this)">💰 收入</button>
-          <button class="filter-btn" onclick="setFilter('支出',this)">💸 支出</button>
-          <button class="filter-btn" onclick="setFilter('固定支出',this)">📌 固定支出</button>
-          <button class="filter-btn" onclick="setFilter('分期',this)">🔄 分期</button>
+        <!-- 右：固定支出 + 結餘率 小卡 -->
+        <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+          <div style="padding:12px 14px;background:var(--bg-card);border:1px solid rgba(167,139,250,0.2);border-radius:12px;">
+            <div style="font-size:0.6rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:5px;">固定支出</div>
+            <div style="font-family:var(--mono);font-size:1.05rem;font-weight:600;color:var(--accent-purple);" id="ledger-kpi-fixed">$0</div>
+            <div style="font-size:0.6rem;color:var(--text-muted);margin-top:3px;" id="ledger-kpi-fixed-sub">尚未設定</div>
+          </div>
+          <div style="padding:12px 14px;background:var(--bg-card);border:1px solid rgba(59,130,246,0.15);border-radius:12px;">
+            <div style="font-size:0.6rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:5px;">總支出</div>
+            <div style="font-family:var(--mono);font-size:1.05rem;font-weight:600;color:var(--accent-amber);" id="ledger-kpi-total-exp">$0</div>
+            <div style="font-size:0.6rem;color:var(--text-muted);margin-top:3px;">固定＋浮動</div>
+          </div>
+          <div style="padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;">
+            <div style="font-size:0.6rem;color:var(--text-muted);margin-bottom:5px;">儲蓄率</div>
+            <div style="height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;margin-bottom:4px;">
+              <div id="ledger-save-bar" style="height: 100%; width: 100%; background: linear-gradient(90deg, rgb(5, 150, 105), rgb(0, 229, 160)); border-radius: 3px; transition: width 0.6s;"></div>
+            </div>
+            <div style="font-family:var(--mono);font-size:0.82rem;font-weight:600;color:var(--accent-green);" id="ledger-save-pct">100%</div>
+          </div>
         </div>
-        <div class="tx-list" id="txList"></div>
+
       </div>
     </div>
 
-    <!-- ── 月份收支趨勢 全寬 ── -->
+    <!-- ══ 主體：兩大按鈕 + 流水帳列表 ══ -->
+    <div class="two-col">
+
+      <!-- 左：收入/支出 橫排精緻按鈕 -->
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <!-- 橫排兩按鈕 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <!-- 支出 -->
+          <button onclick="openTxModal('支出')" style="border-radius: 14px; border: none; background: linear-gradient(135deg, rgb(229, 62, 62), rgb(255, 77, 109)); color: rgb(255, 255, 255); font-family: var(--sans); cursor: pointer; padding: 16px 18px; text-align: left; transition: 0.18s; box-shadow: rgba(255, 77, 109, 0.3) 0px 4px 16px;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(255,77,109,0.45)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(255,77,109,0.3)'">
+            <div style="font-size:0.78rem;font-weight:600;letter-spacing:0.04em;margin-bottom:6px;">支出</div>
+            <div style="font-family:var(--mono);font-size:1rem;font-weight:700;" id="ledger-btn-expense">NT$0</div>
+          </button>
+          <!-- 收入 -->
+          <button onclick="openTxModal('收入')" style="border-radius:14px;border:none;background:linear-gradient(135deg,#059669,#00e5a0);color:#001a0f;font-family:var(--sans);cursor:pointer;padding:16px 18px;text-align:left;transition:all 0.18s;box-shadow:0 4px 16px rgba(0,229,160,0.25);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,229,160,0.4)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(0,229,160,0.25)'">
+            <div style="font-size:0.78rem;font-weight:600;letter-spacing:0.04em;margin-bottom:6px;">收入</div>
+            <div style="font-family:var(--mono);font-size:1rem;font-weight:700;" id="ledger-btn-income">NT$15,151</div>
+          </button>
+        </div>
+        <!-- 結餘小字 -->
+        <div style="text-align: center; font-size: 0.72rem; color: var(--accent-green); font-family: var(--mono);" id="ledger-btn-net">結餘：+NT$15,151</div>
+        <!-- 提示 -->
+        <div style="padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;font-size:0.68rem;color:var(--text-muted);" id="ledger-form-month-hint">記錄 3月 的帳務</div>
+      </div>
+
+      <!-- 右：流水帳列表 -->
+      <div>
+        <div class="card" style="height:100%;">
+          <div class="card-header" style="flex-wrap:wrap;gap:8px;">
+            <div class="card-title">帳務記錄</div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="filter-bar" style="margin:0;">
+                <button class="filter-btn active" onclick="setFilter('all',this)">全部</button>
+                <button class="filter-btn" onclick="setFilter('收入',this)">收入</button>
+                <button class="filter-btn" onclick="setFilter('支出',this)">支出</button>
+              </div>
+              <div style="font-family:var(--mono);font-size:0.72rem;color:var(--text-muted);" id="txCount">1 筆</div>
+            </div>
+          </div>
+          <div class="tx-list" id="txList"><div class="tx-item-wrap" id="wrap_1773695523973" data-del-id="1773695523973" data-del-type="tx">
+        <div class="tx-item-delete-bg">🗑 刪除</div>
+        <div class="tx-item" ontouchstart="txSwipeStart(event,'1773695523973')" ontouchmove="txSwipeMove(event,'1773695523973')" ontouchend="txSwipeEnd(event,'1773695523973')">
+          <div class="tx-cat-dot" style="background:#00e5a0"></div>
+          <div class="tx-info">
+            <div class="tx-name">參觀參觀</div>
+            <div class="tx-meta">
+              <span>2026-03</span>
+              <span class="tx-cat-badge" style="background:#00e5a022;color:#00e5a0">收入</span>
+              
+            </div>
+          </div>
+          <div class="tx-amount up">+$15,151</div>
+        </div>
+      </div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- hidden 舊表單欄位供 addTransaction 相容 -->
+    <div style="display:none;">
+      <input type="hidden" id="txCategory" value="支出">
+      <input type="hidden" id="txDate" value="2026-03-18">
+      <input type="hidden" id="txName" value="">
+      <input type="hidden" id="txAmount" value="" style="border-color: var(--border);">
+      <input type="hidden" id="txNote" value="">
+      <div id="incomeChipsRow" style="display: block;"></div>
+      <div id="expenseChipsRow" style="display: none;"></div>
+      <button id="toggleIncome" style="background: rgba(0, 229, 160, 0.133); color: rgb(0, 229, 160); font-weight: 600;"></button>
+      <button id="toggleExpense" style="background: transparent; color: var(--text-muted); font-weight: 500;"></button>
+    </div>
+
+    <!-- ══ 底部：月份趨勢圖 ══ -->
     <div class="card" style="margin-top:18px;">
       <div class="card-header">
         <div class="card-title">月份收支趨勢</div>
         <div style="display:flex;align-items:center;gap:10px;">
-          <span style="font-family:var(--mono);font-size:0.7rem;color:var(--text-muted);" id="chartYear"></span>
+          <span style="font-family:var(--mono);font-size:0.7rem;color:var(--text-muted);" id="chartYear">2026</span>
           <div style="display:flex;gap:4px;">
             <button class="chart-tab active" id="lineTab-combined" onclick="switchLineChart('combined',this)">複合</button>
             <button class="chart-tab" id="lineTab-income" onclick="switchLineChart('income',this)">收入</button>
@@ -1702,12 +2190,125 @@ input::placeholder { color: var(--text-muted); }
         </div>
       </div>
       <div style="position:relative;height:220px;margin-top:4px;">
-        <canvas id="monthLineChart" style="width:100%;height:220px;display:block;"></canvas>
+        <canvas id="monthLineChart" style="width: 358px; height: 220px; display: block;" width="939" height="577"></canvas>
       </div>
-      <div id="monthLineChartLegend" style="display:flex;gap:20px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:0.68rem;"></div>
+      <div id="monthLineChartLegend" style="display:flex;gap:20px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:0.68rem;"><div style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);">
+      <span style="display:inline-block;width:18px;background:#00e5a0;height:2px;border-radius:2px;"></span>
+      <span>收入</span>
+      <span style="font-family:var(--mono);color:#00e5a0;font-weight:500;">$15,151</span>
+    </div><div style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);">
+      <span style="display:inline-block;width:18px;background:#ff4d6d;height:2px;border-radius:2px;"></span>
+      <span>支出</span>
+      <span style="font-family:var(--mono);color:#ff4d6d;font-weight:500;">$0</span>
+    </div><div style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);">
+      <span style="display:inline-block;width:18px;border-bottom:2px dashed #a78bfa;background:none;height:0;border-radius:2px;"></span>
+      <span>固定支出</span>
+      <span style="font-family:var(--mono);color:#a78bfa;font-weight:500;">$0</span>
+    </div><div style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);">
+      <span style="display:inline-block;width:18px;border-bottom:2px dashed #f59e0b;background:none;height:0;border-radius:2px;"></span>
+      <span>淨結餘</span>
+      <span style="font-family:var(--mono);color:#f59e0b;font-weight:500;">+$15,151</span>
+    </div></div>
+    </div>
+
+    <!-- hidden 舊元素相容 -->
+    <div style="display:none;">
+      <canvas id="ledgerPieCanvas" width="100" height="100"></canvas>
+      <span id="ledgerPieCenter" style="color: var(--accent-green);">+$15,151</span><span id="ledgerPieLabel">結餘</span>
+      <span id="ledger-stat-income">$15,151</span><span id="ledger-stat-expense">$0</span><span id="ledger-stat-net" style="color: var(--accent-green);">+$15,151</span>
+      <div id="ledgerPieLegend"><div style="display:flex;align-items:center;gap:5px;font-size:0.68rem;">
+        <span style="width:7px;height:7px;border-radius:2px;background:#00e5a0;display:inline-block;flex-shrink:0;"></span>
+        <span style="flex:1;color:var(--text-secondary);">收入</span>
+        <span style="font-family:var(--mono);color:#00e5a0;font-weight:500;">$15,151</span>
+      </div><div style="display:flex;align-items:center;gap:5px;font-size:0.68rem;">
+        <span style="width:7px;height:7px;border-radius:2px;background:#ff4d6d;display:inline-block;flex-shrink:0;"></span>
+        <span style="flex:1;color:var(--text-secondary);">支出</span>
+        <span style="font-family:var(--mono);color:#ff4d6d;font-weight:500;">$0</span>
+      </div></div><div id="ledgerPieSection"></div>
+      <button id="ledger-month-all"></button><button id="ledger-month-sel"></button>
+      <button id="toggleFixed" style="background: transparent; color: var(--text-muted); font-weight: 500;"></button>
     </div>
 
   </section>
+
+  <!-- ══ 收支新增 Modal ══ -->
+  <div id="txModal" style="display: none; position: fixed; inset: 0px; z-index: 6000; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(6px); align-items: flex-end; justify-content: center;" onclick="if(event.target===this)closeTxModal()">
+    <div id="txModalInner" style="width:min(520px,100vw);background:var(--bg-card);border-radius:20px 20px 0 0;padding:24px 20px 36px;animation:slideUp 0.28s cubic-bezier(0.4,0,0.2,1);">
+
+      <!-- 拖曳條 -->
+      <div style="width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,0.12);margin:0 auto 20px;"></div>
+
+      <!-- 標題列 -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="txModalDot" style="width: 12px; height: 12px; border-radius: 50%; background: rgb(255, 77, 109); flex-shrink: 0;"></div>
+          <div style="font-size:1.05rem;font-weight:600;" id="txModalTitle">新增支出</div>
+        </div>
+        <button onclick="closeTxModal()" style="background:rgba(255,255,255,0.07);border:none;color:var(--text-muted);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">✕</button>
+      </div>
+
+      <!-- 日期 + 金額 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+        <div>
+          <label style="font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:6px;">日期</label>
+          <input type="date" id="txDate" style="width:100%;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text-primary);font-size:0.88rem;outline:none;font-family:var(--sans);">
+        </div>
+        <div>
+          <label style="font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:6px;">金額 (NTD)</label>
+          <input type="number" id="txAmount" placeholder="0" min="0" step="1" style="width:100%;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text-primary);font-size:1rem;font-family:var(--mono);font-weight:600;outline:none;" oninput="this.style.borderColor=this.value?'var(--txModalAccent, var(--accent-red))':'var(--border)'">
+        </div>
+      </div>
+
+      <!-- 快速類別選擇（收入用 / 支出用，各自顯示） -->
+      <div id="txModal-income-cats" style="display:none;margin-bottom:14px;">
+        <label style="font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:8px;">類別</label>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;">
+          <button type="button" class="tx-chip income-chip" onclick="selectModalChip(this,'薪資','收入')">💼 薪資</button>
+          <button type="button" class="tx-chip income-chip" onclick="selectModalChip(this,'三節','收入')">🎁 三節</button>
+          <button type="button" class="tx-chip income-chip" onclick="selectModalChip(this,'衛服部加碼','收入')">🏥 衛服部加碼</button>
+          <button type="button" class="tx-chip income-chip" onclick="selectModalChip(this,'獎金','收入')">🏆 獎金</button>
+          <button type="button" class="tx-chip income-chip" onclick="selectModalChip(this,'打工','收入')">🔧 打工</button>
+          <button type="button" class="tx-chip income-chip" onclick="selectModalChip(this,'其他收入','收入')">➕ 其他</button>
+        </div>
+      </div>
+      <div id="txModal-expense-cats" style="display: block; margin-bottom: 14px;">
+        <label style="font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:8px;">類別</label>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;">
+          <button type="button" class="tx-chip expense-chip" onclick="selectModalChip(this,'生活','支出')">🛍 生活</button>
+          <button type="button" class="tx-chip expense-chip" onclick="selectModalChip(this,'餐飲','支出')">🍜 餐飲</button>
+          <button type="button" class="tx-chip expense-chip" onclick="selectModalChip(this,'交通','支出')">🚗 交通</button>
+          <button type="button" class="tx-chip expense-chip" onclick="selectModalChip(this,'娛樂','支出')">🎮 娛樂</button>
+          <button type="button" class="tx-chip expense-chip" onclick="selectModalChip(this,'醫療','支出')">💊 醫療</button>
+          <button type="button" class="tx-chip expense-chip" onclick="selectModalChip(this,'教育','支出')">📚 教育</button>
+          <button type="button" class="tx-chip expense-chip" onclick="selectModalChip(this,'股票投資','支出')">📈 投資</button>
+          <button type="button" class="tx-chip expense-chip" style="background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.3);color:#f59e0b;" onclick="selectModalChip(this,'信用卡','支出')">💳 信用卡</button>
+          <button type="button" class="tx-chip expense-chip" onclick="selectModalChip(this,'其他','支出')">•• 其他</button>
+        </div>
+      </div>
+
+      <!-- 項目名稱 -->
+      <div style="margin-bottom:14px;">
+        <label style="font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:6px;">項目名稱</label>
+        <input type="text" id="txName" placeholder="輸入說明…" style="width:100%;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text-primary);font-size:0.88rem;outline:none;font-family:var(--sans);">
+      </div>
+
+      <!-- 備註 -->
+      <div style="margin-bottom:20px;">
+        <label style="font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:6px;">備註（選填）</label>
+        <input type="text" id="txNote" placeholder="備註…" style="width:100%;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text-primary);font-size:0.85rem;outline:none;font-family:var(--sans);">
+      </div>
+
+      <!-- 確認按鈕 -->
+      <button id="txModalConfirmBtn" onclick="addTransactionFromModal()" style="width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: 0.18s; font-family: var(--sans); background: linear-gradient(135deg, rgb(229, 62, 62), rgb(255, 77, 109)); color: rgb(255, 255, 255);">＋ 新增</button>
+    </div>
+  </div>
+
+  <style>
+  @keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+  </style>
 
   <!-- ── 現金流 ── -->
   <section class="page" id="page-stats">
@@ -2865,6 +3466,82 @@ input::placeholder { color: var(--text-muted); }
         </div>
       </div>
     </div>
+    <!-- ═══ TSUNAMI MODE TOGGLE BAR ═══ -->
+    <div class="tsunami-bar" id="tsunami_bar">
+      <div class="tsunami-icon">🌊</div>
+      <div class="tsunami-info">
+        <div class="tsunami-title">
+          海嘯應變模式
+          <span class="tsunami-badge" id="tsunami_status_badge">STANDBY</span>
+        </div>
+        <div class="tsunami-desc" id="tsunami_desc_text">壓力測試模式 — 關閉時所有數值使用常態計畫，開啟後改用影子設定試算，不影響儲存資料。</div>
+      </div>
+      <div class="tsunami-toggle-wrap">
+        <label class="tsunami-toggle">
+          <input type="checkbox" id="tsunami_toggle" onchange="onTsunamiToggle(this.checked)">
+          <span class="tsunami-slider"></span>
+        </label>
+        <span class="tsunami-toggle-label" id="tsunami_toggle_label">關閉</span>
+      </div>
+    </div>
+
+    <!-- ═══ TSUNAMI SHADOW PANEL ═══ -->
+    <div class="tsunami-shadow-panel" id="tsunami_shadow_panel">
+      <div class="tsunami-shadow-title">⚠️ 影子設定 — 海嘯壓力參數（不會存檔）</div>
+      <div class="tsunami-params">
+        <div class="tsunami-param-item s-param-item">
+          <label>停止超額還款（每月減少）</label>
+          <div class="s-input-wrap">
+            <input type="number" id="ts_stop_extra" value="10000" step="1000" min="0" oninput="runStrategy()">
+            <span>元</span>
+          </div>
+        </div>
+        <div class="tsunami-param-item s-param-item">
+          <label>基金贖回比例</label>
+          <div style="margin-top:4px;">
+            <div class="slider-wrap">
+              <input type="range" id="ts_redeem_pct" min="10" max="100" step="5" value="50" oninput="updateTsunamiSlider(this.value);runStrategy()">
+              <span class="slider-val" id="ts_redeem_pct_val">50%</span>
+            </div>
+            <div style="font-size:0.55rem;color:var(--text-muted);margin-top:3px;">贖回比例（假設淨值跌至 7 成後執行）</div>
+          </div>
+        </div>
+        <div class="tsunami-param-item s-param-item">
+          <label>基金現值折損比（跌幅）</label>
+          <div class="slider-wrap" style="margin-top:4px;">
+            <input type="range" id="ts_nav_drop" min="0" max="50" step="5" value="30" oninput="updateTsunamiNavDrop(this.value);runStrategy()">
+            <span class="slider-val" id="ts_nav_drop_val">-30%</span>
+          </div>
+          <div style="font-size:0.55rem;color:var(--text-muted);margin-top:3px;">模擬淨值跌幅後可贖回金額</div>
+        </div>
+      </div>
+      <!-- 海嘯模式試算結果 -->
+      <div style="height:1px;background:rgba(255,77,109,0.15);margin:10px 0;"></div>
+      <div style="font-size:0.58rem;color:rgba(255,77,109,0.6);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;font-family:var(--mono);">▶ 試算結果預覽</div>
+      <div class="tsunami-results">
+        <div class="tsunami-result-card">
+          <div class="tsunami-result-label">可贖回金額</div>
+          <div class="tsunami-result-val" id="ts_res_redeem">—</div>
+          <div class="tsunami-result-sub" id="ts_res_redeem_sub">基金現值 × 比例</div>
+        </div>
+        <div class="tsunami-result-card">
+          <div class="tsunami-result-label">贖回後信貸餘額</div>
+          <div class="tsunami-result-val" id="ts_res_loan_after">—</div>
+          <div class="tsunami-result-sub">扣除贖回款後</div>
+        </div>
+        <div class="tsunami-result-card">
+          <div class="tsunami-result-label">新月付金（信貸）</div>
+          <div class="tsunami-result-val" id="ts_res_new_pmt">—</div>
+          <div class="tsunami-result-sub">贖回還款後重算</div>
+        </div>
+        <div class="tsunami-result-card">
+          <div class="tsunami-result-label">每月減少負擔</div>
+          <div class="tsunami-result-val" id="ts_res_pmt_diff">—</div>
+          <div class="tsunami-result-sub">vs 常態月付金</div>
+        </div>
+      </div>
+    </div>
+
     <div id="st_settings_panel" style="display:none;margin-bottom:14px;"><div class="s-card">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><div style="width:6px;height:6px;border-radius:50%;background:var(--accent-green);flex-shrink:0;"></div><span style="font-size:0.65rem;font-weight:600;color:var(--accent-green);">第一階段</span></div>
       <div class="s-param-group-label" style="color:var(--accent-red);">💳 信貸</div>
@@ -2983,14 +3660,129 @@ input::placeholder { color: var(--text-muted); }
       <div id="st_table_body"></div>
     </div>
   </section>
+
+  <!-- ══════════════════════════════════
+       資料庫分頁
+  ══════════════════════════════════ -->
+  <section class="page" id="page-database">
+    <!-- Header -->
+    <div style="margin-bottom:20px;">
+      <div style="font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);font-family:var(--mono);margin-bottom:4px;">MASTER DATABASE</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+        <h1 style="font-size:1.4rem;font-weight:500;margin:0;">核心資料庫</h1>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div id="db_dirty_badge" style="display:none;font-size:0.6rem;padding:3px 10px;border-radius:10px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.35);color:var(--accent-amber);font-family:var(--mono);">● 有未儲存變更</div>
+          <button onclick="dbSave()" style="display:flex;align-items:center;gap:7px;padding:9px 20px;border-radius:10px;background:linear-gradient(135deg,#00c87a,#00e5a0);border:none;color:#001a0f;font-weight:700;font-size:0.82rem;cursor:pointer;transition:all 0.18s;box-shadow:0 4px 16px rgba(0,229,160,0.25);" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 20px rgba(0,229,160,0.4)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(0,229,160,0.25)'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            儲存並更新所有分頁
+          </button>
+        </div>
+      </div>
+      <div style="margin-top:8px;font-size:0.65rem;color:var(--text-muted);">靜態基準資料。收入與浮動支出請至帳本記錄，此處只管不變的固定數字。<span id="db_last_saved" style="margin-left:10px;color:var(--text-muted);font-family:var(--mono);"></span></div>
+    </div>
+
+    <!-- ══ 區塊一：固定支出（無期限） ══ -->
+    <div style="margin-bottom:8px;display:flex;align-items:center;gap:10px;">
+      <div style="width:4px;height:18px;border-radius:2px;background:var(--accent-red);flex-shrink:0;"></div>
+      <span style="font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent-red);">固定支出</span>
+      <span style="font-size:0.6rem;color:var(--text-muted);margin-left:2px;">無期限・持續進行</span>
+      <div style="flex:1;height:1px;background:rgba(255,77,109,0.15);"></div>
+      <button onclick="dbAddRecurring()" class="db-add-btn" style="border-color:rgba(255,77,109,0.3);color:var(--accent-red);">+ 新增</button>
+    </div>
+    <div class="db-card" style="margin-bottom:6px;">
+      <div id="db_recurring_list" style="display:flex;flex-direction:column;gap:6px;min-height:40px;"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+        <div class="db-derived" style="margin-top:0;">月合計 <span id="db_recurring_monthly_preview" class="db-derived-val" style="color:var(--accent-red);">—</span></div>
+        <div class="db-derived" style="margin-top:0;">年合計 <span id="db_recurring_yearly_preview" class="db-derived-val" style="color:var(--accent-amber);">—</span></div>
+      </div>
+    </div>
+    <!-- 類別小計 -->
+    <div id="db_recurring_cat_summary" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px;"></div>
+
+    <!-- ══ 區塊二：有期限負債 ══ -->
+    <div style="margin-bottom:8px;display:flex;align-items:center;gap:10px;">
+      <div style="width:4px;height:18px;border-radius:2px;background:var(--accent-purple);flex-shrink:0;"></div>
+      <span style="font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent-purple);">有期限負債</span>
+      <span style="font-size:0.6rem;color:var(--text-muted);margin-left:2px;">系統自動計算剩餘本金</span>
+      <div style="flex:1;height:1px;background:rgba(167,139,250,0.15);"></div>
+      <button onclick="dbAddLoan()" class="db-add-btn" style="border-color:rgba(167,139,250,0.3);color:var(--accent-purple);">+ 新增</button>
+    </div>
+    <div class="db-card" style="margin-bottom:6px;">
+      <div id="db_loan_list" style="display:flex;flex-direction:column;gap:10px;min-height:40px;"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+        <div class="db-derived" style="margin-top:0;">月攤還合計 <span id="db_loan_monthly_preview" class="db-derived-val" style="color:var(--accent-purple);">—</span></div>
+        <div class="db-derived" style="margin-top:0;">負債總額 <span id="db_loan_total_preview" class="db-derived-val" style="color:var(--accent-red);">—</span></div>
+      </div>
+    </div>
+    <!-- 還清時間軸 -->
+    <div id="db_loan_timeline" style="margin-bottom:22px;"></div>
+
+    <!-- ══ 區塊三：投資資產 ══ -->
+    <div style="margin-bottom:8px;display:flex;align-items:center;gap:10px;">
+      <div style="width:4px;height:18px;border-radius:2px;background:var(--accent-amber);flex-shrink:0;"></div>
+      <span style="font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent-amber);">投資資產</span>
+      <div style="flex:1;height:1px;background:rgba(245,158,11,0.15);"></div>
+    </div>
+    <div class="db-card-grid" style="margin-bottom:22px;">
+
+      <!-- 股票 -->
+      <div class="db-card" data-section="stocks">
+        <div class="db-card-header">
+          <span class="db-card-icon">📈</span>
+          <span class="db-card-title">股票持股</span>
+          <button onclick="dbAddStock()" class="db-add-btn" style="margin-left:auto;">+ 新增</button>
+        </div>
+        <div id="db_stock_list" style="display:flex;flex-direction:column;gap:8px;"></div>
+        <div class="db-derived" id="db_stock_div_preview" style="margin-top:10px;"></div>
+      </div>
+
+      <!-- 基金 -->
+      <div class="db-card" data-section="funds">
+        <div class="db-card-header">
+          <span class="db-card-icon">🏦</span>
+          <span class="db-card-title">基金</span>
+          <button onclick="dbAddFund()" class="db-add-btn" style="margin-left:auto;">+ 新增</button>
+        </div>
+        <div id="db_fund_list" style="display:flex;flex-direction:column;gap:8px;"></div>
+        <div class="db-derived" id="db_fund_div_preview" style="margin-top:10px;"></div>
+      </div>
+
+      <!-- 銀行 / 定存 -->
+      <div class="db-card" data-section="bank">
+        <div class="db-card-header">
+          <span class="db-card-icon">🏛️</span>
+          <span class="db-card-title">銀行 / 定存</span>
+          <button onclick="dbAddBank()" class="db-add-btn" style="margin-left:auto;">+ 新增</button>
+        </div>
+        <div id="db_bank_list" style="display:flex;flex-direction:column;gap:8px;"></div>
+        <div class="db-derived" id="db_bank_int_preview" style="margin-top:10px;"></div>
+      </div>
+    </div>
+
+    <!-- 舊有 hidden inputs 保持相容 -->
+    <input type="hidden" id="db_salary">
+    <input type="hidden" id="db_bonus_annual">
+    <input type="hidden" id="db_side_income">
+    <div style="display:none;" id="db_expense_list"></div>
+    <div style="display:none;" id="db_total_income_preview"></div>
+    <div style="display:none;" id="db_total_expense_preview"></div>
+    <div style="display:none;" id="db_mortgage_list"></div>
+    <div style="display:none;" id="db_personal_list"></div>
+    <div style="display:none;" id="db_pledge_list"></div>
+    <div style="display:none;" id="db_mortgage_pmt_preview"></div>
+    <div style="display:none;" id="db_personal_pmt_preview"></div>
+    <div style="display:none;" id="db_pledge_int_preview"></div>
+
+  </section>
+
 </main>
 
 
 <nav class="mobile-nav" id="mobileNav">
-  <div class="mobile-nav-item active" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
+  <div class="mobile-nav-item" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span><span>總覽</span>
   </div>
-  <div class="mobile-nav-item" id="mn-ledger" onclick="goPage('ledger',     null, 'mn-ledger')">
+  <div class="mobile-nav-item active" id="mn-ledger" onclick="goPage('ledger',     null, 'mn-ledger')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg></span><span>帳務</span>
   </div>
   <div class="mobile-nav-item" id="mn-stats" onclick="goPage('stats',      null, 'mn-stats')">
@@ -3008,9 +3800,10 @@ input::placeholder { color: var(--text-muted); }
   <div class="mobile-nav-item" id="mn-strategy" onclick="goPage('strategy',   null, 'mn-strategy')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span><span>策略</span>
   </div>
+  <div class="mobile-nav-item" id="mn-database" onclick="goPage('database',   null, 'mn-database')">
+    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"></path><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"></path></svg></span><span>資料庫</span>
+  </div>
 </nav>
-
-<!-- TOAST -->
 <div class="toast show" id="toast" style="border-color: var(--accent-green); color: var(--accent-green);">⏫ 正在推送到 GitHub...</div>
 
 <!-- 情報陳列室 Modal -->
@@ -3676,7 +4469,7 @@ const sb = {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 let currentYear   = '2026';
 let currentFilter = 'all';
-let currentLedgerMonth = 'all'; // 'all' or '01'-'12'
+let currentLedgerMonth = String(new Date().getMonth()+1).padStart(2,'0'); // 預設當月
 let _txCache = null, _bankCache = null, _invCache = null;
 let currentPage = 'home';
 
@@ -3723,18 +4516,19 @@ function goPage(name, navEl, mobileNavId) {
 
   if (name === 'home')        renderHome();
   if (name === 'ledger') {
-    // init month selector to current month on first visit
-    if (currentLedgerMonth === 'all') {
-      const nowM = String(new Date().getMonth()+1).padStart(2,'0');
-      currentLedgerMonth = nowM;
-      const selBtn = document.getElementById('ledger-month-sel');
-      if (selBtn) {
-        const mnNames=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
-        selBtn.textContent = mnNames[parseInt(nowM)-1];
-        selBtn.classList.add('active');
-        document.getElementById('ledger-month-all')?.classList.remove('active');
-      }
-    }
+    // 預設選當月
+    const nowM = String(new Date().getMonth()+1).padStart(2,'0');
+    if (currentLedgerMonth === 'all') currentLedgerMonth = nowM;
+    // 更新12格按鈕
+    document.querySelectorAll('.lm-btn').forEach(b => b.classList.remove('active'));
+    const activeBtn = document.getElementById('lm-' + currentLedgerMonth);
+    if (activeBtn) activeBtn.classList.add('active');
+    // 更新標題
+    const mnNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+    const titleEl = document.getElementById('ledger-month-title');
+    if (titleEl) titleEl.textContent = mnNames[parseInt(currentLedgerMonth)-1];
+    const hintEl = document.getElementById('ledger-form-month-hint');
+    if (hintEl) hintEl.textContent = '記錄 ' + mnNames[parseInt(currentLedgerMonth)-1] + ' 的帳務';
     renderAll();
   }
   if (name === 'stats') {
@@ -3764,6 +4558,9 @@ function goPage(name, navEl, mobileNavId) {
   }
   if (name === 'strategy') {
     setTimeout(function(){ stLoadSettings(); runStrategy(); }, 50);
+  }
+  if (name === 'database') {
+    setTimeout(function(){ dbLoad(); }, 30);
   }
 }
 
@@ -3918,8 +4715,95 @@ function selectFixedCat(btn, cat) {
   }
 }
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 收支新增 Modal
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let _txModalType = '支出';
+
+function openTxModal(type) {
+  _txModalType = type;
+  const isExpense = type === '支出';
+  const accentColor = isExpense ? '#ff4d6d' : '#00e5a0';
+  const btnBg = isExpense
+    ? 'linear-gradient(135deg,#e53e3e,#ff4d6d)'
+    : 'linear-gradient(135deg,#059669,#00e5a0)';
+  const btnColor = isExpense ? '#fff' : '#001a0f';
+
+  // 標題 & 顏色
+  document.getElementById('txModalTitle').textContent = '新增' + type;
+  document.getElementById('txModalDot').style.background = accentColor;
+  document.getElementById('txModalConfirmBtn').style.background = btnBg;
+  document.getElementById('txModalConfirmBtn').style.color = btnColor;
+  document.documentElement.style.setProperty('--txModalAccent', accentColor);
+
+  // 類別面板切換
+  document.getElementById('txModal-income-cats').style.display  = isExpense ? 'none' : 'block';
+  document.getElementById('txModal-expense-cats').style.display = isExpense ? 'block' : 'none';
+
+  // 重置欄位
+  document.getElementById('txName').value   = '';
+  document.getElementById('txAmount').value = '';
+  document.getElementById('txNote').value   = '';
+  document.getElementById('txAmount').style.borderColor = 'var(--border)';
+  document.querySelectorAll('#txModal .tx-chip').forEach(b => b.classList.remove('active'));
+
+  // 預設日期為當月選擇的月份第一天或今天
+  const now = new Date();
+  const selM = currentLedgerMonth;
+  const y = currentYear;
+  const defaultDate = selM !== 'all'
+    ? `${y}-${selM}-${String(now.getDate()).padStart(2,'0')}`
+    : now.toISOString().slice(0,10);
+  document.getElementById('txDate').value = defaultDate;
+
+  // 隱藏舊的 txCategory
+  const catEl = document.getElementById('txCategory');
+  if (catEl) catEl.value = type;
+
+  // 顯示 modal
+  const modal = document.getElementById('txModal');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('txAmount').focus(), 300);
+}
+
+function closeTxModal() {
+  document.getElementById('txModal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function selectModalChip(btn, name, type) {
+  document.querySelectorAll('#txModal .tx-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const nameEl = document.getElementById('txName');
+  if (nameEl && !nameEl.value) nameEl.value = name;
+  const catEl = document.getElementById('txCategory');
+  if (catEl) catEl.value = type === '收入' ? '收入' : name;
+}
+
+async function addTransactionFromModal() {
+  const date     = document.getElementById('txDate').value;
+  const name     = document.getElementById('txName').value.trim();
+  const amount   = parseFloat(document.getElementById('txAmount').value);
+  const category = document.getElementById('txCategory')?.value || _txModalType;
+  const note     = document.getElementById('txNote').value.trim();
+
+  if (!date || !name || isNaN(amount) || amount <= 0) {
+    showToast('⚠ 請填寫日期、項目名稱及有效金額', 'warn');
+    return;
+  }
+
+  const tx = { id: Date.now().toString(), date, name, amount, category, note, year: date.slice(0,4) };
+  _txCache = [...(_txCache || []), tx];
+  saveTransaction(tx).then(ok => { if (ok) setStatus(true); });
+
+  closeTxModal();
+  await renderAll();
+  showToast('✓ 已新增：' + name);
+}
+
 function clearForm() {
-  ['txName','txAmount','txNote'].forEach(id => document.getElementById(id).value = '');
+  ['txName','txAmount','txNote'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
   document.querySelectorAll('.tx-chip').forEach(c => c.classList.remove('active'));
   initForm();
 }
@@ -4019,6 +4903,37 @@ async function renderAll() {
   if (safe('ledger-stat-expense')) safe('ledger-stat-expense').textContent = fmtMoney(mExpense);
   const netEl = safe('ledger-stat-net');
   if (netEl) { netEl.textContent=(mNet>=0?'+':'-')+fmtMoney(Math.abs(mNet)); netEl.style.color=mNet>=0?'var(--accent-green)':'var(--accent-red)'; }
+
+  // ── 新版頂部 KPI 更新 ──
+  const mFixed2   = monthFiltered.filter(t=>t._isRecur).reduce((s,t)=>s+t.amount,0);
+  const mPureEx2  = monthFiltered.filter(t=>t.category!=='收入'&&!t._isRecur).reduce((s,t)=>s+t.amount,0);
+  const mTotalExp = mFixed2 + mPureEx2;
+  const mNet2     = mIncome - mTotalExp;
+  const savePct   = mIncome > 0 ? Math.max(0, Math.round((mNet2 / mIncome) * 100)) : 0;
+
+  if (safe('ledger-kpi-income'))    safe('ledger-kpi-income').textContent    = '$' + mIncome.toLocaleString('zh-TW');
+  if (safe('ledger-kpi-expense'))   safe('ledger-kpi-expense').textContent   = '$' + mPureEx2.toLocaleString('zh-TW');
+  if (safe('ledger-kpi-fixed'))     safe('ledger-kpi-fixed').textContent     = '$' + mFixed2.toLocaleString('zh-TW');
+  if (safe('ledger-kpi-total-exp')) safe('ledger-kpi-total-exp').textContent = '$' + mTotalExp.toLocaleString('zh-TW');
+  if (safe('ledger-kpi-fixed-sub')) safe('ledger-kpi-fixed-sub').textContent = mFixed2 > 0 ? AppState.recurring.length + ' 項固定' : '尚未設定';
+  if (safe('ledger-kpi-net')) {
+    safe('ledger-kpi-net').textContent = (mNet2>=0?'+$':'-$') + Math.abs(mNet2).toLocaleString('zh-TW');
+    safe('ledger-kpi-net').style.color = mNet2>=0 ? 'var(--accent-green)' : 'var(--accent-red)';
+  }
+  if (safe('ledger-btn-income'))  safe('ledger-btn-income').textContent  = 'NT$' + mIncome.toLocaleString('zh-TW');
+  if (safe('ledger-btn-expense')) safe('ledger-btn-expense').textContent = 'NT$' + mPureEx2.toLocaleString('zh-TW');
+  if (safe('ledger-btn-net')) {
+    safe('ledger-btn-net').textContent = '結餘：' + (mNet2>=0?'+NT$':'-NT$') + Math.abs(mNet2).toLocaleString('zh-TW');
+    safe('ledger-btn-net').style.color = mNet2>=0 ? 'var(--accent-green)' : 'var(--accent-red)';
+  }
+  if (safe('ledger-save-pct'))  safe('ledger-save-pct').textContent  = savePct + '%';
+  if (safe('ledger-save-bar'))  safe('ledger-save-bar').style.width  = Math.min(savePct, 100) + '%';
+
+  // 波浪圓形
+  const wvCv = document.getElementById('ledgerWaveCanvas');
+  if (wvCv) { wvCv.dataset.income = mIncome; wvCv.dataset.expense = mTotalExp; }
+  drawLedgerWave(mIncome, mTotalExp);
+  startWaveAnim();
 
   // 支出類別 map for pie
   const catMap = {};
@@ -4200,6 +5115,75 @@ function drawLedgerPieColored(items, total, label, centerColor) {
 }
 
 // 組合圖：收入＋支出兩色
+// ── 波浪圓形 KPI ──
+function drawLedgerWave(income, expense) {
+  const cv = document.getElementById('ledgerWaveCanvas');
+  if (!cv) return;
+  const ctx = cv.getContext('2d');
+  const W = 200, H = 200, cx = W/2, cy = H/2, r = 90;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // 計算填充比例（支出/收入，最多100%）
+  const ratio = income > 0 ? Math.min(expense / income, 1) : (expense > 0 ? 1 : 0);
+  const fillY = cy + r - ratio * 2 * r; // 填充高度從底部往上
+
+  // 背景圓（深色）
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fillStyle = '#1a1e2e';
+  ctx.fill();
+  ctx.restore();
+
+  // 波浪填充（紅色）
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.clip();
+
+  // 畫波浪路徑
+  const waveH = 8;
+  const t = Date.now() / 800;
+  ctx.beginPath();
+  ctx.moveTo(0, fillY);
+  for (let x = 0; x <= W; x += 2) {
+    const y = fillY + Math.sin((x / W) * Math.PI * 3 + t) * waveH;
+    ctx.lineTo(x, y);
+  }
+  ctx.lineTo(W, H);
+  ctx.lineTo(0, H);
+  ctx.closePath();
+
+  // 填充顏色依狀態
+  const fillColor = ratio >= 1 ? 'rgba(255,77,109,0.85)' : ratio > 0.7 ? 'rgba(255,77,109,0.75)' : 'rgba(255,77,109,0.6)';
+  ctx.fillStyle = fillColor;
+  ctx.fill();
+  ctx.restore();
+
+  // 圓形邊框
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.strokeStyle = ratio >= 1 ? 'rgba(255,77,109,0.6)' : 'rgba(255,255,255,0.08)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+}
+
+// 波浪動畫
+let _waveAnimId = null;
+function startWaveAnim() {
+  if (_waveAnimId) cancelAnimationFrame(_waveAnimId);
+  const loop = () => {
+    const cv = document.getElementById('ledgerWaveCanvas');
+    if (!cv || !cv.closest('.page.active')) { _waveAnimId = null; return; }
+    const inc = parseFloat(cv.dataset.income || 0);
+    const exp = parseFloat(cv.dataset.expense || 0);
+    drawLedgerWave(inc, exp);
+    _waveAnimId = requestAnimationFrame(loop);
+  };
+  _waveAnimId = requestAnimationFrame(loop);
+}
+
 function drawLedgerPieCombined(mIncome, mExpense) {
   const canvas = document.getElementById('ledgerPieCanvas');
   if (!canvas) return;
@@ -6257,52 +7241,23 @@ async function setFilter(cat, btn) {
 // ── 月份選擇器
 function setLedgerMonth(month, btn) {
   currentLedgerMonth = month;
-  // 更新按鈕狀態
-  document.getElementById('ledger-month-all').classList.toggle('active', month==='all');
-  document.getElementById('ledger-month-sel').classList.toggle('active', month!=='all');
-  const mnNames=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
-  const selBtn = document.getElementById('ledger-month-sel');
-  selBtn.textContent = month==='all' ? '月份' : mnNames[parseInt(month)-1];
-  // 關閉 picker
-  const picker = document.getElementById('ledgerMonthPicker');
-  if (picker) picker.style.display='none';
+  // 更新 12 格按鈕 active 狀態
+  document.querySelectorAll('.lm-btn').forEach(b => b.classList.remove('active'));
+  if (month !== 'all') {
+    const activeBtn = document.getElementById('lm-' + month);
+    if (activeBtn) activeBtn.classList.add('active');
+  }
+  // 更新月份標題
+  const mnNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  const titleEl = document.getElementById('ledger-month-title');
+  if (titleEl) titleEl.textContent = month === 'all' ? '全年' : mnNames[parseInt(month)-1];
+  // 更新表單提示
+  const hintEl = document.getElementById('ledger-form-month-hint');
+  if (hintEl) hintEl.textContent = month === 'all' ? '' : '記錄 ' + mnNames[parseInt(month)-1] + ' 的帳務';
   renderAll();
 }
 
-function openMonthPicker() {
-  let picker = document.getElementById('ledgerMonthPicker');
-  if (!picker) {
-    picker = document.createElement('div');
-    picker.id = 'ledgerMonthPicker';
-    picker.style.cssText = `position:absolute;z-index:500;background:#1a1e2e;border:1px solid #2e3550;border-radius:10px;padding:8px;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;box-shadow:0 8px 32px rgba(0,0,0,0.5);`;
-    const mnNames=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
-    mnNames.forEach((mn,i) => {
-      const mm = String(i+1).padStart(2,'0');
-      const b = document.createElement('button');
-      b.textContent = mn;
-      b.style.cssText = 'padding:7px 4px;border:1px solid #252a3a;border-radius:6px;background:transparent;color:#7a8099;font-size:0.75rem;cursor:pointer;transition:all 0.15s;font-family:var(--sans);';
-      b.onmouseover = () => { b.style.background='rgba(59,130,246,0.15)'; b.style.color='#e8ecf5'; };
-      b.onmouseout  = () => { b.style.background='transparent'; b.style.color='#7a8099'; };
-      b.onclick = () => setLedgerMonth(mm, b);
-      picker.appendChild(b);
-    });
-    // close on outside click
-    document.addEventListener('click', e => {
-      if (!picker.contains(e.target) && e.target.id!=='ledger-month-sel') picker.style.display='none';
-    });
-    document.getElementById('ledger-month-sel').parentNode.style.position='relative';
-    document.getElementById('ledger-month-sel').parentNode.appendChild(picker);
-  }
-  picker.style.display = picker.style.display==='none' ? 'grid' : 'none';
-  // highlight current month
-  const mnNames=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
-  [...picker.querySelectorAll('button')].forEach((b,i)=>{
-    const mm = String(i+1).padStart(2,'0');
-    b.style.background = mm===currentLedgerMonth ? 'rgba(59,130,246,0.25)' : 'transparent';
-    b.style.color      = mm===currentLedgerMonth ? '#3b82f6' : '#7a8099';
-    b.style.borderColor= mm===currentLedgerMonth ? '#3b82f6' : '#252a3a';
-  });
-}
+function openMonthPicker() { /* 已由 12 格取代，保留空殼 */ }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // EXPORT
@@ -8402,6 +9357,30 @@ async function appInit() {
 //  策略計畫（三階段）
 // ═══════════════════════════════════════════════════════
 var stRows=[];var stShowAll=false;var stCurMonth=0;
+var isTsunamiActive=false;
+
+function onTsunamiToggle(checked){
+  isTsunamiActive=checked;
+  var bar=document.getElementById('tsunami_bar');
+  var panel=document.getElementById('tsunami_shadow_panel');
+  var badge=document.getElementById('tsunami_status_badge');
+  var lbl=document.getElementById('tsunami_toggle_label');
+  var desc=document.getElementById('tsunami_desc_text');
+  if(bar){bar.classList.toggle('active',checked);}
+  if(panel){panel.classList.toggle('visible',checked);}
+  if(badge){badge.textContent=checked?'ACTIVE':'STANDBY';badge.style.background=checked?'rgba(255,77,109,0.25)':'';badge.style.borderColor=checked?'rgba(255,77,109,0.6)':'';}
+  if(lbl){lbl.textContent=checked?'開啟':'關閉';lbl.style.color=checked?'var(--accent-red)':'';}
+  if(desc){desc.textContent=checked?'🌊 海嘯模式啟動 — 數值為壓力測試結果，不影響儲存資料。重新整理後將恢復常態計畫。':'壓力測試模式 — 關閉時所有數值使用常態計畫，開啟後改用影子設定試算，不影響儲存資料。';}
+  // 只重算，不存檔
+  runStrategy();
+}
+
+function updateTsunamiSlider(val){
+  var el=document.getElementById('ts_redeem_pct_val');if(el)el.textContent=val+'%';
+}
+function updateTsunamiNavDrop(val){
+  var el=document.getElementById('ts_nav_drop_val');if(el)el.textContent='-'+val+'%';
+}
 function stV(id){var el=document.getElementById(id);return el?(parseFloat(el.value)||0):0;}
 
 // ── 策略設定 自動儲存 / 載入 ──────────────────────────────────
@@ -8422,10 +9401,38 @@ function stResetToNow(){var sl=document.getElementById('st_timeline');if(sl){sl.
 function stOnTimeline(val){stCurMonth=parseInt(val);updateStDashboard();}
 function runStrategy(){
   stInitDate();
-  stSaveSettings();
+  // 海嘯模式：不呼叫 stSaveSettings()，只在常態模式下存檔
+  if(!isTsunamiActive){ stSaveSettings(); }
+
+  // ══ 海嘯模式：從影子設定覆蓋變數 ══
   var loanAmt=stV('st_loan_amt'),loanRate=stV('st_loan_rate'),loanYears=stV('st_loan_years');
   var fundAmt=stV('st_fund_amt'),fundRate=stV('st_fund_rate'),etfAmt=stV('st_etf_amt'),etfRate=stV('st_etf_rate');
   var pledgeRate=stV('st_pledge_rate'),pledgeCap=stV('st_pledge_cap'),extraPledge=stV('st_extra_pledge'),redeemAmt=stV('st_redeem_amt'),extraCash=stV('st_extra_cash'),extraCashP2=stV('st_extra_cash_p2');
+
+  if(isTsunamiActive){
+    // 停止超額還款：從每月閒錢中扣除海嘯設定金額
+    var tsStopExtra = parseFloat((document.getElementById('ts_stop_extra')||{}).value)||10000;
+    extraCash = Math.max(0, extraCash - tsStopExtra);
+    extraCashP2 = Math.max(0, extraCashP2 - tsStopExtra);
+    // 基金贖回比例 & 淨值折損
+    var tsRedeemPct = parseFloat((document.getElementById('ts_redeem_pct')||{}).value)||50;
+    var tsNavDrop   = parseFloat((document.getElementById('ts_nav_drop')||{}).value)||30;
+    var tsActualFundVal = fundAmt * (1 - tsNavDrop/100);
+    var tsRedeemAmt = tsActualFundVal * (tsRedeemPct/100);
+    redeemAmt = tsRedeemAmt;
+    // 更新影子試算結果顯示
+    var origPMT = stCalcPMT(loanAmt, loanRate, loanYears*12);
+    var loanAfterRedeem = Math.max(0, loanAmt - tsRedeemAmt);
+    var newPMT = stCalcPMT(loanAfterRedeem, loanRate, loanYears*12);
+    stEl('ts_res_redeem', stFmtD(tsRedeemAmt));
+    var redeemSubEl = document.getElementById('ts_res_redeem_sub');
+    if(redeemSubEl) redeemSubEl.textContent = stFmtM(fundAmt)+'×'+Math.round(1-tsNavDrop/100)*100+'%×'+tsRedeemPct+'%';
+    stEl('ts_res_loan_after', stFmtD(loanAfterRedeem));
+    stEl('ts_res_new_pmt', stFmtD(newPMT));
+    var diffEl = document.getElementById('ts_res_pmt_diff');
+    if(diffEl){ var diff=origPMT-newPMT; diffEl.textContent=(diff>=0?'-':'+')+'$'+Math.round(Math.abs(diff)).toLocaleString(); }
+  }
+
   var totalMonths=loanYears*12,lrMo=loanRate/100/12,prMo=pledgeRate/100/12;
   var initPMT=stCalcPMT(loanAmt,loanRate,totalMonths);
   stEl('st_pmt_display',stFmtD(initPMT));
@@ -8482,7 +9489,23 @@ function runStrategy(){
   var bigPoolFirst=(fundAmt*(fundRate/100)/12)+(etfAmt*(etfRate/100)/12)+extraPledge;
   var lastRow=rows[rows.length-1];
   var sumEl=document.getElementById('st_summary');
-  if(sumEl){var cards=[{icon:'💳',label:'初始月還款',val:stFmtD(initPMT),sub:loanYears+'年 '+totalMonths+'期',color:'var(--accent-red)'},{icon:'💰',label:'每月大額還款',val:stFmtD(bigPoolFirst),sub:'配息＋超額',color:'var(--accent-green)'},{icon:'①',label:'第一階段結束',val:phase2Month!=null?'第'+(phase2Month+1)+'月':'未達標',sub:phase2Month!=null?stMonthLabel(phase2Month):'',color:'var(--accent-amber)'},{icon:'🏁',label:'預計還清',val:lastRow?'第'+(lastRow.m+1)+'月':'—',sub:lastRow?stMonthLabel(lastRow.m):'',color:'var(--accent-blue)'}];sumEl.innerHTML=cards.map(function(c){return'<div class="s-summary-card"><div class="s-summary-icon">'+c.icon+'</div><div class="s-summary-label">'+c.label+'</div><div class="s-summary-val" style="color:'+c.color+';">'+c.val+'</div>'+(c.sub?'<div class="s-summary-sub">'+c.sub+'</div>':'')+'</div>';}).join('');}
+  if(sumEl){
+    // 海嘯模式：受影響的欄位（月還款、還清時間）標紅
+    var tcRed=isTsunamiActive?'var(--accent-red)':'var(--accent-red)';
+    var tcFinish=isTsunamiActive?'var(--accent-red)':'var(--accent-blue)';
+    var tcPmt=isTsunamiActive?'var(--accent-red)':'var(--accent-red)';
+    var tsLabel=isTsunamiActive?' <span style="font-size:0.48rem;background:rgba(255,77,109,0.15);border:1px solid rgba(255,77,109,0.3);color:var(--accent-red);padding:1px 5px;border-radius:8px;vertical-align:middle;">🌊</span>':'';
+    var cards=[
+      {icon:'💳',label:'初始月還款'+tsLabel,val:stFmtD(initPMT),sub:loanYears+'年 '+totalMonths+'期',color:tcPmt},
+      {icon:'💰',label:'每月大額還款',val:stFmtD(bigPoolFirst),sub:'配息＋超額',color:'var(--accent-green)'},
+      {icon:'①',label:'第一階段結束',val:phase2Month!=null?'第'+(phase2Month+1)+'月':'未達標',sub:phase2Month!=null?stMonthLabel(phase2Month):'',color:'var(--accent-amber)'},
+      {icon:'🏁',label:'預計還清'+tsLabel,val:lastRow?'第'+(lastRow.m+1)+'月':'—',sub:lastRow?stMonthLabel(lastRow.m):'',color:tcFinish}
+    ];
+    var cardStyle=isTsunamiActive?'border-color:rgba(255,77,109,0.25);':'';
+    sumEl.innerHTML=cards.map(function(c){return'<div class="s-summary-card" style="'+cardStyle+'"><div class="s-summary-icon">'+c.icon+'</div><div class="s-summary-label">'+c.label+'</div><div class="s-summary-val" style="color:'+c.color+(isTsunamiActive&&(c.icon==='💳'||c.icon==='🏁')?';text-shadow:0 0 10px rgba(255,77,109,0.4)':'')+';'+c.val+'</div>'+(c.sub?'<div class="s-summary-sub">'+c.sub+'</div>':'')+'</div>';}).join('');
+    // 修正 innerHTML 拼接 bug
+    sumEl.innerHTML=cards.map(function(c){var extra=isTsunamiActive&&(c.icon==='💳'||c.icon==='🏁')?';text-shadow:0 0 10px rgba(255,77,109,0.4)':'';return'<div class="s-summary-card" style="'+cardStyle+'"><div class="s-summary-icon">'+c.icon+'</div><div class="s-summary-label">'+c.label+'</div><div class="s-summary-val" style="color:'+c.color+extra+';">'+c.val+'</div>'+(c.sub?'<div class="s-summary-sub">'+c.sub+'</div>':'')+'</div>';}).join('');
+  }
   updateStDashboard();renderStTable();runPhase3();
 }
 function updateStDashboard(){
@@ -8492,6 +9515,17 @@ function updateStDashboard(){
   var phEl=document.getElementById('st_phase_label');if(phEl){phEl.textContent=row.phase===1?'① 質押累積中':'② 結清還款中';phEl.style.color=row.phase===1?'var(--accent-green)':'var(--accent-amber)';}
   stEl('st_cur_month_label',stMonthLabel(m)+'　第 '+(m+1)+' 月');
   stEl('st_cur_cost',stFmtD(row.totalCost));stEl('st_cur_pmt',stFmtD(row.pmt));stEl('st_cur_pledgeint',stFmtD(row.pledgeInt));
+  // 海嘯模式視覺回饋：月付金、成本顯示紅色光暈
+  var costEl=document.getElementById('st_cur_cost');
+  var pmtEl=document.getElementById('st_cur_pmt');
+  if(costEl){costEl.style.textShadow=isTsunamiActive?'0 0 18px rgba(255,77,109,0.7)':'';}
+  if(pmtEl){pmtEl.style.color=isTsunamiActive?'var(--accent-red)':'var(--accent-blue)';pmtEl.style.textShadow=isTsunamiActive?'0 0 8px rgba(255,77,109,0.5)':'';}
+  // 海嘯模式：在本月標題下方顯示提示
+  var tsWarnEl=document.getElementById('tsunami_cur_warn');
+  if(!tsWarnEl&&isTsunamiActive){
+    var costParent=costEl?costEl.parentNode:null;
+    if(costParent){var w=document.createElement('div');w.id='tsunami_cur_warn';w.style.cssText='font-size:0.55rem;color:rgba(255,77,109,0.7);letter-spacing:0.1em;margin-top:4px;font-family:var(--mono);';w.textContent='🌊 海嘯壓力測試數值';costParent.appendChild(w);}
+  }else if(tsWarnEl){tsWarnEl.style.display=isTsunamiActive?'':'none';}
   var lPct=loanAmt>0?Math.min(1,row.loanBal/loanAmt):0;stBar('st_loan_bar',lPct);stEl('st_loan_val',stFmtM(row.loanBal));stEl('st_loan_pct',Math.round(lPct*100)+'%');
   var plPct=pledgeCap>0?Math.min(1,row.pledgeBal/pledgeCap):0;stBar('st_pledge_bar',plPct);stEl('st_pledge_val',stFmtM(row.pledgeBal));stEl('st_pledge_pct',Math.round(plPct*100)+'%');stEl('st_pledge_sub',stFmtM(row.pledgeBal)+' / '+stFmtM(pledgeCap));
   var fPct=fundAmt>0?Math.min(1,row.fundBal/fundAmt):0;stBar('st_fund_bar',fPct);stEl('st_fund_val',stFmtM(row.fundBal));stEl('st_fund_pct',Math.round(fPct*100)+'%');
@@ -8556,7 +9590,571 @@ function stSyncP3Rate(v){
   runPhase3();
 }
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// APP STATE — 全域單一真相來源
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const DB_MASTER_KEY = 'fd2026_appstate_v3';
+
+const AppState = {
+  meta: { last_updated: '', version: '3.0' },
+
+  // 舊欄位保留（相容舊資料）
+  income:   { salary: 0, bonus_annual: 0, side_income: 0 },
+  expenses: [],
+  debts:    { mortgage: [], personal: [], pledge: [] },
+
+  // ── 固定支出（無期限）──
+  // { id, name, amount, freq:'monthly'|'quarterly'|'yearly', category, note }
+  recurring: [],
+
+  // ── 有期限負債 ──
+  // { id, name, type:'mortgage'|'personal'|'pledge'|'other',
+  //   principal, rate, months, start_date,
+  //   override_balance, override_date }
+  loans: [],
+
+  assets: {
+    stocks: [],  // { id, ticker, shares, cost_per_share, div_yield }
+    funds:  [],  // { id, name, principal, annual_rate }
+    bank:   [],  // { id, name, amount, rate, currency }
+  },
+};
+
+// ── PageState 暫存 ──
+const PageState = {};
+
+function appStateLoad() {
+  try {
+    const raw = localStorage.getItem(DB_MASTER_KEY);
+    if (!raw) return false;
+    const saved = JSON.parse(raw);
+    if (saved.meta)      Object.assign(AppState.meta,   saved.meta);
+    if (saved.income)    Object.assign(AppState.income, saved.income);
+    if (saved.expenses)  AppState.expenses  = saved.expenses;
+    if (saved.recurring) AppState.recurring = saved.recurring;
+    if (saved.loans)     AppState.loans     = saved.loans;
+    if (saved.assets) {
+      if (saved.assets.stocks) AppState.assets.stocks = saved.assets.stocks;
+      if (saved.assets.funds)  AppState.assets.funds  = saved.assets.funds;
+      if (saved.assets.bank)   AppState.assets.bank   = saved.assets.bank;
+    }
+    if (saved.debts) {
+      if (saved.debts.mortgage) AppState.debts.mortgage = saved.debts.mortgage;
+      if (saved.debts.personal) AppState.debts.personal = saved.debts.personal;
+      if (saved.debts.pledge)   AppState.debts.pledge   = saved.debts.pledge;
+    }
+    return true;
+  } catch(e) { return false; }
+}
+
+function appStateSave() {
+  AppState.meta.last_updated = new Date().toISOString();
+  try { localStorage.setItem(DB_MASTER_KEY, JSON.stringify(AppState)); } catch(e) {}
+}
+
+// ── 計算衍生值 ──
+function appCalcMonthlyIncome() {
+  return (AppState.income.salary||0) + (AppState.income.bonus_annual||0)/12 + (AppState.income.side_income||0);
+}
+function appCalcMonthlyExpenses() {
+  return AppState.expenses.filter(e=>e.active).reduce((s,e)=>s+(e.amount||0),0);
+}
+function appCalcMonthlyDividends() {
+  const stockDiv = AppState.assets.stocks.reduce((s,st)=>{
+    const price = 0; // live price not available without API
+    return s + (st.shares||0) * (st.cost_per_share||0) * ((st.div_yield||0)/100/12);
+  }, 0);
+  const fundDiv = AppState.assets.funds.reduce((s,f)=> s + (f.principal||0)*((f.annual_rate||0)/100/12), 0);
+  return stockDiv + fundDiv;
+}
+function appCalcPMT(principal, annualRate, months) {
+  if (!principal || !months) return 0;
+  const r = annualRate / 100 / 12;
+  if (r === 0) return principal / months;
+  return principal * r * Math.pow(1+r, months) / (Math.pow(1+r, months) - 1);
+}
+function appCalcMonthlyDebtPayments() {
+  let total = 0;
+  AppState.debts.mortgage.forEach(m => { total += appCalcPMT(m.principal, m.rate, (m.years||20)*12); });
+  AppState.debts.personal.forEach(p => { total += appCalcPMT(p.principal, p.rate, (p.years||7)*12); });
+  AppState.debts.pledge.forEach(pl => { total += (pl.balance||0)*((pl.rate||0)/100/12); });
+  return total;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// DATABASE PAGE — UI RENDER & LOGIC
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let _dbDirty = false;
+
+function dbMarkDirty() {
+  _dbDirty = true;
+  const badge = document.getElementById('db_dirty_badge');
+  if (badge) badge.style.display = 'inline-flex';
+  dbUpdatePreviews();
+}
+
+function dbLoad() {
+  appStateLoad();
+  dbRenderRecurring();
+  dbRenderLoans();
+  dbRenderStocks();
+  dbRenderFunds();
+  dbRenderBanks();
+  dbUpdatePreviews();
+  if (AppState.meta.last_updated) {
+    const d = new Date(AppState.meta.last_updated);
+    const el = document.getElementById('db_last_saved');
+    if (el) el.textContent = '上次儲存：' + d.toLocaleDateString('zh-TW') + ' ' + d.toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});
+  }
+  _dbDirty = false;
+  const badge = document.getElementById('db_dirty_badge');
+  if (badge) badge.style.display = 'none';
+}
+
+function dbSave() {
+  appStateSave();
+  _dbDirty = false;
+  const badge = document.getElementById('db_dirty_badge');
+  if (badge) badge.style.display = 'none';
+  const lastEl = document.getElementById('db_last_saved');
+  if (lastEl) {
+    const d = new Date();
+    lastEl.textContent = '上次儲存：' + d.toLocaleDateString('zh-TW') + ' ' + d.toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});
+  }
+  if (typeof showToast === 'function') showToast('✅ 資料庫已儲存，各分頁數據已更新');
+  else alert('✅ 資料庫已儲存');
+}
+
+function dbUpdatePreviews() {
+  // ── 固定支出月合計、年合計 ──
+  let recurMonthly = 0, recurYearly = 0;
+  AppState.recurring.forEach(r => {
+    const amt = r.amount || 0;
+    if (r.freq === 'monthly')   { recurMonthly += amt; recurYearly += amt * 12; }
+    if (r.freq === 'quarterly') { recurMonthly += amt / 3; recurYearly += amt * 4; }
+    if (r.freq === 'yearly')    { recurMonthly += amt / 12; recurYearly += amt; }
+  });
+  const rmEl = document.getElementById('db_recurring_monthly_preview');
+  const ryEl = document.getElementById('db_recurring_yearly_preview');
+  if (rmEl) rmEl.textContent = '$' + Math.round(recurMonthly).toLocaleString('zh-TW');
+  if (ryEl) ryEl.textContent = '$' + Math.round(recurYearly).toLocaleString('zh-TW');
+
+  // 類別小計
+  const catMap = {};
+  const catColors = { housing:'#3b82f6', insurance:'#06b6d4', parent:'#f59e0b', subscription:'#a78bfa', utilities:'#10b981', transport:'#f97316', other:'#6b7280' };
+  const catLabels = { housing:'住房', insurance:'保險', parent:'孝親', subscription:'訂閱', utilities:'水電', transport:'交通', other:'其他' };
+  AppState.recurring.forEach(r => {
+    const cat = r.category || 'other';
+    const amt = r.amount || 0;
+    const mo = r.freq==='monthly' ? amt : r.freq==='quarterly' ? amt/3 : amt/12;
+    catMap[cat] = (catMap[cat]||0) + mo;
+  });
+  const catEl = document.getElementById('db_recurring_cat_summary');
+  if (catEl) {
+    catEl.innerHTML = Object.entries(catMap).map(([cat, mo]) =>
+      `<div style="display:flex;align-items:center;gap:5px;padding:3px 10px;border-radius:8px;background:${catColors[cat]||'#6b7280'}18;border:1px solid ${catColors[cat]||'#6b7280'}33;">
+        <span style="font-size:0.6rem;color:${catColors[cat]||'#6b7280'};">${catLabels[cat]||cat}</span>
+        <span style="font-family:var(--mono);font-size:0.65rem;color:${catColors[cat]||'#6b7280'};font-weight:600;">$${Math.round(mo).toLocaleString()}/月</span>
+      </div>`
+    ).join('');
+  }
+
+  // ── 負債月攤還、總額 ──
+  let loanMonthly = 0, loanTotal = 0;
+  AppState.loans.forEach(l => {
+    const rem = dbCalcLoanRemaining(l);
+    loanMonthly += rem.pmt;
+    loanTotal   += rem.balance;
+  });
+  const lmEl = document.getElementById('db_loan_monthly_preview');
+  const ltEl = document.getElementById('db_loan_total_preview');
+  if (lmEl) lmEl.textContent = '$' + Math.round(loanMonthly).toLocaleString('zh-TW');
+  if (ltEl) ltEl.textContent = '$' + Math.round(loanTotal).toLocaleString('zh-TW');
+
+  // 還清時間軸
+  dbRenderLoanTimeline();
+
+  // ── 股票配息 ──
+  const stockDivEl = document.getElementById('db_stock_div_preview');
+  if (stockDivEl) {
+    const mo = AppState.assets.stocks.reduce((s,st)=> s+(st.shares||0)*(st.cost_per_share||0)*((st.div_yield||0)/100/12), 0);
+    stockDivEl.innerHTML = mo > 0 ? '月配息估計 <span class="db-derived-val">$'+Math.round(mo).toLocaleString()+'</span>' : '';
+  }
+  // ── 基金配息 ──
+  const fundDivEl = document.getElementById('db_fund_div_preview');
+  if (fundDivEl) {
+    const mo = AppState.assets.funds.reduce((s,f)=> s+(f.principal||0)*((f.annual_rate||0)/100/12), 0);
+    fundDivEl.innerHTML = mo > 0 ? '月配息估計 <span class="db-derived-val">$'+Math.round(mo).toLocaleString()+'</span>' : '';
+  }
+  // ── 銀行利息 ──
+  const bankIntEl = document.getElementById('db_bank_int_preview');
+  if (bankIntEl) {
+    const mo = AppState.assets.bank.reduce((s,b)=> s+(b.amount||0)*((b.rate||0)/100/12), 0);
+    bankIntEl.innerHTML = mo > 0 ? '月利息估計 <span class="db-derived-val">$'+Math.round(mo).toLocaleString()+'</span>' : '';
+  }
+}
+
+// ── 計算負債當前剩餘本金、月攤還 ──
+function dbCalcLoanRemaining(l) {
+  if (!l) return { balance: 0, pmt: 0, remMonths: 0, clearDate: null };
+  const totalMonths = l.months || 0;
+  const annualRate  = l.rate   || 0;
+  const r = annualRate / 100 / 12;
+
+  // 起算點：有手動覆蓋則用覆蓋，否則用起始日
+  let startBalance, startDate;
+  if (l.override_balance && l.override_date) {
+    startBalance = l.override_balance;
+    startDate    = new Date(l.override_date);
+  } else {
+    startBalance = l.principal || 0;
+    startDate    = l.start_date ? new Date(l.start_date) : null;
+  }
+
+  if (!startDate || isNaN(startDate)) return { balance: startBalance, pmt: appCalcPMT(startBalance, annualRate, totalMonths), remMonths: totalMonths, clearDate: null };
+
+  // 計算從起算點到今天經過幾個月
+  const now = new Date();
+  const elapsed = Math.max(0, (now.getFullYear() - startDate.getFullYear()) * 12 + (now.getMonth() - startDate.getMonth()));
+
+  // 本金攤還計算
+  let balance = startBalance;
+  const pmt = appCalcPMT(startBalance, annualRate, totalMonths);
+  for (let m = 0; m < Math.min(elapsed, totalMonths); m++) {
+    const interest = balance * r;
+    const principal = Math.min(pmt - interest, balance);
+    balance = Math.max(0, balance - principal);
+  }
+  const remMonths = Math.max(0, totalMonths - elapsed);
+  const clearDate = new Date(now.getFullYear(), now.getMonth() + remMonths, 1);
+  return { balance: Math.round(balance), pmt: Math.round(pmt), remMonths, clearDate };
+}
+
+// ── 還清時間軸 ──
+function dbRenderLoanTimeline() {
+  const el = document.getElementById('db_loan_timeline');
+  if (!el || !AppState.loans.length) { if(el) el.innerHTML=''; return; }
+  const items = AppState.loans.map(l => {
+    const rem = dbCalcLoanRemaining(l);
+    return { name: l.name||'貸款', remMonths: rem.remMonths, clearDate: rem.clearDate, balance: rem.balance };
+  }).filter(x => x.remMonths > 0).sort((a,b) => a.remMonths - b.remMonths);
+  if (!items.length) { el.innerHTML=''; return; }
+  const maxM = Math.max(...items.map(x => x.remMonths), 1);
+  el.innerHTML = `
+    <div style="padding:12px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;">
+      <div style="font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;">還清時間軸</div>
+      ${items.map(x => `
+        <div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:0.7rem;margin-bottom:4px;">
+            <span style="color:var(--text-secondary);">${x.name}</span>
+            <span style="font-family:var(--mono);color:var(--accent-purple);">剩 ${x.remMonths} 個月・${x.clearDate ? x.clearDate.getFullYear()+'/'+(x.clearDate.getMonth()+1) : '—'} 還清</span>
+          </div>
+          <div style="height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;">
+            <div style="height:100%;width:${Math.round((x.remMonths/maxM)*100)}%;background:linear-gradient(90deg,var(--accent-purple),#a78bfa88);border-radius:3px;transition:width 0.6s;"></div>
+          </div>
+          <div style="font-size:0.58rem;color:var(--text-muted);margin-top:2px;">剩餘本金 $${x.balance.toLocaleString('zh-TW')}</div>
+        </div>
+      `).join('')}
+    </div>`;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 固定支出（無期限）CRUD
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const RECURRING_CATS = [
+  { value:'housing',      label:'住房',   color:'#3b82f6' },
+  { value:'insurance',    label:'保險',   color:'#06b6d4' },
+  { value:'parent',       label:'孝親',   color:'#f59e0b' },
+  { value:'subscription', label:'訂閱',   color:'#a78bfa' },
+  { value:'utilities',    label:'水電',   color:'#10b981' },
+  { value:'transport',    label:'交通',   color:'#f97316' },
+  { value:'other',        label:'其他',   color:'#6b7280' },
+];
+const FREQ_LABELS = { monthly:'每月', quarterly:'每季', yearly:'每年' };
+
+function dbRenderRecurring() {
+  const c = document.getElementById('db_recurring_list');
+  if (!c) return;
+  if (!AppState.recurring.length) {
+    c.innerHTML = '<div style="color:var(--text-muted);font-size:0.7rem;text-align:center;padding:14px 0;">尚未新增固定支出</div>';
+    dbUpdatePreviews(); return;
+  }
+  c.innerHTML = AppState.recurring.map((r, i) => {
+    const cat = RECURRING_CATS.find(x => x.value === r.category) || RECURRING_CATS[RECURRING_CATS.length-1];
+    const catOpts = RECURRING_CATS.map(x => `<option value="${x.value}" ${r.category===x.value?'selected':''}>${x.label}</option>`).join('');
+    const freqOpts = Object.entries(FREQ_LABELS).map(([v,l]) => `<option value="${v}" ${r.freq===v?'selected':''}>${l}</option>`).join('');
+    // 月換算
+    const mo = r.freq==='monthly' ? r.amount : r.freq==='quarterly' ? (r.amount/3) : (r.amount/12);
+    return `
+    <div class="db-expense-row" style="grid-template-columns:3px 1fr 1fr auto auto auto;gap:8px;border-left:3px solid ${cat.color};">
+      <div style="width:3px;"></div>
+      <div class="db-input-wrap"><input type="text" placeholder="項目名稱" value="${r.name||''}" oninput="AppState.recurring[${i}].name=this.value;dbMarkDirty()" style="font-size:0.8rem;"></div>
+      <div class="db-input-wrap">
+        <input type="number" placeholder="0" value="${r.amount||''}" step="100" oninput="AppState.recurring[${i}].amount=parseFloat(this.value)||0;dbMarkDirty()">
+        <select style="background:transparent;border:none;color:var(--text-muted);font-size:0.68rem;padding:0 6px;cursor:pointer;" onchange="AppState.recurring[${i}].freq=this.value;dbMarkDirty();dbRenderRecurring()">${freqOpts}</select>
+      </div>
+      <select style="background:var(--bg-input);border:1px solid var(--border);border-radius:7px;padding:6px 8px;color:${cat.color};font-size:0.68rem;cursor:pointer;" onchange="AppState.recurring[${i}].category=this.value;dbMarkDirty();dbRenderRecurring()">${catOpts}</select>
+      <span style="font-size:0.6rem;color:var(--text-muted);white-space:nowrap;font-family:var(--mono);">${r.freq!=='monthly'?'≈$'+Math.round(mo).toLocaleString()+'/月':''}</span>
+      <button class="db-row-delete" onclick="dbDeleteRecurring(${i})">✕</button>
+    </div>`;
+  }).join('');
+  dbUpdatePreviews();
+}
+function dbAddRecurring() {
+  AppState.recurring.push({ id:'rc'+Date.now(), name:'', amount:0, freq:'monthly', category:'other' });
+  dbRenderRecurring(); dbMarkDirty();
+}
+function dbDeleteRecurring(i) {
+  AppState.recurring.splice(i,1); dbRenderRecurring(); dbMarkDirty();
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 有期限負債 CRUD
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const LOAN_TYPES = [
+  { value:'mortgage', label:'🏠 房貸' },
+  { value:'personal', label:'💳 信貸' },
+  { value:'pledge',   label:'🔗 質押' },
+  { value:'other',    label:'📋 其他' },
+];
+
+function dbRenderLoans() {
+  const c = document.getElementById('db_loan_list');
+  if (!c) return;
+  if (!AppState.loans.length) {
+    c.innerHTML = '<div style="color:var(--text-muted);font-size:0.7rem;text-align:center;padding:14px 0;">尚未新增負債</div>';
+    dbUpdatePreviews(); return;
+  }
+  c.innerHTML = AppState.loans.map((l, i) => {
+    const rem = dbCalcLoanRemaining(l);
+    const typeOpts = LOAN_TYPES.map(t => `<option value="${t.value}" ${l.type===t.value?'selected':''}>${t.label}</option>`).join('');
+    const hasOverride = l.override_balance && l.override_date;
+    return `
+    <div class="db-row-item">
+      <button class="db-row-delete" onclick="dbDeleteLoan(${i})">✕</button>
+      <div class="db-row-fields">
+        <div class="db-field"><label>類型</label>
+          <div class="db-input-wrap"><select onchange="AppState.loans[${i}].type=this.value;dbMarkDirty()">${typeOpts}</select></div>
+        </div>
+        <div class="db-field"><label>名稱</label>
+          <div class="db-input-wrap"><input type="text" placeholder="例：玉山房貸" value="${l.name||''}" oninput="AppState.loans[${i}].name=this.value;dbMarkDirty()"></div>
+        </div>
+        <div class="db-field"><label>原始本金</label>
+          <div class="db-input-wrap"><input type="number" placeholder="0" value="${l.principal||''}" step="100000" oninput="AppState.loans[${i}].principal=parseFloat(this.value)||0;dbMarkDirty();dbRenderLoans()"><span>元</span></div>
+        </div>
+        <div class="db-field"><label>年利率</label>
+          <div class="db-input-wrap"><input type="number" placeholder="2.0" value="${l.rate||''}" step="0.01" oninput="AppState.loans[${i}].rate=parseFloat(this.value)||0;dbMarkDirty();dbRenderLoans()"><span>%</span></div>
+        </div>
+        <div class="db-field"><label>總期數（月）</label>
+          <div class="db-input-wrap"><input type="number" placeholder="240" value="${l.months||''}" step="12" oninput="AppState.loans[${i}].months=parseInt(this.value)||0;dbMarkDirty();dbRenderLoans()"><span>月</span></div>
+        </div>
+        <div class="db-field"><label>起始日期</label>
+          <div class="db-input-wrap"><input type="month" value="${l.start_date||''}" oninput="AppState.loans[${i}].start_date=this.value;dbMarkDirty();dbRenderLoans()" style="font-size:0.8rem;"></div>
+        </div>
+      </div>
+      <!-- 自動計算結果 -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:6px;margin-top:8px;padding:8px 10px;background:rgba(167,139,250,0.05);border-radius:8px;border:1px solid rgba(167,139,250,0.15);">
+        <div><div style="font-size:0.55rem;color:var(--text-muted);">剩餘本金</div><div style="font-family:var(--mono);font-size:0.82rem;font-weight:600;color:var(--accent-purple);">$${rem.balance.toLocaleString('zh-TW')}</div></div>
+        <div><div style="font-size:0.55rem;color:var(--text-muted);">每月攤還</div><div style="font-family:var(--mono);font-size:0.82rem;font-weight:600;color:var(--accent-red);">$${rem.pmt.toLocaleString('zh-TW')}</div></div>
+        <div><div style="font-size:0.55rem;color:var(--text-muted);">剩餘期數</div><div style="font-family:var(--mono);font-size:0.82rem;font-weight:600;color:var(--text-primary);">${rem.remMonths} 個月</div></div>
+        <div><div style="font-size:0.55rem;color:var(--text-muted);">預計還清</div><div style="font-family:var(--mono);font-size:0.82rem;font-weight:600;color:var(--accent-green);">${rem.clearDate ? rem.clearDate.getFullYear()+'/'+(rem.clearDate.getMonth()+1) : '—'}</div></div>
+      </div>
+      <!-- 手動覆蓋（提前還款用） -->
+      <div style="margin-top:8px;">
+        <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'grid':'none'" style="font-size:0.6rem;color:var(--text-muted);background:none;border:1px solid var(--border);border-radius:6px;padding:3px 10px;cursor:pointer;">
+          ${hasOverride ? '✏️ 已覆蓋餘額' : '＋ 提前還款覆蓋'}
+        </button>
+        <div style="display:${hasOverride?'grid':'none'};grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;padding:10px;background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.2);border-radius:8px;">
+          <div class="db-field"><label style="color:rgba(245,158,11,0.8);">實際餘額（提前還款後）</label>
+            <div class="db-input-wrap"><input type="number" placeholder="0" value="${l.override_balance||''}" step="10000" oninput="AppState.loans[${i}].override_balance=parseFloat(this.value)||0;dbMarkDirty();dbRenderLoans()"><span>元</span></div>
+          </div>
+          <div class="db-field"><label style="color:rgba(245,158,11,0.8);">更新日期</label>
+            <div class="db-input-wrap"><input type="month" value="${l.override_date||''}" oninput="AppState.loans[${i}].override_date=this.value;dbMarkDirty();dbRenderLoans()" style="font-size:0.8rem;"></div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  dbUpdatePreviews();
+}
+function dbAddLoan() {
+  AppState.loans.push({ id:'ln'+Date.now(), name:'', type:'personal', principal:0, rate:0, months:84, start_date:'', override_balance:null, override_date:'' });
+  dbRenderLoans(); dbMarkDirty();
+}
+function dbDeleteLoan(i) {
+  AppState.loans.splice(i,1); dbRenderLoans(); dbMarkDirty();
+}
+
+// ── 舊版函數空殼保留相容 ──
+function dbRenderExpenses()  {}
+function dbRenderMortgages() {}
+function dbRenderPersonals() {}
+function dbRenderPledges()   {}
+function dbAddExpense()      { dbAddRecurring(); }
+function dbAddMortgage()     { dbAddLoan(); }
+function dbAddPersonal()     { dbAddLoan(); }
+function dbAddPledge()       { dbAddLoan(); }
+function dbPreviewDebts()    {}
+function dbAddExpense() {
+  AppState.expenses.push({ id: 'e'+Date.now(), name: '', amount: 0, category: 'other', active: true });
+  dbRenderExpenses();
+  dbMarkDirty();
+}
+function dbDeleteExpense(i) {
+  AppState.expenses.splice(i, 1);
+  dbRenderExpenses();
+  dbMarkDirty();
+}
+
+// ── STOCKS ──
+function dbRenderStocks() {
+  const c = document.getElementById('db_stock_list');
+  if (!c) return;
+  if (!AppState.assets.stocks.length) { c.innerHTML = '<div style="color:var(--text-muted);font-size:0.7rem;padding:8px 0;">尚未新增</div>'; return; }
+  c.innerHTML = AppState.assets.stocks.map((s,i) => `
+    <div class="db-row-item">
+      <button class="db-row-delete" onclick="dbDeleteStock(${i})">✕</button>
+      <div class="db-row-fields">
+        <div class="db-field"><label>代碼</label><div class="db-input-wrap"><input type="text" placeholder="0050" value="${s.ticker||''}" oninput="AppState.assets.stocks[${i}].ticker=this.value;dbMarkDirty()" style="font-family:var(--mono);font-weight:600;"></div></div>
+        <div class="db-field"><label>持股數（張）</label><div class="db-input-wrap"><input type="number" placeholder="0" value="${s.shares||''}" step="1" oninput="AppState.assets.stocks[${i}].shares=parseFloat(this.value)||0;dbMarkDirty()"><span>張</span></div></div>
+        <div class="db-field"><label>成本均價</label><div class="db-input-wrap"><input type="number" placeholder="0" value="${s.cost_per_share||''}" step="0.1" oninput="AppState.assets.stocks[${i}].cost_per_share=parseFloat(this.value)||0;dbMarkDirty()"><span>元</span></div></div>
+        <div class="db-field"><label>殖利率</label><div class="db-input-wrap"><input type="number" placeholder="3" value="${s.div_yield||''}" step="0.1" oninput="AppState.assets.stocks[${i}].div_yield=parseFloat(this.value)||0;dbMarkDirty()"><span>%</span></div></div>
+      </div>
+    </div>
+  `).join('');
+}
+function dbAddStock() {
+  AppState.assets.stocks.push({ id:'s'+Date.now(), ticker:'', shares:0, cost_per_share:0, div_yield:0 });
+  dbRenderStocks(); dbMarkDirty();
+}
+function dbDeleteStock(i) { AppState.assets.stocks.splice(i,1); dbRenderStocks(); dbMarkDirty(); }
+
+// ── FUNDS ──
+function dbRenderFunds() {
+  const c = document.getElementById('db_fund_list');
+  if (!c) return;
+  if (!AppState.assets.funds.length) { c.innerHTML = '<div style="color:var(--text-muted);font-size:0.7rem;padding:8px 0;">尚未新增</div>'; return; }
+  c.innerHTML = AppState.assets.funds.map((f,i) => `
+    <div class="db-row-item">
+      <button class="db-row-delete" onclick="dbDeleteFund(${i})">✕</button>
+      <div class="db-row-fields">
+        <div class="db-field"><label>基金名稱</label><div class="db-input-wrap"><input type="text" placeholder="境外基金" value="${f.name||''}" oninput="AppState.assets.funds[${i}].name=this.value;dbMarkDirty()"></div></div>
+        <div class="db-field"><label>本金</label><div class="db-input-wrap"><input type="number" placeholder="0" value="${f.principal||''}" step="10000" oninput="AppState.assets.funds[${i}].principal=parseFloat(this.value)||0;dbMarkDirty()"><span>元</span></div></div>
+        <div class="db-field"><label>年化報酬率</label><div class="db-input-wrap"><input type="number" placeholder="6" value="${f.annual_rate||''}" step="0.1" oninput="AppState.assets.funds[${i}].annual_rate=parseFloat(this.value)||0;dbMarkDirty()"><span>%</span></div></div>
+      </div>
+    </div>
+  `).join('');
+}
+function dbAddFund() {
+  AppState.assets.funds.push({ id:'f'+Date.now(), name:'', principal:0, annual_rate:0 });
+  dbRenderFunds(); dbMarkDirty();
+}
+function dbDeleteFund(i) { AppState.assets.funds.splice(i,1); dbRenderFunds(); dbMarkDirty(); }
+
+// ── BANK ──
+function dbRenderBanks() {
+  const c = document.getElementById('db_bank_list');
+  if (!c) return;
+  if (!AppState.assets.bank.length) { c.innerHTML = '<div style="color:var(--text-muted);font-size:0.7rem;padding:8px 0;">尚未新增</div>'; return; }
+  c.innerHTML = AppState.assets.bank.map((b,i) => `
+    <div class="db-row-item">
+      <button class="db-row-delete" onclick="dbDeleteBank(${i})">✕</button>
+      <div class="db-row-fields">
+        <div class="db-field"><label>帳戶名稱</label><div class="db-input-wrap"><input type="text" placeholder="台幣活存" value="${b.name||''}" oninput="AppState.assets.bank[${i}].name=this.value;dbMarkDirty()"></div></div>
+        <div class="db-field"><label>存款金額</label><div class="db-input-wrap"><input type="number" placeholder="0" value="${b.amount||''}" step="10000" oninput="AppState.assets.bank[${i}].amount=parseFloat(this.value)||0;dbMarkDirty()"><span>元</span></div></div>
+        <div class="db-field"><label>年利率</label><div class="db-input-wrap"><input type="number" placeholder="0.8" value="${b.rate||''}" step="0.1" oninput="AppState.assets.bank[${i}].rate=parseFloat(this.value)||0;dbMarkDirty()"><span>%</span></div></div>
+        <div class="db-field"><label>幣別</label>
+          <div class="db-input-wrap">
+            <select onchange="AppState.assets.bank[${i}].currency=this.value;dbMarkDirty()">
+              ${['TWD','USD','JPY','EUR'].map(cur=>`<option value="${cur}" ${b.currency===cur?'selected':''}>${cur}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+function dbAddBank() {
+  AppState.assets.bank.push({ id:'b'+Date.now(), name:'', amount:0, rate:0, currency:'TWD' });
+  dbRenderBanks(); dbMarkDirty();
+}
+function dbDeleteBank(i) { AppState.assets.bank.splice(i,1); dbRenderBanks(); dbMarkDirty(); }
+
+// ── MORTGAGE ──
+function dbRenderMortgages() {
+  const c = document.getElementById('db_mortgage_list');
+  if (!c) return;
+  if (!AppState.debts.mortgage.length) { c.innerHTML = '<div style="color:var(--text-muted);font-size:0.7rem;padding:8px 0;">尚未新增</div>'; return; }
+  c.innerHTML = AppState.debts.mortgage.map((m,i) => `
+    <div class="db-row-item">
+      <button class="db-row-delete" onclick="dbDeleteMortgage(${i})">✕</button>
+      <div class="db-row-fields">
+        <div class="db-field"><label>名稱</label><div class="db-input-wrap"><input type="text" placeholder="主貸" value="${m.name||''}" oninput="AppState.debts.mortgage[${i}].name=this.value;dbMarkDirty()"></div></div>
+        <div class="db-field"><label>本金餘額</label><div class="db-input-wrap"><input type="number" placeholder="0" value="${m.principal||''}" step="100000" oninput="AppState.debts.mortgage[${i}].principal=parseFloat(this.value)||0;dbMarkDirty()"><span>元</span></div></div>
+        <div class="db-field"><label>年利率</label><div class="db-input-wrap"><input type="number" placeholder="2.0" value="${m.rate||''}" step="0.01" oninput="AppState.debts.mortgage[${i}].rate=parseFloat(this.value)||0;dbMarkDirty()"><span>%</span></div></div>
+        <div class="db-field"><label>剩餘年限</label><div class="db-input-wrap"><input type="number" placeholder="20" value="${m.years||''}" step="1" oninput="AppState.debts.mortgage[${i}].years=parseFloat(this.value)||0;dbMarkDirty()"><span>年</span></div></div>
+        <div class="db-field"><label>貸款開始日</label><div class="db-input-wrap"><input type="month" value="${m.start||''}" oninput="AppState.debts.mortgage[${i}].start=this.value;dbMarkDirty()" style="font-size:0.8rem;"></div></div>
+      </div>
+    </div>
+  `).join('');
+}
+function dbAddMortgage() {
+  AppState.debts.mortgage.push({ id:'m'+Date.now(), name:'房貸', principal:0, rate:2.0, years:20, start:'' });
+  dbRenderMortgages(); dbMarkDirty();
+}
+function dbDeleteMortgage(i) { AppState.debts.mortgage.splice(i,1); dbRenderMortgages(); dbMarkDirty(); }
+
+// ── PERSONAL LOAN ──
+function dbRenderPersonals() {
+  const c = document.getElementById('db_personal_list');
+  if (!c) return;
+  if (!AppState.debts.personal.length) { c.innerHTML = '<div style="color:var(--text-muted);font-size:0.7rem;padding:8px 0;">尚未新增</div>'; return; }
+  c.innerHTML = AppState.debts.personal.map((p,i) => `
+    <div class="db-row-item">
+      <button class="db-row-delete" onclick="dbDeletePersonal(${i})">✕</button>
+      <div class="db-row-fields">
+        <div class="db-field"><label>名稱</label><div class="db-input-wrap"><input type="text" placeholder="信貸" value="${p.name||''}" oninput="AppState.debts.personal[${i}].name=this.value;dbMarkDirty()"></div></div>
+        <div class="db-field"><label>本金餘額</label><div class="db-input-wrap"><input type="number" placeholder="0" value="${p.principal||''}" step="100000" oninput="AppState.debts.personal[${i}].principal=parseFloat(this.value)||0;dbMarkDirty()"><span>元</span></div></div>
+        <div class="db-field"><label>年利率</label><div class="db-input-wrap"><input type="number" placeholder="2.39" value="${p.rate||''}" step="0.01" oninput="AppState.debts.personal[${i}].rate=parseFloat(this.value)||0;dbMarkDirty()"><span>%</span></div></div>
+        <div class="db-field"><label>年限</label><div class="db-input-wrap"><input type="number" placeholder="7" value="${p.years||''}" step="1" oninput="AppState.debts.personal[${i}].years=parseFloat(this.value)||0;dbMarkDirty()"><span>年</span></div></div>
+        <div class="db-field"><label>貸款開始日</label><div class="db-input-wrap"><input type="month" value="${p.start||''}" oninput="AppState.debts.personal[${i}].start=this.value;dbMarkDirty()" style="font-size:0.8rem;"></div></div>
+      </div>
+    </div>
+  `).join('');
+}
+function dbAddPersonal() {
+  AppState.debts.personal.push({ id:'p'+Date.now(), name:'信貸', principal:0, rate:2.39, years:7, start:'' });
+  dbRenderPersonals(); dbMarkDirty();
+}
+function dbDeletePersonal(i) { AppState.debts.personal.splice(i,1); dbRenderPersonals(); dbMarkDirty(); }
+
+// ── PLEDGE ──
+function dbRenderPledges() {
+  const c = document.getElementById('db_pledge_list');
+  if (!c) return;
+  if (!AppState.debts.pledge.length) { c.innerHTML = '<div style="color:var(--text-muted);font-size:0.7rem;padding:8px 0;">尚未新增</div>'; return; }
+  c.innerHTML = AppState.debts.pledge.map((pl,i) => `
+    <div class="db-row-item">
+      <button class="db-row-delete" onclick="dbDeletePledge(${i})">✕</button>
+      <div class="db-row-fields">
+        <div class="db-field"><label>名稱</label><div class="db-input-wrap"><input type="text" placeholder="質押借款" value="${pl.name||''}" oninput="AppState.debts.pledge[${i}].name=this.value;dbMarkDirty()"></div></div>
+        <div class="db-field"><label>目前借款餘額</label><div class="db-input-wrap"><input type="number" placeholder="0" value="${pl.balance||''}" step="10000" oninput="AppState.debts.pledge[${i}].balance=parseFloat(this.value)||0;dbMarkDirty()"><span>元</span></div></div>
+        <div class="db-field"><label>質押上限</label><div class="db-input-wrap"><input type="number" placeholder="700000" value="${pl.cap||''}" step="50000" oninput="AppState.debts.pledge[${i}].cap=parseFloat(this.value)||0;dbMarkDirty()"><span>元</span></div></div>
+        <div class="db-field"><label>年利率</label><div class="db-input-wrap"><input type="number" placeholder="2.58" value="${pl.rate||''}" step="0.01" oninput="AppState.debts.pledge[${i}].rate=parseFloat(this.value)||0;dbMarkDirty()"><span>%</span></div></div>
+      </div>
+    </div>
+  `).join('');
+}
+function dbAddPledge() {
+  AppState.debts.pledge.push({ id:'pl'+Date.now(), name:'質押借款', balance:0, cap:700000, rate:2.58 });
+  dbRenderPledges(); dbMarkDirty();
+}
+function dbDeletePledge(i) { AppState.debts.pledge.splice(i,1); dbRenderPledges(); dbMarkDirty(); }
+
+// ── Init on load ──
+(function() {
+  appStateLoad();
+})();
+
 </script>
-
-
 <div style="position: fixed; pointer-events: none; padding: 8px 12px; background: rgb(30, 35, 53); border: 1px solid rgb(46, 53, 80); border-radius: 8px; font-size: 0.75rem; color: rgb(232, 236, 245); display: none; z-index: 999; line-height: 1.8; font-family: &quot;DM Mono&quot;, monospace; box-shadow: rgba(0, 0, 0, 0.5) 0px 8px 24px;"></div></body></html>
