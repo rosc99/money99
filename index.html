@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW"><head>
+<html lang="zh-TW" style="--txModalAccent: #ff4d6d;"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1605,7 +1605,7 @@ input::placeholder { color: var(--text-muted); }
 .expense-chip.active { background: #3b82f6; color: #fff; border-color: #3b82f6; font-weight: 700; box-shadow: 0 2px 10px rgba(59,130,246,0.35); }
 </style>
 </head>
-<body>
+<body style="">
 
 <!-- ── 登入 / 註冊 Overlay ── -->
 <div id="authOverlay" class="hidden">
@@ -1755,7 +1755,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot ok" id="syncDot"></div>
       <span id="syncStatusText" style="color: var(--accent-green);">已同步</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-18 18:11:59</div>
+    <div class="clock-display" id="clockDisplay">2026-03-18 18:14:12</div>
   </div>
 </aside>
 
@@ -1900,8 +1900,23 @@ input::placeholder { color: var(--text-muted); }
             </div>
           </div>
         </div>
-        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"></div>
-        <canvas id="wealthChart" style="width:100%;display:block;" height="220"></canvas>
+        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#f59e0b;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#ff4d6d;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總負債</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#ff4d6d;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#00e5a0;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">淨資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#00e5a0;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div></div>
+        <canvas id="wealthChart" style="width:100%;display:block;" height="220" width="346"></canvas>
         <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;" id="wealthXLabels"></div>
       </div>
 
@@ -2098,7 +2113,7 @@ input::placeholder { color: var(--text-muted); }
         <!-- 橫排兩按鈕 -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
           <!-- 支出 -->
-          <button onclick="openTxModal('支出')" style="border-radius:14px;border:none;background:linear-gradient(135deg,#e53e3e,#ff4d6d);color:#fff;font-family:var(--sans);cursor:pointer;padding:16px 18px;text-align:left;transition:all 0.18s;box-shadow:0 4px 16px rgba(255,77,109,0.3);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(255,77,109,0.45)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(255,77,109,0.3)'">
+          <button onclick="openTxModal('支出')" style="border-radius: 14px; border: none; background: linear-gradient(135deg, rgb(229, 62, 62), rgb(255, 77, 109)); color: rgb(255, 255, 255); font-family: var(--sans); cursor: pointer; padding: 16px 18px; text-align: left; transition: 0.18s; box-shadow: rgba(255, 77, 109, 0.3) 0px 4px 16px;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(255,77,109,0.45)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(255,77,109,0.3)'">
             <div style="font-size:0.78rem;font-weight:600;letter-spacing:0.04em;margin-bottom:6px;">支出</div>
             <div style="font-family:var(--mono);font-size:1rem;font-weight:700;" id="ledger-btn-expense">NT$0</div>
           </button>
@@ -2135,11 +2150,11 @@ input::placeholder { color: var(--text-muted); }
 
     <!-- hidden 舊表單欄位供 addTransaction 相容 -->
     <div style="display:none;">
-      <input type="hidden" id="txCategory" value="收入">
+      <input type="hidden" id="txCategory" value="支出">
       <input type="hidden" id="txDate" value="2026-03-18">
       <input type="hidden" id="txName" value="">
-      <input type="hidden" id="txAmount">
-      <input type="hidden" id="txNote">
+      <input type="hidden" id="txAmount" value="" style="border-color: var(--border);">
+      <input type="hidden" id="txNote" value="">
       <div id="incomeChipsRow" style="display: block;"></div>
       <div id="expenseChipsRow" style="display: none;"></div>
       <button id="toggleIncome" style="background: rgba(0, 229, 160, 0.133); color: rgb(0, 229, 160); font-weight: 600;"></button>
@@ -2203,7 +2218,7 @@ input::placeholder { color: var(--text-muted); }
   </section>
 
   <!-- ══ 收支新增 Modal ══ -->
-  <div id="txModal" style="display:none;position:fixed;inset:0;z-index:6000;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;" onclick="if(event.target===this)closeTxModal()">
+  <div id="txModal" style="display: none; position: fixed; inset: 0px; z-index: 6000; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(6px); align-items: flex-end; justify-content: center;" onclick="if(event.target===this)closeTxModal()">
     <div id="txModalInner" style="width:min(520px,100vw);background:var(--bg-card);border-radius:20px 20px 0 0;display:flex;flex-direction:column;max-height:92vh;animation:slideUp 0.28s cubic-bezier(0.4,0,0.2,1);" ontouchstart="txModalTouchStart(event)" ontouchmove="txModalTouchMove(event)" ontouchend="txModalTouchEnd(event)">
 
       <!-- 固定頂部：拖曳條 + 標題 -->
@@ -2211,7 +2226,7 @@ input::placeholder { color: var(--text-muted); }
         <div style="width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,0.12);margin:0 auto 16px;"></div>
         <div style="display:flex;align-items:center;justify-content:space-between;">
           <div style="display:flex;align-items:center;gap:10px;">
-            <div id="txModalDot" style="width:12px;height:12px;border-radius:50%;background:var(--accent-red);flex-shrink:0;"></div>
+            <div id="txModalDot" style="width: 12px; height: 12px; border-radius: 50%; background: rgb(255, 77, 109); flex-shrink: 0;"></div>
             <div style="font-size:1.05rem;font-weight:600;" id="txModalTitle">新增支出</div>
           </div>
           <button onclick="closeTxModal()" style="background:rgba(255,255,255,0.07);border:none;color:var(--text-muted);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">✕</button>
@@ -2245,7 +2260,7 @@ input::placeholder { color: var(--text-muted); }
             <button type="button" class="tx-chip income-chip" onclick="selectModalChip(this,'其他收入','收入')">➕ 其他</button>
           </div>
         </div>
-        <div id="txModal-expense-cats" style="display:none;margin-bottom:14px;">
+        <div id="txModal-expense-cats" style="display: block; margin-bottom: 14px;">
           <label style="font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:8px;">類別</label>
           <div style="display:flex;flex-wrap:wrap;gap:7px;">
             <button type="button" class="tx-chip expense-chip" onclick="selectModalChip(this,'生活','支出')">🛍 生活</button>
@@ -2275,7 +2290,7 @@ input::placeholder { color: var(--text-muted); }
 
       <!-- 固定底部：確認按鈕 -->
       <div style="padding:12px 20px;padding-bottom:calc(16px + env(safe-area-inset-bottom, 0px) + 60px);flex-shrink:0;background:var(--bg-card);border-top:1px solid var(--border);">
-        <button id="txModalConfirmBtn" onclick="addTransactionFromModal()" style="width:100%;padding:14px;border:none;border-radius:12px;font-size:0.95rem;font-weight:700;cursor:pointer;transition:all 0.18s;font-family:var(--sans);">＋ 新增</button>
+        <button id="txModalConfirmBtn" onclick="addTransactionFromModal()" style="width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: 0.18s; font-family: var(--sans); background: linear-gradient(135deg, rgb(229, 62, 62), rgb(255, 77, 109)); color: rgb(255, 255, 255);">＋ 新增</button>
       </div>
     </div>
   </div>
