@@ -1773,7 +1773,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-19 19:43:07</div>
+    <div class="clock-display" id="clockDisplay">2026-03-19 20:19:24</div>
   </div>
 </aside>
 
@@ -9778,6 +9778,8 @@ function dbMarkDirty() {
   const badge = document.getElementById('db_dirty_badge');
   if (badge) badge.style.display = 'inline-flex';
   dbUpdatePreviews();
+  // 即時寫進 localStorage，確保重整不遺失
+  appStateSave();
 }
 
 function dbLoad() {
