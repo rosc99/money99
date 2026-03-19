@@ -1773,7 +1773,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-20 07:40:13</div>
+    <div class="clock-display" id="clockDisplay">2026-03-20 07:49:04</div>
   </div>
 </aside>
 
@@ -1918,23 +1918,8 @@ input::placeholder { color: var(--text-muted); }
             </div>
           </div>
         </div>
-        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">總資產</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#f59e0b;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#ff4d6d;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">總負債</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#ff4d6d;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#00e5a0;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">淨資產</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#00e5a0;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div></div>
-        <canvas id="wealthChart" style="width:100%;display:block;" height="220" width="346"></canvas>
+        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"></div>
+        <canvas id="wealthChart" style="width:100%;display:block;" height="220"></canvas>
         <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;" id="wealthXLabels"></div>
       </div>
 
@@ -2264,7 +2249,7 @@ input::placeholder { color: var(--text-muted); }
       </div>
 
       <!-- 報價狀態列 -->
-      <div id="te_quote_info" style="display:none;padding:8px 12px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:8px;margin-bottom:12px;display:none;">
+      <div id="te_quote_info" style="display:none;padding:8px 12px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:8px;margin-bottom:12px;">
         <div style="display:flex;align-items:center;justify-content:space-between;">
           <div>
             <span style="font-size:0.6rem;color:var(--text-muted);">即時報價</span>
@@ -6765,9 +6750,7 @@ async function fetchQuote(ticker) {
 }
 
 // 相容舊有變數
-let _twseCache = null, _tpexCache = null;
-async function loadTWSEAll() { return {}; }
-async function loadTPEXAll() { return {}; }
+// loadTWSEAll / loadTPEXAll 已廢棄（全走 proxy）
 
 // 新增時預覽股票報價
 let _invValueLocked = false; // true = 自動報價鎖定，false = 手動模式
@@ -8444,7 +8427,7 @@ function switchIntelRange(range) {
 //  所有 stooq / BCI 請求統一走伺服器端 proxy
 //  前端完全不直連外部 API
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const PROXY_BASE = 'https://dlwswwioqbghwpksbnjv.supabase.co/functions/v1/quote-proxy';
+const PROXY_BASE = QUOTE_PROXY_URL; // 同一個 proxy，統一參照
 
 // 記憶體快取（同一次開 App 內不重複請求）
 const _dashMem = {};
@@ -8540,25 +8523,7 @@ function dashCacheSave(key, data) {
     localStorage.setItem(DASH_CACHE_KEY, JSON.stringify(store));
   } catch(e) {}
 }
-function dashCacheLoad(key) {
-  try {
-    const store = JSON.parse(localStorage.getItem(DASH_CACHE_KEY) || '{}');
-    const entry = store[key];
-    if (!entry || Date.now() - entry.ts > DASH_CACHE_TTL) return null;
-    return entry.data;
-  } catch(e) { return null; }
-}
-function dashCacheLoadAny(key) {
-  try { return JSON.parse(localStorage.getItem(DASH_CACHE_KEY) || '{}')[key]?.data || null; } catch(e) { return null; }
-}
-function dashCacheAge(key) {
-  try {
-    const ts = JSON.parse(localStorage.getItem(DASH_CACHE_KEY) || '{}')[key]?.ts;
-    if (!ts) return null;
-    const mins = Math.round((Date.now() - ts) / 60000);
-    return mins < 1 ? '剛剛' : mins < 60 ? `${mins} 分鐘前` : `${Math.round(mins/60)} 小時前`;
-  } catch(e) { return null; }
-}
+// dashCacheLoad / dashCacheLoadAny / dashCacheAge 已移除（未使用）
 
 async function preloadIntelData() {
   try {
