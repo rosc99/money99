@@ -1758,6 +1758,184 @@ input::placeholder { color: var(--text-muted); }
 @keyframes chipSpin{to{transform:rotate(360deg)}}
 .chip-spin{animation:chipSpin .8s linear infinite;display:inline-block}
 
+
+/* ══════════════════════════════════════
+   籌碼雷達 II — Complete Redesign CSS
+   ══════════════════════════════════════ */
+
+/* ── Buttons ── */
+#page-stats .cr-scan-btn{background:#f0b429;color:#000;border:none;padding:7px 16px;border-radius:20px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:var(--sans);white-space:nowrap;transition:opacity .15s}
+#page-stats .cr-scan-btn:disabled{opacity:.4;cursor:not-allowed}
+#page-stats .cr-icon-btn{background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.25);color:#f0b429;padding:6px 10px;border-radius:10px;cursor:pointer;font-size:0.85rem;line-height:1;transition:background .15s}
+#page-stats .cr-icon-btn:active{background:rgba(240,180,41,.25)}
+#page-stats .cr-btn-primary{flex:1;background:#f0b429;color:#000;border:none;padding:10px;border-radius:10px;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:var(--sans)}
+#page-stats .cr-btn-secondary{flex:1;background:var(--bg-card2);color:var(--text-secondary);border:1px solid var(--border);padding:10px;border-radius:10px;font-size:0.82rem;cursor:pointer;font-family:var(--sans)}
+
+/* ── Stats bar ── */
+#page-stats .cr-stats-bar{display:flex;align-items:center;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:10px 16px;margin-bottom:10px;gap:0}
+#page-stats .cr-stat{flex:1;text-align:center}
+#page-stats .cr-stat-num{font-family:var(--mono);font-size:1.4rem;font-weight:700;line-height:1}
+#page-stats .cr-stat-lbl{font-size:0.55rem;color:var(--text-muted);margin-top:2px;letter-spacing:.05em}
+#page-stats .cr-stat-div{width:1px;height:32px;background:var(--border)}
+
+/* ── Progress ── */
+#page-stats .cr-progress{margin-bottom:10px;display:none}
+#page-stats .cr-progress.show{display:block}
+#page-stats .cr-progress-track{height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+#page-stats .cr-progress-fill{height:100%;background:#f0b429;border-radius:2px;transition:width .3s;width:0%}
+#page-stats .cr-progress-lbl{font-size:0.6rem;color:var(--text-muted);font-family:var(--mono);margin-top:3px}
+
+/* ── Main tabs ── */
+#page-stats .cr-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:5px}
+#page-stats .cr-tab{padding:8px 4px;border-radius:10px;font-size:0.72rem;font-weight:600;text-align:center;cursor:pointer;color:var(--text-muted);transition:all .2s;white-space:nowrap}
+#page-stats .cr-tab.active{background:#f0b429;color:#000}
+
+/* ── Tab panels ── */
+#page-stats .cr-tabpanel{animation:crFadeIn .2s ease}
+@keyframes crFadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Card base ── */
+#page-stats .cr-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+#page-stats .cr-card-title{font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px}
+#page-stats .cr-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+
+/* ── Market hero ── */
+#page-stats .cr-mkt-hero{border-radius:14px;padding:16px;margin-bottom:10px;border:1px solid var(--border);background:var(--bg-card);transition:all .4s}
+#page-stats .cr-mkt-hero.bull{background:linear-gradient(135deg,rgba(0,229,160,.12),rgba(0,229,160,.04));border-color:rgba(0,229,160,.35)}
+#page-stats .cr-mkt-hero.bear{background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(59,130,246,.04));border-color:rgba(59,130,246,.35)}
+#page-stats .cr-mkt-hero.neutral{background:linear-gradient(135deg,rgba(240,180,41,.1),rgba(240,180,41,.03));border-color:rgba(240,180,41,.3)}
+#page-stats .cr-mkt-verdict{font-size:1.5rem;font-weight:900;line-height:1.2;margin-bottom:4px}
+#page-stats .cr-mkt-verdict.bull{color:var(--accent-red)}
+#page-stats .cr-mkt-verdict.bear{color:var(--accent-blue)}
+#page-stats .cr-mkt-verdict.cr-neu{color:#f0b429}
+#page-stats .cr-mkt-sub{font-size:0.72rem;color:var(--text-muted);line-height:1.5}
+#page-stats .cr-refresh-btn{width:38px;height:38px;border-radius:50%;background:rgba(240,180,41,.12);border:1px solid rgba(240,180,41,.3);color:#f0b429;font-size:1.1rem;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
+#page-stats .cr-refresh-btn:active{background:rgba(240,180,41,.3)}
+
+/* ── Metric cards ── */
+#page-stats .cr-metric-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:11px 13px}
+#page-stats .cr-metric-lbl{font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
+#page-stats .cr-metric-val{font-family:var(--mono);font-size:1.15rem;font-weight:700;line-height:1}
+#page-stats .cr-metric-val.up{color:var(--accent-red)}
+#page-stats .cr-metric-val.dn{color:var(--accent-blue)}
+#page-stats .cr-metric-val.cr-neu{color:#f0b429}
+#page-stats .cr-metric-sub{font-size:0.62rem;color:var(--text-muted);margin-top:3px}
+
+/* ── Flow bar ── */
+#page-stats .cr-flow-bar{display:flex;height:6px;border-radius:3px;overflow:hidden;margin-bottom:6px}
+#page-stats .cr-flow-tse{background:var(--accent-red);transition:flex .6s}
+#page-stats .cr-flow-otc{background:var(--accent-blue);transition:flex .6s}
+#page-stats .cr-flow-legend{display:flex;justify-content:space-between;font-size:0.65rem}
+
+/* ── Analysis rows ── */
+#page-stats .cr-analysis-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+#page-stats .cr-analysis-row:last-child{border-bottom:none}
+#page-stats .cr-analysis-icon{font-size:1rem;flex-shrink:0;width:22px}
+#page-stats .cr-analysis-content{flex:1;min-width:0}
+#page-stats .cr-analysis-label{font-size:0.75rem;font-weight:700;color:var(--text-primary);margin-bottom:2px}
+#page-stats .cr-analysis-val{font-size:0.65rem;color:var(--text-muted);line-height:1.5}
+#page-stats .cr-analysis-badge{font-size:0.62rem;font-weight:700;padding:2px 8px;border-radius:6px;flex-shrink:0;white-space:nowrap}
+#page-stats .cr-badge-bull{background:rgba(0,229,160,.12);color:var(--accent-green);border:1px solid rgba(0,229,160,.25)}
+#page-stats .cr-badge-bear{background:rgba(59,130,246,.12);color:var(--accent-blue);border:1px solid rgba(59,130,246,.25)}
+#page-stats .cr-badge-neu{background:rgba(240,180,41,.1);color:#f0b429;border:1px solid rgba(240,180,41,.25)}
+#page-stats .cr-badge-warn{background:rgba(255,77,109,.1);color:var(--accent-red);border:1px solid rgba(255,77,109,.2)}
+
+/* ── Strategy bar ── */
+#page-stats .cr-strategy-bar{display:flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:8px 12px;margin-bottom:10px}
+#page-stats .cr-strategy-select{flex:1;background:transparent;border:none;color:var(--text-primary);font-family:var(--sans);font-size:0.82rem;outline:none;cursor:pointer;min-width:0}
+
+/* ── Filter chips ── */
+#page-stats .cr-chip-row{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+#page-stats .cr-chip-row::-webkit-scrollbar{display:none}
+#page-stats .cr-chip{flex-shrink:0;padding:4px 12px;border-radius:20px;font-size:0.7rem;font-weight:500;border:1px solid var(--border);background:var(--bg-card);color:var(--text-muted);cursor:pointer;transition:all .15s}
+#page-stats .cr-chip.active{background:#f0b429;border-color:#f0b429;color:#000;font-weight:700}
+
+/* ── Signal cards ── */
+#page-stats .cr-signal-card{background:var(--bg-card);border:1px solid rgba(240,180,41,.3);border-radius:14px;padding:13px 15px;margin-bottom:10px;cursor:pointer;position:relative;overflow:hidden;animation:crFadeIn .3s ease both}
+#page-stats .cr-signal-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#f0b429,transparent)}
+#page-stats .cr-signal-card:active{transform:scale(.99)}
+#page-stats .cr-elim-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:11px 14px;margin-bottom:8px;opacity:.55;cursor:pointer}
+#page-stats .cr-empty{text-align:center;padding:36px 20px;color:var(--text-muted);font-size:0.8rem;line-height:1.7}
+
+/* ── Signal card internals ── */
+#page-stats .cr-s-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:9px}
+#page-stats .cr-s-id{font-family:var(--mono);font-size:0.68rem;color:var(--text-muted)}
+#page-stats .cr-s-name{font-size:0.95rem;font-weight:700}
+#page-stats .cr-s-price{font-family:var(--mono);font-size:1.15rem;font-weight:700;color:var(--accent-red);text-align:right;line-height:1}
+#page-stats .cr-s-price.dn{color:var(--accent-green)}
+#page-stats .cr-s-chg{font-family:var(--mono);font-size:0.68rem;color:var(--accent-red);text-align:right;margin-top:2px}
+#page-stats .cr-s-chg.dn{color:var(--accent-green)}
+#page-stats .cr-badge-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+#page-stats .cr-b{font-size:0.6rem;font-weight:700;padding:2px 7px;border-radius:5px}
+#page-stats .cr-b.g{background:rgba(0,229,160,.1);color:var(--accent-green);border:1px solid rgba(0,229,160,.2)}
+#page-stats .cr-b.y{background:rgba(240,180,41,.1);color:#f0b429;border:1px solid rgba(240,180,41,.2)}
+#page-stats .cr-b.b{background:rgba(59,130,246,.1);color:var(--accent-blue);border:1px solid rgba(59,130,246,.2)}
+#page-stats .cr-ma-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+#page-stats .cr-ma{font-family:var(--mono);font-size:0.58rem;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,.04);color:var(--text-muted);border:1px solid var(--border)}
+#page-stats .cr-bar-row{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+#page-stats .cr-bar-lbl{font-size:0.65rem;color:var(--text-muted);width:26px;flex-shrink:0}
+#page-stats .cr-bar-track{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+#page-stats .cr-bar-fill{height:100%;border-radius:2px}
+#page-stats .cr-bar-fill.r{background:var(--accent-red)}
+#page-stats .cr-bar-fill.b{background:var(--accent-blue)}
+#page-stats .cr-bar-val{font-family:var(--mono);font-size:0.6rem;width:48px;text-align:right;flex-shrink:0}
+
+/* ── Watch list ── */
+#page-stats .cr-watch-add-bar{display:flex;gap:8px;margin-bottom:12px;align-items:center}
+#page-stats .cr-watch-input{flex:1;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-family:var(--mono);font-size:0.88rem;color:var(--text-primary);outline:none;transition:border .2s}
+#page-stats .cr-watch-input:focus{border-color:#f0b429}
+#page-stats .cr-watch-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:13px 15px;margin-bottom:8px;position:relative;animation:crFadeIn .25s ease}
+#page-stats .cr-watch-card.loading{opacity:.6}
+#page-stats .cr-watch-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+#page-stats .cr-watch-info{display:flex;flex-direction:column;gap:1px}
+#page-stats .cr-watch-id{font-family:var(--mono);font-size:0.68rem;color:var(--text-muted)}
+#page-stats .cr-watch-name{font-size:0.95rem;font-weight:700}
+#page-stats .cr-watch-price{font-family:var(--mono);font-size:1.1rem;font-weight:700}
+#page-stats .cr-watch-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.8rem;padding:4px 6px;border-radius:6px;transition:color .15s}
+#page-stats .cr-watch-del:hover{color:var(--accent-red)}
+#page-stats .cr-watch-status{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+#page-stats .cr-watch-tag{font-size:0.6rem;font-weight:600;padding:2px 7px;border-radius:5px}
+#page-stats .cr-watch-tag.pass{background:rgba(0,229,160,.1);color:var(--accent-green);border:1px solid rgba(0,229,160,.2)}
+#page-stats .cr-watch-tag.fail{background:rgba(255,77,109,.1);color:var(--accent-red);border:1px solid rgba(255,77,109,.2)}
+#page-stats .cr-watch-tag.info{background:rgba(59,130,246,.1);color:var(--accent-blue);border:1px solid rgba(59,130,246,.2)}
+
+/* ── Modal ── */
+#page-stats .cr-modal-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);align-items:flex-end;justify-content:center}
+#page-stats .cr-modal-overlay.open{display:flex}
+#page-stats .cr-modal{width:100%;max-width:500px;background:var(--bg-card2);border:1px solid var(--border);border-radius:20px 20px 0 0;padding:16px 18px 40px;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);max-height:82vh;overflow-y:auto}
+#page-stats .cr-modal-overlay.open .cr-modal{transform:translateY(0)}
+#page-stats .cr-modal-drag{width:32px;height:3px;background:var(--border);border-radius:2px;margin:0 auto 14px}
+#page-stats .cr-modal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+#page-stats .cr-modal-title{font-size:1rem;font-weight:700}
+#page-stats .cr-modal-close{width:28px;height:28px;border-radius:50%;background:var(--border);border:none;color:var(--text-primary);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#page-stats .cr-modal-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)}
+#page-stats .cr-modal-row:last-child{border-bottom:none}
+#page-stats .cr-modal-lbl{font-size:0.72rem;color:var(--text-muted)}
+#page-stats .cr-modal-val{font-family:var(--mono);font-size:0.82rem;font-weight:700}
+#page-stats .cr-modal-sec{font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin:12px 0 6px}
+#page-stats .cr-modal-filter-row{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)}
+#page-stats .cr-modal-filter-row:last-child{border-bottom:none}
+#page-stats .cr-filter-icon{font-size:13px;width:20px;flex-shrink:0}
+#page-stats .cr-filter-desc{flex:1;font-size:0.7rem;color:var(--text-muted);line-height:1.5}
+#page-stats .cr-filter-res{font-size:0.7rem;font-weight:700}
+#page-stats .cr-filter-res.pass{color:var(--accent-green)}
+#page-stats .cr-filter-res.fail{color:var(--accent-red)}
+
+/* ── Setting modal rows ── */
+#page-stats .cr-set-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border)}
+#page-stats .cr-set-row:last-child{border-bottom:none}
+#page-stats .cr-set-info{flex:1}
+#page-stats .cr-set-name{font-size:0.85rem;font-weight:600;margin-bottom:2px}
+#page-stats .cr-set-sub{font-size:0.65rem;color:var(--text-muted)}
+#page-stats .cr-set-val{font-family:var(--mono);font-size:0.8rem;font-weight:700;color:#f0b429;background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.2);padding:3px 9px;border-radius:7px}
+#page-stats .cr-toggle{width:42px;height:23px;background:var(--border);border-radius:12px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+#page-stats .cr-toggle.on{background:#f0b429}
+#page-stats .cr-toggle::after{content:'';position:absolute;width:17px;height:17px;background:#fff;border-radius:50%;top:3px;left:3px;transition:transform .2s}
+#page-stats .cr-toggle.on::after{transform:translateX(19px)}
+
+/* ── Score ring ── */
+#page-stats .cr-ring{width:36px;height:36px;flex-shrink:0}
+
 </style>
 </head>
 <body>
@@ -1906,7 +2084,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-22 02:16:33</div>
+    <div class="clock-display" id="clockDisplay">2026-03-22 02:31:03</div>
   </div>
 </aside>
 
@@ -2051,8 +2229,23 @@ input::placeholder { color: var(--text-muted); }
             </div>
           </div>
         </div>
-        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"></div>
-        <canvas id="wealthChart" style="width:100%;display:block;" height="220"></canvas>
+        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#f59e0b;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#ff4d6d;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總負債</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#ff4d6d;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#00e5a0;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">淨資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#00e5a0;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div></div>
+        <canvas id="wealthChart" style="width:100%;display:block;" height="220" width="346"></canvas>
         <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;" id="wealthXLabels"></div>
       </div>
 
@@ -2632,155 +2825,192 @@ input::placeholder { color: var(--text-muted); }
 
   <!-- ── 現金流 ── -->
   <section class="page" id="page-stats">
-    <div class="page-header">
+    <!-- ══ Header ══ -->
+    <div class="page-header" style="margin-bottom:12px;">
       <div class="page-title-block">
         <div class="page-label">Chip Radar II</div>
         <h1>籌碼雷達</h1>
       </div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <button class="chip-deploy-btn" id="chipDeployBtn" onclick="chipDeployToGitHub()" title="推送到 GitHub Pages">☁️</button>
-        <button class="chip-scan-btn" id="chipScanBtn" onclick="chipStartScan()">▶ 開始掃描</button>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="cr-icon-btn" onclick="chipDeployToGitHub()" title="推送 GitHub">☁️</button>
+        <button class="cr-scan-btn" id="chipScanBtn" onclick="chipStartScan()">▶ 掃描</button>
       </div>
     </div>
 
-    <!-- Filter chips -->
-    <div class="chip-filters">
-      <div class="filter-chip active" data-f="all">全部 <span id="chipTotalCount">—</span></div>
-      <div class="filter-chip" data-f="pass">✅ 通過</div>
-      <div class="filter-chip" data-f="vol">⚡ 爆量</div>
-      <div class="filter-chip" data-f="bull">📈 多頭</div>
-      <div class="filter-chip" data-f="elim">🚫 淘汰</div>
+    <!-- ══ Stats bar ══ -->
+    <div class="cr-stats-bar">
+      <div class="cr-stat"><div class="cr-stat-num" id="chipStatPass" style="color:#f0b429">—</div><div class="cr-stat-lbl">通過</div></div>
+      <div class="cr-stat-div"></div>
+      <div class="cr-stat"><div class="cr-stat-num" id="chipStatScan" style="color:var(--accent-red)">—</div><div class="cr-stat-lbl">掃描</div></div>
+      <div class="cr-stat-div"></div>
+      <div class="cr-stat"><div class="cr-stat-num" id="chipStatElim" style="color:var(--accent-green)">—</div><div class="cr-stat-lbl">淘汰</div></div>
+      <div class="cr-stat-div"></div>
+      <div class="cr-stat"><div class="cr-stat-num" id="chipStatVol" style="color:var(--accent-blue)">—</div><div class="cr-stat-lbl">爆量</div></div>
     </div>
 
-    <!-- Stats -->
-    <div class="chip-stats-row">
-      <div class="chip-stat-card"><div class="chip-stat-num gold" id="chipStatPass">—</div><div class="chip-stat-label">通過三關</div></div>
-      <div class="chip-stat-card"><div class="chip-stat-num red" id="chipStatScan">—</div><div class="chip-stat-label">已掃描</div></div>
-      <div class="chip-stat-card"><div class="chip-stat-num green" id="chipStatElim">—</div><div class="chip-stat-label">已淘汰</div></div>
-      <div class="chip-stat-card"><div class="chip-stat-num blue" id="chipStatVol">—</div><div class="chip-stat-label">爆量</div></div>
+    <!-- ══ Progress ══ -->
+    <div class="cr-progress" id="chipProgressWrap">
+      <div class="cr-progress-track"><div class="cr-progress-fill" id="chipProgressFill"></div></div>
+      <div class="cr-progress-lbl" id="chipProgressLabel">準備中…</div>
     </div>
 
-    <!-- Progress -->
-    <div class="chip-progress-wrap" id="chipProgressWrap">
-      <div class="chip-progress-bar-bg"><div class="chip-progress-bar-fill" id="chipProgressFill"></div></div>
-      <div class="chip-progress-label" id="chipProgressLabel">準備中…</div>
+    <!-- ══ Main Tabs ══ -->
+    <div class="cr-tabs">
+      <div class="cr-tab active" data-cr="market">🐂 多空判斷</div>
+      <div class="cr-tab" data-cr="scan">🔍 篩選標的</div>
+      <div class="cr-tab" data-cr="watch">👁 觀察名單</div>
     </div>
 
-    <!-- Sub tabs -->
-    <div style="display:flex;gap:8px;margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:8px;overflow-x:auto;scrollbar-width:none;">
-      <div class="chip-nav-btn active" data-page="signal" style="flex-shrink:0;padding:5px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:rgba(240,180,41,.15);color:#f0b429;border:1px solid rgba(240,180,41,.3);">📡 訊號</div>
-      <div class="chip-nav-btn" data-page="chip" style="flex-shrink:0;padding:5px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--text-secondary);border:1px solid var(--border);">📊 籌碼</div>
-      <div class="chip-nav-btn" data-page="market" style="flex-shrink:0;padding:5px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--text-secondary);border:1px solid var(--border);">🐂 多空</div>
-      <div class="chip-nav-btn" data-page="notify" style="flex-shrink:0;padding:5px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--text-secondary);border:1px solid var(--border);">🔔 記錄</div>
-      <div class="chip-nav-btn" data-page="settings" style="flex-shrink:0;padding:5px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--text-secondary);border:1px solid var(--border);">⚙️ 設定</div>
+    <!-- ══════════════════════════════════
+         TAB 1：多空判斷
+    ══════════════════════════════════ -->
+    <div id="crTab-market" class="cr-tabpanel">
+      <!-- Hero card -->
+      <div class="cr-mkt-hero cr-loading" id="chipMktHero">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="flex:1">
+            <div class="cr-mkt-verdict cr-neu" id="chipMktVerdict">— 市場狀態</div>
+            <div class="cr-mkt-sub" id="chipMktSub">點擊「重新分析」載入</div>
+          </div>
+          <button class="cr-refresh-btn" id="chipMktRefreshBtn" onclick="chipLoadMarketData()">
+            <span id="chipMktRefreshIcon">⟳</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 metric cards -->
+      <div class="cr-grid-2">
+        <div class="cr-metric-card">
+          <div class="cr-metric-lbl">加權指數</div>
+          <div class="cr-metric-val cr-neu" id="chipMktTse">—</div>
+          <div class="cr-metric-sub" id="chipMktTseChg">—</div>
+        </div>
+        <div class="cr-metric-card">
+          <div class="cr-metric-lbl">OTC 櫃買</div>
+          <div class="cr-metric-val cr-neu" id="chipMktOtc">—</div>
+          <div class="cr-metric-sub" id="chipMktOtcChg">—</div>
+        </div>
+        <div class="cr-metric-card">
+          <div class="cr-metric-lbl">年線 200MA</div>
+          <div class="cr-metric-val cr-neu" id="chipMktMa200">—</div>
+          <div class="cr-metric-sub" id="chipMktMa200Sub">—</div>
+        </div>
+        <div class="cr-metric-card">
+          <div class="cr-metric-lbl">年線乖離</div>
+          <div class="cr-metric-val cr-neu" id="chipMktMaBias">—</div>
+          <div class="cr-metric-sub" id="chipMktMaBiasSub">—</div>
+        </div>
+      </div>
+
+      <!-- Flow bar -->
+      <div class="cr-card" style="margin-bottom:10px;">
+        <div class="cr-card-title">資金主角分析</div>
+        <div class="cr-flow-bar">
+          <div class="cr-flow-tse" id="chipFlowTse" style="flex:1"></div>
+          <div class="cr-flow-otc" id="chipFlowOtc" style="flex:1"></div>
+        </div>
+        <div class="cr-flow-legend">
+          <span style="color:var(--accent-red)" id="chipFlowTseLabel">加權 —%</span>
+          <span style="color:var(--text-muted);font-size:0.62rem" id="chipFlowCenter">資金流向</span>
+          <span style="color:var(--accent-blue)" id="chipFlowOtcLabel">OTC —%</span>
+        </div>
+      </div>
+
+      <!-- Analysis rows -->
+      <div class="cr-card">
+        <div class="cr-card-title">四重分析結果</div>
+        <div id="chipMktAnalysisRows">
+          <div style="color:var(--text-muted);font-size:0.75rem;text-align:center;padding:16px">點擊右上角「⟳」載入資料</div>
+        </div>
+      </div>
     </div>
 
-    <!-- Sub pages -->
-    <div id="chipSubPage-signal" class="chip-subpage active">
+    <!-- ══════════════════════════════════
+         TAB 2：篩選標的
+    ══════════════════════════════════ -->
+    <div id="crTab-scan" class="cr-tabpanel" style="display:none">
+
+      <!-- Strategy bar -->
+      <div class="cr-strategy-bar">
+        <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">
+          <span style="font-size:0.65rem;color:var(--text-muted);white-space:nowrap;">策略</span>
+          <select class="cr-strategy-select" id="crStrategySelect" onchange="crLoadStrategy(this.value)"><option value="default">🎯 預設策略</option></select>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="cr-icon-btn" onclick="crShowStrategyModal()" title="篩選設定">⚙️</button>
+          <button class="cr-icon-btn cr-save-btn" onclick="crSaveStrategyAs()" title="另存策略">💾</button>
+          <button class="cr-icon-btn" onclick="crDeleteStrategy()" title="刪除策略" style="color:var(--accent-red)">🗑</button>
+        </div>
+      </div>
+
+      <!-- Filter chips -->
+      <div class="cr-chip-row">
+        <div class="cr-chip active" data-f="all">全部 <span id="chipTotalCount">—</span></div>
+        <div class="cr-chip" data-f="pass">✅ 通過</div>
+        <div class="cr-chip" data-f="vol">⚡ 爆量</div>
+        <div class="cr-chip" data-f="bull">📈 多頭</div>
+        <div class="cr-chip" data-f="elim">🚫 淘汰</div>
+      </div>
+
+      <!-- Signal cards -->
       <div id="chipSignalSection">
-        <div class="chip-empty-state">
-          <div class="chip-empty-icon">📡</div>
-          <p>點擊「開始掃描」<br>自動篩選今日符合條件的台股<br><br>
-          <span style="font-size:11px;opacity:.6">K線純度 · 多頭排列 · 乖離控制 · 爆量偵測</span></p>
+        <div class="cr-empty">
+          <div style="font-size:2rem;margin-bottom:8px;">📡</div>
+          <div>點擊右上角「▶ 掃描」開始</div>
+          <div style="font-size:0.65rem;opacity:.5;margin-top:4px;">K線純度 · 多頭排列 · 乖離控制 · 爆量偵測</div>
         </div>
       </div>
     </div>
 
-    <div id="chipSubPage-chip" class="chip-subpage" style="display:none">
-      <div id="chipChipPage">
-        <div class="chip-empty-state"><div class="chip-empty-icon">📊</div><p>掃描後顯示籌碼明細</p></div>
+    <!-- ══════════════════════════════════
+         TAB 3：觀察名單
+    ══════════════════════════════════ -->
+    <div id="crTab-watch" class="cr-tabpanel" style="display:none">
+      <!-- Add bar -->
+      <div class="cr-watch-add-bar">
+        <input class="cr-watch-input" id="crWatchInput" placeholder="輸入股號，例如 2330" maxlength="6" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter')crAddWatch()">
+        <button class="cr-scan-btn" onclick="crAddWatch()" style="padding:6px 14px;">+ 加入</button>
       </div>
-    </div>
-
-    <div id="chipSubPage-market" class="chip-subpage" style="display:none">
-      <div class="chip-mkt-hero chip-loading" id="chipMktHero">
-        <div class="chip-mkt-verdict chip-neu" id="chipMktVerdict">載入中…</div>
-        <div class="chip-mkt-sub" id="chipMktSub">點擊「重新分析」載入市場狀態</div>
-      </div>
-      <div class="chip-mkt-grid" id="chipMktGrid">
-        <div class="chip-mkt-card"><div class="chip-mkt-label">加權指數</div><div class="chip-mkt-val chip-neu" id="chipMktTse">—</div><div class="chip-mkt-sub2" id="chipMktTseChg">—</div></div>
-        <div class="chip-mkt-card"><div class="chip-mkt-label">OTC 櫃買</div><div class="chip-mkt-val chip-neu" id="chipMktOtc">—</div><div class="chip-mkt-sub2" id="chipMktOtcChg">—</div></div>
-        <div class="chip-mkt-card"><div class="chip-mkt-label">年線 200MA</div><div class="chip-mkt-val chip-neu" id="chipMktMa200">—</div><div class="chip-mkt-sub2" id="chipMktMa200Sub">—</div></div>
-        <div class="chip-mkt-card"><div class="chip-mkt-label">年線乖離</div><div class="chip-mkt-val chip-neu" id="chipMktMaBias">—</div><div class="chip-mkt-sub2" id="chipMktMaBiasSub">—</div></div>
-      </div>
-      <div class="chip-mkt-flow-card">
-        <div class="chip-mkt-flow-title">資金主角分析</div>
-        <div class="chip-mkt-flow-bar"><div class="chip-flow-tse" id="chipFlowTse" style="flex:1"></div><div class="chip-flow-otc" id="chipFlowOtc" style="flex:1"></div></div>
-        <div class="chip-mkt-flow-legend">
-          <span style="color:#ff4757" id="chipFlowTseLabel">加權 —%</span>
-          <span style="color:var(--text-muted);font-size:0.65rem" id="chipFlowCenter">資金流向</span>
-          <span style="color:#3b82f6" id="chipFlowOtcLabel">OTC —%</span>
+      <!-- Watch list -->
+      <div id="crWatchList">
+        <div class="cr-empty">
+          <div style="font-size:2rem;margin-bottom:8px;">👁</div>
+          <div>輸入股號加入觀察名單</div>
+          <div style="font-size:0.65rem;opacity:.5;margin-top:4px;">自動抓取報價與技術指標</div>
         </div>
       </div>
-      <div class="chip-mkt-analysis-card">
-        <div class="chip-mkt-flow-title">四重分析結果</div>
-        <div id="chipMktAnalysisRows"><div style="color:var(--text-muted);font-size:0.75rem;text-align:center;padding:12px">點擊「重新分析」載入資料</div></div>
-      </div>
-      <div class="chip-mkt-refresh-btn" id="chipMktRefreshBtn" onclick="chipLoadMarketData()"><span id="chipMktRefreshIcon">⟳</span> 重新分析</div>
     </div>
 
-    <div id="chipSubPage-notify" class="chip-subpage" style="display:none">
-      <div id="chipNotifyPage">
-        <div class="chip-empty-state"><div class="chip-empty-icon">🔔</div><p>尚無掃描記錄</p></div>
-      </div>
-    </div>
-
-    <div id="chipSubPage-settings" class="chip-subpage" style="display:none">
-      <div id="chipSettingsPage">
-    <div class="settings-group-label">篩選條件</div>
-    
-    <div class="chip-setting-row">
-      <div class="setting-info"><div class="chip-setting-name">上影線門檻</div><div class="chip-setting-sub">K線純度 — 避雷針過濾</div></div>
-      <div class="chip-setting-val">1.5%</div>
-    </div>
-    <div class="chip-setting-row">
-      <div class="setting-info"><div class="chip-setting-name">月線乖離上限</div><div class="chip-setting-sub">乖離控制 — 不追過度噴發</div></div>
-      <div class="chip-setting-val">15%</div>
-    </div>
-    <div class="chip-setting-row">
-      <div class="setting-info"><div class="chip-setting-name">爆量倍數門檻</div><div class="chip-setting-sub">量比 = 今日量 ÷ 昨日量</div></div>
-      <div class="chip-setting-val">2x</div>
-    </div>
-    <div class="chip-setting-row">
-      <div class="setting-info"><div class="chip-setting-name">多頭排列</div><div class="chip-setting-sub">收盤 &gt; 5MA &gt; 10MA &gt; 20MA</div></div>
-      <div class="chip-toggle on" data-key="need_bull"></div>
-    </div>
-    <div class="chip-setting-row">
-      <div class="setting-info"><div class="chip-setting-name">排除金融股</div><div class="chip-setting-sub">28 開頭股票代號一律排除</div></div>
-      <div class="chip-toggle on" data-key="exclude_28"></div>
-    </div>
-    <div class="settings-group-label" style="margin-top:18px">掃描清單</div>
-    <div class="chip-setting-row">
-      <div class="setting-info"><div class="chip-setting-name">監控標的總數</div><div class="chip-setting-sub">上市 + 上櫃主要個股</div></div>
-      <div class="chip-setting-val">70 支</div>
-    </div>
-    <div class="settings-group-label" style="margin-top:18px">資料來源</div>
-    <div class="chip-setting-row" style="cursor:default">
-      <div class="setting-info"><div class="chip-setting-name">報價 + 歷史</div><div class="chip-setting-sub">Supabase proxy → stooq → Yahoo Finance</div></div>
-      <div class="badge pass" style="flex-shrink:0">✓ 即時</div>
-    </div>
-    <div class="settings-group-label" style="margin-top:18px">🔧 資料診斷</div>
-    <div class="chip-setting-row" style="cursor:pointer" onclick="chipRunDiag()">
-      <div class="setting-info"><div class="chip-setting-name">測試單支股票資料</div><div class="chip-setting-sub">測試 2330 台積電的報價與歷史資料</div></div>
-      <div class="chip-setting-val">▶ 執行</div>
-    </div>
-    <div id="chipDiagResult" style="margin-top:8px;padding:12px;background:#0a0c10;border:1px solid var(--border);border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);line-height:1.8;display:none"></div></div>
-    </div>
-
-    <!-- Modal -->
-    <div class="chip-modal-overlay" id="chipModalOverlay">
-      <div class="chip-modal">
-        <div class="chip-modal-handle"></div>
-        <div class="chip-modal-header">
-          <div class="chip-modal-title" id="chipModalTitle">—</div>
-          <button class="chip-modal-close" id="chipModalClose">✕</button>
+    <!-- ══ Modal：籌碼詳情 ══ -->
+    <div class="cr-modal-overlay" id="chipModalOverlay">
+      <div class="cr-modal" id="crModal">
+        <div class="cr-modal-drag"></div>
+        <div class="cr-modal-hd">
+          <div class="cr-modal-title" id="chipModalTitle">—</div>
+          <button class="cr-modal-close" id="chipModalClose">✕</button>
         </div>
         <div id="chipModalBody"></div>
       </div>
     </div>
 
-    <!-- Toast -->
-    <div id="chipToast" style="display:none;position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1e2330;border:1px solid var(--border);color:var(--text-primary);padding:10px 18px;border-radius:12px;font-size:13px;z-index:999;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.5)"></div>
+    <!-- ══ Modal：篩選設定 ══ -->
+    <div class="cr-modal-overlay" id="crSettingOverlay">
+      <div class="cr-modal">
+        <div class="cr-modal-drag"></div>
+        <div class="cr-modal-hd">
+          <div class="cr-modal-title" id="crSettingTitle">⚙️ 篩選設定</div>
+          <button class="cr-modal-close" onclick="crCloseSettingModal()">✕</button>
+        </div>
+        <div id="crSettingBody" style="padding-bottom:8px;"></div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="cr-btn-secondary" onclick="crCloseSettingModal()">取消</button>
+          <button class="cr-btn-primary" onclick="crApplySetting()">套用</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ Toast ══ -->
+    <div id="chipToast" style="display:none;position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--bg-card2);border:1px solid var(--border);color:var(--text-primary);padding:9px 16px;border-radius:10px;font-size:0.78rem;z-index:999;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.5)"></div>
 
   </section>
 
@@ -11126,78 +11356,76 @@ function chipRenderSignalPage(){
   const C=100.53;
   let html='';
   const showPass=['all','pass','vol','bull'].includes(chipFilter);
-  const passList=chipFilter==='vol'  ? chipSignals.filter(s=>s.isVol)
-                :chipFilter==='bull' ? chipSignals.filter(s=>s.isBull)
-                :chipSignals;
+  const passList = chipFilter==='vol'  ? chipSignals.filter(s=>s.isVol)
+                 : chipFilter==='bull' ? chipSignals.filter(s=>s.isBull)
+                 : chipFilter==='pass' ? chipSignals
+                 : chipSignals;
 
   if(showPass && passList.length>0){
-    html+=`<div class="chip-section-title" style="font-size:0.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);display:flex;align-items:center;gap:6px;margin-bottom:8px;">⚡ 通過訊號 (${passList.length})</div><div style="display:flex;flex-direction:column;gap:10px;">`;
+    html += `<div style="font-size:0.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">⚡ 通過訊號 (${passList.length})</div>`;
     passList.forEach((s,i)=>{
       const offset=C-(s.score/100)*C;
       const up=s.change>=0;
       html+=`
-      <div class="chip-signal-card" style="animation:cardIn .35s ease ${i*.06}s both" onclick="chipOpenModal('${s.id}')">
-        <div class="chip-card-top">
-          <div class="chip-stock-info">
-            <div class="chip-stock-id">${s.id}</div>
-            <div class="chip-stock-name">${s.name}</div>
+      <div class="cr-signal-card" style="animation-delay:${i*.05}s" onclick="chipOpenModal('${s.id}')">
+        <div class="cr-s-top">
+          <div>
+            <div class="cr-s-id">${s.id}</div>
+            <div class="cr-s-name">${s.name}</div>
           </div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <svg class="chip-score-ring" width="36" height="36" viewBox="0 0 40 40">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <svg class="cr-ring" viewBox="0 0 40 40">
               <circle style="fill:none;stroke:var(--border);stroke-width:3" cx="20" cy="20" r="16"/>
               <circle style="fill:none;stroke:#f0b429;stroke-width:3;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%" cx="20" cy="20" r="16" stroke-dasharray="${C}" stroke-dashoffset="${offset}"/>
               <text style="font-family:'DM Mono',monospace;font-size:10px;font-weight:700;fill:#f0b429;dominant-baseline:middle;text-anchor:middle" x="20" y="20">${s.score}</text>
             </svg>
-            <div class="chip-price-block">
-              <div class="chip-price ${up?'':'down'}">${s.price.toLocaleString()}</div>
-              <div class="chip-change ${up?'':'down'}">${up?'▲':'▼'}${Math.abs(s.change).toFixed(2)}%</div>
+            <div>
+              <div class="cr-s-price ${up?'':'dn'}">${s.price.toLocaleString()}</div>
+              <div class="cr-s-chg ${up?'':'dn'}">${up?'▲':'▼'}${Math.abs(s.change).toFixed(2)}%</div>
             </div>
           </div>
         </div>
-        <div class="chip-badge-row">
-          <div class="chip-badge pass">純K ✓ ${s.shadow}%</div>
-          <div class="chip-badge pass">多頭排列 ✓</div>
-          <div class="chip-badge pass">乖離 ${s.bias}%</div>
-          ${s.isVol?`<div class="chip-badge gold">⚡ 爆量 ${s.volRatio}x</div>`:`<div class="chip-badge blue">量比 ${s.volRatio}x</div>`}
+        <div class="cr-badge-row">
+          <div class="cr-b g">純K ✓ ${s.shadow}%</div>
+          <div class="cr-b g">多頭排列 ✓</div>
+          <div class="cr-b g">乖離 ${s.bias}%</div>
+          ${s.isVol?`<div class="cr-b y">⚡ 爆量 ${s.volRatio}x</div>`:`<div class="cr-b b">量比 ${s.volRatio}x</div>`}
         </div>
-        <div class="chip-ma-row">
-          <span class="chip-ma-tag">5MA ${s.ma5}</span>
-          <span class="chip-ma-tag">10MA ${s.ma10}</span>
-          <span class="chip-ma-tag">20MA ${s.ma20}</span>
+        <div class="cr-ma-row">
+          <span class="cr-ma">5MA ${s.ma5}</span>
+          <span class="cr-ma">10MA ${s.ma10}</span>
+          <span class="cr-ma">20MA ${s.ma20}</span>
         </div>
-        ${s.foreign!==null?`
-        <div style="margin-top:4px">
-          <div class="chip-bar-row"><div class="chip-bar-label">外資</div><div class="chip-bar-bg"><div class="chip-bar-fill red" style="width:${Math.min(100,(s.foreign/50000)*100)}%"></div></div><div class="chip-bar-val">+${fmt(s.foreign)}</div></div>
-          <div class="chip-bar-row"><div class="chip-bar-label">投信</div><div class="chip-bar-bg"><div class="chip-bar-fill blue" style="width:${Math.min(100,(s.trust/10000)*100)}%"></div></div><div class="chip-bar-val" style="color:var(--blue)">+${fmt(s.trust)}</div></div>
-        </div>`:'<div style="font-size:11px;color:var(--text-dim);margin-top:2px">籌碼：請合併 TWSE API 資料</div>'}
+        <div style="font-size:0.65rem;color:var(--text-muted);padding-top:6px;border-top:1px solid var(--border)">籌碼：請合併 TWSE API 資料</div>
       </div>`;
     });
-    html+='</div>';
   }
 
   if(['all','elim'].includes(chipFilter) && chipEliminated.length>0){
-    html+=`<div class="section-title" style="margin-top:14px">🚫 遭淘汰 (${chipEliminated.length})</div>
-           <div style="padding:0 16px;display:flex;flex-direction:column;gap:7px">`;
+    html+=`<div style="font-size:0.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin:14px 0 8px;">🚫 遭淘汰 (${chipEliminated.length})</div>`;
     chipEliminated.forEach(e=>{
       html+=`
-      <div class="chip-elim-card" onclick="chipOpenElimModal('${e.id}')">
-        <div class="chip-elim-top">
-          <div style="display:flex;align-items:center;gap:8px">
-            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim)">${e.id}</span>
-            <span style="font-size:14px;font-weight:600">${e.name}</span>
+      <div class="cr-elim-card" onclick="chipOpenElimModal('${e.id}')">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;">
+          <div style="display:flex;align-items:center;gap:7px;">
+            <span style="font-family:var(--mono);font-size:0.68rem;color:var(--text-muted)">${e.id}</span>
+            <span style="font-size:0.85rem;font-weight:600">${e.name}</span>
           </div>
-          <div class="chip-elim-reason">✗ ${e.reason}</div>
+          <span style="font-size:0.62rem;color:var(--accent-red);background:rgba(255,77,109,.08);border:1px solid rgba(255,77,109,.18);padding:2px 7px;border-radius:5px;">✗ ${e.reason}</span>
         </div>
-        <div style="font-size:11px;color:var(--text-dim)">${e.detail}</div>
+        <div style="font-size:0.65rem;color:var(--text-muted)">${e.detail}</div>
       </div>`;
     });
-    html+='</div>';
   }
 
-  if(!html) html=`<div class="chip-empty-state"><div class="chip-empty-icon">${chipSignals.length+chipEliminated.length===0?'📡':'🔍'}</div>
-    <p>${chipSignals.length+chipEliminated.length===0?'點擊「開始掃描」<br>自動篩選今日符合條件的台股<br><br><span style="font-size:11px;opacity:.6">K線純度 · 多頭排列 · 乖離控制 · 爆量偵測</span>':'此篩選條件無結果'}</p></div>`;
+  if(!html) html=`<div class="cr-empty">
+    <div style="font-size:2rem;margin-bottom:8px;">${chipSignals.length+chipEliminated.length===0?'📡':'🔍'}</div>
+    <div>${chipSignals.length+chipEliminated.length===0?'點擊右上角「▶ 掃描」開始':'此篩選條件無結果'}</div>
+    ${chipSignals.length+chipEliminated.length===0?'<div style="font-size:0.65rem;opacity:.5;margin-top:4px;">K線純度 · 多頭排列 · 乖離控制 · 爆量偵測</div>':''}
+  </div>`;
 
-  document.getElementById('chipSignalSection').innerHTML=html;
+  const sec = document.getElementById('chipSignalSection');
+  if(sec) sec.innerHTML = html;
 }
 
 function chipRenderChipPage(){
@@ -11318,306 +11546,49 @@ function chipUpdateStats(){
   document.getElementById('chipStatVol').textContent  = vol||'—';
   document.getElementById('chipTotalCount').textContent=(chipSignals.length+chipEliminated.length)||'—';
 }
-function chipShowProgress(on){document.getElementById('chipProgressWrap').classList.toggle('show',on);if(!on)document.getElementById('chipProgressFill').style.width='0%';}
+function chipShowProgress(on){const el=document.getElementById('chipProgressWrap');if(el){el.classList.toggle('show',on);if(!on){const f=document.getElementById('chipProgressFill');if(f)f.style.width='0%';}}}
 function chipSetProgress(r,label){document.getElementById('chipProgressFill').style.width=(r*100).toFixed(0)+'%';document.getElementById('chipProgressLabel').textContent=`${Math.round(r*100)}%  掃描中：${label}`;}
 function chipFmt(n){return n>=10000?(n/10000).toFixed(1)+'萬':n.toLocaleString();}
 function chipNowHHMM(){const n=new Date();return String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');}
 function chipSleep(ms){return new Promise(r=>setTimeout(r,ms));}
 
-document.querySelectorAll('#page-stats .chip-nav-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('#page-stats .chip-nav-btn').forEach(b=>{
-      b.style.background='transparent'; b.style.color='var(--text-secondary)'; b.style.borderColor='var(--border)';
-      b.classList.remove('active');
-    });
-    btn.style.background='rgba(240,180,41,.15)'; btn.style.color='#f0b429'; btn.style.borderColor='rgba(240,180,41,.3)';
-    btn.classList.add('active');
-    const page=btn.dataset.page;
-    document.querySelectorAll('#page-stats .chip-subpage').forEach(p=>p.style.display='none');
-    const target=document.getElementById('chipSubPage-'+page);
-    if(target) target.style.display='block';
-    if(page==='chip') chipRenderChipPage();
-    if(page==='notify') chipRenderNotifyPage();
-    if(page==='settings') chipRenderSettingsPage();
-    if(page==='market') chipLoadMarketData();
+// ── Main tab switching ──
+document.querySelectorAll('#page-stats .cr-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('#page-stats .cr-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const key = tab.dataset.cr;
+    document.querySelectorAll('#page-stats .cr-tabpanel').forEach(p => p.style.display = 'none');
+    const panel = document.getElementById('crTab-' + key);
+    if (panel) panel.style.display = 'block';
+    if (key === 'market') chipLoadMarketData();
+    if (key === 'watch')  crRenderWatchList();
   });
 });
-
-document.querySelectorAll('#page-stats .filter-chip').forEach(chip=>{
-  chip.addEventListener('click',()=>{
-    document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
-    chip.classList.add('active');
-    chipFilter=chip.dataset.f;
-    chipRenderSignalPage();
-  });
-});
-
-
-// ═══════════════════════════════════════════════
-//  多空判斷 — 市場狀態分析
-// ═══════════════════════════════════════════════
-
-// 用 dashStooq 相同邏輯抓指數歷史（台股加權 ^twii / OTC ^twoii）
-async function chipFetchIndexHistory(yahooSym, days) {
-  try {
-    const range = days > 100 ? '12mo' : '3mo';
-    const d = await chipProxyFetch(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(yahooSym)}?interval=1d&range=${range}`);
-    const closes = d?.chart?.result?.[0]?.indicators?.quote?.[0]?.close?.filter(v=>v!=null&&v>0);
-    if (closes?.length >= 2) return closes.slice(-days);
-  } catch {}
-  return null;
-}
-
-let chip_mktLoading = false;
-
-async function chipLoadMarketData() {
-  if (chip_mktLoading) return;
-  chip_mktLoading = true;
-
-  const icon = document.getElementById('chipMktRefreshIcon');
-  const btn  = document.getElementById('chipMktRefreshBtn');
-  if (icon) icon.className = 'spin';
-  if (btn)  btn.style.pointerEvents = 'none';
-
-  chipSetMktLoading();
-
-  try {
-    // 同時抓：加權(twii) 200天、OTC(twoii) 30天
-    const [tseHist, otcHist] = await Promise.all([
-      chipFetchIndexHistory('^TWII', 210),
-      chipFetchIndexHistory('^TWOII', 30),
-    ]);
-
-    if (!tseHist || tseHist.length < 5) {
-      chipSetMktError('無法取得加權指數資料，請稍後再試');
-      return;
-    }
-
-    const tseNow   = tseHist[tseHist.length - 1];
-    const tsePrev  = tseHist[tseHist.length - 2];
-    const tseChg   = ((tseNow - tsePrev) / tsePrev * 100);
-
-    // 200MA（年線）
-    const ma200arr = tseHist.slice(-200);
-    const ma200    = ma200arr.reduce((a,b)=>a+b,0) / ma200arr.length;
-    // 年線斜率：今日 200MA vs 20日前 200MA
-    const ma200old = tseHist.length >= 220
-      ? tseHist.slice(-220,-20).reduce((a,b)=>a+b,0)/200
-      : ma200;
-    const ma200slope = ma200 - ma200old; // 正 = 向上
-
-    const biasMa200 = (tseNow - ma200) / ma200 * 100;
-    const aboveMa200 = tseNow > ma200;
-
-    // OTC
-    let otcNow = null, otcChg = null;
-    if (otcHist && otcHist.length >= 2) {
-      otcNow  = otcHist[otcHist.length - 1];
-      const otcPrev = otcHist[otcHist.length - 2];
-      otcChg  = (otcNow - otcPrev) / otcPrev * 100;
-    }
-
-    // ── 牛熊判斷 ──
-    let marketState, stateClass;
-    if (aboveMa200 && ma200slope > 0) {
-      marketState = '牛市'; stateClass = 'bull';
-    } else if (!aboveMa200 && ma200slope < 0) {
-      marketState = '熊市'; stateClass = 'bear';
-    } else {
-      marketState = '盤整'; stateClass = 'neutral';
-    }
-
-    // ── 資金主角 ──
-    let flowMsg = '—', flowClass = 'neutral';
-    if (otcChg !== null) {
-      if (tseChg > otcChg + 0.3) {
-        flowMsg = '權值股拉升（大象起舞）'; flowClass = 'bull';
-      } else if (otcChg > tseChg + 0.3) {
-        flowMsg = '中小型股撐盤（小鋼炮噴發）'; flowClass = 'bear';
-      } else {
-        flowMsg = '加權與 OTC 同步'; flowClass = 'neutral';
-      }
-    }
-
-    // ── 年線斜率文字 ──
-    const slopeText = ma200slope > 0 ? '向上（多頭結構）' : ma200slope < 0 ? '向下（空頭結構）' : '走平（觀察中）';
-    const slopeClass = ma200slope > 0 ? 'bull' : ma200slope < 0 ? 'bear' : 'neutral';
-
-    // ── 建議 ──
-    let advice, adviceClass;
-    if (stateClass === 'bull') {
-      advice = '符合雷達訊號　積極佈局多方'; adviceClass = 'bull';
-    } else if (stateClass === 'bear') {
-      advice = '空頭環境謹慎操作　嚴守停損'; adviceClass = 'bear';
-    } else {
-      advice = '盤整觀望　等待方向明確'; adviceClass = 'neutral';
-    }
-
-    // ── 更新 UI ──
-    // Hero
-    const hero = document.getElementById('chipMktHero');
-    hero.className = `chip-mkt-hero ${stateClass}`;
-    document.getElementById('chipMktVerdict').className = `chip-mkt-verdict ${stateClass}`;
-    document.getElementById('chipMktVerdict').textContent = `【${marketState}】${stateClass==='bull'?'🐂':stateClass==='bear'?'🐻':'⚖️'}`;
-    document.getElementById('chipMktSub').innerHTML =
-      `加權 ${aboveMa200?'站上':'跌破'} 200MA（${biasMa200>=0?'+':''}${biasMa200.toFixed(1)}%）　年線${slopeText}<br>
-       <span class="mkt-tag ${stateClass}">${advice}</span>`;
-
-    // Grid
-    const tseUp = tseChg >= 0;
-    document.getElementById('chipMktTse').className    = `mkt-card-val ${tseUp?'up':'dn'}`;
-    document.getElementById('chipMktTse').textContent  = tseNow.toLocaleString('zh-TW',{maximumFractionDigits:0});
-    document.getElementById('chipMktTseChg').textContent = `${tseUp?'▲':'▼'} ${Math.abs(tseChg).toFixed(2)}%`;
-    document.getElementById('chipMktTseChg').style.color = tseUp?'var(--red)':'var(--blue)';
-
-    document.getElementById('chipMktMa200').className   = `mkt-card-val ${aboveMa200?'up':'dn'}`;
-    document.getElementById('chipMktMa200').textContent = ma200.toLocaleString('zh-TW',{maximumFractionDigits:0});
-    document.getElementById('chipMktMa200Sub').textContent = `指數${aboveMa200?'站上':'跌破'}年線`;
-    document.getElementById('chipMktMa200Sub').style.color = aboveMa200?'var(--red)':'var(--blue)';
-
-    const biasUp = biasMa200 >= 0;
-    document.getElementById('chipMktMaBias').className   = `mkt-card-val ${biasUp?'up':'dn'}`;
-    document.getElementById('chipMktMaBias').textContent = `${biasUp?'+':''}${biasMa200.toFixed(1)}%`;
-    document.getElementById('chipMktMaBiasSub').textContent = biasUp?'正乖離（指數偏高）':'負乖離（指數偏低）';
-
-    if (otcNow) {
-      const otcUp = otcChg >= 0;
-      document.getElementById('chipMktOtc').className   = `mkt-card-val ${otcUp?'up':'dn'}`;
-      document.getElementById('chipMktOtc').textContent = otcNow.toLocaleString('zh-TW',{maximumFractionDigits:2});
-      document.getElementById('chipMktOtcChg').textContent = `${otcUp?'▲':'▼'} ${Math.abs(otcChg).toFixed(2)}%`;
-      document.getElementById('chipMktOtcChg').style.color = otcUp?'var(--red)':'var(--blue)';
-
-      // Flow bar
-      const tseAbs = Math.abs(tseChg), otcAbs = Math.abs(otcChg), total = tseAbs+otcAbs||1;
-      document.getElementById('chipFlowTse').style.flex = tseAbs/total;
-      document.getElementById('chipFlowOtc').style.flex = otcAbs/total;
-      document.getElementById('chipFlowTseLabel').textContent = `加權 ${tseChg>=0?'+':''}${tseChg.toFixed(2)}%`;
-      document.getElementById('chipFlowOtcLabel').textContent = `OTC ${otcChg>=0?'+':''}${otcChg.toFixed(2)}%`;
-      document.getElementById('chipFlowCenter').textContent = flowMsg;
-    }
-
-    // Analysis rows
-    document.getElementById('chipMktAnalysisRows').innerHTML = `
-      <div class="mkt-row">
-        <span class="mkt-row-icon">${stateClass==='bull'?'🐂':stateClass==='bear'?'🐻':'⚖️'}</span>
-        <div class="mkt-row-content">
-          <div class="mkt-row-label">【市場狀態】</div>
-          <div class="mkt-row-val">加權 ${tseNow.toLocaleString('zh-TW',{maximumFractionDigits:0})} vs 200MA ${ma200.toLocaleString('zh-TW',{maximumFractionDigits:0})}　年線${slopeText}</div>
-        </div>
-        <span class="mkt-row-badge ${stateClass}">${marketState}</span>
-      </div>
-      <div class="mkt-row">
-        <span class="mkt-row-icon">💰</span>
-        <div class="mkt-row-content">
-          <div class="mkt-row-label">【資金風向】</div>
-          <div class="mkt-row-val">加權${tseChg>=0?'+':''}${tseChg.toFixed(2)}%　OTC${otcChg!==null?(otcChg>=0?'+':'')+otcChg.toFixed(2)+'%':'—'}</div>
-        </div>
-        <span class="mkt-row-badge ${flowClass}">${otcChg!==null?(tseChg>otcChg+0.3?'權值主導':otcChg>tseChg+0.3?'中小型主導':'同步'):'—'}</span>
-      </div>
-      <div class="mkt-row">
-        <span class="mkt-row-icon">📐</span>
-        <div class="mkt-row-content">
-          <div class="mkt-row-label">【年線乖離】</div>
-          <div class="mkt-row-val">指數距年線 ${biasUp?'+':''}${biasMa200.toFixed(1)}%　${biasUp?'正乖離，注意回測壓力':'負乖離，觀察反彈訊號'}</div>
-        </div>
-        <span class="mkt-row-badge ${Math.abs(biasMa200)>15?'warn':stateClass}">${Math.abs(biasMa200)>15?'過度延伸':biasUp?'偏高':'偏低'}</span>
-      </div>
-      <div class="mkt-row">
-        <span class="mkt-row-icon">🎯</span>
-        <div class="mkt-row-content">
-          <div class="mkt-row-label">【投資建議】</div>
-          <div class="mkt-row-val">${stateClass==='bull'?'牛市環境，搭配個股四重濾網積極選股':''}${stateClass==='bear'?'空頭結構，個股訊號僅供觀察，嚴守風控':''}${stateClass==='neutral'?'盤整格局，以籌碼雷達選強勢標的，輕倉操作':''}</div>
-        </div>
-        <span class="mkt-row-badge ${adviceClass}">${stateClass==='bull'?'積極佈局':stateClass==='bear'?'嚴守停損':'輕倉觀望'}</span>
-      </div>`;
-
-  } catch(err) {
-    chipSetMktError('資料載入失敗：' + err.message);
-  } finally {
-    chip_mktLoading = false;
-    if (icon) icon.className = '';
-    if (btn)  btn.style.pointerEvents = '';
-  }
-}
-
-function chipSetMktLoading() {
-  document.getElementById('chipMktHero').className = 'mkt-hero loading';
-  document.getElementById('chipMktVerdict').textContent = '分析中…';
-  document.getElementById('chipMktVerdict').className = 'mkt-verdict neu';
-  document.getElementById('chipMktSub').textContent = '正在抓取加權指數與 OTC 指數資料';
-}
-
-function chipSetMktError(msg) {
-  document.getElementById('chipMktHero').className = 'mkt-hero neutral';
-  document.getElementById('chipMktVerdict').textContent = '⚠️ 資料異常';
-  document.getElementById('chipMktSub').textContent = msg;
-}
-
-
-// ═══════════════════════════════════════════════
-//  GitHub Pages 部署（與 index-db 完全相同）
-// ═══════════════════════════════════════════════
-const CHIP_SUPABASE_URL = 'https://dlwswwioqbghwpksbnjv.supabase.co';
-
-function chipShowToast(msg, type='ok') {
-  let el = document.getElementById('chipToast');
-  if (!el) { el = document.createElement('div'); el.id='chipToast'; document.body.appendChild(el); }
-  el.textContent = msg;
-  el.style.display = 'block';
-  el.style.borderColor = type==='warn' ? 'var(--red)' : 'var(--accent)';
-  clearTimeout(el._t);
-  el._t = setTimeout(() => { el.style.display='none'; }, 3500);
-}
-
-// ═══════════════════════════════════════════════
-//  GitHub Pages 部署設定
-//  rosc99/444 → chip-signal.html
-// ═══════════════════════════════════════════════
-const CHIP_GH_REPO  = 'rosc99/444';
-const CHIP_GH_FILE  = 'index.html';
-const CHIP_GH_PAGES = 'https://rosc99.github.io/444/chip.html';
-let chip_ghToken = localStorage.getItem('gh_token_chip') || '';
 
 async function chipDeployToGitHub() {
-  // 1. 確認有 token
+  const btn = document.getElementById('chipDeployBtn');
   if (!chip_ghToken) {
-    const t = prompt(
-      'GitHub Personal Access Token\n' +
-      '（Settings → Developer settings → Personal access tokens → Fine-grained）\n' +
-      '需要 repo Contents: Read & Write 權限\n\n' +
-      '輸入後會儲存在本機，下次不用再輸入：'
-    );
+    const t = prompt('GitHub Personal Access Token\n(Fine-grained → repo Contents: Read & Write)\n\n輸入後儲存於本機，下次不用再輸入：');
     if (!t) return;
     chip_ghToken = t.trim();
     localStorage.setItem('gh_token_chip', chip_ghToken);
   }
-
-  const btn = document.getElementById('chipDeployBtn');
   if (btn) { btn.textContent = '⏫'; btn.disabled = true; }
-  chipShowToast('⏫ 正在推送到 GitHub Pages…', 'ok');
-
+  chipShowToast('⏫ 推送到 GitHub Pages…', 'ok');
   try {
-    // 2. 快照 HTML（先隱藏 UI 元素避免殘留）
     const toastEl = document.getElementById('chipToast');
     if (toastEl) toastEl.style.display = 'none';
     if (btn) { btn.textContent = '☁️'; btn.disabled = false; }
-
     const rawHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-
     if (btn) { btn.textContent = '⏫'; btn.disabled = true; }
-    chipShowToast('⏫ 正在推送到 GitHub Pages…', 'ok');
-
+    chipShowToast('⏫ 推送到 GitHub Pages…', 'ok');
     const content = btoa(unescape(encodeURIComponent(rawHtml)));
-
-    // 3. 取得現有檔案的 SHA（更新時必須提供）
     const apiBase = `https://api.github.com/repos/${CHIP_GH_REPO}/contents/${CHIP_GH_FILE}`;
     let sha = '';
     try {
       const getRes = await fetch(apiBase, {
-        headers: {
-          'Authorization': `Bearer ${chip_ghToken}`,
-          'Accept': 'application/vnd.github+json',
-        }
+        headers: { 'Authorization': `Bearer ${chip_ghToken}`, 'Accept': 'application/vnd.github+json' }
       });
       if (getRes.ok) {
         const meta = await getRes.json();
@@ -11701,10 +11672,266 @@ async function chipRunDiag() {
   el.innerHTML = lines.join('<br>');
 }
 
+
+// ══════════════════════════════════════════════
+//  策略管理（投資策略存取）
+// ══════════════════════════════════════════════
+const CR_STRATEGIES_KEY = 'cr_strategies_v1';
+
+function crGetStrategies() {
+  try { return JSON.parse(localStorage.getItem(CR_STRATEGIES_KEY)) || {}; } catch { return {}; }
+}
+function crSaveStrategies(obj) {
+  try { localStorage.setItem(CR_STRATEGIES_KEY, JSON.stringify(obj)); } catch {}
+}
+
+function crInitStrategies() {
+  let s = crGetStrategies();
+  if (!s.default) {
+    s.default = {
+      name: '🎯 預設策略',
+      shadow_max: 0.015, bias_max: 0.15, vol_mult: 2.0,
+      need_bull: true, exclude_28: true
+    };
+    crSaveStrategies(s);
+  }
+  crRefreshStrategySelect();
+}
+
+function crRefreshStrategySelect() {
+  const sel = document.getElementById('crStrategySelect');
+  if (!sel) return;
+  const s = crGetStrategies();
+  sel.innerHTML = Object.entries(s).map(([k,v]) =>
+    `<option value="${k}">${v.name}</option>`
+  ).join('');
+}
+
+function crLoadStrategy(key) {
+  const s = crGetStrategies();
+  const st = s[key];
+  if (!st) return;
+  CHIP_CFG.shadow_max  = st.shadow_max  ?? CHIP_CFG.shadow_max;
+  CHIP_CFG.bias_max    = st.bias_max    ?? CHIP_CFG.bias_max;
+  CHIP_CFG.vol_mult    = st.vol_mult    ?? CHIP_CFG.vol_mult;
+  CHIP_CFG.need_bull   = st.need_bull   ?? CHIP_CFG.need_bull;
+  CHIP_CFG.exclude_28  = st.exclude_28  ?? CHIP_CFG.exclude_28;
+  chipShowToast(`✅ 已載入：${st.name}`, 'ok');
+}
+
+function crSaveStrategyAs() {
+  const name = prompt('輸入策略名稱：');
+  if (!name?.trim()) return;
+  const key = 'st_' + Date.now();
+  const s = crGetStrategies();
+  s[key] = {
+    name: name.trim(),
+    shadow_max: CHIP_CFG.shadow_max, bias_max: CHIP_CFG.bias_max,
+    vol_mult: CHIP_CFG.vol_mult, need_bull: CHIP_CFG.need_bull,
+    exclude_28: CHIP_CFG.exclude_28
+  };
+  crSaveStrategies(s);
+  crRefreshStrategySelect();
+  document.getElementById('crStrategySelect').value = key;
+  chipShowToast(`💾 已儲存：${name.trim()}`, 'ok');
+}
+
+function crDeleteStrategy() {
+  const sel = document.getElementById('crStrategySelect');
+  if (!sel) return;
+  const key = sel.value;
+  if (key === 'default') { chipShowToast('⚠️ 無法刪除預設策略', 'warn'); return; }
+  const s = crGetStrategies();
+  if (!s[key]) return;
+  const name = s[key].name;
+  if (!confirm(`確定刪除「${name}」？`)) return;
+  delete s[key];
+  crSaveStrategies(s);
+  crRefreshStrategySelect();
+  crLoadStrategy('default');
+  chipShowToast(`🗑 已刪除：${name}`, 'ok');
+}
+
+function crShowStrategyModal() {
+  const body = document.getElementById('crSettingBody');
+  if (!body) return;
+  document.getElementById('crSettingTitle').textContent = '⚙️ 篩選條件設定';
+  body.innerHTML = `
+    <div class="cr-set-row">
+      <div class="cr-set-info"><div class="cr-set-name">上影線門檻</div><div class="cr-set-sub">K線純度 — 避雷針過濾 (1.5% = 0.015)</div></div>
+      <div class="cr-set-val" id="crSetShadow">${(CHIP_CFG.shadow_max*100).toFixed(1)}%</div>
+    </div>
+    <div class="cr-set-row">
+      <div class="cr-set-info"><div class="cr-set-name">月線乖離上限</div><div class="cr-set-sub">乖離控制 — 不追過度噴發</div></div>
+      <div class="cr-set-val" id="crSetBias">${(CHIP_CFG.bias_max*100).toFixed(0)}%</div>
+    </div>
+    <div class="cr-set-row">
+      <div class="cr-set-info"><div class="cr-set-name">爆量倍數門檻</div><div class="cr-set-sub">量比 = 今日量 ÷ 昨日量</div></div>
+      <div class="cr-set-val" id="crSetVol">${CHIP_CFG.vol_mult}x</div>
+    </div>
+    <div class="cr-set-row">
+      <div class="cr-set-info"><div class="cr-set-name">多頭排列</div><div class="cr-set-sub">收盤 > 5MA > 10MA > 20MA</div></div>
+      <div class="cr-toggle ${CHIP_CFG.need_bull?'on':''}" id="crToggleBull" onclick="this.classList.toggle('on')"></div>
+    </div>
+    <div class="cr-set-row">
+      <div class="cr-set-info"><div class="cr-set-name">排除金融股</div><div class="cr-set-sub">28 開頭股票代號一律排除</div></div>
+      <div class="cr-toggle ${CHIP_CFG.exclude_28?'on':''}" id="crToggle28" onclick="this.classList.toggle('on')"></div>
+    </div>`;
+  document.getElementById('crSettingOverlay').classList.add('open');
+}
+
+function crCloseSettingModal() {
+  document.getElementById('crSettingOverlay').classList.remove('open');
+}
+
+function crApplySetting() {
+  CHIP_CFG.need_bull  = document.getElementById('crToggleBull')?.classList.contains('on') ?? CHIP_CFG.need_bull;
+  CHIP_CFG.exclude_28 = document.getElementById('crToggle28')?.classList.contains('on') ?? CHIP_CFG.exclude_28;
+  crCloseSettingModal();
+  chipShowToast('✅ 設定已套用', 'ok');
+}
+
+// ══════════════════════════════════════════════
+//  觀察名單
+// ══════════════════════════════════════════════
+const CR_WATCH_KEY = 'cr_watchlist_v1';
+
+function crGetWatchList() {
+  try { return JSON.parse(localStorage.getItem(CR_WATCH_KEY)) || []; } catch { return []; }
+}
+function crSaveWatchList(arr) {
+  try { localStorage.setItem(CR_WATCH_KEY, JSON.stringify(arr)); } catch {}
+}
+
+async function crAddWatch() {
+  const input = document.getElementById('crWatchInput');
+  if (!input) return;
+  const id = input.value.trim().toUpperCase();
+  if (!id || !/^\d{4,6}$/.test(id)) { chipShowToast('⚠️ 請輸入4~6位股票代號', 'warn'); return; }
+  let list = crGetWatchList();
+  if (list.find(w => w.id === id)) { chipShowToast('⚠️ 已在觀察名單中', 'warn'); return; }
+  list.push({ id, name: CHIP_TW_NAMES[id] || id, addedAt: Date.now() });
+  crSaveWatchList(list);
+  input.value = '';
+  chipShowToast(`👁 已加入 ${id}`, 'ok');
+  crRenderWatchList();
+  // Auto fetch quote
+  crUpdateWatchCard(id);
+}
+
+function crRemoveWatch(id) {
+  let list = crGetWatchList().filter(w => w.id !== id);
+  crSaveWatchList(list);
+  crRenderWatchList();
+}
+
+async function crUpdateWatchCard(id) {
+  const card = document.getElementById('crWatchCard-' + id);
+  if (!card) return;
+  card.classList.add('loading');
+  try {
+    const [q, hist] = await Promise.all([chipFetchQuote(id), chipFetchHistory(id)]);
+    if (!q) { card.classList.remove('loading'); return; }
+
+    const price  = q.price;
+    const change = q.change || 0;
+    const up     = change >= 0;
+    const name   = CHIP_TW_NAMES[id] || q.name || id;
+
+    // Update name in storage
+    let list = crGetWatchList();
+    const item = list.find(w => w.id === id);
+    if (item) { item.name = name; item.price = price; item.change = change; crSaveWatchList(list); }
+
+    // Compute indicators if hist available
+    let tags = '';
+    if (hist) {
+      const closes = hist.closes;
+      const ma5    = chipSma(closes, 5);
+      const ma10   = chipSma(closes, 10);
+      const ma20   = chipSma(closes, 20);
+      const shadow = (q.high - price) / price;
+      const bias   = (price - ma20) / ma20;
+      const vols   = hist.volumes || [];
+      const prevV  = vols.at(-2) || 0;
+      const todayV = vols.at(-1) || 0;
+      const volR   = prevV > 0 ? (todayV/prevV).toFixed(1) : 0;
+      const isBull = price > ma5 && ma5 > ma10 && ma10 > ma20;
+      const isVol  = volR >= CHIP_CFG.vol_mult;
+      const pureK  = shadow < CHIP_CFG.shadow_max;
+      const biasOk = bias < CHIP_CFG.bias_max;
+
+      tags = `
+        <div class="cr-watch-tag ${pureK?'pass':'fail'}">純K ${(shadow*100).toFixed(1)}%</div>
+        <div class="cr-watch-tag ${isBull?'pass':'fail'}">多頭 ${isBull?'✓':'✗'}</div>
+        <div class="cr-watch-tag ${biasOk?'pass':'fail'}">乖離 ${(bias*100).toFixed(1)}%</div>
+        ${isVol?`<div class="cr-watch-tag pass">⚡ 爆量 ${volR}x</div>`:`<div class="cr-watch-tag info">量比 ${volR}x</div>`}
+        <div class="cr-watch-tag info">5MA ${ma5?.toFixed(0)||'—'}</div>
+        <div class="cr-watch-tag info">20MA ${ma20?.toFixed(0)||'—'}</div>`;
+    }
+
+    card.innerHTML = `
+      <div class="cr-watch-hd">
+        <div class="cr-watch-info">
+          <div class="cr-watch-id">${id}</div>
+          <div class="cr-watch-name">${name}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div>
+            <div class="cr-watch-price" style="color:${up?'var(--accent-red)':'var(--accent-green)'}">${price.toLocaleString()}</div>
+            <div style="font-family:var(--mono);font-size:0.65rem;color:${up?'var(--accent-red)':'var(--accent-green)'};">${up?'▲':'▼'}${Math.abs(change).toFixed(2)}%</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <button class="cr-icon-btn" onclick="crUpdateWatchCard('${id}')" style="padding:4px 8px;font-size:0.7rem;">↻</button>
+            <button class="cr-watch-del" onclick="crRemoveWatch('${id}')">✕</button>
+          </div>
+        </div>
+      </div>
+      <div class="cr-watch-status">${tags}</div>`;
+  } catch {}
+  card.classList.remove('loading');
+}
+
+function crRenderWatchList() {
+  const container = document.getElementById('crWatchList');
+  if (!container) return;
+  const list = crGetWatchList();
+  if (!list.length) {
+    container.innerHTML = `<div class="cr-empty">
+      <div style="font-size:2rem;margin-bottom:8px;">👁</div>
+      <div>輸入股號加入觀察名單</div>
+      <div style="font-size:0.65rem;opacity:.5;margin-top:4px;">自動抓取報價與技術指標</div>
+    </div>`;
+    return;
+  }
+  container.innerHTML = list.map(w => `
+    <div class="cr-watch-card loading" id="crWatchCard-${w.id}">
+      <div class="cr-watch-hd">
+        <div class="cr-watch-info">
+          <div class="cr-watch-id">${w.id}</div>
+          <div class="cr-watch-name">${w.name}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <button class="cr-icon-btn" onclick="crUpdateWatchCard('${w.id}')" style="padding:4px 8px;font-size:0.7rem;">↻</button>
+          <button class="cr-watch-del" onclick="crRemoveWatch('${w.id}')">✕</button>
+        </div>
+      </div>
+      <div style="font-size:0.68rem;color:var(--text-muted);">載入中…</div>
+    </div>`).join('');
+
+  // Auto-refresh all
+  list.forEach(w => crUpdateWatchCard(w.id));
+}
+
+// Close setting overlay on bg click
+document.getElementById('crSettingOverlay')?.addEventListener('click', e => {
+  if (e.target === document.getElementById('crSettingOverlay')) crCloseSettingModal();
+});
+
 // chip init - called by index.html when stats page is shown
 function chipInit() {
   chipUpdateStats();
-  chipRenderSettingsPage();
+  crInitStrategies();
 }
 chipInit();
 
