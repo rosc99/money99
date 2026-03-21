@@ -2049,7 +2049,7 @@ input::placeholder { color: var(--text-muted); }
   </div>
 
   <div class="nav-section-label">主頁</div>
-  <div class="nav-item active" onclick="goPage('home',this)">
+  <div class="nav-item" onclick="goPage('home',this)">
     <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span> 總覽主頁
   </div>
 
@@ -2081,10 +2081,10 @@ input::placeholder { color: var(--text-muted); }
 
   <div class="sidebar-bottom">
     <div class="sync-status">
-      <div class="sync-dot" id="syncDot"></div>
-      <span id="syncStatusText">連線中…</span>
+      <div class="sync-dot ok" id="syncDot"></div>
+      <span id="syncStatusText" style="color: var(--accent-green);">已同步</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-22 05:04:09</div>
+    <div class="clock-display" id="clockDisplay">2026-03-22 05:12:28</div>
   </div>
 </aside>
 
@@ -2095,10 +2095,10 @@ input::placeholder { color: var(--text-muted); }
 <!-- ══════════════════════════════════
      MAIN
 ══════════════════════════════════ -->
-<main class="main-content">
+<main class="main-content" style="overflow-y: auto;">
 
   <!-- ── 主頁 ── -->
-  <section class="page active" id="page-home">
+  <section class="page" id="page-home">
     <div class="page-header">
       <div class="page-title-block">
         <div class="page-label">Dashboard</div>
@@ -2809,7 +2809,7 @@ input::placeholder { color: var(--text-muted); }
   </section>
 
   <!-- ── 現金流 ── -->
-  <section class="page" id="page-stats">
+  <section class="page active" id="page-stats">
     <!-- ══ Header ══ -->
     <div class="page-header" style="margin-bottom:12px;">
       <div class="page-title-block">
@@ -2841,24 +2841,24 @@ input::placeholder { color: var(--text-muted); }
 
     <!-- ══ Main Tabs ══ -->
     <div class="cr-tabs">
-      <div class="cr-tab active" data-cr="scan">🔍 篩選標的</div>
-      <div class="cr-tab" data-cr="market">🐂 多空判斷</div>
+      <div class="cr-tab" data-cr="scan">🔍 篩選標的</div>
+      <div class="cr-tab active" data-cr="market">🐂 多空判斷</div>
       <div class="cr-tab" data-cr="watch">👁 觀察名單</div>
     </div>
 
     <!-- ══════════════════════════════════
          TAB 1：多空判斷
     ══════════════════════════════════ -->
-    <div id="crTab-market" class="cr-tabpanel" style="display:none">
+    <div id="crTab-market" class="cr-tabpanel" style="display: block;">
       <!-- Hero card -->
-      <div class="cr-mkt-hero cr-loading" id="chipMktHero">
+      <div class="cr-mkt-hero neutral" id="chipMktHero">
         <div style="display:flex;align-items:center;gap:12px;">
           <div style="flex:1">
-            <div class="cr-mkt-verdict cr-neu" id="chipMktVerdict">— 市場狀態</div>
-            <div class="cr-mkt-sub" id="chipMktSub">點擊「重新分析」載入</div>
+            <div class="cr-mkt-verdict cr-neu" id="chipMktVerdict">⚠️ 資料異常</div>
+            <div class="cr-mkt-sub" id="chipMktSub">無法取得加權指數資料，請稍後再試</div>
           </div>
-          <button class="cr-refresh-btn" id="chipMktRefreshBtn" onclick="chipLoadMarketData()">
-            <span id="chipMktRefreshIcon">⟳</span>
+          <button class="cr-refresh-btn" id="chipMktRefreshBtn" onclick="chipLoadMarketData()" style="">
+            <span id="chipMktRefreshIcon" class="">⟳</span>
           </button>
         </div>
       </div>
@@ -2913,15 +2913,13 @@ input::placeholder { color: var(--text-muted); }
     <!-- ══════════════════════════════════
          TAB 2：篩選標的
     ══════════════════════════════════ -->
-    <div id="crTab-scan" class="cr-tabpanel">
+    <div id="crTab-scan" class="cr-tabpanel" style="display: none;">
 
       <!-- Strategy bar -->
       <div class="cr-strategy-bar">
         <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">
           <span style="font-size:0.65rem;color:var(--text-muted);white-space:nowrap;">策略</span>
-          <select class="cr-strategy-select" id="crStrategySelect" onchange="crLoadStrategy(this.value)">
-            <option value="default">🎯 預設策略</option>
-          </select>
+          <select class="cr-strategy-select" id="crStrategySelect" onchange="crLoadStrategy(this.value)"><option value="default">🎯 預設策略</option></select>
         </div>
         <div style="display:flex;gap:6px;">
           <button class="cr-icon-btn" onclick="crShowStrategyModal()" title="篩選設定">⚙️</button>
@@ -3642,7 +3640,7 @@ input::placeholder { color: var(--text-muted); }
 
 
 <nav class="mobile-nav" id="mobileNav">
-  <div class="mobile-nav-item active" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
+  <div class="mobile-nav-item" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span><span>總覽</span>
   </div>
   <div class="mobile-nav-item" id="mn-ledger" onclick="goPage('ledger', null, 'mn-ledger')">
@@ -3651,7 +3649,7 @@ input::placeholder { color: var(--text-muted); }
   <div class="mobile-nav-item" id="mn-invest" onclick="goPage('invest', null, 'mn-invest')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span><span>投資</span>
   </div>
-  <div class="mobile-nav-item" id="mn-stats" onclick="goPage('stats',      null, 'mn-stats')">
+  <div class="mobile-nav-item active" id="mn-stats" onclick="goPage('stats',      null, 'mn-stats')">
     <span class="mobile-nav-icon">📡</span><span>雷達</span>
   </div>
 <div class="mobile-nav-item" id="mn-intel" onclick="goPage('intel',      null, 'mn-intel')">
@@ -12011,33 +12009,80 @@ async function chipLoadMarketData() {
     else if (!aboveMa200 && ma200slope < 0)  { marketState='熊市'; stateClass='bear'; }
     else                                      { marketState='盤整'; stateClass='neutral'; }
 
-    // 資金主角 — 考慮絕對漲跌方向
-    let flowMsg='—', flowClass='cr-neu', flowDetail='';
+    // ══════════════════════════════════════════════
+    //  資金主角判斷
+    //  邏輯：加權(TAIEX)代表權值股/外資動態
+    //        OTC(櫃買)代表中小型/本土主力/投信
+    //  減法原則：兩指數差值 = 資金傾斜方向
+    // ══════════════════════════════════════════════
+    let flowMsg='—', flowClass='cr-neu', flowDetail='', flowEmotion='';
     if (otcChg !== null) {
-      const tseUp  = tseChg >  0.05;
-      const tseDn  = tseChg < -0.05;
-      const otcUp  = otcChg >  0.05;
-      const otcDn  = otcChg < -0.05;
-      const diff   = tseChg - otcChg;
+      const diff   = tseChg - otcChg; // 正=加權強，負=OTC強
+      const tseDir = tseChg >  0.05 ? 1 : tseChg < -0.05 ? -1 : 0;
+      const otcDir = otcChg >  0.05 ? 1 : otcChg < -0.05 ? -1 : 0;
+      const absDiff = Math.abs(diff);
 
-      if (tseUp && otcUp) {
-        if      (diff >  0.3) { flowMsg='權值股領漲';    flowClass='cr-badge-bull'; flowDetail='加權強於OTC，大型股主導上攻'; }
-        else if (diff < -0.3) { flowMsg='中小型股領漲';  flowClass='cr-badge-bear'; flowDetail='OTC強於加權，小鋼炮噴發'; }
-        else                  { flowMsg='全面多頭';       flowClass='cr-badge-bull'; flowDetail='加權與OTC同步上漲，市場健康'; }
-      } else if (tseDn && otcDn) {
-        if      (diff >  0.3) { flowMsg='中小型股殺盤';  flowClass='cr-badge-warn'; flowDetail='OTC跌幅較大，小型股賣壓重'; }
-        else if (diff < -0.3) { flowMsg='權值股殺盤';    flowClass='cr-badge-warn'; flowDetail='加權跌幅較大，大型股賣壓重'; }
-        else                  { flowMsg='全面賣壓';       flowClass='cr-badge-warn'; flowDetail='加權與OTC同步下跌，避險優先'; }
-      } else if (tseUp && otcDn) {
-        flowMsg='護盤集中權值';  flowClass='cr-badge-neu'; flowDetail='加權撐盤但OTC下跌，資金集中大型護盤股';
-      } else if (tseDn && otcUp) {
-        flowMsg='資金轉向中小型'; flowClass='cr-badge-bear'; flowDetail='OTC逆勢上漲，資金流向中小型股';
-      } else if (tseUp) {
-        flowMsg='加權微漲';      flowClass='cr-badge-bull'; flowDetail='加權小幅上漲，OTC持平';
-      } else if (otcUp) {
-        flowMsg='OTC微漲';       flowClass='cr-badge-bear'; flowDetail='OTC小幅上漲，加權持平';
+      if (tseDir === 1 && otcDir === 1) {
+        if (diff > 0.3) {
+          flowMsg='權值股領漲';
+          flowClass='cr-badge-bull';
+          flowDetail='加權強於OTC，外資/大型股主導上攻';
+          flowEmotion='市場信心集中於台積電等權值，多頭氣氛偏強但廣度不足';
+        } else if (diff < -0.3) {
+          flowMsg='中小型股領漲';
+          flowClass='cr-badge-bear';
+          flowDetail='OTC強於加權，本土主力/投信操作活潑中小型股';
+          flowEmotion='市場信心極強，主力資金擴散至中小型，噴發行情特徵';
+        } else {
+          flowMsg='全面多頭';
+          flowClass='cr-badge-bull';
+          flowDetail='加權與OTC同步上漲，外資內資共振';
+          flowEmotion='最健康的上漲結構，買盤廣泛，行情延續機率高';
+        }
+      } else if (tseDir === -1 && otcDir === -1) {
+        if (diff > 0.3) {
+          flowMsg='中小型殺盤';
+          flowClass='cr-badge-warn';
+          flowDetail='OTC跌幅 > 加權，中小型股賣壓沉重';
+          flowEmotion='本土主力/散戶信心崩潰，籌碼鬆動，避開中小型標的';
+        } else if (diff < -0.3) {
+          flowMsg='外資棄守';
+          flowClass='cr-badge-warn';
+          flowDetail='加權跌幅 > OTC，外資賣超權值股';
+          flowEmotion='外資撤離訊號，大型股首當其衝，市場情緒明顯轉空';
+        } else {
+          flowMsg='全面賣壓';
+          flowClass='cr-badge-warn';
+          flowDetail='加權與OTC同步下跌，系統性賣壓';
+          flowEmotion='無差別拋售，市場情緒極度悲觀，避險優先';
+        }
+      } else if (tseDir >= 0 && otcDir === -1) {
+        if (diff > 0.3) {
+          flowMsg='拉大出小';
+          flowClass='cr-badge-neu';
+          flowDetail='加權撐住 OTC 卻在失血，資金集中護盤大型股';
+          flowEmotion='典型「拉大出小」：外資/法人護盤台積電，但中小型股其實在出貨';
+        } else {
+          flowMsg='OTC 承壓';
+          flowClass='cr-badge-warn';
+          flowDetail='中小型股偏弱，加權持平，本土主力觀望';
+          flowEmotion='內資信心不足，投信縮手，中小型股短期謹慎';
+        }
+      } else if (tseDir <= 0 && otcDir === 1) {
+        flowMsg='資金轉向中小型';
+        flowClass='cr-badge-bear';
+        flowDetail='OTC 逆勢上漲，加權承壓，本土主力/投信積極';
+        flowEmotion='外資撤離大型股，內資轉戰中小型，行情重心下移';
+      } else if (tseDir === -1 && otcDir === 0) {
+        flowMsg='權值股承壓';
+        flowClass='cr-badge-warn';
+        flowDetail='大型股偏弱，OTC 相對抗跌';
+        flowEmotion='外資賣壓集中在權值股，中小型股相對安全';
       } else {
-        flowMsg='盤整觀望';      flowClass='cr-badge-neu'; flowDetail='加權與OTC皆無明顯方向';
+        flowMsg='量縮盤整';
+        flowClass='cr-badge-neu';
+        flowDetail='加權與OTC皆無明顯方向';
+        flowEmotion='成交量可能萎縮，市場等待方向性觸媒，靜待變盤';
       }
     }
 
@@ -12120,7 +12165,8 @@ async function chipLoadMarketData() {
         <span class="cr-analysis-icon">💰</span>
         <div class="cr-analysis-content">
           <div class="cr-analysis-label">【資金風向】</div>
-          <div class="cr-analysis-val">加權${tseChg>=0?'+':''}${tseChg.toFixed(2)}% · OTC${otcChg!==null?(otcChg>=0?'+':'')+otcChg.toFixed(2)+'%':'—'}<br><span style="color:var(--text-muted);font-size:0.6rem">${flowDetail}</span></div>
+          <div class="cr-analysis-val">加權${tseChg>=0?'+':''}${tseChg.toFixed(2)}% · OTC${otcChg!==null?(otcChg>=0?'+':'')+otcChg.toFixed(2)+'%':'—'}<br><span style="color:var(--text-muted);font-size:0.62rem">${flowDetail}</span>${flowEmotion?`<br><span style="color:#f0b429;font-size:0.6rem">📊 ${flowEmotion}</span>`:''}
+          </div>
         </div>
         <span class="cr-analysis-badge ${flowClass}">${otcChg!==null?(tseChg>otcChg+0.3?'權值主導':otcChg>tseChg+0.3?'中小型主導':'同步'):'—'}</span>
       </div>
