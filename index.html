@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
-<head>
+<html lang="zh-TW"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
@@ -8,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0d0f14">
 <title>2026 理財管理系統</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&amp;family=Noto+Sans+TC:wght@300;400;500;700&amp;display=swap" rel="stylesheet">
 <style>
 :root {
   --bg-base: #0d0f14;
@@ -1950,8 +1949,8 @@ input::placeholder { color: var(--text-muted); }
 
     <!-- 登入 / 註冊 tabs -->
     <div class="auth-tabs">
-      <button class="auth-tab active" id="tabLogin"    onclick="switchTab('login')">登入</button>
-      <button class="auth-tab"        id="tabRegister" onclick="switchTab('register')">建立帳號</button>
+      <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">登入</button>
+      <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">建立帳號</button>
     </div>
 
     <!-- 登入表單 -->
@@ -1988,7 +1987,7 @@ input::placeholder { color: var(--text-muted); }
         <input class="auth-input" type="password" id="regPasswordConfirm" placeholder="再輸入一次" onkeydown="if(event.key==='Enter')doRegister()">
       </div>
       <button class="auth-btn" id="registerBtn" onclick="doRegister()">建立帳號</button>
-      <div class="auth-error"   id="registerError"></div>
+      <div class="auth-error" id="registerError"></div>
       <div class="auth-success" id="registerSuccess"></div>
     </div>
 
@@ -1998,15 +1997,15 @@ input::placeholder { color: var(--text-muted); }
 </div>
 
 <!-- 右上角用戶 badge -->
-<div id="userBadge" class="hidden" onclick="toggleLogoutMenu()">
-  <div class="user-avatar-circle" id="userInitial">?</div>
-  <span id="userName">載入中…</span>
+<div id="userBadge" class="" onclick="toggleLogoutMenu()">
+  <div class="user-avatar-circle" id="userInitial">C</div>
+  <span id="userName">colljacky99</span>
   <span style="color:#3b82f6;font-size:0.6rem;">▾</span>
 </div>
-<div id="logoutMenu">
+<div id="logoutMenu" style="display: none;">
   <div class="logout-user-info">
-    <div class="logout-user-name" id="menuUserName">—</div>
-    <div class="logout-user-email" id="menuUserEmail">—</div>
+    <div class="logout-user-name" id="menuUserName">colljacky99</div>
+    <div class="logout-user-email" id="menuUserEmail">colljacky99@gmail.com</div>
   </div>
   <div class="logout-item" onclick="showChangePassword()">🔑 修改密碼</div>
   <div style="height:1px;background:rgba(255,255,255,0.08);margin:4px 0;"></div>
@@ -2016,7 +2015,7 @@ input::placeholder { color: var(--text-muted); }
 </div>
 
 <!-- 推送確認 modal -->
-<div id="deployConfirmModal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.75);align-items:center;justify-content:center;">
+<div id="deployConfirmModal" style="display: none; position: fixed; inset: 0px; z-index: 10000; background: rgba(0, 0, 0, 0.75); align-items: center; justify-content: center;">
   <div style="background:#141720;border:1px solid #252a3a;border-radius:16px;padding:28px 24px;width:min(300px,88vw);box-shadow:0 24px 64px rgba(0,0,0,0.7);">
     <div style="font-size:1.4rem;text-align:center;margin-bottom:10px;">☁️</div>
     <div style="font-size:0.92rem;font-weight:600;color:#e8ecf5;text-align:center;margin-bottom:6px;">確認推送到 GitHub？</div>
@@ -2045,38 +2044,38 @@ input::placeholder { color: var(--text-muted); }
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <div class="logo-title"><span class="hex" style="font-size:0;display:inline-flex;align-items:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 7 22 17 12 22 2 17 2 7"/><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="7" x2="22" y2="7"/><line x1="2" y1="17" x2="22" y2="17"/></svg></span> FINLEDGER</div>
+    <div class="logo-title"><span class="hex" style="font-size:0;display:inline-flex;align-items:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 7 22 17 12 22 2 17 2 7"></polygon><line x1="12" y1="2" x2="12" y2="22"></line><line x1="2" y1="7" x2="22" y2="7"></line><line x1="2" y1="17" x2="22" y2="17"></line></svg></span> FINLEDGER</div>
     <div class="logo-sub">2026 專業理財系統</div>
   </div>
 
   <div class="nav-section-label">主頁</div>
   <div class="nav-item active" onclick="goPage('home',this)">
-    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/><path d="M5 10v11h14V10"/></svg></span> 總覽主頁
+    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span> 總覽主頁
   </div>
 
   <div class="nav-section-label">帳務管理</div>
   <div class="nav-item" onclick="goPage('ledger',this)">
-    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></span> 收支流水帳
+    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg></span> 收支流水帳
   </div>
   <div class="nav-item" onclick="goPage('stats',this)">
-    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span> 現金流
+    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></span> 現金流
   </div>
   <div class="nav-item" onclick="goPage('invest',this)">
-    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span> 投資組合
+    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span> 投資組合
   </div>
 
   <div class="nav-section-label">資產管理</div>
 <div class="nav-section-label">市場情報</div>
   <div class="nav-item" onclick="goPage('intel',this)">
-    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span> 情報瀏覽
+    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span> 情報瀏覽
   </div>
   <div class="nav-item" onclick="goPage('strategy',this)">
-    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span> 策略追蹤
+    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span> 策略追蹤
   </div>
 
   <div class="nav-section-label">系統</div>
   <div class="nav-item" onclick="goPage('database',this)" id="nav-database">
-    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg></span> 資料庫
+    <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"></path><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"></path></svg></span> 資料庫
     <span class="nav-badge" style="background:rgba(0,229,160,0.12);color:var(--accent-green);">核心</span>
   </div>
 
@@ -2085,13 +2084,13 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay"></div>
+    <div class="clock-display" id="clockDisplay">2026-03-22 02:49:49</div>
   </div>
 </aside>
 
 <!-- mobile overlay -->
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
-<button class="hamburger" onclick="toggleSidebar()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+<button class="hamburger" onclick="toggleSidebar()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
 
 <!-- ══════════════════════════════════
      MAIN
@@ -2110,7 +2109,7 @@ input::placeholder { color: var(--text-muted); }
           <select class="year-selector" id="yearSelect" onchange="onYearChange()">
             <option value="2024">2024</option>
             <option value="2025">2025</option>
-            <option value="2026" selected>2026</option>
+            <option value="2026" selected="">2026</option>
             <option value="2027">2027</option>
           </select>
         </div>
@@ -2151,8 +2150,8 @@ input::placeholder { color: var(--text-muted); }
           </div>
           <div style="height:8px;border-radius:4px;background:rgba(255,255,255,0.05);overflow:hidden;display:flex;">
             <div id="h-barAsset" style="height:100%;background:linear-gradient(90deg,#b45309,#f59e0b);transition:width 0.6s ease;width:0%;"></div>
-            <div id="h-barLiab"  style="height:100%;background:linear-gradient(90deg,#be123c,#ff4d6d);transition:width 0.6s ease;width:0%;"></div>
-            <div id="h-barNet"   style="height:100%;background:linear-gradient(90deg,#059669,#00e5a0);transition:width 0.6s ease;flex:1;"></div>
+            <div id="h-barLiab" style="height:100%;background:linear-gradient(90deg,#be123c,#ff4d6d);transition:width 0.6s ease;width:0%;"></div>
+            <div id="h-barNet" style="height:100%;background:linear-gradient(90deg,#059669,#00e5a0);transition:width 0.6s ease;flex:1;"></div>
           </div>
           <div style="display:flex;gap:12px;margin-top:6px;font-size:0.62rem;">
             <span style="display:flex;align-items:center;gap:4px;color:var(--text-muted);"><span style="width:8px;height:8px;border-radius:2px;background:var(--accent-amber);display:inline-block;"></span>資產</span>
@@ -2223,15 +2222,30 @@ input::placeholder { color: var(--text-muted); }
           <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
             <span style="font-size:0.6rem;color:var(--text-muted);font-family:var(--mono);padding:2px 8px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:4px;">銀行＋投資＋負債</span>
             <div style="display:flex;gap:4px;background:var(--bg-card2);border:1px solid var(--border);border-radius:8px;padding:3px;">
-              <button class="wt-btn active" id="wt-all"   onclick="switchWealthChart('all',this)">複合</button>
-              <button class="wt-btn"        id="wt-asset" onclick="switchWealthChart('asset',this)">總資產</button>
-              <button class="wt-btn"        id="wt-liab"  onclick="switchWealthChart('liab',this)">負債</button>
-              <button class="wt-btn"        id="wt-net"   onclick="switchWealthChart('net',this)">淨資產</button>
+              <button class="wt-btn active" id="wt-all" onclick="switchWealthChart('all',this)">複合</button>
+              <button class="wt-btn" id="wt-asset" onclick="switchWealthChart('asset',this)">總資產</button>
+              <button class="wt-btn" id="wt-liab" onclick="switchWealthChart('liab',this)">負債</button>
+              <button class="wt-btn" id="wt-net" onclick="switchWealthChart('net',this)">淨資產</button>
             </div>
           </div>
         </div>
-        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"></div>
-        <canvas id="wealthChart" style="width:100%;display:block;" height="220"></canvas>
+        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#f59e0b;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#ff4d6d;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總負債</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#ff4d6d;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#00e5a0;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">淨資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#00e5a0;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div></div>
+        <canvas id="wealthChart" style="width:100%;display:block;" height="220" width="346"></canvas>
         <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;" id="wealthXLabels"></div>
       </div>
 
@@ -2293,7 +2307,7 @@ input::placeholder { color: var(--text-muted); }
         <!-- 各筆負債進度條 -->
         <div id="homeLiabProgress" style="display:flex;flex-direction:column;gap:10px;">
           <div class="empty-state" style="padding:12px 0;font-size:0.78rem;">
-            <div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg></div>尚無負債資料
+            <div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path><line x1="12" y1="12" x2="12" y2="16"></line><line x1="10" y1="14" x2="14" y2="14"></line></svg></div>尚無負債資料
           </div>
         </div>
       </div>
@@ -2357,7 +2371,7 @@ input::placeholder { color: var(--text-muted); }
           <select class="year-selector" id="yearSelectLedger" onchange="onYearChangeLedger()" style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text-primary);font-family:var(--mono);font-size:0.82rem;outline:none;cursor:pointer;">
             <option value="2024">2024</option>
             <option value="2025">2025</option>
-            <option value="2026" selected>2026</option>
+            <option value="2026" selected="">2026</option>
             <option value="2027">2027</option>
           </select>
           <div style="font-family:var(--mono);font-size:1.1rem;font-weight:500;color:var(--text-primary);" id="ledger-month-title">—</div>
@@ -2619,7 +2633,7 @@ input::placeholder { color: var(--text-muted); }
             <option value="">所有年份</option>
             <option value="2024">2024</option>
             <option value="2025">2025</option>
-            <option value="2026" selected>2026</option>
+            <option value="2026" selected="">2026</option>
             <option value="2027">2027</option>
           </select>
         </div>
@@ -2768,7 +2782,7 @@ input::placeholder { color: var(--text-muted); }
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
       <div style="font-size:0.62rem;color:var(--text-muted);" id="inv-quote-status">載入中…</div>
       <button onclick="refreshInvestQuotes()" style="font-size:0.65rem;padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:5px;">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> 更新報價
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg> 更新報價
       </button>
     </div>
 
@@ -2786,8 +2800,8 @@ input::placeholder { color: var(--text-muted); }
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
         <div style="font-size:0.68rem;font-weight:600;color:var(--text-primary);">投資成本趨勢</div>
         <div style="display:flex;gap:4px;">
-          <button onclick="setSnapshotRange(30,this)"  class="wt-btn active" id="snp-30">1月</button>
-          <button onclick="setSnapshotRange(90,this)"  class="wt-btn" id="snp-90">3月</button>
+          <button onclick="setSnapshotRange(30,this)" class="wt-btn active" id="snp-30">1月</button>
+          <button onclick="setSnapshotRange(90,this)" class="wt-btn" id="snp-90">3月</button>
           <button onclick="setSnapshotRange(180,this)" class="wt-btn" id="snp-180">6月</button>
           <button onclick="setSnapshotRange(365,this)" class="wt-btn" id="snp-365">1年</button>
         </div>
@@ -2842,15 +2856,15 @@ input::placeholder { color: var(--text-muted); }
 
     <!-- ══ Main Tabs ══ -->
     <div class="cr-tabs">
-      <div class="cr-tab active" data-cr="market">🐂 多空判斷</div>
-      <div class="cr-tab" data-cr="scan">🔍 篩選標的</div>
+      <div class="cr-tab active" data-cr="scan">🔍 篩選標的</div>
+      <div class="cr-tab" data-cr="market">🐂 多空判斷</div>
       <div class="cr-tab" data-cr="watch">👁 觀察名單</div>
     </div>
 
     <!-- ══════════════════════════════════
          TAB 1：多空判斷
     ══════════════════════════════════ -->
-    <div id="crTab-market" class="cr-tabpanel">
+    <div id="crTab-market" class="cr-tabpanel" style="display:none">
       <!-- Hero card -->
       <div class="cr-mkt-hero cr-loading" id="chipMktHero">
         <div style="display:flex;align-items:center;gap:12px;">
@@ -2914,15 +2928,13 @@ input::placeholder { color: var(--text-muted); }
     <!-- ══════════════════════════════════
          TAB 2：篩選標的
     ══════════════════════════════════ -->
-    <div id="crTab-scan" class="cr-tabpanel" style="display:none">
+    <div id="crTab-scan" class="cr-tabpanel">
 
       <!-- Strategy bar -->
       <div class="cr-strategy-bar">
         <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">
           <span style="font-size:0.65rem;color:var(--text-muted);white-space:nowrap;">策略</span>
-          <select class="cr-strategy-select" id="crStrategySelect" onchange="crLoadStrategy(this.value)">
-            <option value="default">🎯 預設策略</option>
-          </select>
+          <select class="cr-strategy-select" id="crStrategySelect" onchange="crLoadStrategy(this.value)"><option value="default">🎯 預設策略</option></select>
         </div>
         <div style="display:flex;gap:6px;">
           <button class="cr-icon-btn" onclick="crShowStrategyModal()" title="篩選設定">⚙️</button>
@@ -2956,9 +2968,7 @@ input::placeholder { color: var(--text-muted); }
     <div id="crTab-watch" class="cr-tabpanel" style="display:none">
       <!-- Add bar -->
       <div class="cr-watch-add-bar">
-        <input class="cr-watch-input" id="crWatchInput" placeholder="輸入股號，例如 2330" maxlength="6"
-          oninput="this.value=this.value.replace(/[^0-9]/g,'')"
-          onkeydown="if(event.key==='Enter')crAddWatch()">
+        <input class="cr-watch-input" id="crWatchInput" placeholder="輸入股號，例如 2330" maxlength="6" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter')crAddWatch()">
         <button class="cr-scan-btn" onclick="crAddWatch()" style="padding:6px 14px;">+ 加入</button>
       </div>
       <!-- Watch list -->
@@ -3017,7 +3027,7 @@ input::placeholder { color: var(--text-muted); }
         <h1 class="page-title">情報瀏覽</h1>
       </div>
       <button onclick="refreshAllIntel()" style="display:flex;align-items:center;gap:6px;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.3);color:var(--accent-blue);border-radius:8px;padding:8px 14px;font-size:0.78rem;cursor:pointer;font-family:var(--sans);">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
         更新報價
       </button>
     </div>
@@ -3027,7 +3037,7 @@ input::placeholder { color: var(--text-muted); }
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
       <div style="font-size:0.65rem;color:var(--text-muted);letter-spacing:0.12em;text-transform:uppercase;">市場分析儀表板</div>
       <button onclick="loadAllDashboard(true)" style="font-size:0.65rem;color:var(--text-muted);background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:4px;">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>全部更新
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>全部更新
       </button>
     </div>
 
@@ -3307,7 +3317,7 @@ input::placeholder { color: var(--text-muted); }
     <div id="intelGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;"></div>
 
     <button onclick="openIntelAddModal()" style="width:100%;padding:14px;border:2px dashed rgba(59,130,246,0.3);border-radius:12px;background:rgba(59,130,246,0.04);color:var(--text-muted);font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;font-family:var(--sans);" onmouseover="this.style.borderColor='rgba(59,130,246,0.6)';this.style.color='var(--accent-blue)'" onmouseout="this.style.borderColor='rgba(59,130,246,0.3)';this.style.color='var(--text-muted)'">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
       新增情報格
     </button>
   </section>  <!-- ══ 策略追蹤頁 ══ -->
@@ -3530,7 +3540,7 @@ input::placeholder { color: var(--text-muted); }
         <div style="display:flex;align-items:center;gap:10px;">
           <div id="db_dirty_badge" style="display:none;font-size:0.6rem;padding:3px 10px;border-radius:10px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.35);color:var(--accent-amber);font-family:var(--mono);">● 有未儲存變更</div>
           <button onclick="dbSave()" style="display:flex;align-items:center;gap:7px;padding:9px 20px;border-radius:10px;background:linear-gradient(135deg,#00c87a,#00e5a0);border:none;color:#001a0f;font-weight:700;font-size:0.82rem;cursor:pointer;transition:all 0.18s;box-shadow:0 4px 16px rgba(0,229,160,0.25);" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 20px rgba(0,229,160,0.4)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(0,229,160,0.25)'">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
             儲存並更新所有分頁
           </button>
         </div>
@@ -3674,29 +3684,29 @@ input::placeholder { color: var(--text-muted); }
 
 
 <nav class="mobile-nav" id="mobileNav">
-  <div class="mobile-nav-item active" id="mn-home"       onclick="goPage('home',       null, 'mn-home')">
-    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/><path d="M5 10v11h14V10"/></svg></span><span>總覽</span>
+  <div class="mobile-nav-item active" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
+    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span><span>總覽</span>
   </div>
   <div class="mobile-nav-item" id="mn-ledger" onclick="goPage('ledger', null, 'mn-ledger')">
-    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></span><span>帳務</span>
+    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg></span><span>帳務</span>
   </div>
   <div class="mobile-nav-item" id="mn-invest" onclick="goPage('invest', null, 'mn-invest')">
-    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span><span>投資</span>
+    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span><span>投資</span>
   </div>
-  <div class="mobile-nav-item"        id="mn-stats"      onclick="goPage('stats',      null, 'mn-stats')">
+  <div class="mobile-nav-item" id="mn-stats" onclick="goPage('stats',      null, 'mn-stats')">
     <span class="mobile-nav-icon">📡</span><span>雷達</span>
   </div>
-<div class="mobile-nav-item"        id="mn-intel"      onclick="goPage('intel',      null, 'mn-intel')">
-    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span>情報</span>
+<div class="mobile-nav-item" id="mn-intel" onclick="goPage('intel',      null, 'mn-intel')">
+    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span><span>情報</span>
   </div>
-  <div class="mobile-nav-item"        id="mn-strategy"   onclick="goPage('strategy',   null, 'mn-strategy')">
-    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span><span>策略</span>
+  <div class="mobile-nav-item" id="mn-strategy" onclick="goPage('strategy',   null, 'mn-strategy')">
+    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span><span>策略</span>
   </div>
-  <div class="mobile-nav-item"        id="mn-database"   onclick="goPage('database',   null, 'mn-database')">
-    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg></span><span>資料庫</span>
+  <div class="mobile-nav-item" id="mn-database" onclick="goPage('database',   null, 'mn-database')">
+    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"></path><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"></path></svg></span><span>資料庫</span>
   </div>
 </nav>
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" style="border-color: var(--accent-green); color: var(--accent-green);">⏫ 正在推送到 GitHub...</div>
 
 <!-- 情報陳列室 Modal -->
 <div id="intelDetailModal" style="display:none;position:fixed;inset:0;z-index:6000;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px 0;" onclick="if(event.target===this)closeIntelDetail()">
@@ -3763,18 +3773,18 @@ input::placeholder { color: var(--text-muted); }
     <!-- 類別格子 -->
     <div style="font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">選擇類別</div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px;" id="fqCatGrid">
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'保險','保險')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span>保險</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'電話費','電話')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span><span>電話費</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'網路費','網路')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span>網路費</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'孝親費','孝親')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span><span>孝親費</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'投資','其他')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span><span>投資</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'水電費','水電')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span><span>水電費</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'房租','房租')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/><path d="M5 10v11h14V10"/></svg></span><span>房租</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'訂閱','訂閱')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg></span><span>訂閱</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'瓦斯費','瓦斯')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></span><span>瓦斯費</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'交通月票','交通')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span><span>交通</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'健身房','健身')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M6 8H5a4 4 0 0 0 0 8h1"/><line x1="6" y1="12" x2="18" y2="12"/></svg></span><span>健身</span></button>
-      <button class="iq-cat-btn" onclick="selectFQCat(this,'其他','其他')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span><span>其他</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'保險','保險')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></span><span>保險</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'電話費','電話')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg></span><span>電話費</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'網路費','網路')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span><span>網路費</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'孝親費','孝親')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></span><span>孝親費</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'投資','其他')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span><span>投資</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'水電費','水電')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></span><span>水電費</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'房租','房租')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span><span>房租</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'訂閱','訂閱')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2"></rect><polyline points="17 2 12 7 7 2"></polyline></svg></span><span>訂閱</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'瓦斯費','瓦斯')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg></span><span>瓦斯費</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'交通月票','交通')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg></span><span>交通</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'健身房','健身')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M6 8H5a4 4 0 0 0 0 8h1"></path><line x1="6" y1="12" x2="18" y2="12"></line></svg></span><span>健身</span></button>
+      <button class="iq-cat-btn" onclick="selectFQCat(this,'其他','其他')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg></span><span>其他</span></button>
     </div>
 
     <div style="height:1px;background:var(--border);margin-bottom:18px;"></div>
@@ -3848,14 +3858,14 @@ input::placeholder { color: var(--text-muted); }
     <div style="margin-bottom:18px;">
       <div style="font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">選擇分期類別</div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;" id="iqCatGrid">
-        <button class="iq-cat-btn" data-cat="房貸" onclick="selectIQCat(this,'房貸')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/><path d="M5 10v11h14V10"/></svg></span><span>房貸</span></button>
-        <button class="iq-cat-btn" data-cat="信貸" onclick="selectIQCat(this,'信貸')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></span><span>信貸</span></button>
-        <button class="iq-cat-btn" data-cat="信用卡分期" onclick="selectIQCat(this,'信用卡分期')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span><span>信用卡分期</span></button>
-        <button class="iq-cat-btn" data-cat="保險" onclick="selectIQCat(this,'保險')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span>保險</span></button>
-        <button class="iq-cat-btn" data-cat="電話費" onclick="selectIQCat(this,'電話費')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span><span>電話費</span></button>
-        <button class="iq-cat-btn" data-cat="網路費" onclick="selectIQCat(this,'網路費')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span>網路費</span></button>
-        <button class="iq-cat-btn" data-cat="孝親費" onclick="selectIQCat(this,'孝親費')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span><span>孝親費</span></button>
-        <button class="iq-cat-btn" data-cat="投資" onclick="selectIQCat(this,'投資')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span><span>投資</span></button>
+        <button class="iq-cat-btn" data-cat="房貸" onclick="selectIQCat(this,'房貸')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span><span>房貸</span></button>
+        <button class="iq-cat-btn" data-cat="信貸" onclick="selectIQCat(this,'信貸')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path></svg></span><span>信貸</span></button>
+        <button class="iq-cat-btn" data-cat="信用卡分期" onclick="selectIQCat(this,'信用卡分期')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg></span><span>信用卡分期</span></button>
+        <button class="iq-cat-btn" data-cat="保險" onclick="selectIQCat(this,'保險')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></span><span>保險</span></button>
+        <button class="iq-cat-btn" data-cat="電話費" onclick="selectIQCat(this,'電話費')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg></span><span>電話費</span></button>
+        <button class="iq-cat-btn" data-cat="網路費" onclick="selectIQCat(this,'網路費')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span><span>網路費</span></button>
+        <button class="iq-cat-btn" data-cat="孝親費" onclick="selectIQCat(this,'孝親費')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></span><span>孝親費</span></button>
+        <button class="iq-cat-btn" data-cat="投資" onclick="selectIQCat(this,'投資')"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span><span>投資</span></button>
       </div>
     </div>
 
@@ -11362,8 +11372,8 @@ function chipRenderSignalPage(){
       const offset=C-(s.score/100)*C;
       const up=s.change>=0;
       html+=`
-      <div class="cr-signal-card" style="animation-delay:${i*.05}s" onclick="chipOpenModal('${s.id}')">
-        <div class="cr-s-top">
+      <div class="cr-signal-card" style="animation-delay:${i*.05}s">
+        <div class="cr-s-top" onclick="chipOpenModal('${s.id}')">
           <div>
             <div class="cr-s-id">${s.id}</div>
             <div class="cr-s-name">${s.name}</div>
@@ -11391,7 +11401,13 @@ function chipRenderSignalPage(){
           <span class="cr-ma">10MA ${s.ma10}</span>
           <span class="cr-ma">20MA ${s.ma20}</span>
         </div>
-        <div style="font-size:0.65rem;color:var(--text-muted);padding-top:6px;border-top:1px solid var(--border)">籌碼：請合併 TWSE API 資料</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid var(--border);margin-top:2px;">
+          <span style="font-size:0.62rem;color:var(--text-muted);">籌碼待合併</span>
+          <button onclick="crAddFromSignal('${s.id}','${s.name}')"
+            style="font-size:0.65rem;font-weight:600;padding:3px 10px;border-radius:8px;border:1px solid rgba(240,180,41,.3);background:rgba(240,180,41,.08);color:#f0b429;cursor:pointer;">
+            👁 加入觀察
+          </button>
+        </div>
       </div>`;
     });
   }
@@ -11547,6 +11563,7 @@ function chipFmt(n){return n>=10000?(n/10000).toFixed(1)+'萬':n.toLocaleString(
 function chipNowHHMM(){const n=new Date();return String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');}
 function chipSleep(ms){return new Promise(r=>setTimeout(r,ms));}
 
+
 // ── Main tab switching ──
 document.querySelectorAll('#page-stats .cr-tab').forEach(tab => {
   tab.addEventListener('click', () => {
@@ -11564,7 +11581,7 @@ document.querySelectorAll('#page-stats .cr-tab').forEach(tab => {
 async function chipDeployToGitHub() {
   const btn = document.getElementById('chipDeployBtn');
   if (!chip_ghToken) {
-    const t = prompt('GitHub Personal Access Token\n(Fine-grained → repo Contents: Read & Write)\n\n輸入後儲存於本機，下次不用再輸入：');
+    const t = prompt('GitHub Personal Access Token\n(Fine-grained → repo Contents: Read & Write)\n\n輸入後儲存本機：');
     if (!t) return;
     chip_ghToken = t.trim();
     localStorage.setItem('gh_token_chip', chip_ghToken);
@@ -11682,14 +11699,16 @@ function crSaveStrategies(obj) {
 
 function crInitStrategies() {
   let s = crGetStrategies();
-  if (!s.default) {
-    s.default = {
-      name: '🎯 預設策略',
-      shadow_max: 0.015, bias_max: 0.15, vol_mult: 2.0,
-      need_bull: true, exclude_28: true
-    };
-    crSaveStrategies(s);
-  }
+  // Always overwrite default with current CHIP_CFG values
+  s.default = {
+    name: '🎯 預設策略',
+    shadow_max: CHIP_CFG.shadow_max,
+    bias_max:   CHIP_CFG.bias_max,
+    vol_mult:   CHIP_CFG.vol_mult,
+    need_bull:  CHIP_CFG.need_bull,
+    exclude_28: CHIP_CFG.exclude_28
+  };
+  crSaveStrategies(s);
   crRefreshStrategySelect();
 }
 
@@ -11752,25 +11771,70 @@ function crShowStrategyModal() {
   if (!body) return;
   document.getElementById('crSettingTitle').textContent = '⚙️ 篩選條件設定';
   body.innerHTML = `
+    <div style="font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">基本條件</div>
+
     <div class="cr-set-row">
-      <div class="cr-set-info"><div class="cr-set-name">上影線門檻</div><div class="cr-set-sub">K線純度 — 避雷針過濾 (1.5% = 0.015)</div></div>
-      <div class="cr-set-val" id="crSetShadow">${(CHIP_CFG.shadow_max*100).toFixed(1)}%</div>
+      <div class="cr-set-info"><div class="cr-set-name">上影線門檻</div><div class="cr-set-sub">K線純度 — 避雷針過濾</div></div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <input id="crSetShadow" type="number" value="${(CHIP_CFG.shadow_max*100).toFixed(1)}" min="0.5" max="5" step="0.5"
+          style="width:58px;background:var(--bg-input);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-family:var(--mono);font-size:0.78rem;color:var(--text-primary);text-align:center;">
+        <span style="font-size:0.7rem;color:var(--text-muted)">%</span>
+      </div>
     </div>
+
     <div class="cr-set-row">
       <div class="cr-set-info"><div class="cr-set-name">月線乖離上限</div><div class="cr-set-sub">乖離控制 — 不追過度噴發</div></div>
-      <div class="cr-set-val" id="crSetBias">${(CHIP_CFG.bias_max*100).toFixed(0)}%</div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <input id="crSetBias" type="number" value="${(CHIP_CFG.bias_max*100).toFixed(0)}" min="5" max="30" step="1"
+          style="width:58px;background:var(--bg-input);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-family:var(--mono);font-size:0.78rem;color:var(--text-primary);text-align:center;">
+        <span style="font-size:0.7rem;color:var(--text-muted)">%</span>
+      </div>
     </div>
+
     <div class="cr-set-row">
       <div class="cr-set-info"><div class="cr-set-name">爆量倍數門檻</div><div class="cr-set-sub">量比 = 今日量 ÷ 昨日量</div></div>
-      <div class="cr-set-val" id="crSetVol">${CHIP_CFG.vol_mult}x</div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <input id="crSetVol" type="number" value="${CHIP_CFG.vol_mult}" min="1" max="10" step="0.5"
+          style="width:58px;background:var(--bg-input);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-family:var(--mono);font-size:0.78rem;color:var(--text-primary);text-align:center;">
+        <span style="font-size:0.7rem;color:var(--text-muted)">x</span>
+      </div>
     </div>
+
     <div class="cr-set-row">
       <div class="cr-set-info"><div class="cr-set-name">多頭排列</div><div class="cr-set-sub">收盤 > 5MA > 10MA > 20MA</div></div>
       <div class="cr-toggle ${CHIP_CFG.need_bull?'on':''}" id="crToggleBull" onclick="this.classList.toggle('on')"></div>
     </div>
+
     <div class="cr-set-row">
       <div class="cr-set-info"><div class="cr-set-name">排除金融股</div><div class="cr-set-sub">28 開頭股票代號一律排除</div></div>
       <div class="cr-toggle ${CHIP_CFG.exclude_28?'on':''}" id="crToggle28" onclick="this.classList.toggle('on')"></div>
+    </div>
+
+    <div style="font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin:14px 0 8px;">進階條件（保留擴充）</div>
+
+    <div class="cr-set-row" style="opacity:.45">
+      <div class="cr-set-info"><div class="cr-set-name">外資最低買超</div><div class="cr-set-sub">土洋共振 — 待接入 TWSE API</div></div>
+      <div class="cr-set-val" style="opacity:.5">待啟用</div>
+    </div>
+
+    <div class="cr-set-row" style="opacity:.45">
+      <div class="cr-set-info"><div class="cr-set-name">投信最低買超</div><div class="cr-set-sub">土洋共振 — 待接入 TWSE API</div></div>
+      <div class="cr-set-val" style="opacity:.5">待啟用</div>
+    </div>
+
+    <div class="cr-set-row" style="opacity:.45">
+      <div class="cr-set-info"><div class="cr-set-name">最低市值門檻</div><div class="cr-set-sub">排除過小型股 — 待擴充</div></div>
+      <div class="cr-set-val" style="opacity:.5">待啟用</div>
+    </div>
+
+    <div class="cr-set-row" style="opacity:.45">
+      <div class="cr-set-info"><div class="cr-set-name">連續上漲天數</div><div class="cr-set-sub">動能確認 — 待擴充</div></div>
+      <div class="cr-set-val" style="opacity:.5">待啟用</div>
+    </div>
+
+    <div class="cr-set-row" style="opacity:.45">
+      <div class="cr-set-info"><div class="cr-set-name">自訂篩選腳本</div><div class="cr-set-sub">進階自訂條件 — 待擴充</div></div>
+      <div class="cr-set-val" style="opacity:.5">待啟用</div>
     </div>`;
   document.getElementById('crSettingOverlay').classList.add('open');
 }
@@ -11780,8 +11844,14 @@ function crCloseSettingModal() {
 }
 
 function crApplySetting() {
+  const shadow = parseFloat(document.getElementById('crSetShadow')?.value);
+  const bias   = parseFloat(document.getElementById('crSetBias')?.value);
+  const vol    = parseFloat(document.getElementById('crSetVol')?.value);
+  if (!isNaN(shadow)) CHIP_CFG.shadow_max = shadow / 100;
+  if (!isNaN(bias))   CHIP_CFG.bias_max   = bias / 100;
+  if (!isNaN(vol))    CHIP_CFG.vol_mult   = vol;
   CHIP_CFG.need_bull  = document.getElementById('crToggleBull')?.classList.contains('on') ?? CHIP_CFG.need_bull;
-  CHIP_CFG.exclude_28 = document.getElementById('crToggle28')?.classList.contains('on') ?? CHIP_CFG.exclude_28;
+  CHIP_CFG.exclude_28 = document.getElementById('crToggle28')?.classList.contains('on')  ?? CHIP_CFG.exclude_28;
   crCloseSettingModal();
   chipShowToast('✅ 設定已套用', 'ok');
 }
@@ -11887,6 +11957,18 @@ async function crUpdateWatchCard(id) {
   card.classList.remove('loading');
 }
 
+
+function crAddFromSignal(id, name) {
+  let list = crGetWatchList();
+  if (list.find(w => w.id === id)) {
+    chipShowToast(`⚠️ ${id} ${name} 已在觀察名單`, 'warn');
+    return;
+  }
+  list.push({ id, name: name || CHIP_TW_NAMES[id] || id, addedAt: Date.now() });
+  crSaveWatchList(list);
+  chipShowToast(`👁 已加入觀察：${id} ${name}`, 'ok');
+}
+
 function crRenderWatchList() {
   const container = document.getElementById('crWatchList');
   if (!container) return;
@@ -11918,17 +12000,39 @@ function crRenderWatchList() {
   list.forEach(w => crUpdateWatchCard(w.id));
 }
 
-// Close setting overlay on bg click
-document.getElementById('crSettingOverlay')?.addEventListener('click', e => {
-  if (e.target === document.getElementById('crSettingOverlay')) crCloseSettingModal();
-});
+
 
 // chip init - called by index.html when stats page is shown
 function chipInit() {
   chipUpdateStats();
   crInitStrategies();
+  // Attach listeners (safe to call multiple times)
+  document.querySelectorAll('#page-stats .cr-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('#page-stats .cr-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const key = tab.dataset.cr;
+      document.querySelectorAll('#page-stats .cr-tabpanel').forEach(p => p.style.display = 'none');
+      const panel = document.getElementById('crTab-' + key);
+      if (panel) panel.style.display = 'block';
+      if (key === 'market') chipLoadMarketData();
+      if (key === 'watch')  crRenderWatchList();
+    });
+  });
+  document.querySelectorAll('#page-stats .cr-chip').forEach(c => {
+    c.addEventListener('click', () => {
+      document.querySelectorAll('#page-stats .cr-chip').forEach(x => x.classList.remove('active'));
+      c.classList.add('active');
+      chipFilter = c.dataset.f;
+      chipRenderSignalPage();
+    });
+  });
+  document.getElementById('crSettingOverlay')?.addEventListener('click', e => {
+    if (e.target === document.getElementById('crSettingOverlay')) crCloseSettingModal();
+  });
 }
 chipInit();
 
 
 </script>
+<div style="position: fixed; pointer-events: none; padding: 8px 12px; background: rgb(30, 35, 53); border: 1px solid rgb(46, 53, 80); border-radius: 8px; font-size: 0.75rem; color: rgb(232, 236, 245); display: none; z-index: 999; line-height: 1.8; font-family: &quot;DM Mono&quot;, monospace; box-shadow: rgba(0, 0, 0, 0.5) 0px 8px 24px;"></div></body></html>
