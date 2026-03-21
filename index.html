@@ -2084,7 +2084,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-22 06:43:54</div>
+    <div class="clock-display" id="clockDisplay">2026-03-22 06:56:54</div>
   </div>
 </aside>
 
@@ -2906,7 +2906,10 @@ input::placeholder { color: var(--text-muted); }
 
       <!-- Analysis rows -->
       <div class="cr-card">
-        <div class="cr-card-title">四重分析結果</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div class="cr-card-title" style="margin-bottom:0">四重分析結果</div>
+          <button onclick="crShowLogicModal()" style="background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.25);color:#f0b429;border-radius:8px;padding:4px 10px;font-size:0.72rem;cursor:pointer;display:flex;align-items:center;gap:4px;">⚙️ 邏輯</button>
+        </div>
         <div id="chipMktAnalysisRows">
           <div style="color:var(--text-muted);font-size:0.75rem;text-align:center;padding:16px">點擊右上角「⟳」載入資料</div>
         </div>
@@ -12429,6 +12432,124 @@ function chipDetectDistribution(tseChg, otcChg, biasMa200, tseHist) {
   return result;
 }
 
+
+// ══════════════════════════════════════════════
+//  邏輯策略說明 Modal
+// ══════════════════════════════════════════════
+function crShowLogicModal() {
+  const overlay = document.getElementById('crLogicOverlay');
+  const body    = document.getElementById('crLogicBody');
+  if (!overlay || !body) return;
+
+  body.innerHTML = `
+
+    <!-- 一、牛熊判斷 -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f0b429;margin-bottom:8px;">一、牛熊市判斷</div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:0.7rem;color:var(--text-muted);line-height:1.8;">
+        <div><b style="color:var(--text-primary)">資料：</b>加權指數（^TWII）近 210 日收盤</div>
+        <div><b style="color:var(--text-primary)">200MA：</b>近 200 日平均收盤價</div>
+        <div><b style="color:var(--text-primary)">年線斜率：</b>今日 200MA vs 20 日前 200MA</div>
+        <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border);">
+          🐂 <b style="color:#00e5a0">牛市：</b>指數 &gt; 200MA 且年線斜率向上<br>
+          🐻 <b style="color:#3b82f6">熊市：</b>指數 &lt; 200MA 且年線斜率向下<br>
+          ⚖️ <b style="color:#f0b429">盤整：</b>其餘情況（站上但走平等）
+        </div>
+        <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border);">
+          <b style="color:var(--text-primary)">扣抵值：</b>tseHist[length-200]（即將被替換的舊收盤）<br>
+          今日收盤 &gt; 扣抵值 → ↑ 年線上揚；&lt; 扣抵值 → ↓ 年線下彎
+        </div>
+      </div>
+    </div>
+
+    <!-- 二、資金主角 -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f0b429;margin-bottom:8px;">二、資金主角分析</div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:0.7rem;color:var(--text-muted);line-height:1.8;">
+        <div><b style="color:var(--text-primary)">雜訊門檻：</b>±0.05%（低於此值視為持平）</div>
+        <div><b style="color:var(--text-primary)">差值 diff：</b>tseChg − otcChg</div>
+        <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border);">
+          ✅ <b style="color:#00e5a0">全面多頭：</b>雙漲，diff &lt; ±0.3%<br>
+          🚀 <b style="color:#00e5a0">權值股領漲：</b>雙漲，diff &gt; +0.3%<br>
+          💥 <b style="color:#a78bfa">中小型股領漲：</b>雙漲，diff &lt; −0.3%<br>
+          🛡️ <b style="color:#f0b429">拉大出小：</b>加權平/漲，OTC跌，diff &gt; 0.3%<br>
+          ⚠️ <b style="color:#f59e0b">OTC承壓：</b>加權平，OTC跌，diff &lt; 0.3%<br>
+          🔄 <b style="color:#a78bfa">資金轉向中小型：</b>OTC漲，加權平/跌<br>
+          💀 <b style="color:#ef4444">全面賣壓：</b>雙跌，diff &lt; ±0.3%<br>
+          🔴 <b style="color:#ef4444">外資棄守：</b>雙跌，加權跌幅 &gt; OTC +0.3%
+        </div>
+      </div>
+    </div>
+
+    <!-- 三、三階段出貨偵測 -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f0b429;margin-bottom:8px;">三、三階段出貨偵測</div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:0.7rem;color:var(--text-muted);line-height:1.8;">
+        <div style="margin-bottom:6px;"><b style="color:var(--text-primary)">前提條件：</b>年線乖離偏高（>15%）時才觸發警示</div>
+        <div style="padding:6px 0;border-bottom:1px solid var(--border);">
+          ⚠️ <b style="color:#f59e0b">第一階段 — 拉大出小：</b><br>
+          加權平/漲 且 OTC跌 且 diff &gt; 0.2% 且 乖離 &gt; 20%<br>
+          <span style="color:#6b7280">→ 外資護盤權值、掩護出脫中小型</span>
+        </div>
+        <div style="padding:6px 0;border-bottom:1px solid var(--border);">
+          🚨 <b style="color:#ef4444">第二階段 — 結構背離：</b><br>
+          OTC跌 且 diff &gt; 0.3% 且 乖離 &gt; 15%<br>
+          <span style="color:#6b7280">→ 市場廣度惡化，80% 股票在跌</span>
+        </div>
+        <div style="padding:6px 0;border-bottom:1px solid var(--border);">
+          🔴 <b style="color:#dc2626">第三階段 — 一起出貨：</b><br>
+          加權單日跌幅 &gt; 1%（tseChg &lt; −1.0）<br>
+          或 雙跌且加權跌幅比OTC多 &gt; 0.3%<br>
+          <span style="color:#6b7280">→ 外資棄守台積電，長黑K棒出現</span>
+        </div>
+        <div style="padding:6px 0;">
+          ✅ <b style="color:#00e5a0">健康多頭：</b>雙漲 且 diff &lt; 0.3%<br>
+          🔍 <b style="color:#6b7280">觀察期：</b>其餘情況（卡片隱藏）
+        </div>
+      </div>
+    </div>
+
+    <!-- 四、篩選標的濾波器 -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f0b429;margin-bottom:8px;">四、個股篩選濾波器（當前設定）</div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:0.7rem;color:var(--text-muted);line-height:1.8;">
+        <div>🔸 <b style="color:var(--text-primary)">上影線門檻：</b>${(CHIP_CFG.shadow_max*100).toFixed(1)}%（K線純度）</div>
+        <div>🔸 <b style="color:var(--text-primary)">月線乖離上限：</b>${(CHIP_CFG.bias_max*100).toFixed(0)}%</div>
+        <div>🔸 <b style="color:var(--text-primary)">爆量倍數：</b>${CHIP_CFG.vol_mult}x（今日量÷昨日量）</div>
+        <div>🔸 <b style="color:var(--text-primary)">多頭排列：</b>${CHIP_CFG.need_bull?'✅ 開啟（收盤>5MA>10MA>20MA）':'⭕ 關閉'}</div>
+        <div>🔸 <b style="color:var(--text-primary)">排除金融股：</b>${CHIP_CFG.exclude_28?'✅ 開啟（28開頭）':'⭕ 關閉'}</div>
+        <div>🔸 <b style="color:var(--text-primary)">當前模式：</b>${CHIP_CFG.mode==='value_bottom'?'🔻 右下角策略':CHIP_CFG.mode==='breakout'?'⚡ 突破策略':CHIP_CFG.mode==='dividend'?'💰 存股策略':'🚀 動能策略'}</div>
+        ${CHIP_CFG.mode==='value_bottom'?`
+        <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border);">
+          <b style="color:#f0b429">右下角專屬：</b><br>
+          均線糾結偵測：${CHIP_CFG.ma_flat?'✅':'⭕'}（月線乖離 &lt; ±5%）<br>
+          量縮偵測：${CHIP_CFG.vol_dry?'✅':'⭕'}（量比 &lt; 0.8x）<br>
+          RSI背離：${CHIP_CFG.rsi_div?'✅':'⭕'}（底部背離）
+        </div>`:''}
+      </div>
+    </div>
+
+    <!-- 五、資料來源 -->
+    <div style="margin-bottom:8px;">
+      <div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f0b429;margin-bottom:8px;">五、資料來源</div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:0.7rem;color:var(--text-muted);line-height:1.8;">
+        <div>📡 <b style="color:var(--text-primary)">Proxy：</b>corsproxy.io → Yahoo Finance v8</div>
+        <div>📊 <b style="color:var(--text-primary)">指數：</b>^TWII（加權）、^TWOII（OTC）</div>
+        <div>📈 <b style="color:var(--text-primary)">個股歷史：</b>ticker.TW / ticker.TWO，range=3mo</div>
+        <div>⏱️ <b style="color:var(--text-primary)">快取：</b>報價 5 分鐘，歷史資料 session 內不重複抓</div>
+        <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border);">
+          ⚠️ <b style="color:#f0b429">待接入：</b>TWSE API（外資/投信買超）、財報 API（P/B、殖利率）
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:8px 0;font-size:0.62rem;color:var(--text-muted);">
+      修改邏輯請至 index.html → chipDetectDistribution() / chipLoadMarketData()
+    </div>`;
+
+  overlay.classList.add('open');
+}
+
 // chip init - called by index.html when stats page is shown
 let _chipListenersAttached = false;
 
@@ -12521,5 +12642,17 @@ function chipAttachListeners() {
 
 <div id="chipToast" style="display:none;position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1a1e2e;border:1px solid #f0b429;color:#e8ecf5;padding:9px 16px;border-radius:10px;font-size:0.78rem;z-index:9999;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.6);pointer-events:none;"></div>
 
+
+<!-- ══ Modal：邏輯策略說明 ══ -->
+<div class="cr-modal-overlay" id="crLogicOverlay" style="z-index:9000" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="cr-modal" style="max-height:88vh;">
+    <div class="cr-modal-drag"></div>
+    <div class="cr-modal-hd">
+      <div class="cr-modal-title">⚙️ 判斷邏輯總覽</div>
+      <button class="cr-modal-close" onclick="document.getElementById('crLogicOverlay').classList.remove('open')">✕</button>
+    </div>
+    <div id="crLogicBody"></div>
+  </div>
+</div>
 
 <div style="position: fixed; pointer-events: none; padding: 8px 12px; background: rgb(30, 35, 53); border: 1px solid rgb(46, 53, 80); border-radius: 8px; font-size: 0.75rem; color: rgb(232, 236, 245); display: none; z-index: 999; line-height: 1.8; font-family: &quot;DM Mono&quot;, monospace; box-shadow: rgba(0, 0, 0, 0.5) 0px 8px 24px;"></div></body></html>
