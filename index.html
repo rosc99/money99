@@ -1625,6 +1625,139 @@ input::placeholder { color: var(--text-muted); }
 }
 .expense-chip:hover  { background: rgba(59,130,246,0.18); border-color: #3b82f6; transform: translateY(-1px); }
 .expense-chip.active { background: #3b82f6; color: #fff; border-color: #3b82f6; font-weight: 700; box-shadow: 0 2px 10px rgba(59,130,246,0.35); }
+
+/* ════════════════════════════════════
+   籌碼雷達 II — chip radar styles
+   ════════════════════════════════════ */
+#page-stats .chip-scan-btn{font-size:0.78rem;font-family:var(--mono);background:#f0b429;color:#000;border:none;padding:6px 14px;border-radius:20px;cursor:pointer;font-weight:700;white-space:nowrap}
+#page-stats .chip-scan-btn:disabled{opacity:.4;cursor:not-allowed}
+#page-stats .chip-deploy-btn{font-size:0.78rem;background:rgba(240,180,41,.12);border:1px solid rgba(240,180,41,.3);color:#f0b429;padding:5px 12px;border-radius:20px;cursor:pointer}
+#page-stats .chip-filters{display:flex;gap:8px;margin-bottom:10px;overflow-x:auto;scrollbar-width:none}
+#page-stats .chip-filters::-webkit-scrollbar{display:none}
+#page-stats .filter-chip{flex-shrink:0;padding:4px 12px;border-radius:20px;font-size:0.72rem;font-weight:500;border:1px solid var(--border);background:var(--bg-card);color:var(--text-muted);cursor:pointer;transition:all .15s}
+#page-stats .filter-chip.active{background:#f0b429;border-color:#f0b429;color:#000;font-weight:700}
+#page-stats .chip-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+#page-stats .chip-stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:8px 10px;text-align:center}
+#page-stats .chip-stat-num{font-size:1.3rem;font-weight:900;font-family:var(--mono);line-height:1}
+#page-stats .chip-stat-num.red{color:var(--accent-red)}
+#page-stats .chip-stat-num.gold{color:#f0b429}
+#page-stats .chip-stat-num.green{color:var(--accent-green)}
+#page-stats .chip-stat-num.blue{color:var(--accent-blue)}
+#page-stats .chip-stat-label{font-size:0.58rem;color:var(--text-muted);margin-top:2px}
+#page-stats .chip-progress-wrap{margin-bottom:10px;display:none}
+#page-stats .chip-progress-wrap.show{display:block}
+#page-stats .chip-progress-bar-bg{height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+#page-stats .chip-progress-bar-fill{height:100%;background:#f0b429;border-radius:2px;transition:width .3s;width:0%}
+#page-stats .chip-progress-label{font-size:0.62rem;color:var(--text-muted);font-family:var(--mono);margin-top:3px}
+#page-stats .chip-subpage{display:block}
+#page-stats .chip-nav-btn{transition:all .15s}
+#page-stats .chip-nav-btn.active{background:rgba(240,180,41,.15)!important;color:#f0b429!important;border-color:rgba(240,180,41,.3)!important}
+/* Signal cards */
+#page-stats .chip-signal-card{background:var(--bg-card);border:1px solid rgba(240,180,41,.35);border-radius:14px;padding:14px 16px;position:relative;overflow:hidden;cursor:pointer;margin-bottom:10px}
+#page-stats .chip-signal-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#f0b429,transparent)}
+#page-stats .chip-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+#page-stats .chip-stock-id{font-family:var(--mono);font-size:0.72rem;color:var(--text-muted)}
+#page-stats .chip-stock-name{font-size:1rem;font-weight:700;color:var(--text-primary)}
+#page-stats .chip-price{font-family:var(--mono);font-size:1.2rem;font-weight:700;color:var(--accent-red);line-height:1;text-align:right}
+#page-stats .chip-price.dn{color:var(--accent-green)}
+#page-stats .chip-change{font-family:var(--mono);font-size:0.72rem;color:var(--accent-red);margin-top:2px;text-align:right}
+#page-stats .chip-change.dn{color:var(--accent-green)}
+#page-stats .chip-badge-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+#page-stats .chip-badge{font-size:0.62rem;font-weight:600;padding:2px 7px;border-radius:5px}
+#page-stats .chip-badge.pass{background:rgba(0,229,160,.1);color:var(--accent-green);border:1px solid rgba(0,229,160,.25)}
+#page-stats .chip-badge.gold{background:rgba(240,180,41,.1);color:#f0b429;border:1px solid rgba(240,180,41,.25)}
+#page-stats .chip-badge.blue{background:rgba(59,130,246,.1);color:var(--accent-blue);border:1px solid rgba(59,130,246,.25)}
+#page-stats .chip-badge.warn{background:rgba(255,77,109,.1);color:var(--accent-red);border:1px solid rgba(255,77,109,.2)}
+#page-stats .chip-ma-row{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+#page-stats .chip-ma-tag{font-family:var(--mono);font-size:0.6rem;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,.04);color:var(--text-muted);border:1px solid var(--border)}
+#page-stats .chip-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+#page-stats .chip-bar-label{font-size:0.68rem;color:var(--text-muted);width:28px;flex-shrink:0}
+#page-stats .chip-bar-bg{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+#page-stats .chip-bar-fill{height:100%;border-radius:2px}
+#page-stats .chip-bar-fill.red{background:var(--accent-red)}
+#page-stats .chip-bar-fill.blue{background:var(--accent-blue)}
+#page-stats .chip-bar-val{font-family:var(--mono);font-size:0.65rem;color:var(--accent-red);width:50px;text-align:right;flex-shrink:0}
+/* Elim card */
+#page-stats .chip-elim-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:11px 14px;opacity:.55;cursor:pointer;margin-bottom:8px}
+#page-stats .chip-elim-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
+#page-stats .chip-elim-reason{font-size:0.65rem;color:var(--accent-red);background:rgba(255,77,109,.08);border:1px solid rgba(255,77,109,.18);padding:2px 7px;border-radius:5px}
+/* Empty state */
+#page-stats .chip-empty-state{text-align:center;padding:40px 20px;color:var(--text-muted)}
+#page-stats .chip-empty-icon{font-size:2.5rem;margin-bottom:12px}
+#page-stats .chip-empty-state p{font-size:0.82rem;line-height:1.7}
+/* Score ring */
+#page-stats .chip-score-ring{width:36px;height:36px;flex-shrink:0}
+/* Modal */
+#page-stats .chip-modal-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);align-items:flex-end;justify-content:center}
+#page-stats .chip-modal-overlay.open{display:flex}
+#page-stats .chip-modal{width:100%;max-width:480px;background:var(--bg-card2);border:1px solid var(--border);border-radius:20px 20px 0 0;padding:18px 18px 40px;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);max-height:80vh;overflow-y:auto}
+#page-stats .chip-modal-overlay.open .chip-modal{transform:translateY(0)}
+#page-stats .chip-modal-handle{width:32px;height:3px;background:var(--border);border-radius:2px;margin:0 auto 16px}
+#page-stats .chip-modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+#page-stats .chip-modal-title{font-size:1.1rem;font-weight:700}
+#page-stats .chip-modal-close{width:28px;height:28px;border-radius:50%;background:var(--border);border:none;color:var(--text-primary);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#page-stats .chip-modal-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+#page-stats .chip-modal-row:last-child{border-bottom:none}
+#page-stats .chip-modal-label{font-size:0.72rem;color:var(--text-muted)}
+#page-stats .chip-modal-val{font-family:var(--mono);font-size:0.82rem;font-weight:700}
+#page-stats .chip-modal-section{font-size:0.62rem;font-weight:700;letter-spacing:.1em;color:var(--text-muted);text-transform:uppercase;margin:12px 0 6px}
+#page-stats .chip-filter-row{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)}
+#page-stats .chip-filter-row:last-child{border-bottom:none}
+#page-stats .chip-filter-icon{font-size:14px;width:20px;flex-shrink:0}
+#page-stats .chip-filter-desc{flex:1;font-size:0.72rem;color:var(--text-muted);line-height:1.5}
+#page-stats .chip-filter-result{font-size:0.72rem;font-weight:700;flex-shrink:0}
+#page-stats .chip-filter-result.pass{color:var(--accent-green)}
+#page-stats .chip-filter-result.fail{color:var(--accent-red)}
+/* Market */
+#page-stats .chip-mkt-hero{margin-bottom:12px;border-radius:14px;padding:18px;border:1px solid var(--border);background:var(--bg-card)}
+#page-stats .chip-mkt-hero.bull{background:linear-gradient(135deg,rgba(0,229,160,.1),rgba(0,229,160,.03));border-color:rgba(0,229,160,.3)}
+#page-stats .chip-mkt-hero.bear{background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(59,130,246,.03));border-color:rgba(59,130,246,.3)}
+#page-stats .chip-mkt-hero.neutral{background:linear-gradient(135deg,rgba(240,180,41,.08),rgba(240,180,41,.02));border-color:rgba(240,180,41,.25)}
+#page-stats .chip-mkt-verdict{font-size:1.6rem;font-weight:900;margin-bottom:4px}
+#page-stats .chip-mkt-verdict.bull{color:var(--accent-red)}
+#page-stats .chip-mkt-verdict.bear{color:var(--accent-blue)}
+#page-stats .chip-mkt-verdict.neu{color:#f0b429}
+#page-stats .chip-mkt-sub{font-size:0.72rem;color:var(--text-muted);line-height:1.6}
+#page-stats .chip-mkt-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+#page-stats .chip-mkt-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:10px 12px}
+#page-stats .chip-mkt-label{font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
+#page-stats .chip-mkt-val{font-family:var(--mono);font-size:1.1rem;font-weight:700}
+#page-stats .chip-mkt-val.up{color:var(--accent-red)}
+#page-stats .chip-mkt-val.dn{color:var(--accent-blue)}
+#page-stats .chip-mkt-val.neu{color:#f0b429}
+#page-stats .chip-mkt-sub2{font-size:0.65rem;color:var(--text-muted);margin-top:2px}
+#page-stats .chip-mkt-flow-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+#page-stats .chip-mkt-flow-title{font-size:0.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+#page-stats .chip-mkt-flow-bar{display:flex;height:6px;border-radius:3px;overflow:hidden;margin-bottom:6px}
+#page-stats .chip-flow-tse{background:var(--accent-red);transition:flex .6s}
+#page-stats .chip-flow-otc{background:var(--accent-blue);transition:flex .6s}
+#page-stats .chip-mkt-flow-legend{display:flex;justify-content:space-between;font-size:0.65rem}
+#page-stats .chip-mkt-analysis-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+#page-stats .chip-mkt-analysis-row{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)}
+#page-stats .chip-mkt-analysis-row:last-child{border-bottom:none}
+#page-stats .chip-mkt-refresh-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;background:rgba(240,180,41,.08);border:1px solid rgba(240,180,41,.2);border-radius:10px;cursor:pointer;font-size:0.78rem;font-weight:600;color:#f0b429;margin-bottom:16px}
+/* Settings */
+#page-stats .chip-setting-row{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+#page-stats .chip-setting-name{font-size:0.85rem;font-weight:600;margin-bottom:2px}
+#page-stats .chip-setting-sub{font-size:0.68rem;color:var(--text-muted)}
+#page-stats .chip-setting-val{font-family:var(--mono);font-size:0.8rem;font-weight:700;color:#f0b429;background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.2);padding:3px 8px;border-radius:6px}
+#page-stats .chip-toggle{width:40px;height:22px;background:var(--border);border-radius:11px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+#page-stats .chip-toggle.on{background:#f0b429}
+#page-stats .chip-toggle::after{content:'';position:absolute;width:16px;height:16px;background:#fff;border-radius:50%;top:3px;left:3px;transition:transform .2s}
+#page-stats .chip-toggle.on::after{transform:translateX(18px)}
+#page-stats .chip-diag-result{margin-top:8px;padding:10px;background:var(--bg-base);border:1px solid var(--border);border-radius:8px;font-family:var(--mono);font-size:0.68rem;color:var(--text-muted);line-height:1.8;display:none}
+/* Notify */
+#page-stats .chip-notify-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+#page-stats .chip-notify-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+#page-stats .chip-notify-dot.new{background:#f0b429;box-shadow:0 0 5px #f0b429}
+#page-stats .chip-notify-dot.old{color:var(--text-muted)}
+#page-stats .chip-notify-title{font-size:0.8rem;font-weight:700;margin-bottom:2px}
+#page-stats .chip-notify-sub{font-size:0.68rem;color:var(--text-muted)}
+#page-stats .chip-notify-time{font-family:var(--mono);font-size:0.62rem;color:var(--text-muted);flex-shrink:0}
+@keyframes chipCardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes chipSpin{to{transform:rotate(360deg)}}
+.chip-spin{animation:chipSpin .8s linear infinite;display:inline-block}
+
 </style>
 </head>
 <body>
@@ -1773,7 +1906,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot ok" id="syncDot"></div>
       <span id="syncStatusText" style="color: var(--accent-green);">已同步</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-21 20:37:55</div>
+    <div class="clock-display" id="clockDisplay">2026-03-22 02:00:09</div>
   </div>
 </aside>
 
@@ -1918,8 +2051,23 @@ input::placeholder { color: var(--text-muted); }
             </div>
           </div>
         </div>
-        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"></div>
-        <canvas id="wealthChart" style="width:100%;display:block;" height="220"></canvas>
+        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#f59e0b;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#ff4d6d;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總負債</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#ff4d6d;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#00e5a0;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">淨資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#00e5a0;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div></div>
+        <canvas id="wealthChart" style="width:100%;display:block;" height="220" width="346"></canvas>
         <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;" id="wealthXLabels"></div>
       </div>
 
@@ -2036,7 +2184,7 @@ input::placeholder { color: var(--text-muted); }
   </section>
 
   <!-- ── 收支流水帳 ── -->
-  <section class="page active" id="page-ledger">
+  <section class="page" id="page-ledger">
 
     <!-- ══ 頂部：月份切換 + 當月摘要 ══ -->
     <div style="position:sticky;top:0;z-index:50;background:var(--bg-base);padding-bottom:12px;margin-bottom:4px;">
@@ -2048,7 +2196,7 @@ input::placeholder { color: var(--text-muted); }
             <option value="2026" selected="">2026</option>
             <option value="2027">2027</option>
           </select>
-          <div style="font-family:var(--mono);font-size:1.1rem;font-weight:500;color:var(--text-primary);" id="ledger-month-title">3月</div>
+          <div style="font-family:var(--mono);font-size:1.1rem;font-weight:500;color:var(--text-primary);" id="ledger-month-title">—</div>
         </div>
         <button class="btn btn-ghost" onclick="exportCSV()" style="font-size:0.75rem;padding:6px 12px;">↓ CSV</button>
       </div>
@@ -2057,7 +2205,7 @@ input::placeholder { color: var(--text-muted); }
       <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:3px;margin-top:10px;" id="ledger-month-grid">
         <button onclick="setLedgerMonth('01',this)" class="lm-btn" id="lm-01">1</button>
         <button onclick="setLedgerMonth('02',this)" class="lm-btn" id="lm-02">2</button>
-        <button onclick="setLedgerMonth('03',this)" class="lm-btn active" id="lm-03">3</button>
+        <button onclick="setLedgerMonth('03',this)" class="lm-btn" id="lm-03">3</button>
         <button onclick="setLedgerMonth('04',this)" class="lm-btn" id="lm-04">4</button>
         <button onclick="setLedgerMonth('05',this)" class="lm-btn" id="lm-05">5</button>
         <button onclick="setLedgerMonth('06',this)" class="lm-btn" id="lm-06">6</button>
@@ -2081,7 +2229,7 @@ input::placeholder { color: var(--text-muted); }
         </div>
         <div style="padding:10px 12px;background:var(--bg-card);border:1px solid rgba(59,130,246,0.2);border-radius:10px;">
           <div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:3px;">結餘</div>
-          <div style="font-family: var(--mono); font-size: 0.88rem; font-weight: 600; color: var(--accent-green);" id="ledger-kpi-net">+$0</div>
+          <div style="font-family:var(--mono);font-size:0.88rem;font-weight:600;" id="ledger-kpi-net">+$0</div>
         </div>
       </div>
     </div>
@@ -2092,7 +2240,7 @@ input::placeholder { color: var(--text-muted); }
       <!-- 左：圓形波浪 -->
       <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;">
         <div style="position:relative;width:160px;height:160px;">
-          <canvas id="ledgerWaveCanvas" width="160" height="160" style="width:160px;height:160px;display:block;border-radius:50%;" data-income="0" data-expense="0"></canvas>
+          <canvas id="ledgerWaveCanvas" width="160" height="160" style="width:160px;height:160px;display:block;border-radius:50%;"></canvas>
           <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
             <div style="font-size:0.55rem;color:var(--text-muted);letter-spacing:0.08em;margin-bottom:2px;">月支出合計</div>
             <div style="font-family:var(--mono);font-size:0.95rem;font-weight:700;color:var(--accent-amber);" id="ledger-kpi-total-exp">$0</div>
@@ -2119,7 +2267,7 @@ input::placeholder { color: var(--text-muted); }
             <div style="font-size:0.55rem;color:var(--accent-red);font-family:var(--mono);white-space:nowrap;flex-shrink:0;">編輯 →</div>
           </div>
           <div style="font-family:var(--mono);font-size:0.95rem;font-weight:600;color:var(--accent-red);" id="ledger-kpi-loan">$0</div>
-          <div style="font-size:0.58rem;color:var(--text-muted);margin-top:2px;" id="ledger-kpi-loan-sub">尚未設定</div>
+          <div style="font-size:0.58rem;color:var(--text-muted);margin-top:2px;" id="ledger-kpi-loan-sub">月攤還</div>
         </div>
         <div style="padding:11px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;flex:1;">
           <div style="font-size:0.58rem;color:var(--text-muted);margin-bottom:6px;">儲蓄率</div>
@@ -2150,9 +2298,9 @@ input::placeholder { color: var(--text-muted); }
           </button>
         </div>
         <!-- 結餘小字 -->
-        <div style="text-align: center; font-size: 0.72rem; color: var(--accent-green); font-family: var(--mono);" id="ledger-btn-net">結餘：+NT$0</div>
+        <div style="text-align:center;font-size:0.72rem;color:var(--text-muted);font-family:var(--mono);" id="ledger-btn-net">結餘：$0</div>
         <!-- 提示 -->
-        <div style="padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;font-size:0.68rem;color:var(--text-muted);" id="ledger-form-month-hint">記錄 3月 的帳務</div>
+        <div style="padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;font-size:0.68rem;color:var(--text-muted);" id="ledger-form-month-hint">點擊按鈕新增帳務</div>
       </div>
 
       <!-- 右：流水帳列表 -->
@@ -2170,7 +2318,7 @@ input::placeholder { color: var(--text-muted); }
               <div style="font-family:var(--mono);font-size:0.72rem;color:var(--text-muted);" id="txCount">0 筆</div>
             </div>
           </div>
-          <div class="tx-list" id="txList"><div class="empty-state"><div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></div>2026 年 3 月 尚無記錄<br>請使用左側表單新增</div></div>
+          <div class="tx-list" id="txList"></div>
         </div>
       </div>
     </div>
@@ -2193,7 +2341,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="card-header">
         <div class="card-title">月份收支趨勢</div>
         <div style="display:flex;align-items:center;gap:10px;">
-          <span style="font-family:var(--mono);font-size:0.7rem;color:var(--text-muted);" id="chartYear">2026</span>
+          <span style="font-family:var(--mono);font-size:0.7rem;color:var(--text-muted);" id="chartYear"></span>
           <div style="display:flex;gap:4px;">
             <button class="chart-tab active" id="lineTab-combined" onclick="switchLineChart('combined',this)">複合</button>
             <button class="chart-tab" id="lineTab-income" onclick="switchLineChart('income',this)">收入</button>
@@ -2203,41 +2351,17 @@ input::placeholder { color: var(--text-muted); }
         </div>
       </div>
       <div style="position:relative;height:220px;margin-top:4px;">
-        <canvas id="monthLineChart" style="width: 358px; height: 220px; display: block;" width="939" height="577"></canvas>
+        <canvas id="monthLineChart" style="width:100%;height:220px;display:block;"></canvas>
       </div>
-      <div id="monthLineChartLegend" style="display:flex;gap:20px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:0.68rem;"><div style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);">
-      <span style="display:inline-block;width:18px;background:#00e5a0;height:2px;border-radius:2px;"></span>
-      <span>收入</span>
-      <span style="font-family:var(--mono);color:#00e5a0;font-weight:500;">$0</span>
-    </div><div style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);">
-      <span style="display:inline-block;width:18px;background:#ff4d6d;height:2px;border-radius:2px;"></span>
-      <span>支出</span>
-      <span style="font-family:var(--mono);color:#ff4d6d;font-weight:500;">$0</span>
-    </div><div style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);">
-      <span style="display:inline-block;width:18px;border-bottom:2px dashed #a78bfa;background:none;height:0;border-radius:2px;"></span>
-      <span>固定支出</span>
-      <span style="font-family:var(--mono);color:#a78bfa;font-weight:500;">$0</span>
-    </div><div style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);">
-      <span style="display:inline-block;width:18px;border-bottom:2px dashed #f59e0b;background:none;height:0;border-radius:2px;"></span>
-      <span>淨結餘</span>
-      <span style="font-family:var(--mono);color:#f59e0b;font-weight:500;">+$0</span>
-    </div></div>
+      <div id="monthLineChartLegend" style="display:flex;gap:20px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:0.68rem;"></div>
     </div>
 
     <!-- hidden 舊元素相容 -->
     <div style="display:none;">
       <canvas id="ledgerPieCanvas" width="100" height="100"></canvas>
-      <span id="ledgerPieCenter" style="color: var(--text-muted);">$0</span><span id="ledgerPieLabel">收支</span>
-      <span id="ledger-stat-income">$0</span><span id="ledger-stat-expense">$0</span><span id="ledger-stat-net" style="color: var(--accent-green);">+$0</span>
-      <div id="ledgerPieLegend"><div style="display:flex;align-items:center;gap:5px;font-size:0.68rem;">
-        <span style="width:7px;height:7px;border-radius:2px;background:#00e5a0;display:inline-block;flex-shrink:0;"></span>
-        <span style="flex:1;color:var(--text-secondary);">收入</span>
-        <span style="font-family:var(--mono);color:#00e5a0;font-weight:500;">$0</span>
-      </div><div style="display:flex;align-items:center;gap:5px;font-size:0.68rem;">
-        <span style="width:7px;height:7px;border-radius:2px;background:#ff4d6d;display:inline-block;flex-shrink:0;"></span>
-        <span style="flex:1;color:var(--text-secondary);">支出</span>
-        <span style="font-family:var(--mono);color:#ff4d6d;font-weight:500;">$0</span>
-      </div></div><div id="ledgerPieSection"></div>
+      <span id="ledgerPieCenter"></span><span id="ledgerPieLabel"></span>
+      <span id="ledger-stat-income"></span><span id="ledger-stat-expense"></span><span id="ledger-stat-net"></span>
+      <div id="ledgerPieLegend"></div><div id="ledgerPieSection"></div>
       <button id="ledger-month-all"></button><button id="ledger-month-sel"></button>
       <button id="toggleFixed"></button>
     </div>
@@ -2473,12 +2597,12 @@ input::placeholder { color: var(--text-muted); }
       </div>
 
       <!-- 各資產小卡列表 -->
-      <div style="display:flex;flex-direction:column;gap:8px;" id="inv-asset-cards"><div style="color:var(--text-muted);font-size:0.72rem;padding:12px 0;">尚無持股，請至資料庫新增交易記錄</div></div>
+      <div style="display:flex;flex-direction:column;gap:8px;" id="inv-asset-cards"></div>
     </div>
 
     <!-- 報價狀態列 -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-      <div style="font-size:0.62rem;color:var(--text-muted);" id="inv-quote-status">尚無持股</div>
+      <div style="font-size:0.62rem;color:var(--text-muted);" id="inv-quote-status">載入中…</div>
       <button onclick="refreshInvestQuotes()" style="font-size:0.65rem;padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:5px;">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg> 更新報價
       </button>
@@ -2490,7 +2614,7 @@ input::placeholder { color: var(--text-muted); }
         <div style="font-size:0.68rem;font-weight:600;color:var(--text-primary);">月配息估計（12個月）</div>
         <div style="font-size:0.6rem;color:var(--text-muted);font-family:var(--mono);">以成本計算</div>
       </div>
-      <canvas id="invBarChart" style="width: 386px; display: block;" height="315" width="1013"></canvas>
+      <canvas id="invBarChart" style="width:100%;display:block;" height="120"></canvas>
     </div>
 
     <!-- 績效快照折線圖 -->
@@ -2505,7 +2629,7 @@ input::placeholder { color: var(--text-muted); }
         </div>
       </div>
       <div style="font-size:0.58rem;color:var(--text-muted);margin-bottom:10px;">每次開啟投資分頁自動記錄一筆快照</div>
-      <canvas id="invSnapshotChart" style="width: 386px; display: block;" height="367" width="1013"></canvas>
+      <canvas id="invSnapshotChart" style="width:100%;display:block;" height="140"></canvas>
       <div style="display:flex;gap:16px;margin-top:8px;font-size:0.62rem;">
         <span style="display:flex;align-items:center;gap:4px;color:var(--text-muted);"><span style="width:8px;height:3px;border-radius:1px;background:var(--accent-amber);display:inline-block;"></span>投入成本</span>
         <span style="display:flex;align-items:center;gap:4px;color:var(--text-muted);"><span style="width:8px;height:3px;border-radius:1px;background:var(--accent-green);display:inline-block;"></span>月配息（右軸）</span>
@@ -2517,7 +2641,7 @@ input::placeholder { color: var(--text-muted); }
       <div style="width:3px;height:14px;border-radius:2px;background:var(--accent-green);"></div>
       <span style="font-size:0.68rem;font-weight:600;color:var(--accent-green);letter-spacing:0.1em;text-transform:uppercase;">銀行 / 定存</span>
     </div>
-    <div id="inv-bank-cards" style="display:flex;flex-direction:column;gap:8px;margin-bottom:80px;"><div style="color:var(--text-muted);font-size:0.72rem;padding:12px 0;">尚未設定銀行帳戶</div></div>
+    <div id="inv-bank-cards" style="display:flex;flex-direction:column;gap:8px;margin-bottom:80px;"></div>
 
   </section>
 
@@ -2525,119 +2649,157 @@ input::placeholder { color: var(--text-muted); }
   <section class="page" id="page-stats">
     <div class="page-header">
       <div class="page-title-block">
-        <div class="page-label">Cash Flow</div>
-        <h1>現金流</h1>
+        <div class="page-label">Chip Radar II</div>
+        <h1>籌碼雷達</h1>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;">
-        <div class="year-wrap">
-          <select class="year-selector" id="cfMonthSelect" onchange="renderStats()" style="width:auto;">
-            <option value="01">1 月</option><option value="02">2 月</option>
-            <option value="03">3 月</option><option value="04">4 月</option>
-            <option value="05">5 月</option><option value="06">6 月</option>
-            <option value="07">7 月</option><option value="08">8 月</option>
-            <option value="09">9 月</option><option value="10">10 月</option>
-            <option value="11">11 月</option><option value="12">12 月</option>
-          </select>
-        </div>
-        <div class="year-wrap">
-          <select class="year-selector" id="yearSelectStats" onchange="renderStats()">
-            <option value="2024">2024</option>
-            <option value="2025">2025</option>
-            <option value="2026" selected="">2026</option>
-            <option value="2027">2027</option>
-          </select>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="chip-deploy-btn" id="chipDeployBtn" onclick="chipDeployToGitHub()" title="推送到 GitHub Pages">☁️</button>
+        <button class="chip-scan-btn" id="chipScanBtn" onclick="chipStartScan()">▶ 開始掃描</button>
+      </div>
+    </div>
+
+    <!-- Filter chips -->
+    <div class="chip-filters">
+      <div class="filter-chip active" data-f="all">全部 <span id="chipTotalCount">—</span></div>
+      <div class="filter-chip" data-f="pass">✅ 通過</div>
+      <div class="filter-chip" data-f="vol">⚡ 爆量</div>
+      <div class="filter-chip" data-f="bull">📈 多頭</div>
+      <div class="filter-chip" data-f="elim">🚫 淘汰</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="chip-stats-row">
+      <div class="chip-stat-card"><div class="chip-stat-num gold" id="chipStatPass">—</div><div class="chip-stat-label">通過三關</div></div>
+      <div class="chip-stat-card"><div class="chip-stat-num red" id="chipStatScan">—</div><div class="chip-stat-label">已掃描</div></div>
+      <div class="chip-stat-card"><div class="chip-stat-num green" id="chipStatElim">—</div><div class="chip-stat-label">已淘汰</div></div>
+      <div class="chip-stat-card"><div class="chip-stat-num blue" id="chipStatVol">—</div><div class="chip-stat-label">爆量</div></div>
+    </div>
+
+    <!-- Progress -->
+    <div class="chip-progress-wrap" id="chipProgressWrap">
+      <div class="chip-progress-bar-bg"><div class="chip-progress-bar-fill" id="chipProgressFill"></div></div>
+      <div class="chip-progress-label" id="chipProgressLabel">準備中…</div>
+    </div>
+
+    <!-- Sub tabs -->
+    <div style="display:flex;gap:8px;margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:8px;overflow-x:auto;scrollbar-width:none;">
+      <div class="chip-nav-btn active" data-page="signal" style="flex-shrink:0;padding:5px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:rgba(240,180,41,.15);color:#f0b429;border:1px solid rgba(240,180,41,.3);">📡 訊號</div>
+      <div class="chip-nav-btn" data-page="chip" style="flex-shrink:0;padding:5px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--text-secondary);border:1px solid var(--border);">📊 籌碼</div>
+      <div class="chip-nav-btn" data-page="market" style="flex-shrink:0;padding:5px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--text-secondary);border:1px solid var(--border);">🐂 多空</div>
+      <div class="chip-nav-btn" data-page="notify" style="flex-shrink:0;padding:5px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--text-secondary);border:1px solid var(--border);">🔔 記錄</div>
+      <div class="chip-nav-btn" data-page="settings" style="flex-shrink:0;padding:5px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--text-secondary);border:1px solid var(--border);">⚙️ 設定</div>
+    </div>
+
+    <!-- Sub pages -->
+    <div id="chipSubPage-signal" class="chip-subpage active">
+      <div id="chipSignalSection">
+        <div class="chip-empty-state">
+          <div class="chip-empty-icon">📡</div>
+          <p>點擊「開始掃描」<br>自動篩選今日符合條件的台股<br><br>
+          <span style="font-size:11px;opacity:.6">K線純度 · 多頭排列 · 乖離控制 · 爆量偵測</span></p>
         </div>
       </div>
     </div>
 
-    <!-- 當月可用現金 大卡 -->
-    <div id="cf-cashCard" style="margin-bottom:20px;padding:20px 24px;border-radius:14px;background:linear-gradient(135deg,rgba(0,229,160,0.08),rgba(59,130,246,0.06));border:1px solid rgba(0,229,160,0.25);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
-      <div>
-        <div style="font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">當月可用現金</div>
-        <div style="font-family:var(--mono);font-size:2.2rem;font-weight:500;" id="cf-freeCash">$0</div>
-        <div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;" id="cf-formula">收入 $0 − 固定支出 $0 − 一般支出 $0</div>
-      </div>
-      <!-- 水位圖（單柱）-->
-      <div style="display:flex;gap:18px;align-items:center;">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;">
-          <div style="font-family:var(--mono);font-size:0.75rem;font-weight:700;" id="cf-wPct">—%</div>
-          <div style="position:relative;width:56px;height:100px;border-radius:28px;border:2px solid rgba(0,229,160,0.4);overflow:hidden;background:rgba(0,229,160,0.05);">
-            <div id="cf-wFill" style="position:absolute;bottom:0;left:0;right:0;height:0%;border-radius:0 0 26px 26px;transition:height 1.4s cubic-bezier(0.4,0,0.2,1);">
-              <div style="position:absolute;top:0;left:0;right:0;height:7px;background:rgba(255,255,255,0.22);border-radius:4px 4px 0 0;animation:wave 2s ease-in-out infinite;"></div>
-            </div>
-          </div>
-          <div style="font-size:0.52rem;color:var(--text-muted);">可用率</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:8px;font-size:0.72rem;">
-          <div style="display:flex;align-items:center;gap:7px;"><span style="width:8px;height:8px;border-radius:2px;background:var(--accent-green);display:inline-block;flex-shrink:0;"></span><span style="color:var(--text-secondary);">可用現金</span><span style="font-family:var(--mono);color:var(--accent-green);margin-left:8px;" id="cf-wIncome">$0</span></div>
-          <div style="display:flex;align-items:center;gap:7px;"><span style="width:8px;height:8px;border-radius:2px;background:var(--accent-purple);display:inline-block;flex-shrink:0;"></span><span style="color:var(--text-secondary);">固定支出</span><span style="font-family:var(--mono);color:var(--accent-purple);margin-left:8px;" id="cf-wFixed">$0</span></div>
-          <div style="display:flex;align-items:center;gap:7px;"><span style="width:8px;height:8px;border-radius:2px;background:var(--accent-red);display:inline-block;flex-shrink:0;"></span><span style="color:var(--text-secondary);">一般支出</span><span style="font-family:var(--mono);color:var(--accent-red);margin-left:8px;" id="cf-wExpense">$0</span></div>
-        </div>
+    <div id="chipSubPage-chip" class="chip-subpage" style="display:none">
+      <div id="chipChipPage">
+        <div class="chip-empty-state"><div class="chip-empty-icon">📊</div><p>掃描後顯示籌碼明細</p></div>
       </div>
     </div>
 
-    <!-- 4 KPI 卡 -->
-    <div class="stats-row stats-row-4" style="margin-bottom:20px;">
-      <div class="stat-card c-green">
-        <div class="stat-label">當月收入</div>
-        <div class="stat-value c-green" id="s-totalIncome">$0</div>
-        <div class="stat-sub" id="s-incomeCount">0 筆</div>
+    <div id="chipSubPage-market" class="chip-subpage" style="display:none">
+      <div class="chip-mkt-hero chip-loading" id="chipMktHero">
+        <div class="chip-mkt-verdict chip-neu" id="chipMktVerdict">載入中…</div>
+        <div class="chip-mkt-sub" id="chipMktSub">點擊「重新分析」載入市場狀態</div>
       </div>
-      <div class="stat-card c-purple">
-        <div class="stat-label">固定支出</div>
-        <div class="stat-value c-purple" id="cf-fixedEx">$0</div>
-        <div class="stat-sub" id="cf-fixedCount">固定＋分期</div>
+      <div class="chip-mkt-grid" id="chipMktGrid">
+        <div class="chip-mkt-card"><div class="chip-mkt-label">加權指數</div><div class="chip-mkt-val chip-neu" id="chipMktTse">—</div><div class="chip-mkt-sub2" id="chipMktTseChg">—</div></div>
+        <div class="chip-mkt-card"><div class="chip-mkt-label">OTC 櫃買</div><div class="chip-mkt-val chip-neu" id="chipMktOtc">—</div><div class="chip-mkt-sub2" id="chipMktOtcChg">—</div></div>
+        <div class="chip-mkt-card"><div class="chip-mkt-label">年線 200MA</div><div class="chip-mkt-val chip-neu" id="chipMktMa200">—</div><div class="chip-mkt-sub2" id="chipMktMa200Sub">—</div></div>
+        <div class="chip-mkt-card"><div class="chip-mkt-label">年線乖離</div><div class="chip-mkt-val chip-neu" id="chipMktMaBias">—</div><div class="chip-mkt-sub2" id="chipMktMaBiasSub">—</div></div>
       </div>
-      <div class="stat-card c-red">
-        <div class="stat-label">一般支出</div>
-        <div class="stat-value c-red" id="s-totalExpense">$0</div>
-        <div class="stat-sub" id="s-expenseCount">0 筆</div>
+      <div class="chip-mkt-flow-card">
+        <div class="chip-mkt-flow-title">資金主角分析</div>
+        <div class="chip-mkt-flow-bar"><div class="chip-flow-tse" id="chipFlowTse" style="flex:1"></div><div class="chip-flow-otc" id="chipFlowOtc" style="flex:1"></div></div>
+        <div class="chip-mkt-flow-legend">
+          <span style="color:#ff4757" id="chipFlowTseLabel">加權 —%</span>
+          <span style="color:var(--text-muted);font-size:0.65rem" id="chipFlowCenter">資金流向</span>
+          <span style="color:#3b82f6" id="chipFlowOtcLabel">OTC —%</span>
+        </div>
       </div>
-      <div class="stat-card c-blue">
-        <div class="stat-label">月儲蓄率</div>
-        <div class="stat-value c-blue" id="cf-saveRate">0%</div>
-        <div class="stat-sub" id="s-balanceLabel">可用 / 收入</div>
+      <div class="chip-mkt-analysis-card">
+        <div class="chip-mkt-flow-title">四重分析結果</div>
+        <div id="chipMktAnalysisRows"><div style="color:var(--text-muted);font-size:0.75rem;text-align:center;padding:12px">點擊「重新分析」載入資料</div></div>
+      </div>
+      <div class="chip-mkt-refresh-btn" id="chipMktRefreshBtn" onclick="chipLoadMarketData()"><span id="chipMktRefreshIcon">⟳</span> 重新分析</div>
+    </div>
+
+    <div id="chipSubPage-notify" class="chip-subpage" style="display:none">
+      <div id="chipNotifyPage">
+        <div class="chip-empty-state"><div class="chip-empty-icon">🔔</div><p>尚無掃描記錄</p></div>
       </div>
     </div>
 
-    <!-- 圖表區：左圖右詳細 -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-      <!-- 左：月份現金流趨勢 -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">全年每月現金流</div>
-          <div style="font-size:0.65rem;font-family:var(--mono);color:var(--text-muted);" id="cf-yearLabel"></div>
-        </div>
-        <div class="month-chart" id="s-monthChart" style="height:90px;"></div>
-        <!-- 年度小結 -->
-        <div style="display:flex;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
-          <div style="flex:1;text-align:center;">
-            <div style="font-size:0.6rem;color:var(--text-muted);margin-bottom:3px;">年度收入</div>
-            <div style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-green);" id="s-totalIncome-yr">$0</div>
-          </div>
-          <div style="flex:1;text-align:center;border-left:1px solid var(--border);border-right:1px solid var(--border);">
-            <div style="font-size:0.6rem;color:var(--text-muted);margin-bottom:3px;">年度支出</div>
-            <div style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-red);" id="cf-totalEx-yr">$0</div>
-          </div>
-          <div style="flex:1;text-align:center;">
-            <div style="font-size:0.6rem;color:var(--text-muted);margin-bottom:3px;">平均月結餘</div>
-            <div style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-blue);" id="s-avgMonthly">$0</div>
-          </div>
-        </div>
-      </div>
+    <div id="chipSubPage-settings" class="chip-subpage" style="display:none">
+      <div id="chipSettingsPage">
+    <div class="settings-group-label">篩選條件</div>
+    
+    <div class="chip-setting-row">
+      <div class="setting-info"><div class="chip-setting-name">上影線門檻</div><div class="chip-setting-sub">K線純度 — 避雷針過濾</div></div>
+      <div class="chip-setting-val">1.5%</div>
+    </div>
+    <div class="chip-setting-row">
+      <div class="setting-info"><div class="chip-setting-name">月線乖離上限</div><div class="chip-setting-sub">乖離控制 — 不追過度噴發</div></div>
+      <div class="chip-setting-val">15%</div>
+    </div>
+    <div class="chip-setting-row">
+      <div class="setting-info"><div class="chip-setting-name">爆量倍數門檻</div><div class="chip-setting-sub">量比 = 今日量 ÷ 昨日量</div></div>
+      <div class="chip-setting-val">2x</div>
+    </div>
+    <div class="chip-setting-row">
+      <div class="setting-info"><div class="chip-setting-name">多頭排列</div><div class="chip-setting-sub">收盤 &gt; 5MA &gt; 10MA &gt; 20MA</div></div>
+      <div class="chip-toggle on" data-key="need_bull"></div>
+    </div>
+    <div class="chip-setting-row">
+      <div class="setting-info"><div class="chip-setting-name">排除金融股</div><div class="chip-setting-sub">28 開頭股票代號一律排除</div></div>
+      <div class="chip-toggle on" data-key="exclude_28"></div>
+    </div>
+    <div class="settings-group-label" style="margin-top:18px">掃描清單</div>
+    <div class="chip-setting-row">
+      <div class="setting-info"><div class="chip-setting-name">監控標的總數</div><div class="chip-setting-sub">上市 + 上櫃主要個股</div></div>
+      <div class="chip-setting-val">70 支</div>
+    </div>
+    <div class="settings-group-label" style="margin-top:18px">資料來源</div>
+    <div class="chip-setting-row" style="cursor:default">
+      <div class="setting-info"><div class="chip-setting-name">報價 + 歷史</div><div class="chip-setting-sub">Supabase proxy → stooq → Yahoo Finance</div></div>
+      <div class="badge pass" style="flex-shrink:0">✓ 即時</div>
+    </div>
+    <div class="settings-group-label" style="margin-top:18px">🔧 資料診斷</div>
+    <div class="chip-setting-row" style="cursor:pointer" onclick="chipRunDiag()">
+      <div class="setting-info"><div class="chip-setting-name">測試單支股票資料</div><div class="chip-setting-sub">測試 2330 台積電的報價與歷史資料</div></div>
+      <div class="chip-setting-val">▶ 執行</div>
+    </div>
+    <div id="chipDiagResult" style="margin-top:8px;padding:12px;background:#0a0c10;border:1px solid var(--border);border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);line-height:1.8;display:none"></div></div>
+    </div>
 
-      <!-- 右：各類別支出 -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">當月支出類別</div>
-          <div style="font-size:0.65rem;font-family:var(--mono);color:var(--text-muted);" id="cf-catMonthLabel"></div>
+    <!-- Modal -->
+    <div class="chip-modal-overlay" id="chipModalOverlay">
+      <div class="chip-modal">
+        <div class="chip-modal-handle"></div>
+        <div class="chip-modal-header">
+          <div class="chip-modal-title" id="chipModalTitle">—</div>
+          <button class="chip-modal-close" id="chipModalClose">✕</button>
         </div>
-        <div id="s-catList" style="display:flex;flex-direction:column;gap:10px;max-height:260px;overflow-y:auto;padding-right:2px;"></div>
+        <div id="chipModalBody"></div>
       </div>
     </div>
+
+    <!-- Toast -->
+    <div id="chipToast" style="display:none;position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1e2330;border:1px solid var(--border);color:var(--text-primary);padding:10px 18px;border-radius:12px;font-size:13px;z-index:999;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.5)"></div>
+
   </section>
 
-  <!-- ── 資產中心 ── -->
+    <!-- ── 資產中心 ── -->
 
 
   <!-- ── 固定支出 ── -->
@@ -2727,29 +2889,29 @@ input::placeholder { color: var(--text-muted); }
           <div class="dash-panel-title">動能面 · Momentum</div>
           <div class="dash-panel-sub">市場寬度 · 趨勢強度</div>
         </div>
-        <div id="momentumBadge" class="dash-badge" style="margin-left: auto; background: rgba(239, 68, 68, 0.133); color: rgb(239, 68, 68);">多頭</div>
+        <div id="momentumBadge" class="dash-badge" style="margin-left:auto;background:#3b82f622;color:#3b82f6;">載入中</div>
       </div>
       <div class="dash-panel-body">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
           <!-- QQQ 動能 -->
           <div class="dash-metric-card">
             <div class="dash-metric-label">美股 QQQ</div>
-            <div class="dash-metric-val" id="mom_qqq" style="color: var(--accent-red);">$582.06</div>
-            <div class="dash-metric-chg" id="mom_qqq_chg"><span style="color:var(--accent-red)">▲ +0.00%</span></div>
+            <div class="dash-metric-val" id="mom_qqq">—</div>
+            <div class="dash-metric-chg" id="mom_qqq_chg">—</div>
             <canvas id="mom_qqq_spark" width="120" height="28" style="width:100%;height:28px;margin-top:5px;"></canvas>
           </div>
           <!-- 台股 0050 -->
           <div class="dash-metric-card">
             <div class="dash-metric-label">台股 0050</div>
-            <div class="dash-metric-val" id="mom_0050" style="color: var(--accent-red);">$75.90</div>
-            <div class="dash-metric-chg" id="mom_0050_chg"><span style="color:var(--accent-red)">▲ +0.00%</span></div>
+            <div class="dash-metric-val" id="mom_0050">—</div>
+            <div class="dash-metric-chg" id="mom_0050_chg">—</div>
             <canvas id="mom_0050_spark" width="120" height="28" style="width:100%;height:28px;margin-top:5px;"></canvas>
           </div>
           <!-- 美債10年 -->
           <div class="dash-metric-card">
             <div class="dash-metric-label">美債 10Y 殖利率</div>
-            <div class="dash-metric-val" id="mom_tnx" style="color: var(--accent-green);">4.39</div>
-            <div class="dash-metric-chg" id="mom_tnx_chg" style="font-size:0.6rem;color:var(--text-muted);"><span style="color:var(--accent-green)">▲ +0.00%</span></div>
+            <div class="dash-metric-val" id="mom_tnx">—</div>
+            <div class="dash-metric-chg" id="mom_tnx_chg" style="font-size:0.6rem;color:var(--text-muted);">↑ 利率上升 → 科技股承壓</div>
             <canvas id="mom_tnx_spark" width="120" height="28" style="width:100%;height:28px;margin-top:5px;"></canvas>
           </div>
           <!-- 美元指數 DXY -->
@@ -2761,7 +2923,7 @@ input::placeholder { color: var(--text-muted); }
           </div>
         </div>
         <!-- 動能解讀 -->
-        <div id="momentumSignal" class="dash-signal-bar" style="margin-top:8px;"><span style="color:#ff4d6d;font-weight:600;">📈 利多</span> QQQ 多頭延續<br><span style="color:#ff4d6d;font-weight:600;">🟢 利多</span> 台股 0050 強勢<br><span style="color:#00e5a0;font-weight:600;">⚠️ 利空</span> 殖利率上升，科技股承壓</div>
+        <div id="momentumSignal" class="dash-signal-bar" style="margin-top:8px;">分析中…</div>
       </div>
     </div>
 
@@ -2975,8 +3137,10 @@ input::placeholder { color: var(--text-muted); }
     </div>
     <div>
       <div style="font-size:0.75rem;font-weight:500;color:var(--text-secondary);margin-bottom:2px;">台股 0050</div>
-      <div style="font-family:var(--mono);font-size:1.1rem;font-weight:600;color:#00e5a0;" id="intelPrice_def_0050">$75.90</div>
-      <div style="font-size:0.65rem;display:flex;align-items:center;gap:5px;margin-top:1px;" id="intelChange_def_0050"><span style="color:var(--text-muted);">0050</span><span style="color:var(--accent-green);font-family:var(--mono);margin-left:4px;">▼ 0.13%</span></div>
+      <div style="font-family:var(--mono);font-size:1.1rem;font-weight:600;color:#00e5a0;" id="intelPrice_def_0050">—</div>
+      <div style="font-size:0.65rem;display:flex;align-items:center;gap:5px;margin-top:1px;" id="intelChange_def_0050">
+        <span style="color:var(--text-muted);">0050</span>
+      </div>
     </div>
     <!-- sparkline -->
     <div style="margin-top:8px;position:relative;">
@@ -3214,7 +3378,7 @@ input::placeholder { color: var(--text-muted); }
   <!-- ══════════════════════════════════
        資料庫分頁
   ══════════════════════════════════ -->
-  <section class="page" id="page-database">
+  <section class="page active" id="page-database">
     <!-- Header -->
     <div style="margin-bottom:20px;">
       <div style="font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);font-family:var(--mono);margin-bottom:4px;">MASTER DATABASE</div>
@@ -3228,7 +3392,7 @@ input::placeholder { color: var(--text-muted); }
           </button>
         </div>
       </div>
-      <div style="margin-top:8px;font-size:0.65rem;color:var(--text-muted);">靜態基準資料。收入與浮動支出請至帳本記錄，此處只管不變的固定數字。<span id="db_last_saved" style="margin-left:10px;color:var(--text-muted);font-family:var(--mono);">上次儲存：2026/3/19 下午05:51</span></div>
+      <div style="margin-top:8px;font-size:0.65rem;color:var(--text-muted);">靜態基準資料。收入與浮動支出請至帳本記錄，此處只管不變的固定數字。<span id="db_last_saved" style="margin-left:10px;color:var(--text-muted);font-family:var(--mono);">上次儲存：2026/3/19 上午01:41</span></div>
     </div>
 
     <!-- ══ 區塊一：固定支出（無期限） ══ -->
@@ -3301,7 +3465,7 @@ input::placeholder { color: var(--text-muted); }
       <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:3px;margin-bottom:12px;" id="trade-month-grid">
         <button onclick="setTradeMonth('01',this)" class="lm-btn" id="tm-01">1</button>
         <button onclick="setTradeMonth('02',this)" class="lm-btn" id="tm-02">2</button>
-        <button onclick="setTradeMonth('03',this)" class="lm-btn" id="tm-03">3</button>
+        <button onclick="setTradeMonth('03',this)" class="lm-btn active" id="tm-03">3</button>
         <button onclick="setTradeMonth('04',this)" class="lm-btn" id="tm-04">4</button>
         <button onclick="setTradeMonth('05',this)" class="lm-btn" id="tm-05">5</button>
         <button onclick="setTradeMonth('06',this)" class="lm-btn" id="tm-06">6</button>
@@ -3370,14 +3534,14 @@ input::placeholder { color: var(--text-muted); }
   <div class="mobile-nav-item" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span><span>總覽</span>
   </div>
-  <div class="mobile-nav-item active" id="mn-ledger" onclick="goPage('ledger', null, 'mn-ledger')">
+  <div class="mobile-nav-item" id="mn-ledger" onclick="goPage('ledger', null, 'mn-ledger')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg></span><span>帳務</span>
   </div>
   <div class="mobile-nav-item" id="mn-invest" onclick="goPage('invest', null, 'mn-invest')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span><span>投資</span>
   </div>
   <div class="mobile-nav-item" id="mn-stats" onclick="goPage('stats',      null, 'mn-stats')">
-    <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></span><span>統計</span>
+    <span class="mobile-nav-icon">📡</span><span>雷達</span>
   </div>
 <div class="mobile-nav-item" id="mn-intel" onclick="goPage('intel',      null, 'mn-intel')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span><span>情報</span>
@@ -3385,7 +3549,7 @@ input::placeholder { color: var(--text-muted); }
   <div class="mobile-nav-item" id="mn-strategy" onclick="goPage('strategy',   null, 'mn-strategy')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span><span>策略</span>
   </div>
-  <div class="mobile-nav-item" id="mn-database" onclick="goPage('database',   null, 'mn-database')">
+  <div class="mobile-nav-item active" id="mn-database" onclick="goPage('database',   null, 'mn-database')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"></path><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"></path></svg></span><span>資料庫</span>
   </div>
 </nav>
@@ -4124,7 +4288,7 @@ function goPage(name, navEl, mobileNavId) {
     if (hintEl) hintEl.textContent = '記錄 ' + mnNames[parseInt(currentLedgerMonth)-1] + ' 的帳務';
     renderAll();
   }
-  if (name === 'stats') {
+  if (name === 'stats') { setTimeout(()=>{ if(typeof chipInit!=='undefined') chipInit(); },100);
     // set month selector to current month if not already set
     const ms = document.getElementById('cfMonthSelect');
     if (ms && !ms._initialized) {
@@ -10771,6 +10935,856 @@ function dbDeleteBank(i) { AppState.assets.bank.splice(i,1); dbRenderBanks(); db
     }, 100);
   });
 })();
+
+
+
+// ═══ 籌碼雷達 II ═══
+
+// ── Proxy（corsproxy 最穩定）──
+function chipProxy(url) {
+  return `https://corsproxy.io/?${encodeURIComponent(url)}`;
+}
+async function chipProxyFetch(url, timeout=12000) {
+  const r = await fetch(chipProxy(url), {signal:AbortSignal.timeout(timeout)});
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  const wrap = await r.json();
+  const raw  = typeof wrap.contents === 'string' ? wrap.contents
+             : typeof wrap         === 'string'  ? wrap
+             : JSON.stringify(wrap);
+  return JSON.parse(raw);
+}
+
+
+// ═══════════════════════════════════════════════
+//  Supabase proxy（與 index-db 完全相同）
+// ═══════════════════════════════════════════════
+const CHIP_PROXY    = 'https://dlwswwioqbghwpksbnjv.supabase.co/functions/v1/quote-proxy';
+const CHIP_SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsd3N3d2lvcWJnaHdwa3Nibmp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MzQ3NjEsImV4cCI6MjA4ODMxMDc2MX0.d5jRhb_6qQDnfcEIfvRErfAWIEWcEnuR74diYtAicfg';
+
+// ═══════════════════════════════════════════════
+//  台股名稱對照表
+// ═══════════════════════════════════════════════
+const CHIP_TW_NAMES = {
+  "2330":"台積電","2317":"鴻海","2454":"聯發科","2308":"台達電","2382":"廣達",
+  "2303":"聯電","2357":"華碩","2376":"技嘉","2379":"瑞昱","2408":"南亞科",
+  "2412":"中華電","2603":"長榮","2609":"陽明","2615":"萬海","2618":"長榮航",
+  "2610":"華航","6669":"緯穎","3008":"大立光","2395":"研華","2912":"統一超",
+  "1301":"台塑","1303":"南亞","1326":"台化","2002":"中鋼","5876":"上海商銀",
+  "2207":"和泰車","3443":"創意","3034":"聯詠","4938":"和碩","8299":"群聯",
+  "3711":"日月光","2327":"國巨","6505":"台塑化","2474":"可成","4904":"遠傳",
+  "3045":"台灣大","4958":"臻鼎","6415":"矽力","2337":"旺宏","3481":"群創",
+  "2409":"友達","3702":"大聯大","6446":"藥華藥","4966":"譜瑞","2353":"宏碁",
+  "2356":"英業達","2371":"大同","2385":"群光","2392":"正崴","3036":"文曄",
+  "3037":"欣興","2360":"致茂","5871":"中租","6770":"力積電","6679":"台鏈",
+  "3653":"健策","3552":"同致","6488":"環球晶","5347":"世界","8046":"南電",
+  "6533":"晶心科","3189":"景碩","6230":"超眾","2371":"大同","2881":"富邦金",
+  "2882":"國泰金","2886":"兆豐金","2884":"玉山金","2891":"中信金","2880":"華南金",
+  "2883":"開發金","2885":"元大金","2887":"台新金","2892":"第一金","2890":"永豐金",
+};
+
+// ═══════════════════════════════════════════════
+//  篩選參數
+// ═══════════════════════════════════════════════
+const CHIP_CFG = {
+  shadow_max: 0.015,  // 上影線 < 1.5%
+  bias_max:   0.15,   // 月線乖離 < 15%
+  vol_mult:   2.0,    // 爆量倍數
+  need_bull:  true,   // 多頭排列
+  exclude_28: true,   // 排除金融股
+};
+
+// ═══════════════════════════════════════════════
+//  監控清單（上市+上櫃）
+// ═══════════════════════════════════════════════
+const CHIP_WATCH_LIST = [
+  "2330","2317","2454","2308","2382","2303","2357","2376","2379","2408",
+  "2412","2603","2609","2615","2618","2610","6669","3008","2395","2912",
+  "1301","1303","1326","2002","2207","3443","3034","4938","8299","3711",
+  "2327","6505","2474","4904","3045","4958","6415","2337","3481","2409",
+  "3702","6446","4966","2353","2356","2385","2392","3036","3037","2360",
+  "5871","6770","3653","3552","6488","5347","8046","6533","3189","6230",
+  "2881","2882","2886","2884","2891","2880","2883","2885","2887","2892",
+];
+
+// ═══════════════════════════════════════════════
+//  狀態
+// ═══════════════════════════════════════════════
+let chipSignals=[], chipEliminated=[], chipNotifyLog=[];
+let chipFilter='all', chipScanning=false;
+const chip_qCache={}, chip_hCache={};
+
+// ═══════════════════════════════════════════════
+//  資料抓取：quote（即時報價）
+// ═══════════════════════════════════════════════
+async function chipFetchQuote(id) {
+  if (chip_qCache[id] && Date.now()-chip_qCache[id].t < 5*60*1000) return chip_qCache[id].d;
+  for (const sfx of ['.TW','.TWO']) {
+    try {
+      const d   = await chipProxyFetch(`https://query1.finance.yahoo.com/v8/finance/chart/${id}${sfx}?interval=1d&range=5d`);
+      const res = d?.chart?.result?.[0];
+      if (!res) continue;
+      const meta   = res.meta;
+      const q      = res.indicators.quote[0];
+      const closes = (q.close||[]).filter(v=>v!=null);
+      const highs  = (q.high ||[]).filter(v=>v!=null);
+      if (!closes.length) continue;
+      const price  = +(meta.regularMarketPrice || closes.at(-1)).toFixed(2);
+      const prev   = closes.at(-2) || price;
+      const change = +((price-prev)/prev*100).toFixed(2);
+      const high   = highs.at(-1) || price*1.005;
+      const d2 = {price, change, high, name: meta.shortName || CHIP_TW_NAMES[id] || id};
+      chip_qCache[id] = {d:d2, t:Date.now()};
+      return d2;
+    } catch {}
+  }
+  return null;
+}
+
+// ═══════════════════════════════════════════════
+//  資料抓取：歷史收盤（算 MA 用）
+//  走 proxy stooq，失敗則 fallback Yahoo Finance
+// ═══════════════════════════════════════════════
+async function chipFetchHistory(id) {
+  if (chip_hCache[id]) return chip_hCache[id];
+  for (const sfx of ['.TW','.TWO']) {
+    try {
+      const d   = await chipProxyFetch(`https://query1.finance.yahoo.com/v8/finance/chart/${id}${sfx}?interval=1d&range=3mo`);
+      const res = d?.chart?.result?.[0];
+      if (!res) continue;
+      const q       = res.indicators.quote[0];
+      const closes  = (q.close ||[]).filter(v=>v!=null);
+      const highs   = (q.high  ||[]).filter(v=>v!=null);
+      const volumes = (q.volume||[]).filter(v=>v!=null);
+      if (closes.length < 22) continue;
+      const h = {closes, highs, volumes};
+      chip_hCache[id] = h;
+      return h;
+    } catch {}
+  }
+  return null;
+}
+
+// ═══════════════════════════════════════════════
+//  MA 工具
+// ═══════════════════════════════════════════════
+function chipSma(arr,n){ if(arr.length<n)return null; return arr.slice(-n).reduce((a,b)=>a+b,0)/n; }
+
+// ═══════════════════════════════════════════════
+//  三道濾波器
+// ═══════════════════════════════════════════════
+function chipRunFilters(id,price,high,hist,prevVol,todayVol){
+  const closes=hist.closes;
+  if(closes.length<22) return {pass:false,fails:['歷史資料不足'],details:{}};
+
+  const ma5  = chipSma(closes,5);
+  const ma10 = chipSma(closes,10);
+  const ma20 = chipSma(closes,20);
+  const shadow   = (high-price)/price;
+  const bias     = (price-ma20)/ma20;
+  const volRatio = prevVol>0 ? todayVol/prevVol : 0;
+  const isBull   = price>ma5 && ma5>ma10 && ma10>ma20;
+
+  const details = {
+    ma5:+ma5.toFixed(2), ma10:+ma10.toFixed(2), ma20:+ma20.toFixed(2),
+    shadow:+(shadow*100).toFixed(2), bias:+(bias*100).toFixed(2),
+    volRatio:+volRatio.toFixed(2), isVol:volRatio>=CHIP_CFG.vol_mult, isBull,
+  };
+
+  // 排除金融股（快速路徑）
+  if(CHIP_CFG.exclude_28 && id.startsWith('28'))
+    return {pass:false,fails:['金融股排除：28開頭一律淘汰'],details};
+
+  const fails=[];
+
+  // 1️⃣ K線純度
+  if(shadow>=CHIP_CFG.shadow_max)
+    fails.push(`避雷針：上影線 ${details.shadow}%（門檻 ${CHIP_CFG.shadow_max*100}%）`);
+
+  // 2️⃣ 多頭排列
+  if(CHIP_CFG.need_bull && !isBull)
+    fails.push(`非多頭排列：收${price} ≮ 5MA${details.ma5} > 10MA${details.ma10} > 20MA${details.ma20}`);
+
+  // 3️⃣ 乖離控制
+  if(bias>=CHIP_CFG.bias_max)
+    fails.push(`乖離過大：${details.bias}%（上限 ${CHIP_CFG.bias_max*100}%）`);
+
+  return {pass:fails.length===0, fails, details};
+}
+
+// ═══════════════════════════════════════════════
+//  評分
+// ═══════════════════════════════════════════════
+function chipCalcScore(details){
+  const s1=Math.max(0,100-(details.shadow/100/CHIP_CFG.shadow_max)*30);
+  const s2=details.isBull?100:0;
+  const s3=Math.max(0,100-(details.bias/100/CHIP_CFG.bias_max)*40);
+  const s4=Math.min(100,details.volRatio/5*100);
+  return Math.round(s1*.25+s2*.30+s3*.25+s4*.20);
+}
+
+// ═══════════════════════════════════════════════
+//  主掃描
+// ═══════════════════════════════════════════════
+async function chipStartScan(){
+  if(chipScanning) return;
+  chipScanning=true;
+  chipSignals=[]; chipEliminated=[]; chipNotifyLog=[];
+  const btn=document.getElementById('chipScanBtn');
+  btn.disabled=true; btn.textContent='掃描中…';
+  chipShowProgress(true); chipUpdateStats();
+
+  const list=CHIP_WATCH_LIST.filter(id=>!(CHIP_CFG.exclude_28&&id.startsWith('28')));
+  let done=0;
+  const BATCH=8;
+
+  for(let i=0;i<list.length;i+=BATCH){
+    const batch=list.slice(i,i+BATCH);
+    await Promise.all(batch.map(async(id)=>{
+      try{
+        const [q,hist]=await Promise.all([chipFetchQuote(id),chipFetchHistory(id)]);
+        done++;
+        chipSetProgress(done/list.length, `${id} ${CHIP_TW_NAMES[id]||''}`);
+        if(!q||!hist) return;
+
+        const price=q.price, change=q.change||0;
+        // high：優先用 proxy 回傳的 high，否則估算
+        const high = q.high || q.dayHigh || (price*(1+0.005));
+        const vols = hist.volumes||[];
+        const prevVol  = vols.length>=2 ? vols[vols.length-2] : 0;
+        const todayVol = vols.length>=1 ? vols[vols.length-1] : 0;
+        const name = CHIP_TW_NAMES[id] || q.name || id;
+
+        const {pass,fails,details}=chipRunFilters(id,price,high,hist,prevVol,todayVol);
+
+        if(pass){
+          const score=chipCalcScore(details);
+          chipSignals.push({id,name,price,change,score,
+            ma5:details.ma5,ma10:details.ma10,ma20:details.ma20,
+            shadow:details.shadow,bias:details.bias,
+            volRatio:details.volRatio,isVol:details.isVol,isBull:details.isBull,
+            foreign:null,trust:null});
+          chipNotifyLog.unshift({
+            title:`${id} ${name} ⚡ 三關全過`,
+            sub:`量比${details.volRatio}x  乖離${details.bias}%  上影${details.shadow}%`,
+            time:chipNowHHMM(),isNew:true
+          });
+        } else {
+          chipEliminated.push({id,name,price,change,
+            reason:fails[0].split('：')[0],
+            detail:fails[0],allFails:fails});
+          chipNotifyLog.push({
+            title:`${id} ${name} ✗ ${fails[0].split('：')[0]}`,
+            sub:fails[0],time:chipNowHHMM(),isNew:false
+          });
+        }
+        chipUpdateStats();
+      } catch {}
+    }));
+    await chipSleep(400);
+  }
+
+  chipSignals.sort((a,b)=>b.score-a.score);
+  chipShowProgress(false);
+  btn.disabled=false; btn.textContent='🔄 重新掃描';
+  chipScanning=false;
+  chipRenderAll();
+}
+
+// ═══════════════════════════════════════════════
+//  渲染
+// ═══════════════════════════════════════════════
+function chipRenderAll(){
+  chipRenderSignalPage();
+  if(document.getElementById('page-chip').classList.contains('active')) chipRenderChipPage();
+  if(document.getElementById('page-notify').classList.contains('active')) chipRenderNotifyPage();
+}
+
+function chipRenderSignalPage(){
+  const C=100.53;
+  let html='';
+  const showPass=['all','pass','vol','bull'].includes(chipFilter);
+  const passList=chipFilter==='vol'  ? chipSignals.filter(s=>s.isVol)
+                :chipFilter==='bull' ? chipSignals.filter(s=>s.isBull)
+                :chipSignals;
+
+  if(showPass && passList.length>0){
+    html+=`<div class="chip-section-title" style="font-size:0.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);display:flex;align-items:center;gap:6px;margin-bottom:8px;">⚡ 通過訊號 (${passList.length})</div><div style="display:flex;flex-direction:column;gap:10px;">`;
+    passList.forEach((s,i)=>{
+      const offset=C-(s.score/100)*C;
+      const up=s.change>=0;
+      html+=`
+      <div class="chip-signal-card" style="animation:cardIn .35s ease ${i*.06}s both" onclick="chipOpenModal('${s.id}')">
+        <div class="chip-card-top">
+          <div class="chip-stock-info">
+            <div class="chip-stock-id">${s.id}</div>
+            <div class="chip-stock-name">${s.name}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <svg class="chip-score-ring" width="36" height="36" viewBox="0 0 40 40">
+              <circle style="fill:none;stroke:var(--border);stroke-width:3" cx="20" cy="20" r="16"/>
+              <circle style="fill:none;stroke:#f0b429;stroke-width:3;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%" cx="20" cy="20" r="16" stroke-dasharray="${C}" stroke-dashoffset="${offset}"/>
+              <text style="font-family:'DM Mono',monospace;font-size:10px;font-weight:700;fill:#f0b429;dominant-baseline:middle;text-anchor:middle" x="20" y="20">${s.score}</text>
+            </svg>
+            <div class="chip-price-block">
+              <div class="chip-price ${up?'':'down'}">${s.price.toLocaleString()}</div>
+              <div class="chip-change ${up?'':'down'}">${up?'▲':'▼'}${Math.abs(s.change).toFixed(2)}%</div>
+            </div>
+          </div>
+        </div>
+        <div class="chip-badge-row">
+          <div class="chip-badge pass">純K ✓ ${s.shadow}%</div>
+          <div class="chip-badge pass">多頭排列 ✓</div>
+          <div class="chip-badge pass">乖離 ${s.bias}%</div>
+          ${s.isVol?`<div class="chip-badge gold">⚡ 爆量 ${s.volRatio}x</div>`:`<div class="chip-badge blue">量比 ${s.volRatio}x</div>`}
+        </div>
+        <div class="chip-ma-row">
+          <span class="chip-ma-tag">5MA ${s.ma5}</span>
+          <span class="chip-ma-tag">10MA ${s.ma10}</span>
+          <span class="chip-ma-tag">20MA ${s.ma20}</span>
+        </div>
+        ${s.foreign!==null?`
+        <div style="margin-top:4px">
+          <div class="chip-bar-row"><div class="chip-bar-label">外資</div><div class="chip-bar-bg"><div class="chip-bar-fill red" style="width:${Math.min(100,(s.foreign/50000)*100)}%"></div></div><div class="chip-bar-val">+${fmt(s.foreign)}</div></div>
+          <div class="chip-bar-row"><div class="chip-bar-label">投信</div><div class="chip-bar-bg"><div class="chip-bar-fill blue" style="width:${Math.min(100,(s.trust/10000)*100)}%"></div></div><div class="chip-bar-val" style="color:var(--blue)">+${fmt(s.trust)}</div></div>
+        </div>`:'<div style="font-size:11px;color:var(--text-dim);margin-top:2px">籌碼：請合併 TWSE API 資料</div>'}
+      </div>`;
+    });
+    html+='</div>';
+  }
+
+  if(['all','elim'].includes(chipFilter) && chipEliminated.length>0){
+    html+=`<div class="section-title" style="margin-top:14px">🚫 遭淘汰 (${chipEliminated.length})</div>
+           <div style="padding:0 16px;display:flex;flex-direction:column;gap:7px">`;
+    chipEliminated.forEach(e=>{
+      html+=`
+      <div class="chip-elim-card" onclick="chipOpenElimModal('${e.id}')">
+        <div class="chip-elim-top">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim)">${e.id}</span>
+            <span style="font-size:14px;font-weight:600">${e.name}</span>
+          </div>
+          <div class="chip-elim-reason">✗ ${e.reason}</div>
+        </div>
+        <div style="font-size:11px;color:var(--text-dim)">${e.detail}</div>
+      </div>`;
+    });
+    html+='</div>';
+  }
+
+  if(!html) html=`<div class="chip-empty-state"><div class="chip-empty-icon">${chipSignals.length+chipEliminated.length===0?'📡':'🔍'}</div>
+    <p>${chipSignals.length+chipEliminated.length===0?'點擊「開始掃描」<br>自動篩選今日符合條件的台股<br><br><span style="font-size:11px;opacity:.6">K線純度 · 多頭排列 · 乖離控制 · 爆量偵測</span>':'此篩選條件無結果'}</p></div>`;
+
+  document.getElementById('chipSignalSection').innerHTML=html;
+}
+
+function chipRenderChipPage(){
+  const all=[...chipSignals,...chipEliminated];
+  if(!all.length){document.getElementById('chipChipPage').innerHTML='<div class="chip-empty-state"><div class="chip-empty-icon">📊</div><p>掃描後顯示籌碼明細</p></div>';return;}
+  document.getElementById('chipChipPage').innerHTML=all.map(s=>{
+    const isPass=chipSignals.includes(s);
+    const f=s.foreign||0,t=s.trust||0,mx=Math.max(f,t,30000);
+    return `<div class="card" style="margin-bottom:9px;cursor:default">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px">
+        <div><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim)">${s.id}</span> <span style="font-weight:700">${s.name}</span></div>
+        <div class="badge ${isPass?'pass':'warn'}">${isPass?'✓ 通過':'✗ 淘汰'}</div>
+      </div>
+      <div style="font-size:11px;color:var(--text-dim);margin-bottom:7px">
+        收盤 <b style="color:var(--text)">${s.price}</b>　5MA <b style="color:var(--text)">${s.ma5||'—'}</b>　20MA <b style="color:var(--text)">${s.ma20||'—'}</b>
+      </div>
+      ${f>0||t>0?`
+      <div class="chip-bar-row"><div class="chip-bar-label">外資</div><div class="chip-bar-bg"><div class="chip-bar-fill red" style="width:${(f/mx*100).toFixed(0)}%"></div></div><div class="chip-bar-val">+${fmt(f)}</div></div>
+      <div class="chip-bar-row"><div class="chip-bar-label">投信</div><div class="chip-bar-bg"><div class="chip-bar-fill blue" style="width:${(t/mx*100).toFixed(0)}%"></div></div><div class="chip-bar-val" style="color:var(--blue)">+${fmt(t)}</div></div>`
+      :'<div style="font-size:11px;color:var(--text-dim)">籌碼待合併（TWSE API）</div>'}
+    </div>`;
+  }).join('');
+}
+
+function chipRenderNotifyPage(){
+  if(!chipNotifyLog.length){document.getElementById('chipNotifyPage').innerHTML='<div class="chip-empty-state"><div class="chip-empty-icon">🔔</div><p>尚無掃描記錄</p></div>';return;}
+  document.getElementById('chipNotifyPage').innerHTML=chipNotifyLog.slice(0,50).map(n=>`
+    <div class="chip-notify-card">
+      <div class="chip-notify-dot  ${n.isNew?'new':'old'}"></div>
+      <div class=style="flex:1"><div class="chip-notify-title">${n.title}</div><div class="chip-notify-sub">${n.sub}</div></div>
+      <div class="chip-notify-time">${n.time}</div>
+    </div>`).join('');
+}
+
+function chipRenderSettingsPage(){
+  const rows=[
+    {name:"上影線門檻",sub:"K線純度 — 避雷針過濾",val:(CHIP_CFG.shadow_max*100).toFixed(1)+'%'},
+    {name:"月線乖離上限",sub:"乖離控制 — 不追過度噴發",val:(CHIP_CFG.bias_max*100).toFixed(0)+'%'},
+    {name:"爆量倍數門檻",sub:"量比 = 今日量 ÷ 昨日量",val:CHIP_CFG.vol_mult+'x'},
+    {name:"多頭排列",sub:"收盤 > 5MA > 10MA > 20MA",key:"need_bull",toggle:true,val:CHIP_CFG.need_bull},
+    {name:"排除金融股",sub:"28 開頭股票代號一律排除",key:"exclude_28",toggle:true,val:CHIP_CFG.exclude_28},
+  ];
+  document.getElementById('chipSettingsPage').innerHTML=`
+    <div class="settings-group-label">篩選條件</div>
+    ${rows.map(r=>`
+    <div class="chip-setting-row">
+      <div class="setting-info"><div class="chip-setting-name">${r.name}</div><div class="chip-setting-sub">${r.sub}</div></div>
+      ${r.toggle?`<div class="chip-toggle ${r.val?'on':''}" data-key="${r.key}"></div>`:`<div class="chip-setting-val">${r.val}</div>`}
+    </div>`).join('')}
+    <div class="settings-group-label" style="margin-top:18px">掃描清單</div>
+    <div class="chip-setting-row">
+      <div class="setting-info"><div class="chip-setting-name">監控標的總數</div><div class="chip-setting-sub">上市 + 上櫃主要個股</div></div>
+      <div class="chip-setting-val">${CHIP_WATCH_LIST.length} 支</div>
+    </div>
+    <div class="settings-group-label" style="margin-top:18px">資料來源</div>
+    <div class="chip-setting-row" style="cursor:default">
+      <div class="setting-info"><div class="chip-setting-name">報價 + 歷史</div><div class="chip-setting-sub">Supabase proxy → stooq → Yahoo Finance</div></div>
+      <div class="badge pass" style="flex-shrink:0">✓ 即時</div>
+    </div>
+    <div class="settings-group-label" style="margin-top:18px">🔧 資料診斷</div>
+    <div class="chip-setting-row" style="cursor:pointer" onclick="chipRunDiag()">
+      <div class="setting-info"><div class="chip-setting-name">測試單支股票資料</div><div class="chip-setting-sub">測試 2330 台積電的報價與歷史資料</div></div>
+      <div class="chip-setting-val">▶ 執行</div>
+    </div>
+    <div id="chipDiagResult" style="margin-top:8px;padding:12px;background:#0a0c10;border:1px solid var(--border);border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);line-height:1.8;display:none"></div>`;
+  document.querySelectorAll('#page-stats .chip-toggle').forEach(t=>{
+    t.addEventListener('click',()=>{
+      const k=t.dataset.key; CHIP_CFG[k]=!CHIP_CFG[k];
+      t.classList.toggle('on',CHIP_CFG[k]);
+    });
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  Modal
+// ═══════════════════════════════════════════════
+function chipOpenModal(id){
+  const s=chipSignals.find(x=>x.id===id); if(!s) return;
+  const up=s.change>=0;
+  document.getElementById('chipModalTitle').textContent=`${s.id} ${s.name}`;
+  document.getElementById('chipModalBody').innerHTML=`
+    <div class="chip-modal-row"><span class="chip-modal-label">收盤價</span><span class="chip-modal-val" style="color:${up?'var(--red)':'var(--green)'}">${s.price.toLocaleString()}</span></div>
+    <div class="chip-modal-row"><span class="chip-modal-label">漲跌幅</span><span class="chip-modal-val" style="color:${up?'var(--red)':'var(--green)'}">${up?'▲':'▼'}${Math.abs(s.change).toFixed(2)}%</span></div>
+    <div class="chip-modal-row"><span class="chip-modal-label">訊號評分</span><span class="chip-modal-val" style="color:var(--accent)">${s.score} / 100</span></div>
+    <div class="chip-modal-row"><span class="chip-modal-label">5MA / 10MA / 20MA</span><span class="chip-modal-val">${s.ma5} / ${s.ma10} / ${s.ma20}</span></div>
+    <div class="chip-modal-row"><span class="chip-modal-label">月線乖離</span><span class="chip-modal-val">${s.bias}%</span></div>
+    <div class="chip-modal-row"><span class="chip-modal-label">上影線</span><span class="chip-modal-val">${s.shadow}%</span></div>
+    <div class="chip-modal-row"><span class="chip-modal-label">量比</span><span class="chip-modal-val" style="color:${s.isVol?'var(--accent)':'var(--text)'}">${s.volRatio}x ${s.isVol?'⚡ 爆量':''}</span></div>
+    <div class="chip-modal-section">三道濾波器驗證</div>
+    <div class="chip-filter-row"><span class="chip-filter-icon">✅</span><div class="chip-filter-desc"><b style="color:var(--text)">K線純度</b><br>上影線 ${s.shadow}%＜${CHIP_CFG.shadow_max*100}%</div><span class="chip-filter-result pass">通過</span></div>
+    <div class="chip-filter-row"><span class="chip-filter-icon">✅</span><div class="chip-filter-desc"><b style="color:var(--text)">多頭排列</b><br>收${s.price} > 5MA${s.ma5} > 10MA${s.ma10} > 20MA${s.ma20}</div><span class="chip-filter-result pass">通過</span></div>
+    <div class="chip-filter-row"><span class="chip-filter-icon">✅</span><div class="chip-filter-desc"><b style="color:var(--text)">乖離控制</b><br>月線乖離 ${s.bias}%＜${CHIP_CFG.bias_max*100}%</div><span class="chip-filter-result pass">通過</span></div>`;
+  document.getElementById('chipModalOverlay').classList.add('open');
+}
+
+function chipOpenElimModal(id){
+  const e=chipEliminated.find(x=>x.id===id); if(!e) return;
+  document.getElementById('chipModalTitle').textContent=`${e.id} ${e.name}`;
+  document.getElementById('chipModalBody').innerHTML=`
+    <div class="chip-modal-row"><span class="chip-modal-label">收盤價</span><span class="chip-modal-val">${e.price.toLocaleString()}</span></div>
+    <div class="chip-modal-section">淘汰原因</div>
+    ${e.allFails.map(f=>`<div class="chip-filter-row"><span class="chip-filter-icon">❌</span><div class="chip-filter-desc">${f}</div><span class="chip-filter-result fail">淘汰</span></div>`).join('')}`;
+  document.getElementById('chipModalOverlay').classList.add('open');
+}
+
+document.getElementById('chipModalClose').addEventListener('click',chipCloseModal);
+document.getElementById('chipModalOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('chipModalOverlay'))chipCloseModal();});
+function chipCloseModal(){document.getElementById('chipModalOverlay').classList.remove('open');}
+
+// ═══════════════════════════════════════════════
+//  UI Helpers
+// ═══════════════════════════════════════════════
+function chipUpdateStats(){
+  const vol=chipSignals.filter(s=>s.isVol).length;
+  document.getElementById('chipStatPass').textContent = chipSignals.length||'—';
+  document.getElementById('chipStatScan').textContent = (chipSignals.length+chipEliminated.length)||'—';
+  document.getElementById('chipStatElim').textContent = chipEliminated.length||'—';
+  document.getElementById('chipStatVol').textContent  = vol||'—';
+  document.getElementById('chipTotalCount').textContent=(chipSignals.length+chipEliminated.length)||'—';
+}
+function chipShowProgress(on){document.getElementById('chipProgressWrap').classList.toggle('show',on);if(!on)document.getElementById('chipProgressFill').style.width='0%';}
+function chipSetProgress(r,label){document.getElementById('chipProgressFill').style.width=(r*100).toFixed(0)+'%';document.getElementById('chipProgressLabel').textContent=`${Math.round(r*100)}%  掃描中：${label}`;}
+function chipFmt(n){return n>=10000?(n/10000).toFixed(1)+'萬':n.toLocaleString();}
+function chipNowHHMM(){const n=new Date();return String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');}
+function chipSleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+document.querySelectorAll('#page-stats .chip-nav-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('#page-stats .chip-nav-btn').forEach(b=>{
+      b.style.background='transparent'; b.style.color='var(--text-secondary)'; b.style.borderColor='var(--border)';
+      b.classList.remove('active');
+    });
+    btn.style.background='rgba(240,180,41,.15)'; btn.style.color='#f0b429'; btn.style.borderColor='rgba(240,180,41,.3)';
+    btn.classList.add('active');
+    const page=btn.dataset.page;
+    document.querySelectorAll('#page-stats .chip-subpage').forEach(p=>p.style.display='none');
+    const target=document.getElementById('chipSubPage-'+page);
+    if(target) target.style.display='block';
+    if(page==='chip') chipRenderChipPage();
+    if(page==='notify') chipRenderNotifyPage();
+    if(page==='settings') chipRenderSettingsPage();
+    if(page==='market') chipLoadMarketData();
+  });
+});
+
+document.querySelectorAll('#page-stats .filter-chip').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    chipFilter=chip.dataset.f;
+    chipRenderSignalPage();
+  });
+});
+
+
+// ═══════════════════════════════════════════════
+//  多空判斷 — 市場狀態分析
+// ═══════════════════════════════════════════════
+
+// 用 dashStooq 相同邏輯抓指數歷史（台股加權 ^twii / OTC ^twoii）
+async function chipFetchIndexHistory(yahooSym, days) {
+  try {
+    const range = days > 100 ? '12mo' : '3mo';
+    const d = await chipProxyFetch(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(yahooSym)}?interval=1d&range=${range}`);
+    const closes = d?.chart?.result?.[0]?.indicators?.quote?.[0]?.close?.filter(v=>v!=null&&v>0);
+    if (closes?.length >= 2) return closes.slice(-days);
+  } catch {}
+  return null;
+}
+
+let chipchipchip_mktLoading = false;
+
+async function chipLoadMarketData() {
+  if (chip_mktLoading) return;
+  chipchip_mktLoading = true;
+
+  const icon = document.getElementById('chipMktRefreshIcon');
+  const btn  = document.getElementById('chipMktRefreshBtn');
+  if (icon) icon.className = 'spin';
+  if (btn)  btn.style.pointerEvents = 'none';
+
+  chipSetMktLoading();
+
+  try {
+    // 同時抓：加權(twii) 200天、OTC(twoii) 30天
+    const [tseHist, otcHist] = await Promise.all([
+      chipFetchIndexHistory('^TWII', 210),
+      chipFetchIndexHistory('^TWOII', 30),
+    ]);
+
+    if (!tseHist || tseHist.length < 5) {
+      chipSetMktError('無法取得加權指數資料，請稍後再試');
+      return;
+    }
+
+    const tseNow   = tseHist[tseHist.length - 1];
+    const tsePrev  = tseHist[tseHist.length - 2];
+    const tseChg   = ((tseNow - tsePrev) / tsePrev * 100);
+
+    // 200MA（年線）
+    const ma200arr = tseHist.slice(-200);
+    const ma200    = ma200arr.reduce((a,b)=>a+b,0) / ma200arr.length;
+    // 年線斜率：今日 200MA vs 20日前 200MA
+    const ma200old = tseHist.length >= 220
+      ? tseHist.slice(-220,-20).reduce((a,b)=>a+b,0)/200
+      : ma200;
+    const ma200slope = ma200 - ma200old; // 正 = 向上
+
+    const biasMa200 = (tseNow - ma200) / ma200 * 100;
+    const aboveMa200 = tseNow > ma200;
+
+    // OTC
+    let otcNow = null, otcChg = null;
+    if (otcHist && otcHist.length >= 2) {
+      otcNow  = otcHist[otcHist.length - 1];
+      const otcPrev = otcHist[otcHist.length - 2];
+      otcChg  = (otcNow - otcPrev) / otcPrev * 100;
+    }
+
+    // ── 牛熊判斷 ──
+    let marketState, stateClass;
+    if (aboveMa200 && ma200slope > 0) {
+      marketState = '牛市'; stateClass = 'bull';
+    } else if (!aboveMa200 && ma200slope < 0) {
+      marketState = '熊市'; stateClass = 'bear';
+    } else {
+      marketState = '盤整'; stateClass = 'neutral';
+    }
+
+    // ── 資金主角 ──
+    let flowMsg = '—', flowClass = 'neutral';
+    if (otcChg !== null) {
+      if (tseChg > otcChg + 0.3) {
+        flowMsg = '權值股拉升（大象起舞）'; flowClass = 'bull';
+      } else if (otcChg > tseChg + 0.3) {
+        flowMsg = '中小型股撐盤（小鋼炮噴發）'; flowClass = 'bear';
+      } else {
+        flowMsg = '加權與 OTC 同步'; flowClass = 'neutral';
+      }
+    }
+
+    // ── 年線斜率文字 ──
+    const slopeText = ma200slope > 0 ? '向上（多頭結構）' : ma200slope < 0 ? '向下（空頭結構）' : '走平（觀察中）';
+    const slopeClass = ma200slope > 0 ? 'bull' : ma200slope < 0 ? 'bear' : 'neutral';
+
+    // ── 建議 ──
+    let advice, adviceClass;
+    if (stateClass === 'bull') {
+      advice = '符合雷達訊號　積極佈局多方'; adviceClass = 'bull';
+    } else if (stateClass === 'bear') {
+      advice = '空頭環境謹慎操作　嚴守停損'; adviceClass = 'bear';
+    } else {
+      advice = '盤整觀望　等待方向明確'; adviceClass = 'neutral';
+    }
+
+    // ── 更新 UI ──
+    // Hero
+    const hero = document.getElementById('chipMktHero');
+    hero.className = `chip-mkt-hero ${stateClass}`;
+    document.getElementById('chipMktVerdict').className = `chip-mkt-verdict ${stateClass}`;
+    document.getElementById('chipMktVerdict').textContent = `【${marketState}】${stateClass==='bull'?'🐂':stateClass==='bear'?'🐻':'⚖️'}`;
+    document.getElementById('chipMktSub').innerHTML =
+      `加權 ${aboveMa200?'站上':'跌破'} 200MA（${biasMa200>=0?'+':''}${biasMa200.toFixed(1)}%）　年線${slopeText}<br>
+       <span class="mkt-tag ${stateClass}">${advice}</span>`;
+
+    // Grid
+    const tseUp = tseChg >= 0;
+    document.getElementById('chipMktTse').className    = `mkt-card-val ${tseUp?'up':'dn'}`;
+    document.getElementById('chipMktTse').textContent  = tseNow.toLocaleString('zh-TW',{maximumFractionDigits:0});
+    document.getElementById('chipMktTseChg').textContent = `${tseUp?'▲':'▼'} ${Math.abs(tseChg).toFixed(2)}%`;
+    document.getElementById('chipMktTseChg').style.color = tseUp?'var(--red)':'var(--blue)';
+
+    document.getElementById('chipMktMa200').className   = `mkt-card-val ${aboveMa200?'up':'dn'}`;
+    document.getElementById('chipMktMa200').textContent = ma200.toLocaleString('zh-TW',{maximumFractionDigits:0});
+    document.getElementById('chipMktMa200Sub').textContent = `指數${aboveMa200?'站上':'跌破'}年線`;
+    document.getElementById('chipMktMa200Sub').style.color = aboveMa200?'var(--red)':'var(--blue)';
+
+    const biasUp = biasMa200 >= 0;
+    document.getElementById('chipMktMaBias').className   = `mkt-card-val ${biasUp?'up':'dn'}`;
+    document.getElementById('chipMktMaBias').textContent = `${biasUp?'+':''}${biasMa200.toFixed(1)}%`;
+    document.getElementById('chipMktMaBiasSub').textContent = biasUp?'正乖離（指數偏高）':'負乖離（指數偏低）';
+
+    if (otcNow) {
+      const otcUp = otcChg >= 0;
+      document.getElementById('chipMktOtc').className   = `mkt-card-val ${otcUp?'up':'dn'}`;
+      document.getElementById('chipMktOtc').textContent = otcNow.toLocaleString('zh-TW',{maximumFractionDigits:2});
+      document.getElementById('chipMktOtcChg').textContent = `${otcUp?'▲':'▼'} ${Math.abs(otcChg).toFixed(2)}%`;
+      document.getElementById('chipMktOtcChg').style.color = otcUp?'var(--red)':'var(--blue)';
+
+      // Flow bar
+      const tseAbs = Math.abs(tseChg), otcAbs = Math.abs(otcChg), total = tseAbs+otcAbs||1;
+      document.getElementById('chipFlowTse').style.flex = tseAbs/total;
+      document.getElementById('chipFlowOtc').style.flex = otcAbs/total;
+      document.getElementById('chipFlowTseLabel').textContent = `加權 ${tseChg>=0?'+':''}${tseChg.toFixed(2)}%`;
+      document.getElementById('chipFlowOtcLabel').textContent = `OTC ${otcChg>=0?'+':''}${otcChg.toFixed(2)}%`;
+      document.getElementById('chipFlowCenter').textContent = flowMsg;
+    }
+
+    // Analysis rows
+    document.getElementById('chipMktAnalysisRows').innerHTML = `
+      <div class="mkt-row">
+        <span class="mkt-row-icon">${stateClass==='bull'?'🐂':stateClass==='bear'?'🐻':'⚖️'}</span>
+        <div class="mkt-row-content">
+          <div class="mkt-row-label">【市場狀態】</div>
+          <div class="mkt-row-val">加權 ${tseNow.toLocaleString('zh-TW',{maximumFractionDigits:0})} vs 200MA ${ma200.toLocaleString('zh-TW',{maximumFractionDigits:0})}　年線${slopeText}</div>
+        </div>
+        <span class="mkt-row-badge ${stateClass}">${marketState}</span>
+      </div>
+      <div class="mkt-row">
+        <span class="mkt-row-icon">💰</span>
+        <div class="mkt-row-content">
+          <div class="mkt-row-label">【資金風向】</div>
+          <div class="mkt-row-val">加權${tseChg>=0?'+':''}${tseChg.toFixed(2)}%　OTC${otcChg!==null?(otcChg>=0?'+':'')+otcChg.toFixed(2)+'%':'—'}</div>
+        </div>
+        <span class="mkt-row-badge ${flowClass}">${otcChg!==null?(tseChg>otcChg+0.3?'權值主導':otcChg>tseChg+0.3?'中小型主導':'同步'):'—'}</span>
+      </div>
+      <div class="mkt-row">
+        <span class="mkt-row-icon">📐</span>
+        <div class="mkt-row-content">
+          <div class="mkt-row-label">【年線乖離】</div>
+          <div class="mkt-row-val">指數距年線 ${biasUp?'+':''}${biasMa200.toFixed(1)}%　${biasUp?'正乖離，注意回測壓力':'負乖離，觀察反彈訊號'}</div>
+        </div>
+        <span class="mkt-row-badge ${Math.abs(biasMa200)>15?'warn':stateClass}">${Math.abs(biasMa200)>15?'過度延伸':biasUp?'偏高':'偏低'}</span>
+      </div>
+      <div class="mkt-row">
+        <span class="mkt-row-icon">🎯</span>
+        <div class="mkt-row-content">
+          <div class="mkt-row-label">【投資建議】</div>
+          <div class="mkt-row-val">${stateClass==='bull'?'牛市環境，搭配個股四重濾網積極選股':''}${stateClass==='bear'?'空頭結構，個股訊號僅供觀察，嚴守風控':''}${stateClass==='neutral'?'盤整格局，以籌碼雷達選強勢標的，輕倉操作':''}</div>
+        </div>
+        <span class="mkt-row-badge ${adviceClass}">${stateClass==='bull'?'積極佈局':stateClass==='bear'?'嚴守停損':'輕倉觀望'}</span>
+      </div>`;
+
+  } catch(err) {
+    chipSetMktError('資料載入失敗：' + err.message);
+  } finally {
+    chipchip_mktLoading = false;
+    if (icon) icon.className = '';
+    if (btn)  btn.style.pointerEvents = '';
+  }
+}
+
+function chipSetMktLoading() {
+  document.getElementById('chipMktHero').className = 'mkt-hero loading';
+  document.getElementById('chipMktVerdict').textContent = '分析中…';
+  document.getElementById('chipMktVerdict').className = 'mkt-verdict neu';
+  document.getElementById('chipMktSub').textContent = '正在抓取加權指數與 OTC 指數資料';
+}
+
+function chipSetMktError(msg) {
+  document.getElementById('chipMktHero').className = 'mkt-hero neutral';
+  document.getElementById('chipMktVerdict').textContent = '⚠️ 資料異常';
+  document.getElementById('chipMktSub').textContent = msg;
+}
+
+
+// ═══════════════════════════════════════════════
+//  GitHub Pages 部署（與 index-db 完全相同）
+// ═══════════════════════════════════════════════
+const CHIP_SUPABASE_URL = 'https://dlwswwioqbghwpksbnjv.supabase.co';
+
+function chipShowToast(msg, type='ok') {
+  let el = document.getElementById('chipToast');
+  if (!el) { el = document.createElement('div'); el.id='chipToast'; document.body.appendChild(el); }
+  el.textContent = msg;
+  el.style.display = 'block';
+  el.style.borderColor = type==='warn' ? 'var(--red)' : 'var(--accent)';
+  clearTimeout(el._t);
+  el._t = setTimeout(() => { el.style.display='none'; }, 3500);
+}
+
+// ═══════════════════════════════════════════════
+//  GitHub Pages 部署設定
+//  rosc99/444 → chip-signal.html
+// ═══════════════════════════════════════════════
+const CHIP_GH_REPO  = 'rosc99/444';
+const CHIP_GH_FILE  = 'chip.html';
+const CHIP_GH_PAGES = 'https://rosc99.github.io/444/chip.html';
+let chipchip_ghToken = localStorage.getItem('gh_token_chip') || '';
+
+async function chipDeployToGitHub() {
+  // 1. 確認有 token
+  if (!chip_ghToken) {
+    const t = prompt(
+      'GitHub Personal Access Token\n' +
+      '（Settings → Developer settings → Personal access tokens → Fine-grained）\n' +
+      '需要 repo Contents: Read & Write 權限\n\n' +
+      '輸入後會儲存在本機，下次不用再輸入：'
+    );
+    if (!t) return;
+    chip_ghToken = t.trim();
+    localStorage.setItem('gh_token_chip', chip_ghToken);
+  }
+
+  const btn = document.getElementById('chipDeployBtn');
+  if (btn) { btn.textContent = '⏫'; btn.disabled = true; }
+  chipShowToast('⏫ 正在推送到 GitHub Pages…', 'ok');
+
+  try {
+    // 2. 快照 HTML（先隱藏 UI 元素避免殘留）
+    const toastEl = document.getElementById('chipToast');
+    if (toastEl) toastEl.style.display = 'none';
+    if (btn) { btn.textContent = '☁️'; btn.disabled = false; }
+
+    const rawHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+    if (btn) { btn.textContent = '⏫'; btn.disabled = true; }
+    chipShowToast('⏫ 正在推送到 GitHub Pages…', 'ok');
+
+    const content = btoa(unescape(encodeURIComponent(rawHtml)));
+
+    // 3. 取得現有檔案的 SHA（更新時必須提供）
+    const apiBase = `https://api.github.com/repos/${CHIP_GH_REPO}/contents/${CHIP_GH_FILE}`;
+    let sha = '';
+    try {
+      const getRes = await fetch(apiBase, {
+        headers: {
+          'Authorization': `Bearer ${chip_ghToken}`,
+          'Accept': 'application/vnd.github+json',
+        }
+      });
+      if (getRes.ok) {
+        const meta = await getRes.json();
+        sha = meta.sha || '';
+      }
+    } catch {}
+
+    // 4. 推送（PUT）
+    const body = {
+      message: `🤖 auto-deploy chip-signal ${new Date().toLocaleString('zh-TW')}`,
+      content,
+      ...(sha ? { sha } : {}),
+    };
+
+    const putRes = await fetch(apiBase, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${chip_ghToken}`,
+        'Accept': 'application/vnd.github+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (putRes.ok) {
+      chipShowToast('✅ 推送成功！約1分鐘後生效', 'ok');
+      if (btn) {
+        btn.textContent = '✅';
+        setTimeout(() => { btn.textContent = '☁️'; btn.disabled = false; }, 3000);
+      }
+    } else {
+      const err = await putRes.json().catch(() => ({}));
+      // Token 錯誤 → 清除重試
+      if (putRes.status === 401 || putRes.status === 403) {
+        localStorage.removeItem('gh_token_chip');
+        chip_ghToken = '';
+        chipShowToast('❌ Token 無效，已清除，請重新點擊輸入', 'warn');
+      } else {
+        chipShowToast('❌ ' + (err.message || `HTTP ${putRes.status}`), 'warn');
+      }
+      if (btn) { btn.textContent = '☁️'; btn.disabled = false; }
+    }
+  } catch(e) {
+    chipShowToast('❌ ' + e.message, 'warn');
+    if (btn) { btn.textContent = '☁️'; btn.disabled = false; }
+  }
+}
+
+
+// ═══════════════════════════════════════════════
+//  資料診斷工具
+// ═══════════════════════════════════════════════
+async function chipRunDiag() {
+  let el = document.getElementById('chipDiagResult');
+  if (!el) { chipRenderSettingsPage(); el = document.getElementById('chipDiagResult'); }
+  if (!el) return;
+  el.style.display = 'block';
+  el.innerHTML = '⏳ 診斷中…';
+  const lines = [];
+  const ts = (label, ok, detail) => {
+    lines.push(`${ok?'✅':'❌'} ${label}: ${detail}`);
+    el.innerHTML = lines.join('<br>');
+  };
+  try {
+    const d = await chipProxyFetch('https://query1.finance.yahoo.com/v8/finance/chart/2330.TW?interval=1d&range=5d');
+    const price = d?.chart?.result?.[0]?.meta?.regularMarketPrice;
+    ts('報價 2330', !!price, price ? `價格=${price}` : '無資料');
+  } catch(e) { ts('報價 2330', false, e.message.slice(0,50)); }
+  try {
+    const d = await chipProxyFetch('https://query1.finance.yahoo.com/v8/finance/chart/2330.TW?interval=1d&range=3mo');
+    const closes = d?.chart?.result?.[0]?.indicators?.quote?.[0]?.close?.filter(v=>v!=null);
+    ts('歷史 2330', closes?.length>=22, closes ? `${closes.length}筆,最新=${closes.at(-1)?.toFixed(0)}` : '無資料');
+  } catch(e) { ts('歷史 2330', false, e.message.slice(0,50)); }
+  try {
+    const d = await chipProxyFetch('https://query1.finance.yahoo.com/v8/finance/chart/%5ETWII?interval=1d&range=12mo');
+    const closes = d?.chart?.result?.[0]?.indicators?.quote?.[0]?.close?.filter(v=>v!=null&&v>0);
+    ts('加權指數 ^TWII', closes?.length>=5, closes ? `${closes.length}筆,最新=${closes.at(-1)?.toFixed(0)}` : '無資料');
+  } catch(e) { ts('加權指數 ^TWII', false, e.message.slice(0,50)); }
+  lines.push('─────────────────');
+  lines.push('診斷完成');
+  el.innerHTML = lines.join('<br>');
+}
+
+// chip init - called by index.html when stats page is shown
+function chipInit() {
+  chipUpdateStats();
+  chipRenderSettingsPage();
+}
+chipInit();
+
 
 </script>
 <div style="position: fixed; pointer-events: none; padding: 8px 12px; background: rgb(30, 35, 53); border: 1px solid rgb(46, 53, 80); border-radius: 8px; font-size: 0.75rem; color: rgb(232, 236, 245); display: none; z-index: 999; line-height: 1.8; font-family: &quot;DM Mono&quot;, monospace; box-shadow: rgba(0, 0, 0, 0.5) 0px 8px 24px;"></div></body></html>
