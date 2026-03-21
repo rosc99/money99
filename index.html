@@ -1822,7 +1822,7 @@ input::placeholder { color: var(--text-muted); }
 #page-stats .cr-metric-sub{font-size:0.62rem;color:var(--text-muted);margin-top:3px}
 
 /* ── Flow bar ── */
-#page-stats .cr-flow-bar{display:flex;height:20px;border-radius:6px;overflow:hidden;margin-bottom:6px}
+#page-stats .cr-flow-bar{display:flex;height:24px;border-radius:8px;overflow:hidden;margin-bottom:8px}
 #page-stats .cr-flow-tse{background:var(--accent-red);transition:flex .6s}
 #page-stats .cr-flow-otc{background:var(--accent-blue);transition:flex .6s}
 #page-stats .cr-flow-legend{display:flex;justify-content:space-between;font-size:0.65rem}
@@ -2084,7 +2084,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-22 04:10:57</div>
+    <div class="clock-display" id="clockDisplay">2026-03-22 04:23:24</div>
   </div>
 </aside>
 
@@ -12052,33 +12052,34 @@ async function chipLoadMarketData() {
       setSafe('chipMktOtc',    otcNow.toLocaleString('zh-TW',{maximumFractionDigits:2}), otcChg>=0?'up':'dn');
       setSafe('chipMktOtcChg', `${otcChg>=0?'▲':'▼'}${Math.abs(otcChg).toFixed(2)}%`);
       if (document.getElementById('chipMktOtcChg')) document.getElementById('chipMktOtcChg').style.color = otcChg>=0?'var(--accent-red)':'var(--accent-blue)';
-      // Flow bar — 依漲跌比例分割，顏色反映漲跌方向
-      const tseA=Math.abs(tseChg), otcA=Math.abs(otcChg), tot=tseA+otcA||1;
-      const ft=document.getElementById('chipFlowTse'), fo=document.getElementById('chipFlowOtc');
-      if (ft) {
-        ft.style.flex = tseA/tot;
-        ft.style.background = tseChg>=0 ? 'var(--accent-red)' : 'var(--accent-green)';
-        ft.title = `加權 ${tseChg>=0?'+':''}${tseChg.toFixed(2)}%`;
-      }
-      if (fo) {
-        fo.style.flex = otcA/tot;
-        fo.style.background = otcChg>=0 ? '#a78bfa' : '#06b6d4';
-        fo.title = `OTC ${otcChg>=0?'+':''}${otcChg.toFixed(2)}%`;
-      }
-      // Add percentage labels inside bar
+      // Flow bar — 依漲跌強弱比例分割，加最小寬度避免歸零
+      const tseA = Math.abs(tseChg);
+      const otcA = Math.abs(otcChg);
+      // 加最小值 0.05 避免任一方完全歸零看不見
+      const tseSafe = tseA + 0.05;
+      const otcSafe = otcA + 0.05;
+      const tot = tseSafe + otcSafe;
+      const tsePct = (tseSafe / tot * 100).toFixed(1);
+      const otcPct = (otcSafe / tot * 100).toFixed(1);
+      const tseColor = tseChg >= 0 ? '#ff4d6d' : '#00e5a0';
+      const otcColor = otcChg >= 0 ? '#a78bfa' : '#06b6d4';
+      const tseLabel = `${tseChg>=0?'▲':'▼'}${Math.abs(tseChg).toFixed(2)}%`;
+      const otcLabel = `${otcChg>=0?'▲':'▼'}${Math.abs(otcChg).toFixed(2)}%`;
+
       const fbar = document.getElementById('chipFlowBar');
       if (fbar) {
         fbar.innerHTML = `
-          <div style="flex:${tseA/tot};background:${tseChg>=0?'var(--accent-red)':'var(--accent-green)'};height:100%;display:flex;align-items:center;justify-content:center;font-size:0.55rem;font-weight:700;color:#000;min-width:30px;transition:flex .6s">
-            ${tseChg>=0?'▲':'▼'}${Math.abs(tseChg).toFixed(2)}%
+          <div style="flex:${tseSafe};background:${tseColor};height:100%;display:flex;align-items:center;justify-content:center;transition:flex .6s ease;min-width:36px;">
+            <span style="font-size:0.6rem;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5)">${tseLabel}</span>
           </div>
-          <div style="flex:${otcA/tot};background:${otcChg>=0?'#a78bfa':'#06b6d4'};height:100%;display:flex;align-items:center;justify-content:center;font-size:0.55rem;font-weight:700;color:#000;min-width:30px;transition:flex .6s">
-            ${otcChg>=0?'▲':'▼'}${Math.abs(otcChg).toFixed(2)}%
+          <div style="width:2px;background:rgba(0,0,0,.3);flex-shrink:0;"></div>
+          <div style="flex:${otcSafe};background:${otcColor};height:100%;display:flex;align-items:center;justify-content:center;transition:flex .6s ease;min-width:36px;">
+            <span style="font-size:0.6rem;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5)">${otcLabel}</span>
           </div>`;
       }
       const fl=document.getElementById('chipFlowTseLabel'), fr=document.getElementById('chipFlowOtcLabel'), fc=document.getElementById('chipFlowCenter');
-      if (fl) fl.textContent = `加權 ${tseChg>=0?'+':''}${tseChg.toFixed(2)}%`;
-      if (fr) fr.textContent = `OTC ${otcChg>=0?'+':''}${otcChg.toFixed(2)}%`;
+      if (fl) { fl.textContent = `加權 ${tseChg>=0?'+':''}${tseChg.toFixed(2)}%`; fl.style.color = tseChg>=0?'#ff4d6d':'#00e5a0'; }
+      if (fr) { fr.textContent = `OTC ${otcChg>=0?'+':''}${otcChg.toFixed(2)}%`;   fr.style.color = otcChg>=0?'#a78bfa':'#06b6d4'; }
       if (fc) fc.textContent = flowMsg;
     }
 
