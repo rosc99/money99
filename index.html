@@ -2049,7 +2049,7 @@ input::placeholder { color: var(--text-muted); }
   </div>
 
   <div class="nav-section-label">主頁</div>
-  <div class="nav-item active" onclick="goPage('home',this)">
+  <div class="nav-item" onclick="goPage('home',this)">
     <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span> 總覽主頁
   </div>
 
@@ -2081,10 +2081,10 @@ input::placeholder { color: var(--text-muted); }
 
   <div class="sidebar-bottom">
     <div class="sync-status">
-      <div class="sync-dot" id="syncDot"></div>
-      <span id="syncStatusText">連線中…</span>
+      <div class="sync-dot ok" id="syncDot"></div>
+      <span id="syncStatusText" style="color: var(--accent-green);">已同步</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-22 06:23:14</div>
+    <div class="clock-display" id="clockDisplay">2026-03-22 06:38:46</div>
   </div>
 </aside>
 
@@ -2095,10 +2095,10 @@ input::placeholder { color: var(--text-muted); }
 <!-- ══════════════════════════════════
      MAIN
 ══════════════════════════════════ -->
-<main class="main-content">
+<main class="main-content" style="overflow-y: auto;">
 
   <!-- ── 主頁 ── -->
-  <section class="page active" id="page-home">
+  <section class="page" id="page-home">
     <div class="page-header">
       <div class="page-title-block">
         <div class="page-label">Dashboard</div>
@@ -2229,23 +2229,8 @@ input::placeholder { color: var(--text-muted); }
             </div>
           </div>
         </div>
-        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">總資產</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#f59e0b;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#ff4d6d;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">總負債</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#ff4d6d;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#00e5a0;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">淨資產</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#00e5a0;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div></div>
-        <canvas id="wealthChart" style="width:100%;display:block;" height="220" width="346"></canvas>
+        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"></div>
+        <canvas id="wealthChart" style="width:100%;display:block;" height="220"></canvas>
         <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;" id="wealthXLabels"></div>
       </div>
 
@@ -2824,7 +2809,7 @@ input::placeholder { color: var(--text-muted); }
   </section>
 
   <!-- ── 現金流 ── -->
-  <section class="page" id="page-stats">
+  <section class="page active" id="page-stats">
     <!-- ══ Header ══ -->
     <div class="page-header" style="margin-bottom:12px;">
       <div class="page-title-block">
@@ -2903,6 +2888,9 @@ input::placeholder { color: var(--text-muted); }
       </div>
 
       <!-- Flow bar -->
+      <!-- 三階段出貨偵測卡 -->
+      <div id="chipDistribution" class="cr-card" style="margin-bottom:10px;display:none;border-color:rgba(239,68,68,.25)"></div>
+
       <div class="cr-card" style="margin-bottom:10px;">
         <div class="cr-card-title">資金主角分析</div>
         <div class="cr-flow-bar">
@@ -2934,9 +2922,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="cr-strategy-bar">
         <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">
           <span style="font-size:0.65rem;color:var(--text-muted);white-space:nowrap;">策略</span>
-          <select class="cr-strategy-select" id="crStrategySelect" onchange="crLoadStrategy(this.value)">
-            <option value="default">🎯 預設策略</option>
-          </select>
+          <select class="cr-strategy-select" id="crStrategySelect" onchange="crLoadStrategy(this.value)"><option value="default">🎯 預設策略</option></select>
         </div>
         <div style="display:flex;gap:6px;">
           <button class="cr-icon-btn" onclick="crShowStrategyModal()" title="篩選設定">⚙️</button>
@@ -3657,7 +3643,7 @@ input::placeholder { color: var(--text-muted); }
 
 
 <nav class="mobile-nav" id="mobileNav">
-  <div class="mobile-nav-item active" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
+  <div class="mobile-nav-item" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span><span>總覽</span>
   </div>
   <div class="mobile-nav-item" id="mn-ledger" onclick="goPage('ledger', null, 'mn-ledger')">
@@ -3666,7 +3652,7 @@ input::placeholder { color: var(--text-muted); }
   <div class="mobile-nav-item" id="mn-invest" onclick="goPage('invest', null, 'mn-invest')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span><span>投資</span>
   </div>
-  <div class="mobile-nav-item" id="mn-stats" onclick="goPage('stats',      null, 'mn-stats')">
+  <div class="mobile-nav-item active" id="mn-stats" onclick="goPage('stats',      null, 'mn-stats')">
     <span class="mobile-nav-icon">📡</span><span>雷達</span>
   </div>
 <div class="mobile-nav-item" id="mn-intel" onclick="goPage('intel',      null, 'mn-intel')">
@@ -12343,6 +12329,75 @@ function crApplyTemplate(key) {
   // 重新渲染 modal 以高亮選中模板
   crShowStrategyModal();
   chipShowToast(`✅ 已套用：${t.name}`, 'ok');
+}
+
+
+// ══════════════════════════════════════════════
+//  三階段出貨偵測
+//  依據：加權/OTC 差值 + 年線乖離 + 歷史連續天數
+// ══════════════════════════════════════════════
+function chipDetectDistribution(tseChg, otcChg, biasMa200, tseHist) {
+  const result = { stage: 0, label: '', color: '', detail: '', warning: '', advice: '' };
+  if (otcChg === null) return result;
+
+  const diff     = tseChg - otcChg;          // 正值=加權強
+  const tseDir   = tseChg  >  0.05 ? 1 : tseChg  < -0.05 ? -1 : 0;
+  const otcDir   = otcChg  >  0.05 ? 1 : otcChg  < -0.05 ? -1 : 0;
+  const bias     = biasMa200;                // 年線乖離
+  const biasHigh = bias > 20;               // 乖離過高警戒線
+
+  // 連續幾天 OTC < 加權（用近期收盤估算，此處用當日數據判斷）
+  const pullLarge = tseDir >= 0 && otcDir < 0 && diff > 0.2; // 拉大出小特徵
+  const bothDown  = tseDir < 0  && otcDir < 0;               // 雙跌
+  const tseCrash  = tseDir < 0  && Math.abs(tseChg) > 1.0;  // 權值股大跌
+
+  // ── 第一階段：拉大出小 ──
+  if (pullLarge && biasHigh) {
+    result.stage   = 1;
+    result.label   = '⚠️ 第一階段：拉大出小';
+    result.color   = '#f59e0b';
+    result.detail  = `加權${tseChg>=0?'+':''}${tseChg.toFixed(2)}% 撐盤，OTC${otcChg.toFixed(2)}% 失血。年線乖離 ${bias.toFixed(1)}% 偏高，疑似高檔護盤掩護出貨。`;
+    result.warning = '中小型股籌碼正在鬆動，外資可能在高檔出脫 OTC 持股，加權指數的平穩是假象。';
+    result.advice  = '⚡ 避開 OTC 中小型股，若持有需提高警覺。觀察台積電量能是否縮減、台幣是否貶值。';
+  }
+  // ── 第二階段：結構背離 ──
+  else if (otcDir < 0 && diff > 0.3 && bias > 15) {
+    result.stage   = 2;
+    result.label   = '🚨 第二階段：結構背離';
+    result.color   = '#ef4444';
+    result.detail  = `加權仍撐，OTC 明顯弱勢（差值 ${diff.toFixed(2)}%）。市場廣度惡化，多數個股已在下跌。`;
+    result.warning = '高達 80% 的股票可能正在下跌，只有少數權值股在撐住指數。這是空頭市場的前兆。';
+    result.advice  = '🛑 大幅降低持股比例，停止追逐反彈。密切觀察台積電是否跌破月線。';
+  }
+  // ── 第三階段：一起出貨 ──
+  else if (tseCrash || (bothDown && Math.abs(tseChg) > Math.abs(otcChg) + 0.3)) {
+    result.stage   = 3;
+    result.label   = '🔴 第三階段：一起出貨';
+    result.color   = '#dc2626';
+    result.detail  = `權值股加速下跌（加權 ${tseChg.toFixed(2)}%），外資放棄支撐。大盤指數恐跌破關鍵均線，觸發恐慌拋售。`;
+    result.warning = '外資籌碼換手完畢，開始反手大砍台積電。指數長黑 K 棒出現，全市場恐慌性拋售風險極高。';
+    result.advice  = '🆘 保持空手或做好停損。等待市場出現真正的恐慌低點（VIX 飆升、成交量爆量）再考慮布局。';
+  }
+  // ── 健康多頭 ──
+  else if (tseDir > 0 && otcDir > 0 && diff < 0.3) {
+    result.stage   = 0;
+    result.label   = '✅ 健康多頭';
+    result.color   = '#00e5a0';
+    result.detail  = `加權與 OTC 同步上漲，市場廣度健全，無出貨訊號。年線乖離 ${bias.toFixed(1)}%。`;
+    result.warning = bias > 20 ? `⚠️ 年線乖離已達 ${bias.toFixed(1)}%，歷史上超過 25% 後回調機率升高，注意高點風險。` : '';
+    result.advice  = '可持續持股，但年線乖離偏高時宜適度減碼高風險標的。';
+  }
+  // ── 觀察期 ──
+  else {
+    result.stage   = 0;
+    result.label   = '🔍 觀察期';
+    result.color   = '#6b7280';
+    result.detail  = `加權 ${tseChg>=0?'+':''}${tseChg.toFixed(2)}%，OTC ${otcChg>=0?'+':''}${otcChg.toFixed(2)}%。尚無明顯出貨訊號，持續觀察。`;
+    result.warning = biasHigh ? `年線乖離 ${bias.toFixed(1)}% 仍偏高，保持警覺。` : '';
+    result.advice  = '維持現有倉位，等待更明確方向。';
+  }
+
+  return result;
 }
 
 // chip init - called by index.html when stats page is shown
