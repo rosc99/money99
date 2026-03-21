@@ -2084,7 +2084,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-22 04:23:24</div>
+    <div class="clock-display" id="clockDisplay">2026-03-22 04:48:03</div>
   </div>
 </aside>
 
@@ -2229,8 +2229,23 @@ input::placeholder { color: var(--text-muted); }
             </div>
           </div>
         </div>
-        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"></div>
-        <canvas id="wealthChart" style="width:100%;display:block;" height="220"></canvas>
+        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#f59e0b;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#ff4d6d;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總負債</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#ff4d6d;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#00e5a0;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">淨資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#00e5a0;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div></div>
+        <canvas id="wealthChart" style="width:100%;display:block;" height="220" width="346"></canvas>
         <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;" id="wealthXLabels"></div>
       </div>
 
@@ -12011,12 +12026,34 @@ async function chipLoadMarketData() {
     else if (!aboveMa200 && ma200slope < 0)  { marketState='熊市'; stateClass='bear'; }
     else                                      { marketState='盤整'; stateClass='neutral'; }
 
-    // 資金主角
-    let flowMsg='—', flowClass='cr-neu';
+    // 資金主角 — 考慮絕對漲跌方向
+    let flowMsg='—', flowClass='cr-neu', flowDetail='';
     if (otcChg !== null) {
-      if      (tseChg > otcChg + 0.3) { flowMsg='權值股拉升（大象起舞）';     flowClass='cr-badge-bull'; }
-      else if (otcChg > tseChg + 0.3) { flowMsg='中小型股撐盤（小鋼炮噴發）'; flowClass='cr-badge-bear'; }
-      else                             { flowMsg='加權與 OTC 同步';             flowClass='cr-badge-neu';  }
+      const tseUp  = tseChg >  0.05;
+      const tseDn  = tseChg < -0.05;
+      const otcUp  = otcChg >  0.05;
+      const otcDn  = otcChg < -0.05;
+      const diff   = tseChg - otcChg;
+
+      if (tseUp && otcUp) {
+        if      (diff >  0.3) { flowMsg='權值股領漲';    flowClass='cr-badge-bull'; flowDetail='加權強於OTC，大型股主導上攻'; }
+        else if (diff < -0.3) { flowMsg='中小型股領漲';  flowClass='cr-badge-bear'; flowDetail='OTC強於加權，小鋼炮噴發'; }
+        else                  { flowMsg='全面多頭';       flowClass='cr-badge-bull'; flowDetail='加權與OTC同步上漲，市場健康'; }
+      } else if (tseDn && otcDn) {
+        if      (diff >  0.3) { flowMsg='中小型股殺盤';  flowClass='cr-badge-warn'; flowDetail='OTC跌幅較大，小型股賣壓重'; }
+        else if (diff < -0.3) { flowMsg='權值股殺盤';    flowClass='cr-badge-warn'; flowDetail='加權跌幅較大，大型股賣壓重'; }
+        else                  { flowMsg='全面賣壓';       flowClass='cr-badge-warn'; flowDetail='加權與OTC同步下跌，避險優先'; }
+      } else if (tseUp && otcDn) {
+        flowMsg='護盤集中權值';  flowClass='cr-badge-neu'; flowDetail='加權撐盤但OTC下跌，資金集中大型護盤股';
+      } else if (tseDn && otcUp) {
+        flowMsg='資金轉向中小型'; flowClass='cr-badge-bear'; flowDetail='OTC逆勢上漲，資金流向中小型股';
+      } else if (tseUp) {
+        flowMsg='加權微漲';      flowClass='cr-badge-bull'; flowDetail='加權小幅上漲，OTC持平';
+      } else if (otcUp) {
+        flowMsg='OTC微漲';       flowClass='cr-badge-bear'; flowDetail='OTC小幅上漲，加權持平';
+      } else {
+        flowMsg='盤整觀望';      flowClass='cr-badge-neu'; flowDetail='加權與OTC皆無明顯方向';
+      }
     }
 
     const slopeText  = ma200slope>0?'向上（多頭）':ma200slope<0?'向下（空頭）':'走平';
@@ -12069,11 +12106,11 @@ async function chipLoadMarketData() {
       const fbar = document.getElementById('chipFlowBar');
       if (fbar) {
         fbar.innerHTML = `
-          <div style="flex:${tseSafe};background:${tseColor};height:100%;display:flex;align-items:center;justify-content:center;transition:flex .6s ease;min-width:36px;">
+          <div style="flex:${tseSafe};background:${tseColor};height:100%;display:flex;align-items:center;justify-content:center;transition:flex .6s ease;min-width:28px;">
             <span style="font-size:0.6rem;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5)">${tseLabel}</span>
           </div>
           <div style="width:2px;background:rgba(0,0,0,.3);flex-shrink:0;"></div>
-          <div style="flex:${otcSafe};background:${otcColor};height:100%;display:flex;align-items:center;justify-content:center;transition:flex .6s ease;min-width:36px;">
+          <div style="flex:${otcSafe};background:${otcColor};height:100%;display:flex;align-items:center;justify-content:center;transition:flex .6s ease;min-width:28px;">
             <span style="font-size:0.6rem;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5)">${otcLabel}</span>
           </div>`;
       }
@@ -12098,7 +12135,7 @@ async function chipLoadMarketData() {
         <span class="cr-analysis-icon">💰</span>
         <div class="cr-analysis-content">
           <div class="cr-analysis-label">【資金風向】</div>
-          <div class="cr-analysis-val">加權${tseChg>=0?'+':''}${tseChg.toFixed(2)}% · OTC${otcChg!==null?(otcChg>=0?'+':'')+otcChg.toFixed(2)+'%':'—'}</div>
+          <div class="cr-analysis-val">加權${tseChg>=0?'+':''}${tseChg.toFixed(2)}% · OTC${otcChg!==null?(otcChg>=0?'+':'')+otcChg.toFixed(2)+'%':'—'}<br><span style="color:var(--text-muted);font-size:0.6rem">${flowDetail}</span></div>
         </div>
         <span class="cr-analysis-badge ${flowClass}">${otcChg!==null?(tseChg>otcChg+0.3?'權值主導':otcChg>tseChg+0.3?'中小型主導':'同步'):'—'}</span>
       </div>
