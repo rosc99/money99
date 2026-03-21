@@ -2639,7 +2639,7 @@ input::placeholder { color: var(--text-muted); }
         <h1>籌碼雷達</h1>
       </div>
       <div style="display:flex;gap:8px;align-items:center">
-        <button class="chip-deploy-btn" onclick="chipDeployToGitHub()" title="推送到 GitHub Pages">☁️</button>
+        <button class="chip-deploy-btn" id="chipDeployBtn" onclick="chipDeployToGitHub()" title="推送到 GitHub Pages">☁️</button>
         <button class="chip-scan-btn" id="chipScanBtn" onclick="chipStartScan()">▶ 開始掃描</button>
       </div>
     </div>
@@ -2717,7 +2717,7 @@ input::placeholder { color: var(--text-muted); }
         <div class="chip-mkt-flow-title">四重分析結果</div>
         <div id="chipMktAnalysisRows"><div style="color:var(--text-muted);font-size:0.75rem;text-align:center;padding:12px">點擊「重新分析」載入資料</div></div>
       </div>
-      <div class="chip-mkt-refresh-btn" onclick="chipLoadMarketData()">⟳ 重新分析</div>
+      <div class="chip-mkt-refresh-btn" id="chipMktRefreshBtn" onclick="chipLoadMarketData()"><span id="chipMktRefreshIcon">⟳</span> 重新分析</div>
     </div>
 
     <div id="chipSubPage-notify" class="chip-subpage" style="display:none">
@@ -11220,7 +11220,7 @@ function chipRenderSettingsPage(){
       <div class="setting-info"><div class="chip-setting-name">測試單支股票資料</div><div class="chip-setting-sub">測試 2330 台積電的報價與歷史資料</div></div>
       <div class="chip-setting-val">▶ 執行</div>
     </div>
-    <div id="diagResult" style="margin-top:8px;padding:12px;background:#0a0c10;border:1px solid var(--border);border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);line-height:1.8;display:none"></div>`;
+    <div id="chipDiagResult" style="margin-top:8px;padding:12px;background:#0a0c10;border:1px solid var(--border);border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);line-height:1.8;display:none"></div>`;
   document.querySelectorAll('#page-stats .chip-toggle').forEach(t=>{
     t.addEventListener('click',()=>{
       const k=t.dataset.key; CHIP_CFG[k]=!CHIP_CFG[k];
@@ -11633,7 +11633,14 @@ async function chipDeployToGitHub() {
 //  資料診斷工具
 // ═══════════════════════════════════════════════
 async function chipRunDiag() {
-  const el = document.getElementById('chipDiagResult');
+  // Ensure the diag div exists (it's inside dynamically rendered settings)
+  let el = document.getElementById('chipDiagResult');
+  if (!el) {
+    // Re-render settings first then find it
+    chipRenderSettingsPage();
+    el = document.getElementById('chipDiagResult');
+  }
+  if (!el) return;
   el.style.display = 'block';
   el.innerHTML = '⏳ 診斷中…';
   const lines = [];
