@@ -2204,7 +2204,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-23 22:46:30</div>
+    <div class="clock-display" id="clockDisplay">2026-03-23 22:56:39</div>
   </div>
 </aside>
 
@@ -2349,8 +2349,23 @@ input::placeholder { color: var(--text-muted); }
             </div>
           </div>
         </div>
-        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"></div>
-        <canvas id="wealthChart" style="width:100%;display:block;" height="220"></canvas>
+        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#f59e0b;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#ff4d6d;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總負債</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#ff4d6d;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#00e5a0;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">淨資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#00e5a0;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div></div>
+        <canvas id="wealthChart" style="width:100%;display:block;" height="220" width="346"></canvas>
         <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;" id="wealthXLabels"></div>
       </div>
 
@@ -13162,8 +13177,10 @@ async function etfFetchHistory_Yahoo(ticker, range='3mo') {
     const rows = [];
     for (let i = 0; i < timestamps.length; i++) {
       if (!q.close[i]) continue;
+      const _t = new Date(timestamps[i]*1000);
       rows.push({
-        date:   new Date(timestamps[i]*1000).toISOString().slice(0,10),
+        t:      _t,
+        date:   _t.toISOString().slice(0,10),
         open:   q.open[i]   || q.close[i],
         high:   q.high[i]   || q.close[i],
         low:    q.low[i]    || q.close[i],
@@ -13237,6 +13254,7 @@ async function etfFetchTWSEHistory(ticker, months=3) {
       const t = new Date(`${year}-${parts[1]}-${parts[2]}`);
       return {
         t,
+        date:   t.toISOString().slice(0,10),
         open:   parseFloat(row[3].replace(/,/g,'')),
         high:   parseFloat(row[4].replace(/,/g,'')),
         low:    parseFloat(row[5].replace(/,/g,'')),
