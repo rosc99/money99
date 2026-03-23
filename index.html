@@ -1995,40 +1995,70 @@ input::placeholder { color: var(--text-muted); }
 /* ════════════════════════════════════
    高檔風險評分頁 CSS
    ════════════════════════════════════ */
-#page-risk .risk-refresh-btn{background:#f0b429;color:#000;border:none;padding:7px 16px;border-radius:20px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:var(--sans)}
-#page-risk .risk-refresh-btn:disabled{opacity:.4;cursor:not-allowed}
-#page-risk .risk-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:14px 16px}
-#page-risk .risk-card-title{font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px}
-#page-risk .risk-hero{display:flex;align-items:center;gap:16px;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px}
-#page-risk .risk-score-ring{flex-shrink:0}
-#page-risk .risk-hero-right{flex:1}
-#page-risk .risk-level{font-size:1.3rem;font-weight:900;line-height:1.2;margin-bottom:4px}
-#page-risk .risk-level-sub{font-size:0.72rem;color:var(--text-muted);line-height:1.5}
-#page-risk .risk-level-badge{margin-top:8px;display:inline-flex;padding:3px 12px;border-radius:20px;font-size:0.68rem;font-weight:700}
-/* Dimensions */
-#page-risk .risk-dim-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)}
-#page-risk .risk-dim-row:last-child{border-bottom:none}
-#page-risk .risk-dim-name{font-size:0.72rem;font-weight:600;min-width:80px;flex-shrink:0}
-#page-risk .risk-dim-track{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
-#page-risk .risk-dim-fill{height:100%;border-radius:3px;transition:width 1s cubic-bezier(.4,0,.2,1)}
-#page-risk .risk-dim-score{font-family:'DM Mono',monospace;font-size:0.78rem;font-weight:700;min-width:36px;text-align:right;flex-shrink:0}
-#page-risk .risk-dim-max{font-size:0.6rem;color:var(--text-muted);min-width:24px;flex-shrink:0}
+/* 修正：riskDimensions 在 etfMainPanel-risk 內，不在 #page-risk 內，移除前綴 */
+.risk-refresh-btn{background:#f0b429;color:#000;border:none;padding:7px 16px;border-radius:20px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:var(--sans)}
+.risk-refresh-btn:disabled{opacity:.4;cursor:not-allowed}
+.risk-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:14px 16px}
+.risk-card-title{font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px}
+.risk-hero{display:flex;align-items:center;gap:16px;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px}
+.risk-score-ring{flex-shrink:0}
+.risk-hero-right{flex:1}
+.risk-level{font-size:1.3rem;font-weight:900;line-height:1.2;margin-bottom:4px}
+.risk-level-sub{font-size:0.72rem;color:var(--text-muted);line-height:1.5}
+.risk-level-badge{margin-top:8px;display:inline-flex;padding:3px 12px;border-radius:20px;font-size:0.68rem;font-weight:700}
+/* Dimensions bar rows */
+.risk-dim-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)}
+.risk-dim-row:last-child{border-bottom:none}
+.risk-dim-name{font-size:0.7rem;font-weight:600;min-width:72px;flex-shrink:0}
+.risk-dim-track{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.risk-dim-fill{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.risk-dim-score{font-family:'DM Mono',monospace;font-size:0.75rem;font-weight:700;min-width:30px;text-align:right;flex-shrink:0}
+.risk-dim-max{font-size:0.58rem;color:var(--text-muted);min-width:22px;flex-shrink:0}
 /* Market data grid */
-#page-risk .risk-data-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-#page-risk .risk-data-item{background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;padding:9px 10px;text-align:center}
-#page-risk .risk-data-val{font-family:'DM Mono',monospace;font-size:0.95rem;font-weight:700;color:var(--text-primary);margin-bottom:2px}
-#page-risk .risk-data-lbl{font-size:0.58rem;color:var(--text-muted)}
+.risk-data-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.risk-data-item{background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;padding:9px 10px;text-align:center}
+.risk-data-val{font-family:'DM Mono',monospace;font-size:0.95rem;font-weight:700;color:var(--text-primary);margin-bottom:2px}
+.risk-data-lbl{font-size:0.58rem;color:var(--text-muted)}
 /* History */
-#page-risk .risk-hist-row{display:flex;align-items:center;gap:8px;padding:4px 0}
-#page-risk .risk-hist-date{font-size:0.65rem;color:var(--text-muted);font-family:'DM Mono',monospace;min-width:80px;flex-shrink:0}
-#page-risk .risk-hist-track{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
-#page-risk .risk-hist-fill{height:100%;border-radius:3px}
-#page-risk .risk-hist-score{font-family:'DM Mono',monospace;font-size:0.72rem;font-weight:700;min-width:32px;text-align:right}
-#page-risk .risk-dim-skeleton{color:var(--text-muted);font-size:0.72rem;text-align:center;padding:16px}
+.risk-hist-row{display:flex;align-items:center;gap:8px;padding:4px 0}
+.risk-hist-date{font-size:0.65rem;color:var(--text-muted);font-family:'DM Mono',monospace;min-width:80px;flex-shrink:0}
+.risk-hist-track{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.risk-hist-fill{height:100%;border-radius:3px}
+.risk-hist-score{font-family:'DM Mono',monospace;font-size:0.72rem;font-weight:700;min-width:32px;text-align:right}
+.risk-dim-skeleton{color:var(--text-muted);font-size:0.72rem;text-align:center;padding:16px}
+/* ── 連線診斷工具 ── */
+#diagModal{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.85);display:flex;align-items:flex-end;justify-content:center;padding-bottom:env(safe-area-inset-bottom)}
+#diagPanel{background:#141720;border:1px solid #252a3a;border-radius:18px 18px 0 0;width:100%;max-width:520px;padding:20px 18px 28px;max-height:80vh;overflow-y:auto}
+.diag-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #1a1e2e;font-size:0.75rem}
+.diag-row:last-child{border-bottom:none}
+.diag-icon{width:22px;text-align:center;flex-shrink:0;font-size:1rem}
+.diag-name{flex:1;color:#e8ecf5;font-weight:600}
+.diag-status{font-family:'DM Mono',monospace;font-size:0.7rem;min-width:60px;text-align:right}
+.diag-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.diag-ping{font-size:0.62rem;color:#4a5068;min-width:50px;text-align:right}
 
 </style>
 </head>
 <body>
+
+<!-- ══ 連線診斷工具 Modal ══ -->
+<div id="diagModal" style="display:none;" onclick="if(event.target===this)diagClose()">
+  <div id="diagPanel">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <div>
+        <div style="font-size:0.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#4a5068;margin-bottom:2px;">SYSTEM DIAGNOSTIC</div>
+        <div style="font-size:1rem;font-weight:800;color:#e8ecf5;">🔌 連線診斷工具</div>
+      </div>
+      <button onclick="diagClose()" style="background:rgba(255,255,255,.07);border:none;color:#7a8099;border-radius:8px;padding:6px 12px;font-size:0.8rem;cursor:pointer;">✕</button>
+    </div>
+    <div id="diagList" style="margin-bottom:14px;"></div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="diagRun()" id="diagRunBtn" style="flex:1;background:#3b82f6;color:#fff;border:none;border-radius:10px;padding:10px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:var(--sans);">🔄 重新測試</button>
+      <button onclick="diagClose()" style="background:rgba(255,255,255,.06);color:#7a8099;border:1px solid #252a3a;border-radius:10px;padding:10px 18px;font-size:0.8rem;cursor:pointer;font-family:var(--sans);">關閉</button>
+    </div>
+    <div id="diagSummary" style="margin-top:10px;font-size:0.68rem;color:#4a5068;text-align:center;line-height:1.6;"></div>
+  </div>
+</div>
 
 <!-- ── 登入 / 註冊 Overlay ── -->
 <div id="authOverlay" class="hidden">
@@ -2174,7 +2204,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-23 21:44:24</div>
+    <div class="clock-display" id="clockDisplay">2026-03-23 22:26:08</div>
   </div>
 </aside>
 
@@ -3789,6 +3819,8 @@ input::placeholder { color: var(--text-muted); }
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"></path><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"></path></svg></span><span>資料庫</span>
   </div>
 </nav>
+<!-- 連線診斷浮動按鈕 -->
+<button onclick="diagOpen()" id="diagFloatBtn" title="連線診斷" style="position:fixed;bottom:80px;right:14px;z-index:800;width:40px;height:40px;border-radius:50%;background:#1a1e2e;border:1px solid #252a3a;color:#7a8099;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.5);transition:border-color .2s;" onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor='#252a3a'">🔌</button>
 <div class="toast" id="toast" style="border-color: var(--accent-green); color: var(--accent-green);">⏫ 正在推送到 GitHub...</div>
 
 <!-- 情報陳列室 Modal -->
@@ -14462,5 +14494,127 @@ function chipAttachListeners() {
     </div>
   </div>
 </div>
+
+<!-- ══ 連線診斷工具 JS ══ -->
+<script>
+const DIAG_TARGETS = [
+  {
+    icon: '🤖', name: 'Claude AI API',
+    desc: 'AI 量化分析功能',
+    test: async () => {
+      const t0 = Date.now();
+      const r = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:10, messages:[{role:'user',content:'hi'}] })
+      });
+      const ping = Date.now() - t0;
+      if (r.status === 200 || r.status === 401) return { ok: true, ping, note: r.status===401?'API Key 未設定':'✅ 正常' };
+      const j = await r.json().catch(()=>({}));
+      if (r.status === 529 || (j.error?.type === 'overloaded_error')) return { ok: false, ping, note: '伺服器過載' };
+      return { ok: r.ok, ping, note: `HTTP ${r.status}` };
+    }
+  },
+  {
+    icon: '📡', name: 'TWSE 台灣證交所',
+    desc: '台股 K 線、法人資料',
+    test: async () => {
+      const t0 = Date.now();
+      const r = await fetch('https://corsproxy.io/?url=' + encodeURIComponent('https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20260101&stockNo=0050&response=json'), { signal: AbortSignal.timeout(8000) });
+      const ping = Date.now() - t0;
+      return { ok: r.ok, ping, note: r.ok ? '✅ 正常' : `HTTP ${r.status}` };
+    }
+  },
+  {
+    icon: '🌐', name: 'Yahoo Finance',
+    desc: 'ETF 歷史 K 線',
+    test: async () => {
+      const t0 = Date.now();
+      const url = 'https://query1.finance.yahoo.com/v8/finance/chart/0050.TW?interval=1d&range=5d';
+      const r = await fetch('https://corsproxy.io/?url=' + encodeURIComponent(url), { signal: AbortSignal.timeout(8000) });
+      const ping = Date.now() - t0;
+      return { ok: r.ok, ping, note: r.ok ? '✅ 正常' : `HTTP ${r.status}` };
+    }
+  },
+  {
+    icon: '🔀', name: 'CORS Proxy',
+    desc: 'corsproxy.io 代理伺服器',
+    test: async () => {
+      const t0 = Date.now();
+      const r = await fetch('https://corsproxy.io/?url=https://httpbin.org/get', { signal: AbortSignal.timeout(6000) });
+      const ping = Date.now() - t0;
+      return { ok: r.ok, ping, note: r.ok ? '✅ 正常' : `HTTP ${r.status}` };
+    }
+  },
+  {
+    icon: '🗄️', name: 'localStorage',
+    desc: '本地資料儲存',
+    test: async () => {
+      try {
+        localStorage.setItem('_diag', '1');
+        localStorage.removeItem('_diag');
+        return { ok: true, ping: 0, note: '✅ 可用' };
+      } catch(e) {
+        return { ok: false, ping: 0, note: e.message };
+      }
+    }
+  },
+];
+
+function diagOpen() {
+  document.getElementById('diagModal').style.display = 'flex';
+  diagRun();
+}
+function diagClose() {
+  document.getElementById('diagModal').style.display = 'none';
+}
+
+async function diagRun() {
+  const list = document.getElementById('diagList');
+  const btn  = document.getElementById('diagRunBtn');
+  const sumEl = document.getElementById('diagSummary');
+  btn.disabled = true;
+  btn.textContent = '測試中…';
+  sumEl.textContent = '';
+
+  // 初始化每列為 loading
+  list.innerHTML = DIAG_TARGETS.map((t, i) => `
+    <div class="diag-row" id="drow${i}">
+      <div class="diag-icon">${t.icon}</div>
+      <div style="flex:1">
+        <div class="diag-name">${t.name}</div>
+        <div style="font-size:0.6rem;color:#4a5068;margin-top:1px;">${t.desc}</div>
+      </div>
+      <div class="diag-ping" id="dping${i}">—</div>
+      <div class="diag-status" id="dstat${i}" style="color:#4a5068;">測試中</div>
+      <div class="diag-dot" id="ddot${i}" style="background:#4a5068;margin-left:6px;"></div>
+    </div>`).join('');
+
+  let passed = 0;
+  await Promise.all(DIAG_TARGETS.map(async (t, i) => {
+    try {
+      const res = await t.test();
+      const color = res.ok ? '#00e5a0' : '#ff4d6d';
+      document.getElementById(`dstat${i}`).textContent = res.note;
+      document.getElementById(`dstat${i}`).style.color = color;
+      document.getElementById(`ddot${i}`).style.background = color;
+      document.getElementById(`dping${i}`).textContent = res.ping > 0 ? `${res.ping}ms` : '';
+      if (res.ok) passed++;
+    } catch(e) {
+      document.getElementById(`dstat${i}`).textContent = e.name === 'TimeoutError' ? '逾時' : '失敗';
+      document.getElementById(`dstat${i}`).style.color = '#ff4d6d';
+      document.getElementById(`ddot${i}`).style.background = '#ff4d6d';
+    }
+  }));
+
+  btn.disabled = false;
+  btn.textContent = '🔄 重新測試';
+
+  const total = DIAG_TARGETS.length;
+  const color = passed === total ? '#00e5a0' : passed >= 2 ? '#f59e0b' : '#ff4d6d';
+  sumEl.innerHTML = `<span style="color:${color};font-weight:700;">${passed}/${total} 項目通過</span>　${passed < total ? '⚠️ AI 未連接時將使用規則式評分，K線可能無法載入' : '所有連線正常 🎉'}`;
+}
+</script>
+
 
 <div style="position: fixed; pointer-events: none; padding: 8px 12px; background: rgb(30, 35, 53); border: 1px solid rgb(46, 53, 80); border-radius: 8px; font-size: 0.75rem; color: rgb(232, 236, 245); display: none; z-index: 999; line-height: 1.8; font-family: &quot;DM Mono&quot;, monospace; box-shadow: rgba(0, 0, 0, 0.5) 0px 8px 24px;"></div></body></html>
