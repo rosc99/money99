@@ -1936,6 +1936,59 @@ input::placeholder { color: var(--text-muted); }
 /* ── Score ring ── */
 #page-stats .cr-ring{width:36px;height:36px;flex-shrink:0}
 
+
+/* ════════════════════════════════════
+   ETF 分析頁 CSS
+   ════════════════════════════════════ */
+#page-stats .etf-btn-ghost{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text-muted);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+#page-stats .etf-btn-ghost:hover{background:rgba(255,255,255,.1);color:var(--text-primary)}
+#page-stats .etf-deploy-btn{background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.25);color:#f0b429;padding:5px 10px;border-radius:8px;cursor:pointer;font-size:0.85rem}
+
+/* Switcher */
+#page-stats .etf-switcher{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+#page-stats .etf-sw{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;cursor:pointer;text-align:left;transition:all .2s;display:flex;flex-direction:column;gap:2px}
+#page-stats .etf-sw.active{background:rgba(240,180,41,.1);border-color:#f0b429}
+#page-stats .etf-sw-name{font-family:var(--mono);font-size:0.95rem;font-weight:700;color:var(--text-primary)}
+#page-stats .etf-sw.active .etf-sw-name{color:#f0b429}
+#page-stats .etf-sw-sub{font-size:0.62rem;color:var(--text-muted)}
+
+/* Hero */
+#page-stats .etf-hero{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px;display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:center}
+#page-stats .etf-ticker{font-family:var(--mono);font-size:0.72rem;color:var(--text-muted);margin-bottom:2px}
+#page-stats .etf-name{font-size:0.78rem;color:var(--text-secondary);margin-bottom:6px}
+#page-stats .etf-price{font-family:var(--mono);font-size:2rem;font-weight:700;line-height:1;color:var(--text-primary)}
+#page-stats .etf-change{font-family:var(--mono);font-size:0.8rem;margin-top:4px}
+#page-stats .etf-kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+#page-stats .etf-kpi{background:var(--bg-card2);border:1px solid var(--border);border-radius:8px;padding:7px 10px;text-align:center}
+#page-stats .etf-kpi-val{font-family:var(--mono);font-size:0.82rem;font-weight:700;color:var(--text-primary)}
+#page-stats .etf-kpi-lbl{font-size:0.55rem;color:var(--text-muted);margin-top:2px}
+
+/* Range bar */
+#page-stats .etf-range-bar{display:flex;gap:6px;margin-bottom:10px}
+#page-stats .etf-range{flex:1;padding:6px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-family:var(--mono);font-size:0.75rem;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all .2s}
+#page-stats .etf-range.active{background:#f0b429;border-color:#f0b429;color:#000}
+
+/* Card */
+#page-stats .etf-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px}
+
+/* Legend dots */
+#page-stats .etf-legend-dot{font-size:0.6rem;color:var(--text-muted);display:flex;align-items:center;gap:3px}
+#page-stats .etf-legend-dot::before{content:'';width:20px;height:2px;background:var(--c);border-radius:1px;display:inline-block}
+
+/* Growth bars */
+#page-stats .etf-growth-row{display:flex;align-items:center;gap:8px}
+#page-stats .etf-growth-lbl{font-size:0.68rem;font-weight:600;width:32px;flex-shrink:0}
+#page-stats .etf-growth-track{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden}
+#page-stats .etf-growth-fill{height:100%;border-radius:4px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+#page-stats .etf-growth-val{font-family:var(--mono);font-size:0.68rem;width:60px;text-align:right;flex-shrink:0}
+#page-stats .etf-growth-pct{font-size:0.6rem;width:48px;text-align:right;flex-shrink:0;color:var(--text-muted)}
+
+/* Chip summary */
+#page-stats .etf-chip-item{background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;padding:8px 10px;text-align:center}
+#page-stats .etf-chip-val{font-family:var(--mono);font-size:0.9rem;font-weight:700;line-height:1;margin-bottom:2px}
+#page-stats .etf-chip-lbl{font-size:0.58rem;color:var(--text-muted)}
+#page-stats .etf-chip-chg{font-family:var(--mono);font-size:0.62rem;margin-top:3px}
+
 </style>
 </head>
 <body>
@@ -2049,7 +2102,7 @@ input::placeholder { color: var(--text-muted); }
   </div>
 
   <div class="nav-section-label">主頁</div>
-  <div class="nav-item active" onclick="goPage('home',this)">
+  <div class="nav-item" onclick="goPage('home',this)">
     <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span> 總覽主頁
   </div>
 
@@ -2081,10 +2134,10 @@ input::placeholder { color: var(--text-muted); }
 
   <div class="sidebar-bottom">
     <div class="sync-status">
-      <div class="sync-dot" id="syncDot"></div>
-      <span id="syncStatusText">連線中…</span>
+      <div class="sync-dot ok" id="syncDot"></div>
+      <span id="syncStatusText" style="color: var(--accent-green);">已同步</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-22 06:56:54</div>
+    <div class="clock-display" id="clockDisplay">2026-03-23 18:28:27</div>
   </div>
 </aside>
 
@@ -2095,10 +2148,10 @@ input::placeholder { color: var(--text-muted); }
 <!-- ══════════════════════════════════
      MAIN
 ══════════════════════════════════ -->
-<main class="main-content">
+<main class="main-content" style="overflow-y: auto;">
 
   <!-- ── 主頁 ── -->
-  <section class="page active" id="page-home">
+  <section class="page" id="page-home">
     <div class="page-header">
       <div class="page-title-block">
         <div class="page-label">Dashboard</div>
@@ -2809,172 +2862,112 @@ input::placeholder { color: var(--text-muted); }
   </section>
 
   <!-- ── 現金流 ── -->
-  <section class="page" id="page-stats">
+  <section class="page active" id="page-stats">
     <!-- ══ Header ══ -->
     <div class="page-header" style="margin-bottom:12px;">
       <div class="page-title-block">
-        <div class="page-label">Chip Radar II</div>
-        <h1>籌碼雷達</h1>
+        <div class="page-label">ETF Radar</div>
+        <h1>ETF 分析</h1>
       </div>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <button class="cr-icon-btn" onclick="chipDeployToGitHub()" title="推送 GitHub">☁️</button>
-        <button class="cr-scan-btn" id="chipScanBtn" onclick="chipStartScan()">▶ 掃描</button>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <button class="etf-btn-ghost" onclick="etfRefresh()" id="etfRefreshBtn" title="重新載入">⟳</button>
+        <button class="etf-deploy-btn" onclick="chipDeployToGitHub()" title="推送 GitHub">☁️</button>
       </div>
     </div>
 
-    <!-- ══ Stats bar ══ -->
-    <div class="cr-stats-bar">
-      <div class="cr-stat"><div class="cr-stat-num" id="chipStatPass" style="color:#f0b429">—</div><div class="cr-stat-lbl">通過</div></div>
-      <div class="cr-stat-div"></div>
-      <div class="cr-stat"><div class="cr-stat-num" id="chipStatScan" style="color:var(--accent-red)">—</div><div class="cr-stat-lbl">掃描</div></div>
-      <div class="cr-stat-div"></div>
-      <div class="cr-stat"><div class="cr-stat-num" id="chipStatElim" style="color:var(--accent-green)">—</div><div class="cr-stat-lbl">淘汰</div></div>
-      <div class="cr-stat-div"></div>
-      <div class="cr-stat"><div class="cr-stat-num" id="chipStatVol" style="color:var(--accent-blue)">—</div><div class="cr-stat-lbl">爆量</div></div>
+    <!-- ══ ETF 切換 ══ -->
+    <div class="etf-switcher">
+      <button class="etf-sw active" data-etf="0050" onclick="etfSwitch('0050',this)">
+        <span class="etf-sw-name">0050</span>
+        <span class="etf-sw-sub">元大台灣50</span>
+      </button>
+      <button class="etf-sw" data-etf="00662" onclick="etfSwitch('00662',this)">
+        <span class="etf-sw-name">00662</span>
+        <span class="etf-sw-sub">富邦NASDAQ</span>
+      </button>
     </div>
 
-    <!-- ══ Progress ══ -->
-    <div class="cr-progress" id="chipProgressWrap">
-      <div class="cr-progress-track"><div class="cr-progress-fill" id="chipProgressFill"></div></div>
-      <div class="cr-progress-lbl" id="chipProgressLabel">準備中…</div>
-    </div>
-
-    <!-- ══ Main Tabs ══ -->
-    <div class="cr-tabs">
-      <div class="cr-tab active" data-cr="scan">🔍 篩選標的</div>
-      <div class="cr-tab" data-cr="market">🐂 多空判斷</div>
-      <div class="cr-tab" data-cr="watch">👁 觀察名單</div>
-    </div>
-
-    <!-- ══════════════════════════════════
-         TAB 1：多空判斷
-    ══════════════════════════════════ -->
-    <div id="crTab-market" class="cr-tabpanel" style="display:none">
-      <!-- Hero card -->
-      <div class="cr-mkt-hero cr-loading" id="chipMktHero">
-        <div style="display:flex;align-items:center;gap:12px;">
-          <div style="flex:1">
-            <div class="cr-mkt-verdict cr-neu" id="chipMktVerdict">— 市場狀態</div>
-            <div class="cr-mkt-sub" id="chipMktSub">點擊「重新分析」載入</div>
-          </div>
-          <button class="cr-refresh-btn" id="chipMktRefreshBtn" onclick="chipLoadMarketData()">
-            <span id="chipMktRefreshIcon">⟳</span>
-          </button>
-        </div>
+    <!-- ══ 當前報價 Hero ══ -->
+    <div class="etf-hero" id="etfHero">
+      <div class="etf-hero-left">
+        <div class="etf-ticker" id="etfTicker">0050</div>
+        <div class="etf-name" id="etfName">元大台灣50</div>
+        <div class="etf-price" id="etfPrice">—</div>
+        <div class="etf-change" id="etfChange">—</div>
       </div>
-
-      <!-- 4 metric cards -->
-      <div class="cr-grid-2">
-        <div class="cr-metric-card">
-          <div class="cr-metric-lbl">加權指數</div>
-          <div class="cr-metric-val cr-neu" id="chipMktTse">—</div>
-          <div class="cr-metric-sub" id="chipMktTseChg">—</div>
-        </div>
-        <div class="cr-metric-card">
-          <div class="cr-metric-lbl">OTC 櫃買</div>
-          <div class="cr-metric-val cr-neu" id="chipMktOtc">—</div>
-          <div class="cr-metric-sub" id="chipMktOtcChg">—</div>
-        </div>
-        <div class="cr-metric-card">
-          <div class="cr-metric-lbl">年線 200MA</div>
-          <div class="cr-metric-val cr-neu" id="chipMktMa200">—</div>
-          <div class="cr-metric-sub" id="chipMktMa200Sub">—</div>
-        </div>
-        <div class="cr-metric-card">
-          <div class="cr-metric-lbl">年線乖離</div>
-          <div class="cr-metric-val cr-neu" id="chipMktMaBias">—</div>
-          <div class="cr-metric-sub" id="chipMktMaBiasSub">—</div>
-        </div>
-      </div>
-
-      <!-- Flow bar -->
-      <!-- 三階段出貨偵測卡 -->
-      <div id="chipDistribution" class="cr-card" style="margin-bottom:10px;display:none;border-color:rgba(239,68,68,.25)"></div>
-
-      <div class="cr-card" style="margin-bottom:10px;">
-        <div class="cr-card-title">資金主角分析</div>
-        <div class="cr-flow-bar">
-          <div class="cr-flow-tse" id="chipFlowTse" style="flex:1"></div>
-          <div class="cr-flow-otc" id="chipFlowOtc" style="flex:1"></div>
-        </div>
-        <div class="cr-flow-legend">
-          <span style="color:var(--accent-red)" id="chipFlowTseLabel">加權 —%</span>
-          <span style="color:var(--text-muted);font-size:0.62rem" id="chipFlowCenter">資金流向</span>
-          <span style="color:var(--accent-blue)" id="chipFlowOtcLabel">OTC —%</span>
-        </div>
-      </div>
-
-      <!-- Analysis rows -->
-      <div class="cr-card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-          <div class="cr-card-title" style="margin-bottom:0">四重分析結果</div>
-          <button onclick="crShowLogicModal()" style="background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.25);color:#f0b429;border-radius:8px;padding:4px 10px;font-size:0.72rem;cursor:pointer;display:flex;align-items:center;gap:4px;">⚙️ 邏輯</button>
-        </div>
-        <div id="chipMktAnalysisRows">
-          <div style="color:var(--text-muted);font-size:0.75rem;text-align:center;padding:16px">點擊右上角「⟳」載入資料</div>
+      <div class="etf-hero-right">
+        <div class="etf-kpi-grid">
+          <div class="etf-kpi"><div class="etf-kpi-val" id="etfMa20">—</div><div class="etf-kpi-lbl">20MA</div></div>
+          <div class="etf-kpi"><div class="etf-kpi-val" id="etfMa60">—</div><div class="etf-kpi-lbl">60MA</div></div>
+          <div class="etf-kpi"><div class="etf-kpi-val" id="etfBias">—</div><div class="etf-kpi-lbl">乖離</div></div>
+          <div class="etf-kpi"><div class="etf-kpi-val" id="etfVol">—</div><div class="etf-kpi-lbl">量比</div></div>
         </div>
       </div>
     </div>
 
-    <!-- ══════════════════════════════════
-         TAB 2：篩選標的
-    ══════════════════════════════════ -->
-    <div id="crTab-scan" class="cr-tabpanel">
+    <!-- ══ 時間範圍切換 ══ -->
+    <div class="etf-range-bar">
+      <button class="etf-range active" data-range="3mo" onclick="etfSetRange('3mo',this)">3M</button>
+      <button class="etf-range" data-range="6mo" onclick="etfSetRange('6mo',this)">6M</button>
+      <button class="etf-range" data-range="1y" onclick="etfSetRange('1y',this)">1Y</button>
+    </div>
 
-      <!-- Strategy bar -->
-      <div class="cr-strategy-bar">
-        <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">
-          <span style="font-size:0.65rem;color:var(--text-muted);white-space:nowrap;">策略</span>
-          <select class="cr-strategy-select" id="crStrategySelect" onchange="crLoadStrategy(this.value)">
-            <option value="default">🎯 預設策略</option>
-          </select>
-        </div>
+    <!-- ══ 主圖：K線 + 成交量 + 密集交易區 ══ -->
+    <div class="etf-card" style="margin-bottom:10px;padding:14px 12px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);">價格 + 密集交易區</div>
         <div style="display:flex;gap:6px;">
-          <button class="cr-icon-btn" onclick="crShowStrategyModal()" title="篩選設定">⚙️</button>
-          <button class="cr-icon-btn cr-save-btn" onclick="crSaveStrategyAs()" title="另存策略">💾</button>
-          <button class="cr-icon-btn" onclick="crDeleteStrategy()" title="刪除策略" style="color:var(--accent-red)">🗑</button>
+          <span class="etf-legend-dot" style="--c:#f0b429">— 價格</span>
+          <span class="etf-legend-dot" style="--c:#3b82f6">— 20MA</span>
+          <span class="etf-legend-dot" style="--c:#a78bfa">— 60MA</span>
+          <span class="etf-legend-dot" style="--c:rgba(255,77,109,.3)">█ 密集區</span>
         </div>
       </div>
-
-      <!-- Filter chips -->
-      <div class="cr-chip-row">
-        <div class="cr-chip active" data-f="all">全部 <span id="chipTotalCount">—</span></div>
-        <div class="cr-chip" data-f="pass">✅ 通過</div>
-        <div class="cr-chip" data-f="vol">⚡ 爆量</div>
-        <div class="cr-chip" data-f="bull">📈 多頭</div>
-        <div class="cr-chip" data-f="elim">🚫 淘汰</div>
-      </div>
-
-      <!-- Signal cards -->
-      <div id="chipSignalSection">
-        <div class="cr-empty">
-          <div style="font-size:2rem;margin-bottom:8px;">📡</div>
-          <div>點擊右上角「▶ 掃描」開始</div>
-          <div style="font-size:0.65rem;opacity:.5;margin-top:4px;">K線純度 · 多頭排列 · 乖離控制 · 爆量偵測</div>
-        </div>
-      </div>
+      <canvas id="etfPriceChart" style="width:100%;height:160px;display:block;"></canvas>
+      <canvas id="etfVolChart" style="width:100%;height:40px;display:block;margin-top:4px;"></canvas>
+      <div id="etfCostLine" style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border)"></div>
     </div>
 
-    <!-- ══════════════════════════════════
-         TAB 3：觀察名單
-    ══════════════════════════════════ -->
-    <div id="crTab-watch" class="cr-tabpanel" style="display:none">
-      <!-- Add bar -->
-      <div class="cr-watch-add-bar">
-        <input class="cr-watch-input" id="crWatchInput" placeholder="輸入股號，例如 2330" maxlength="6" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onkeydown="if(event.key==='Enter')crAddWatch()">
-        <button class="cr-scan-btn" onclick="crAddWatch()" style="padding:6px 14px;">+ 加入</button>
+    <!-- ══ 成交量分布（水平直方圖）══ -->
+    <div class="etf-card" style="margin-bottom:10px;padding:14px 12px;">
+      <div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">
+        成交量分布 — 密集支撐壓力帶
       </div>
-      <!-- Watch list -->
-      <div id="crWatchList">
-        <div class="cr-empty">
-          <div style="font-size:2rem;margin-bottom:8px;">👁</div>
-          <div>輸入股號加入觀察名單</div>
-          <div style="font-size:0.65rem;opacity:.5;margin-top:4px;">自動抓取報價與技術指標</div>
-        </div>
+      <div style="display:grid;grid-template-columns:1fr 80px;gap:8px;align-items:stretch;">
+        <canvas id="etfVPChart" style="width:100%;height:200px;display:block;"></canvas>
+        <div id="etfVPLegend" style="display:flex;flex-direction:column;justify-content:space-between;font-family:var(--mono);font-size:0.58rem;color:var(--text-muted);padding:2px 0;"></div>
       </div>
+      <div id="etfDenseZone" style="margin-top:10px;padding:8px 10px;background:rgba(255,77,109,.05);border:1px solid rgba(255,77,109,.2);border-radius:8px;font-size:0.7rem;color:var(--text-muted);display:none;"></div>
     </div>
 
+    <!-- ══ 法人籌碼曲線 ══ -->
+    <div class="etf-card" style="margin-bottom:10px;padding:14px 12px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);">法人籌碼累積</div>
+        <div style="display:flex;gap:8px;">
+          <span class="etf-legend-dot" style="--c:#ff4d6d">— 外資</span>
+          <span class="etf-legend-dot" style="--c:#a78bfa">— 投信</span>
+          <span class="etf-legend-dot" style="--c:#00e5a0">— 自營</span>
+        </div>
+      </div>
+      <canvas id="etfChipChart" style="width:100%;height:140px;display:block;"></canvas>
+      <div id="etfChipSummary" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;"></div>
+    </div>
 
+    <!-- ══ 成長比率卡 ══ -->
+    <div class="etf-card" style="margin-bottom:10px;padding:14px 12px;">
+      <div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">法人買超成長比率（近30日）</div>
+      <div id="etfGrowthBars" style="display:flex;flex-direction:column;gap:8px;"></div>
+    </div>
+
+    <!-- ══ 關鍵訊號 ══ -->
+    <div class="etf-card" id="etfSignalCard" style="margin-bottom:16px;display:none;"></div>
+
+    <!-- Loading overlay -->
+    <div id="etfLoading" style="position: fixed; inset: 0px; z-index: 200; background: rgba(13, 15, 20, 0.85); display: none; align-items: center; justify-content: center; flex-direction: column; gap: 12px;">
+      <div style="font-size:2rem;" class="chip-spin">📡</div>
+      <div style="font-size:0.82rem;color:var(--text-muted);" id="etfLoadingTxt">TWSE 失敗，改用 Yahoo Finance…</div>
+    </div>
 
   </section>
 
@@ -3648,7 +3641,7 @@ input::placeholder { color: var(--text-muted); }
 
 
 <nav class="mobile-nav" id="mobileNav">
-  <div class="mobile-nav-item active" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
+  <div class="mobile-nav-item" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span><span>總覽</span>
   </div>
   <div class="mobile-nav-item" id="mn-ledger" onclick="goPage('ledger', null, 'mn-ledger')">
@@ -3657,7 +3650,7 @@ input::placeholder { color: var(--text-muted); }
   <div class="mobile-nav-item" id="mn-invest" onclick="goPage('invest', null, 'mn-invest')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span><span>投資</span>
   </div>
-  <div class="mobile-nav-item" id="mn-stats" onclick="goPage('stats',      null, 'mn-stats')">
+  <div class="mobile-nav-item active" id="mn-stats" onclick="goPage('stats',      null, 'mn-stats')">
     <span class="mobile-nav-icon">📡</span><span>雷達</span>
   </div>
 <div class="mobile-nav-item" id="mn-intel" onclick="goPage('intel',      null, 'mn-intel')">
@@ -11159,13 +11152,20 @@ const CHIP_STRATEGY_TEMPLATES = {
 //  監控清單（上市+上櫃）
 // ═══════════════════════════════════════════════
 const CHIP_WATCH_LIST = [
-  "2330","2317","2454","2308","2382","2303","2357","2376","2379","2408",
-  "2412","2603","2609","2615","2618","2610","6669","3008","2395","2912",
-  "1301","1303","1326","2002","2207","3443","3034","4938","8299","3711",
-  "2327","6505","2474","4904","3045","4958","6415","2337","3481","2409",
-  "3702","6446","4966","2353","2356","2385","2392","3036","3037","2360",
-  "5871","6770","3653","3552","6488","5347","8046","6533","3189","6230",
-  "2881","2882","2886","2884","2891","2880","2883","2885","2887","2892",
+  // ── 半導體/IC設計 ──
+  "2330","2454","2303","2379","3034","3443","6415","4966","2337","8299","2408","3533","6643","3711","2449","3231","6770","6533","3035","2388","2344","3006","2363","2441","3661","6547","4919","3042","3081","6789",
+  // ── 電子製造/零組件 ──
+  "2317","2308","2382","2357","2376","4938","2356","2385","2392","2353","3036","3037","2360","2474","4958","8046","3189","3552","3653","6230","2365","2395","2397","2409","3481","2347","2324","2351","6116","2368","3045","3703","6409","2333","2345",
+  // ── 光電/面板/航運 ──
+  "2369","4137","6271","3044","2301","3008","6669","6488","5347","3130","6510","3665","6531","5274","3576","6153","4736","3026","6285","5863","6756","3673","3019","3499","2340",
+  // ── 傳產/石化/民生 ──
+  "6592","5483","3452","2468","2412","4904","2486","4977","3047","6277","2498","3530","2603","2609","2615","2618","2610","2614","2231","5608","2617","1301","1303","1326","6505","2002","1402","1434","1440","1504",
+  // ── 生技/醫療 ──
+  "1590","2207","1513","1605","9904","9921","1101","1102","1103","1210","1216","6446","4194","1789","4726","4743","6612","6647","4106","6823","4164","4174","4162","6548","4116",
+  // ── 金融（28開頭，排除金融股開關可過濾）──
+  "6492","1777","4126","3176","2881","2882","2886","2884","2891","2880","2883","2885","2887","2892","2823","2801","2812","5876","2832","2836","2838","5820","6008","2849","8069",
+  // ── 上櫃精選 ──
+  "3596","6515","6278","3607","6214","3592",
 ];
 
 // ═══════════════════════════════════════════════
@@ -11304,7 +11304,7 @@ async function chipStartScan(){
   chipScanning=true;
   chipSignals=[]; chipEliminated=[]; chipNotifyLog=[];
   const btn=document.getElementById('chipScanBtn');
-  btn.disabled=true; btn.textContent='掃描中…';
+  if(btn){btn.disabled=true; btn.textContent='掃描中…';}
   chipShowProgress(true); chipUpdateStats();
 
   const list=CHIP_WATCH_LIST.filter(id=>!(CHIP_CFG.exclude_28&&id.startsWith('28')));
@@ -11529,13 +11529,14 @@ function chipCloseModal(){document.getElementById('chipModalOverlay').classList.
 // ═══════════════════════════════════════════════
 function chipUpdateStats(){
   const vol=chipSignals.filter(s=>s.isVol).length;
-  document.getElementById('chipStatPass').textContent = chipSignals.length||'—';
-  document.getElementById('chipStatScan').textContent = (chipSignals.length+chipEliminated.length)||'—';
-  document.getElementById('chipStatElim').textContent = chipEliminated.length||'—';
-  document.getElementById('chipStatVol').textContent  = vol||'—';
-  document.getElementById('chipTotalCount').textContent=(chipSignals.length+chipEliminated.length)||'—';
+  const _s=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  _s('chipStatPass', chipSignals.length||'—');
+  _s('chipStatScan', (chipSignals.length+chipEliminated.length)||'—');
+  _s('chipStatElim', chipEliminated.length||'—');
+  _s('chipStatVol',  vol||'—');
+  _s('chipTotalCount', (chipSignals.length+chipEliminated.length)||'—');
 }
-function chipShowProgress(on){const el=document.getElementById('chipProgressWrap');if(el){el.classList.toggle('show',on);if(!on){const f=document.getElementById('chipProgressFill');if(f)f.style.width='0%';}}}
+function chipShowProgress(on){ const el=document.getElementById('chipProgressWrap'); if(el){el.classList.toggle('show',on);if(!on){const f=document.getElementById('chipProgressFill');if(f)f.style.width='0%';}} }
 function chipSetProgress(r,label){document.getElementById('chipProgressFill').style.width=(r*100).toFixed(0)+'%';document.getElementById('chipProgressLabel').textContent=`${Math.round(r*100)}%  掃描中：${label}`;}
 function chipFmt(n){return n>=10000?(n/10000).toFixed(1)+'萬':n.toLocaleString();}
 function chipNowHHMM(){const n=new Date();return String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');}
@@ -11724,7 +11725,7 @@ function crSaveStrategyAs() {
   };
   crSaveStrategies(s);
   crRefreshStrategySelect();
-  document.getElementById('crStrategySelect').value = key;
+  const _selEl=document.getElementById('crStrategySelect'); if(_selEl) _selEl.value=key;
   chipShowToast(`💾 已儲存：${name.trim()}`, 'ok');
 }
 
@@ -11746,7 +11747,7 @@ function crDeleteStrategy() {
 
 function crShowStrategyModal() {
   const body = document.getElementById('crSettingBody');
-  if (!body) return;
+  if (!body) { chipShowToast('請切換到篩選標的分頁使用此功能','warn'); return; }
   document.getElementById('crSettingTitle').textContent = '⚙️ 篩選條件設定';
   body.innerHTML = `
     <!-- 策略模板快選 -->
@@ -11881,7 +11882,7 @@ function crSaveWatchList(arr) {
 
 async function crAddWatch() {
   const input = document.getElementById('crWatchInput');
-  if (!input) return;
+  if (!input) { chipShowToast('請切換到觀察名單分頁', 'warn'); return; }
   const id = input.value.trim().toUpperCase();
   if (!id || !/^\d{4,6}$/.test(id)) { chipShowToast('⚠️ 請輸入4~6位股票代號', 'warn'); return; }
   let list = crGetWatchList();
@@ -12047,6 +12048,7 @@ let chip_mktLoading = false;
 
 async function chipLoadMarketData() {
   if (chip_mktLoading) return;
+  if(!document.getElementById('chipMktHero')){chipShowToast('請切換到多空判斷分頁','warn');return;}
   chip_mktLoading = true;
 
   const icon = document.getElementById('chipMktRefreshIcon');
@@ -12226,35 +12228,22 @@ async function chipLoadMarketData() {
       const tseLabel = `${tseChg>=0?'▲':'▼'}${Math.abs(tseChg).toFixed(2)}%`;
       const otcLabel = `${otcChg>=0?'▲':'▼'}${Math.abs(otcChg).toFixed(2)}%`;
 
-      // ── 柱狀圖更新 ──
-      // 最大高度基準：用兩者絕對值的最大值，不足時至少顯示 10%
-      const maxAbs   = Math.max(tseA, otcA, 0.1);
-      const tsePctH  = Math.max(8, (tseA / maxAbs * 100)).toFixed(0);
-      const otcPctH  = Math.max(8, (otcA / maxAbs * 100)).toFixed(0);
+      // ── 柱狀圖更新（px 高度，容器 48px）──
+      const BAR_MAX_PX = 48;
+      const maxAbs  = Math.max(tseA, otcA, 0.01);
+      const tsePx   = Math.max(4, Math.round(tseA / maxAbs * BAR_MAX_PX));
+      const otcPx   = Math.max(4, Math.round(otcA / maxAbs * BAR_MAX_PX));
 
-      const tseBar = document.getElementById('chipFlowTseBar');
-      const otcBar = document.getElementById('chipFlowOtcBar');
+      // nullable on ETF page — guarded below
+      const tseBar   = document.getElementById('chipFlowTseBar');
+      const otcBar   = document.getElementById('chipFlowOtcBar');
       const tseValEl = document.getElementById('chipFlowTseVal');
       const otcValEl = document.getElementById('chipFlowOtcVal');
 
-      if (tseBar) {
-        tseBar.style.height    = tsePctH + '%';
-        tseBar.style.background = tseColor;
-        tseBar.title = `加權 ${tseLabel}`;
-      }
-      if (otcBar) {
-        otcBar.style.height    = otcPctH + '%';
-        otcBar.style.background = otcColor;
-        otcBar.title = `OTC ${otcLabel}`;
-      }
-      if (tseValEl) {
-        tseValEl.textContent = tseLabel;
-        tseValEl.style.color = tseColor;
-      }
-      if (otcValEl) {
-        otcValEl.textContent = otcLabel;
-        otcValEl.style.color = otcColor;
-      }
+      if (tseBar)   { tseBar.style.height = tsePx + 'px'; tseBar.style.background = tseColor; }
+      if (otcBar)   { otcBar.style.height = otcPx + 'px'; otcBar.style.background = otcColor; }
+      if (tseValEl) { tseValEl.textContent = tseLabel; tseValEl.style.color = tseColor; }
+      if (otcValEl) { otcValEl.textContent = otcLabel; otcValEl.style.color = otcColor; }
       const fc=document.getElementById('chipFlowCenter');
       if (fc) {
         fc.textContent = flowMsg;
@@ -12271,8 +12260,8 @@ async function chipLoadMarketData() {
     }
 
     // Analysis rows
-    const rows = document.getElementById('chipMktAnalysisRows');
-    if (rows) rows.innerHTML = `
+    const _analysisEl = document.getElementById('chipMktAnalysisRows');
+    if (_analysisEl) _analysisEl.innerHTML = `
       <div class="cr-analysis-row">
         <span class="cr-analysis-icon">${stateClass==='bull'?'🐂':stateClass==='bear'?'🐻':'⚖️'}</span>
         <div class="cr-analysis-content">
@@ -12550,13 +12539,1078 @@ function crShowLogicModal() {
   overlay.classList.add('open');
 }
 
+
+// ══════════════════════════════════════════════
+//  今日分析報告輸出
+// ══════════════════════════════════════════════
+let _reportText = '';
+
+function crExportReport() {
+  const overlay = document.getElementById('crExportOverlay');
+  const body    = document.getElementById('crExportBody');
+  if (!overlay || !body) return;
+
+  // 從 DOM 讀取最新分析結果
+  const verdict    = document.getElementById('chipMktVerdict')?.textContent || '—';
+  const mktSub     = document.getElementById('chipMktSub')?.textContent     || '—';
+  const tse        = document.getElementById('chipMktTse')?.textContent     || '—';
+  const tseChgTxt  = document.getElementById('chipMktTseChg')?.textContent  || '—';
+  const otc        = document.getElementById('chipMktOtc')?.textContent     || '—';
+  const otcChgTxt  = document.getElementById('chipMktOtcChg')?.textContent  || '—';
+  const ma200      = document.getElementById('chipMktMa200')?.textContent   || '—';
+  const ma200sub   = document.getElementById('chipMktMa200Sub')?.innerHTML?.replace(/<[^>]+>/g,'').trim() || '—';
+  const maBias     = document.getElementById('chipMktMaBias')?.textContent  || '—';
+  const flowCenter = document.getElementById('chipFlowCenter')?.textContent || '—';
+  const tseVal     = document.getElementById('chipFlowTseVal')?.textContent || '—';
+  const otcVal     = document.getElementById('chipFlowOtcVal')?.textContent || '—';
+
+  // 讀取四重分析
+  const analysisRows = document.getElementById('chipMktAnalysisRows'); // nullable
+  let analysisText = '';
+  if (analysisRows) {
+    const rows = analysisRows.querySelectorAll('.cr-analysis-row');
+    rows.forEach(row => {
+      const label  = row.querySelector('.cr-analysis-label')?.textContent || '';
+      const val    = row.querySelector('.cr-analysis-val')?.textContent?.trim() || '';
+      const badge  = row.querySelector('.cr-analysis-badge')?.textContent || '';
+      if (label) analysisText += `${label} ${badge}\n  ${val}\n`;
+    });
+  }
+
+  // 三階段偵測
+  const distEl    = document.getElementById('chipDistribution'); // nullable
+  let distText = '';
+  if (distEl && distEl.style.display !== 'none') {
+    const dlabel = distEl.querySelector('span')?.textContent || '';
+    const ddetail= distEl.querySelectorAll('div')[2]?.textContent?.trim() || '';
+    const dadvice= distEl.querySelectorAll('div')[4]?.textContent?.trim() || '';
+    distText = `${dlabel}\n  ${ddetail}\n  ${dadvice}`;
+  }
+
+  // 篩選標的
+  const passCount = document.getElementById('chipStatPass')?.textContent || '—';
+  const scanCount = document.getElementById('chipStatScan')?.textContent || '—';
+  const elimCount = document.getElementById('chipStatElim')?.textContent || '—';
+
+  // 篩選策略設定
+  const modeMap = {
+    momentum:'🚀 動能策略', value_bottom:'🔻 右下角策略',
+    breakout:'⚡ 突破策略', dividend:'💰 存股策略'
+  };
+  const modeName = modeMap[CHIP_CFG.mode||'momentum'] || '🚀 動能策略';
+
+  // 組合報告文字
+  const now  = new Date();
+  const date = `${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()}`;
+  const time = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+  _reportText =
+`📡 籌碼雷達 II — 今日分析報告
+日期：${date} ${time}
+${'─'.repeat(30)}
+
+【市場狀態】${verdict}
+${mktSub}
+
+【指數數據】
+・加權指數：${tse}（${tseChgTxt}）
+・OTC 櫃買：${otc}（${otcChgTxt}）
+・年線 200MA：${ma200}　${ma200sub}
+・年線乖離：${maBias}
+
+【資金主角】${flowCenter}
+・加權 ${tseVal}　OTC ${otcVal}
+
+${'─'.repeat(30)}
+【四重分析】
+${analysisText}
+${'─'.repeat(30)}
+【出貨偵測】
+${distText || '✅ 無明顯出貨訊號'}
+
+${'─'.repeat(30)}
+【今日篩選結果】（${modeName}）
+・掃描：${scanCount} 支　通過：${passCount} 支　淘汰：${elimCount} 支
+・上影線門檻：${(CHIP_CFG.shadow_max*100).toFixed(1)}%
+・月線乖離上限：${(CHIP_CFG.bias_max*100).toFixed(0)}%
+・爆量倍數：${CHIP_CFG.vol_mult}x
+・多頭排列：${CHIP_CFG.need_bull?'開啟':'關閉'}
+・排除金融股：${CHIP_CFG.exclude_28?'開啟':'關閉'}
+
+${'─'.repeat(30)}
+由 籌碼雷達 II 自動產生 ${date} ${time}`;
+
+  // 渲染 Modal（HTML 版本）
+  body.innerHTML = _reportText
+    .split('\n')
+    .map(line => {
+      if (line.startsWith('【') || line.startsWith('📡')) {
+        return `<div style="color:var(--text-primary);font-weight:700;margin-top:6px;">${line}</div>`;
+      } else if (line.startsWith('─')) {
+        return `<div style="border-top:1px solid var(--border);margin:6px 0;"></div>`;
+      } else if (line.startsWith('・')) {
+        return `<div style="color:var(--text-muted);padding-left:8px;">${line}</div>`;
+      } else if (line.trim()) {
+        return `<div>${line}</div>`;
+      }
+      return '<div style="height:4px"></div>';
+    }).join('');
+
+  overlay.classList.add('open');
+}
+
+function crCopyReport() {
+  if (!_reportText) return;
+  navigator.clipboard.writeText(_reportText).then(() => {
+    const btn = document.getElementById('crCopyBtn');
+    if (btn) { btn.textContent = '✅ 已複製'; setTimeout(()=>{ btn.textContent='📋 複製全文'; }, 2000); }
+    chipShowToast('✅ 報告已複製到剪貼簿', 'ok');
+  }).catch(() => {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = _reportText;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    chipShowToast('✅ 報告已複製到剪貼簿', 'ok');
+  });
+}
+
+
+function crCopyLogicText() {
+  const text = `========================================
+籌碼雷達 II — 判斷邏輯總覽
+更新日期：${new Date().toLocaleDateString('zh-TW')}
+========================================
+
+一、牛熊市判斷
+----------------------------------------
+資料：加權指數（^TWII）近 210 日收盤
+200MA：近 200 日平均收盤價
+年線斜率：今日 200MA vs 20 日前 200MA
+
+判定：
+  🐂 牛市：指數 > 200MA 且年線斜率向上
+  🐻 熊市：指數 < 200MA 且年線斜率向下
+  ⚖️ 盤整：其餘情況（站上但走平等）
+
+扣抵值：tseHist[length-200]（即將被替換的舊收盤）
+  今日收盤 > 扣抵值 → ↑ 年線上揚
+  今日收盤 < 扣抵值 → ↓ 年線下彎
+
+========================================
+
+二、資金主角分析
+----------------------------------------
+雜訊門檻：±0.05%（低於此值視為持平）
+差值 diff：tseChg − otcChg
+
+判定情境（8種）：
+  ✅ 全面多頭：雙漲，|diff| < 0.3%
+  🚀 權值股領漲：雙漲，diff > +0.3%
+  💥 中小型股領漲：雙漲，diff < −0.3%
+  🛡️ 拉大出小：加權平/漲，OTC跌，diff > 0.3%
+  ⚠️ OTC承壓：加權平，OTC跌，diff < 0.3%
+  🔄 資金轉向中小型：OTC漲，加權平/跌
+  💀 全面賣壓：雙跌，|diff| < 0.3%
+  🔴 外資棄守：雙跌，加權跌幅 > OTC +0.3%
+
+========================================
+
+三、三階段出貨偵測
+----------------------------------------
+前提：年線乖離偏高（>15%）時才觸發警示
+
+⚠️ 第一階段 — 拉大出小：
+  條件：加權平/漲 且 OTC跌 且 diff > 0.2% 且 乖離 > 20%
+  含義：外資護盤權值、掩護出脫中小型
+
+🚨 第二階段 — 結構背離：
+  條件：OTC跌 且 diff > 0.3% 且 乖離 > 15%
+  含義：市場廣度惡化，80% 股票在跌
+
+🔴 第三階段 — 一起出貨：
+  條件：加權單日跌幅 > 1%（tseChg < −1.0）
+        或 雙跌且加權跌幅比OTC多 > 0.3%
+  含義：外資棄守台積電，長黑K棒出現
+
+✅ 健康多頭：雙漲 且 diff < 0.3%
+🔍 觀察期：其餘情況（卡片隱藏不顯示）
+
+========================================
+
+四、個股篩選濾波器（當前設定）
+----------------------------------------
+上影線門檻：${(CHIP_CFG.shadow_max*100).toFixed(1)}%（K線純度）
+月線乖離上限：${(CHIP_CFG.bias_max*100).toFixed(0)}%
+爆量倍數：${CHIP_CFG.vol_mult}x（今日量÷昨日量）
+多頭排列：${CHIP_CFG.need_bull ? '開啟（收盤>5MA>10MA>20MA）' : '關閉'}
+排除金融股：${CHIP_CFG.exclude_28 ? '開啟（28開頭）' : '關閉'}
+當前模式：${CHIP_CFG.mode==='value_bottom'?'🔻 右下角策略':CHIP_CFG.mode==='breakout'?'⚡ 突破策略':CHIP_CFG.mode==='dividend'?'💰 存股策略':'🚀 動能策略'}
+${CHIP_CFG.mode==='value_bottom' ? `
+右下角策略專屬：
+  均線糾結偵測：${CHIP_CFG.ma_flat?'開啟':'關閉'}（月線乖離 < ±5%）
+  量縮偵測：${CHIP_CFG.vol_dry?'開啟':'關閉'}（量比 < 0.8x）
+  RSI背離：${CHIP_CFG.rsi_div?'開啟':'關閉'}` : ''}
+
+策略模板：
+  🚀 動能策略：shadow<1.5% bias<15% vol>2x 多頭排列開
+  🔻 右下角策略：shadow<3% bias<5% vol<0.5x 多頭排列關
+  ⚡ 突破策略：shadow<1% bias<20% vol>3x 多頭排列開
+  💰 存股策略（預留）：shadow<5% bias<10% vol<0.3x
+
+========================================
+
+五、資料來源
+----------------------------------------
+Proxy：corsproxy.io → Yahoo Finance v8 API
+指數：^TWII（加權）、^TWOII（OTC）
+個股歷史：ticker.TW / ticker.TWO，range=3mo
+快取：報價 5 分鐘，歷史資料 session 內不重複抓
+
+待接入：
+  - TWSE API（外資/投信買超張數）
+  - 財報 API（P/B、現金殖利率、負債比）
+  - RSI 底部背離計算
+  - W底/頭肩底型態辨識
+
+修改邏輯位置：
+  chipDetectDistribution()  → 三階段出貨偵測
+  chipLoadMarketData()      → 市場數據載入與分析
+  runFilters() / chipRunFilters() → 個股篩選濾波器
+  CHIP_STRATEGY_TEMPLATES   → 策略模板定義
+  CHIP_CFG                  → 當前篩選參數
+
+========================================
+由 籌碼雷達 II 自動產生 ${new Date().toLocaleString('zh-TW')}`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('crCopyLogicBtn');
+    if (btn) { btn.textContent = '✅ 已複製'; setTimeout(() => { btn.textContent = '📋 複製邏輯文字'; }, 2500); }
+    chipShowToast('✅ 邏輯文字已複製到剪貼簿', 'ok');
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    chipShowToast('✅ 已複製', 'ok');
+  });
+}
+
+
+// ══════════════════════════════════════════════
+//  從 Supabase 讀取 Python bot 掃描結果
+//  bot 每天 15:35 跑完後存入 chip_signals 表
+// ══════════════════════════════════════════════
+// 使用已宣告的 CHIP_PROXY / CHIP_SUPABASE_URL 等變數
+
+let chipBotData = null; // 快取
+
+async function chipLoadBotData(forceRefresh = false) {
+  if (chipBotData && !forceRefresh) return chipBotData;
+  try {
+    const r = await fetch(
+      `https://dlwswwioqbghwpksbnjv.supabase.co/rest/v1/chip_signals?id=eq.latest&select=*`,
+      { headers: {
+          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsd3N3d2lvcWJnaHdwa3Nibmp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MzQ3NjEsImV4cCI6MjA4ODMxMDc2MX0.d5jRhb_6qQDnfcEIfvRErfAWIEWcEnuR74diYtAicfg',
+          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsd3N3d2lvcWJnaHdwa3Nibmp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MzQ3NjEsImV4cCI6MjA4ODMxMDc2MX0.d5jRhb_6qQDnfcEIfvRErfAWIEWcEnuR74diYtAicfg`,
+      }}
+    );
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const rows = await r.json();
+    if (!rows.length) return null;
+    chipBotData = rows[0];
+    return chipBotData;
+  } catch(e) {
+    log.warn && console.warn('bot 資料讀取失敗:', e.message);
+    return null;
+  }
+}
+
+// 判斷 bot 資料是否為今日
+function chipIsBotToday(data) {
+  if (!data?.date) return false;
+  const today = new Date().toISOString().slice(0,10);
+  return data.date === today;
+}
+
+// ── 合併 bot 籌碼資料到掃描結果卡片 ──
+function chipMergeBotSignals(botData) {
+  if (!botData?.signals?.length) return;
+
+  // 建立 id → bot signal 字典
+  const botMap = {};
+  botData.signals.forEach(s => { botMap[s.id] = s; });
+  botData.eliminated?.forEach(e => { botMap[e.id] = e; });
+
+  // 合併進 chipSignals
+  chipSignals.forEach(s => {
+    const b = botMap[s.id];
+    if (!b) return;
+    s.foreign   = b.foreign   ?? 0;
+    s.trust     = b.trust     ?? 0;
+    s.fromBot   = true;
+  });
+
+  chipRenderSignalPage();
+  chipShowToast('✅ 已合併 bot 籌碼資料', 'ok');
+}
+
+// ── 顯示 bot 狀態 ──
+function chipRenderBotStatus(container, data) {
+  if (!container) return;
+  if (!data) {
+    container.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(255,77,109,.05);border:1px solid rgba(255,77,109,.2);border-radius:10px;">
+        <span style="font-size:1rem;">🤖</span>
+        <div>
+          <div style="font-size:0.75rem;font-weight:700;color:var(--accent-red);">尚未有 bot 資料</div>
+          <div style="font-size:0.62rem;color:var(--text-muted);">請執行 chip_bot.py，每日 15:35 自動更新</div>
+        </div>
+      </div>`;
+    return;
+  }
+  const isToday = chipIsBotToday(data);
+  const meta = data.meta || {};
+  const updTime = data.updated_at ? new Date(data.updated_at).toLocaleString('zh-TW') : '—';
+
+  container.innerHTML = `
+    <div style="padding:10px 14px;background:${isToday?'rgba(0,229,160,.05)':'rgba(240,180,41,.05)'};border:1px solid ${isToday?'rgba(0,229,160,.2)':'rgba(240,180,41,.2)'};border-radius:10px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:1rem;">🤖</span>
+          <div>
+            <div style="font-size:0.75rem;font-weight:700;color:${isToday?'var(--accent-green)':'#f0b429'};">
+              ${isToday ? '✅ 今日 bot 資料' : '⚠️ 非今日資料（' + data.date + '）'}
+            </div>
+            <div style="font-size:0.6rem;color:var(--text-muted);">更新：${updTime}</div>
+          </div>
+        </div>
+        <button onclick="chipMergeBotSignals(chipBotData)"
+          style="font-size:0.65rem;padding:4px 10px;border-radius:8px;background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.3);color:var(--accent-green);cursor:pointer;">
+          合併籌碼
+        </button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;">
+        <div><div style="font-size:1rem;font-weight:700;font-family:var(--mono);color:#f0b429">${meta.pass_count??'—'}</div><div style="font-size:0.55rem;color:var(--text-muted)">通過</div></div>
+        <div><div style="font-size:1rem;font-weight:700;font-family:var(--mono);color:var(--accent-red)">${meta.total_scanned??'—'}</div><div style="font-size:0.55rem;color:var(--text-muted)">掃描</div></div>
+        <div><div style="font-size:1rem;font-weight:700;font-family:var(--mono);color:var(--accent-blue)">${data.signals?.filter(s=>s.foreign>0).length??'—'}</div><div style="font-size:0.55rem;color:var(--text-muted)">外資買</div></div>
+        <div><div style="font-size:1rem;font-weight:700;font-family:var(--mono);color:var(--accent-purple)">${data.signals?.filter(s=>s.trust>0).length??'—'}</div><div style="font-size:0.55rem;color:var(--text-muted)">投信買</div></div>
+      </div>
+      <!-- 外資買超 Top 5 -->
+      ${(data.signals||[]).filter(s=>s.foreign>0).slice(0,5).length ? `
+      <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);">
+        <div style="font-size:0.6rem;color:var(--text-muted);margin-bottom:4px;">🏦 外資買超 Top 5</div>
+        ${(data.signals||[]).filter(s=>s.foreign>0).sort((a,b)=>b.foreign-a.foreign).slice(0,5).map(s=>`
+          <div style="display:flex;justify-content:space-between;font-size:0.68rem;padding:2px 0;">
+            <span style="color:var(--text-primary);font-weight:600;">${s.id} ${s.name}</span>
+            <span style="font-family:var(--mono);color:var(--accent-red);">+${s.foreign.toLocaleString()}張</span>
+          </div>`).join('')}
+      </div>` : ''}
+      <!-- 投信買超 Top 5 -->
+      ${(data.signals||[]).filter(s=>s.trust>0).slice(0,5).length ? `
+      <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);">
+        <div style="font-size:0.6rem;color:var(--text-muted);margin-bottom:4px;">🏛️ 投信買超 Top 5</div>
+        ${(data.signals||[]).filter(s=>s.trust>0).sort((a,b)=>b.trust-a.trust).slice(0,5).map(s=>`
+          <div style="display:flex;justify-content:space-between;font-size:0.68rem;padding:2px 0;">
+            <span style="color:var(--text-primary);font-weight:600;">${s.id} ${s.name}</span>
+            <span style="font-family:var(--mono);color:var(--accent-purple);">+${s.trust.toLocaleString()}張</span>
+          </div>`).join('')}
+      </div>` : ''}
+    </div>`;
+}
+
+
+// ══════════════════════════════════════════════
+//  ETF 分析 — 0050 / 00662
+//  法人資料：TWSE 官方 API（每日收盤後更新）
+// ══════════════════════════════════════════════
+let etfCurrent = '0050';
+let etfRange   = '3mo';
+let etfCache   = {};
+let etfChipCache = {};
+
+const ETF_INFO = {
+  '0050':  { name:'元大台灣50',  color:'#f0b429', bg:'rgba(240,180,41,.12)' },
+  '00662': { name:'富邦NASDAQ',  color:'#3b82f6', bg:'rgba(59,130,246,.12)' },
+};
+
+// ── TWSE API via corsproxy ──
+async function etfFetchTWSE(path, params={}) {
+  const base = 'https://www.twse.com.tw/rwd/zh';
+  const qs   = new URLSearchParams(params).toString();
+  const url  = `${base}/${path}${qs?'?'+qs:''}`;
+  const d    = await chipProxyFetch(url, 15000);
+  return d;
+}
+
+// ── 抓近 N 個月的 TWSE 日K ──
+async function etfFetchTWSEHistory(ticker, months=3) {
+  const today = new Date();
+  let allRows = [];
+  for (let m=months-1; m>=0; m--) {
+    const d = new Date(today.getFullYear(), today.getMonth()-m, 1);
+    const dateStr = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}01`;
+    try {
+      const data = await etfFetchTWSE('afterTrading/STOCK_DAY', {
+        stockNo: ticker, date: dateStr
+      });
+      if (data?.stat==='OK' && data.data?.length) allRows.push(...data.data);
+    } catch {}
+    await new Promise(r=>setTimeout(r,400));
+  }
+  if (!allRows.length) return null;
+
+  const parsed = allRows.map(row => {
+    try {
+      const dateStr = row[0].replace(/\//g,'-');
+      // 民國年轉西元
+      const parts = row[0].split('/');
+      const year  = parseInt(parts[0]) + 1911;
+      const t = new Date(`${year}-${parts[1]}-${parts[2]}`);
+      return {
+        t,
+        open:   parseFloat(row[3].replace(/,/g,'')),
+        high:   parseFloat(row[4].replace(/,/g,'')),
+        low:    parseFloat(row[5].replace(/,/g,'')),
+        close:  parseFloat(row[6].replace(/,/g,'')),
+        volume: parseInt(row[1].replace(/,/g,'')),
+        change: row[8].replace(/[+%]/g,'').replace('X',''),
+      };
+    } catch { return null; }
+  }).filter(r=>r && !isNaN(r.close) && r.close>0);
+
+  return parsed;
+}
+
+// ── 抓三大法人（T86，單日）──
+async function etfFetchChipDay(ticker, dateStr) {
+  try {
+    const data = await etfFetchTWSE('fund/T86', {
+      date: dateStr, selectType: 'ALLBUT0999'
+    });
+    if (!data?.data) return null;
+    const row = data.data.find(r => r[0]===ticker);
+    if (!row) return null;
+    const num = s => parseInt(String(s).replace(/,/g,'').replace(/[^\d-]/g,'')) || 0;
+    return {
+      foreign: num(row[4]),   // 外資買賣超（張）
+      trust:   num(row[7]),   // 投信買賣超
+      dealer:  num(row[10]),  // 自營商買賣超
+    };
+  } catch { return null; }
+}
+
+// ── 抓近 N 個月法人資料（逐日抓）──
+async function etfFetchChipHistory(ticker, tradingDays) {
+  const cacheKey = `chip_${ticker}_${tradingDays.length}`;
+  if (etfChipCache[cacheKey]) return etfChipCache[cacheKey];
+
+  // 只抓最近 60 個交易日（避免太慢）
+  const daysToFetch = tradingDays.slice(-60);
+  const results = { foreign:[], trust:[], dealer:[], dates:[] };
+
+  // Batch fetch with delay
+  for (const day of daysToFetch) {
+    const dateStr = `${day.t.getFullYear()}${String(day.t.getMonth()+1).padStart(2,'0')}${String(day.t.getDate()).padStart(2,'0')}`;
+    const chip = await etfFetchChipDay(ticker, dateStr);
+    results.foreign.push(chip?.foreign ?? null);
+    results.trust.push(chip?.trust ?? null);
+    results.dealer.push(chip?.dealer ?? null);
+    results.dates.push(`${day.t.getMonth()+1}/${day.t.getDate()}`);
+    await new Promise(r=>setTimeout(r,300));
+  }
+
+  // 轉成累積值
+  const cumulate = arr => {
+    let cum = 0;
+    return arr.map(v => { if(v!=null) cum+=v; return cum; });
+  };
+  results.foreignCum = cumulate(results.foreign);
+  results.trustCum   = cumulate(results.trust);
+  results.dealerCum  = cumulate(results.dealer);
+  results.isMock = false;
+
+  etfChipCache[cacheKey] = results;
+  return results;
+}
+
+// ── 計算 SMA ──
+function etfSma(arr, n) {
+  return arr.map((v,i) => {
+    if (i < n-1) return null;
+    const slice = arr.slice(i-n+1, i+1).filter(v=>v!=null);
+    return slice.length===n ? slice.reduce((a,b)=>a+b)/n : null;
+  });
+}
+
+// ── 計算 VWAP / 均量 ──
+function etfAvgVol(volumes, n=20) {
+  if (volumes.length < n) return null;
+  return volumes.slice(-n).reduce((a,b)=>a+b,0)/n;
+}
+
+// ── Volume Profile（水平直方圖）──
+function etfVolumeProfile(rows, buckets=24) {
+  if (!rows.length) return [];
+  const prices = rows.map(r=>r.close).filter(v=>v>0);
+  const min = Math.min(...prices)*0.998;
+  const max = Math.max(...prices)*1.002;
+  const step = (max-min)/buckets;
+  const profile = Array.from({length:buckets}, (_,i) => ({
+    priceFrom: min+i*step,
+    priceTo:   min+(i+1)*step,
+    priceMid:  min+(i+0.5)*step,
+    volume:    0, count:0,
+  }));
+  rows.forEach(r => {
+    if (!r.close||!r.volume) return;
+    const idx = Math.min(Math.floor((r.close-min)/step), buckets-1);
+    profile[idx].volume += r.volume;
+    profile[idx].count++;
+  });
+  const maxVol = Math.max(...profile.map(p=>p.volume));
+  profile.forEach(p => { p.pct = maxVol>0 ? p.volume/maxVol : 0; });
+  return profile;
+}
+
+// ── 找密集交易帶（滑動視窗找連續3格最大量）──
+function etfFindDenseZones(profile) {
+  if (!profile.length) return [];
+  // 找前3大密集帶
+  const zones = [];
+  const used  = new Set();
+  const sorted = [...profile].sort((a,b)=>b.volume-a.volume);
+  for (const p of sorted) {
+    const i = profile.indexOf(p);
+    if (used.has(i)) continue;
+    // 合併相鄰
+    let lo=i, hi=i;
+    while (lo>0 && profile[lo-1].volume > p.volume*0.6 && !used.has(lo-1)) lo--;
+    while (hi<profile.length-1 && profile[hi+1].volume > p.volume*0.6 && !used.has(hi+1)) hi++;
+    for (let j=lo;j<=hi;j++) used.add(j);
+    zones.push({
+      low:   profile[lo].priceFrom,
+      high:  profile[hi].priceTo,
+      mid:   (profile[lo].priceFrom+profile[hi].priceTo)/2,
+      vol:   profile.slice(lo,hi+1).reduce((a,c)=>a+c.volume,0),
+      pct:   profile[lo].pct,
+    });
+    if (zones.length >= 3) break;
+  }
+  return zones.sort((a,b)=>a.mid-b.mid);
+}
+
+// ── 繪製價格 + MA + 密集區 + 均量帶 ──
+function etfDrawPriceChart(canvas, rows, dense, zones) {
+  if (!rows.length) return;
+  const ctx = canvas.getContext('2d');
+  const DPR = window.devicePixelRatio||1;
+  const W = canvas.offsetWidth*DPR, H=canvas.offsetHeight*DPR;
+  canvas.width=W; canvas.height=H;
+  ctx.scale(DPR,DPR);
+  const w=canvas.offsetWidth, h=canvas.offsetHeight;
+  const pad={t:8,r:8,b:28,l:56};
+
+  const closes  = rows.map(r=>r.close);
+  const ma20arr = etfSma(closes,20);
+  const ma60arr = etfSma(closes,60);
+  const allV    = [...closes,...ma20arr.filter(v=>v),...ma60arr.filter(v=>v)];
+  const minV    = Math.min(...allV)*0.995;
+  const maxV    = Math.max(...allV)*1.005;
+  const n       = rows.length;
+
+  const xS = i => pad.l+(i/(n-1))*(w-pad.l-pad.r);
+  const yS = v => pad.t+(1-(v-minV)/(maxV-minV))*(h-pad.t-pad.b);
+
+  ctx.clearRect(0,0,w,h);
+
+  // Background grid
+  for (let i=0;i<=4;i++) {
+    const y=pad.t+i*(h-pad.t-pad.b)/4;
+    const v=maxV-i*(maxV-minV)/4;
+    ctx.strokeStyle='rgba(255,255,255,.04)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(w-pad.r,y); ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,.28)'; ctx.font=`10px DM Mono`; ctx.textAlign='right';
+    ctx.fillText(v.toFixed(0), pad.l-4, y+4);
+  }
+
+  // X axis labels
+  ctx.textAlign='center'; ctx.fillStyle='rgba(255,255,255,.25)';
+  const xStep = Math.max(1, Math.floor(n/5));
+  for (let i=0;i<n;i+=xStep) {
+    ctx.fillText(`${rows[i].t.getMonth()+1}/${rows[i].t.getDate()}`, xS(i), h-6);
+  }
+
+  // Dense zones (all 3)
+  const zoneColors = ['rgba(255,77,109,.10)','rgba(59,130,246,.08)','rgba(167,139,250,.07)'];
+  const zoneEdge   = ['rgba(255,77,109,.4)','rgba(59,130,246,.3)','rgba(167,139,250,.3)'];
+  zones.forEach((z,zi) => {
+    const y1=yS(z.high), y2=yS(z.low);
+    ctx.fillStyle=zoneColors[zi%3];
+    ctx.fillRect(pad.l,y1,w-pad.l-pad.r,y2-y1);
+    ctx.strokeStyle=zoneEdge[zi%3]; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(pad.l,yS(z.mid)); ctx.lineTo(w-pad.r,yS(z.mid)); ctx.stroke();
+    ctx.setLineDash([]);
+    // Label
+    ctx.fillStyle=zoneEdge[zi%3].replace('.3','1').replace('.4','1');
+    ctx.font='9px DM Mono'; ctx.textAlign='left';
+    ctx.fillText(z.mid.toFixed(0), pad.l+2, yS(z.mid)-3);
+  });
+
+  // MA60
+  ctx.strokeStyle='#a78bfa'; ctx.lineWidth=1.5;
+  ctx.beginPath(); let first=true;
+  ma60arr.forEach((v,i)=>{ if(!v)return; const x=xS(i),y=yS(v); first?ctx.moveTo(x,y):ctx.lineTo(x,y); first=false; });
+  ctx.stroke();
+
+  // MA20
+  ctx.strokeStyle='#3b82f6'; ctx.lineWidth=1.5;
+  ctx.beginPath(); first=true;
+  ma20arr.forEach((v,i)=>{ if(!v)return; const x=xS(i),y=yS(v); first?ctx.moveTo(x,y):ctx.lineTo(x,y); first=false; });
+  ctx.stroke();
+
+  // Price area fill
+  const info=ETF_INFO[etfCurrent];
+  const grad=ctx.createLinearGradient(0,pad.t,0,h-pad.b);
+  grad.addColorStop(0,info.color+'44'); grad.addColorStop(1,info.color+'00');
+  ctx.beginPath();
+  closes.forEach((v,i)=>{ const x=xS(i),y=yS(v); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+  ctx.lineTo(xS(n-1),h-pad.b); ctx.lineTo(xS(0),h-pad.b); ctx.closePath();
+  ctx.fillStyle=grad; ctx.fill();
+
+  // Price line
+  ctx.strokeStyle=info.color; ctx.lineWidth=2;
+  ctx.beginPath();
+  closes.forEach((v,i)=>{ const x=xS(i),y=yS(v); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+  ctx.stroke();
+
+  // Last price dot
+  ctx.fillStyle=info.color;
+  ctx.beginPath(); ctx.arc(xS(n-1),yS(closes.at(-1)),4,0,Math.PI*2); ctx.fill();
+}
+
+// ── 繪製 Volume Profile 水平直方圖 ──
+function etfDrawVPChart(canvas, profile, currentPrice, zones) {
+  if (!profile.length) return;
+  const ctx=canvas.getContext('2d');
+  const DPR=window.devicePixelRatio||1;
+  const W=canvas.offsetWidth*DPR, H=canvas.offsetHeight*DPR;
+  canvas.width=W; canvas.height=H;
+  ctx.scale(DPR,DPR);
+  const w=canvas.offsetWidth, h=canvas.offsetHeight;
+  const n=profile.length;
+  const rowH=h/n;
+  const chartW=w-52; // leave space for price labels
+
+  ctx.clearRect(0,0,w,h);
+
+  const priceRange=profile[n-1].priceTo - profile[0].priceFrom;
+
+  profile.slice().reverse().forEach((p,i)=>{
+    const y=i*rowH;
+    const barW=p.pct*chartW;
+    const isAbove=p.priceMid > currentPrice;
+    // Highlight dense zones
+    const inZone = zones.some(z=>p.priceMid>=z.low && p.priceMid<=z.high);
+    if (inZone) {
+      ctx.fillStyle = isAbove ? '#ff4d6d' : '#3b82f6';
+    } else {
+      ctx.fillStyle = isAbove ? 'rgba(255,77,109,.35)' : 'rgba(59,130,246,.35)';
+    }
+    if (barW>0) ctx.fillRect(0, y+0.5, barW, rowH-1);
+
+    // Price label every 4 rows
+    if (i%4===0) {
+      ctx.fillStyle='rgba(255,255,255,.25)'; ctx.font='9px DM Mono'; ctx.textAlign='left';
+      ctx.fillText(p.priceMid.toFixed(0), chartW+3, y+rowH*0.7);
+    }
+  });
+
+  // Current price line
+  if (currentPrice) {
+    const yPrice = h*(1-(currentPrice-profile[0].priceFrom)/priceRange);
+    ctx.strokeStyle='#f0b429'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(0,yPrice); ctx.lineTo(chartW,yPrice); ctx.stroke();
+    ctx.setLineDash([]);
+    // Label
+    ctx.fillStyle='#f0b429'; ctx.font='bold 9px DM Mono'; ctx.textAlign='left';
+    ctx.fillText(`▶${currentPrice.toFixed(0)}`, chartW+3, yPrice+3);
+  }
+
+  // Zone labels on bar
+  zones.forEach((z,zi)=>{
+    const yMid=h*(1-(z.mid-profile[0].priceFrom)/priceRange);
+    const colors=['#ff4d6d','#3b82f6','#a78bfa'];
+    ctx.fillStyle=colors[zi%3]; ctx.font='bold 9px DM Mono'; ctx.textAlign='left';
+    ctx.fillText(`S${zi+1}`, 2, yMid+3);
+  });
+}
+
+// ── 繪製成交量柱狀圖（底部）──
+function etfDrawVolChart(canvas, rows) {
+  if (!rows.length) return;
+  const ctx=canvas.getContext('2d');
+  const DPR=window.devicePixelRatio||1;
+  canvas.width=canvas.offsetWidth*DPR; canvas.height=canvas.offsetHeight*DPR;
+  ctx.scale(DPR,DPR);
+  const w=canvas.offsetWidth, h=canvas.offsetHeight;
+  const n=rows.length;
+  const barW=Math.max(1,(w-8)/n-0.5);
+  const pad={l:8,r:4};
+  const vols=rows.map(r=>r.volume);
+  const maxV=Math.max(...vols)||1;
+  const avgV20=etfAvgVol(vols,20)||0;
+
+  ctx.clearRect(0,0,w,h);
+
+  // Average volume line
+  const avgY=h*(1-avgV20/maxV)*0.95;
+  ctx.strokeStyle='rgba(240,180,41,.5)'; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.moveTo(pad.l,avgY); ctx.lineTo(w-pad.r,avgY); ctx.stroke();
+  ctx.setLineDash([]);
+
+  rows.forEach((r,i)=>{
+    const x=pad.l+i*((w-pad.l-pad.r)/n);
+    const barH=Math.max(1,(r.volume/maxV)*h*0.95);
+    const isUp=r.close>=r.open;
+    // Highlight above-avg volume
+    const isHot=r.volume>=avgV20*1.5;
+    ctx.fillStyle=isHot?(isUp?'#ff4d6d':'#00e5a0'):(isUp?'rgba(255,77,109,.45)':'rgba(0,229,160,.45)');
+    ctx.fillRect(x, h-barH, Math.max(barW,1), barH);
+  });
+}
+
+// ── 繪製法人籌碼累積曲線 ──
+function etfDrawChipChart(canvas, chipData) {
+  if (!chipData) return;
+  const ctx=canvas.getContext('2d');
+  const DPR=window.devicePixelRatio||1;
+  canvas.width=canvas.offsetWidth*DPR; canvas.height=canvas.offsetHeight*DPR;
+  ctx.scale(DPR,DPR);
+  const w=canvas.offsetWidth, h=canvas.offsetHeight;
+  const pad={t:8,r:8,b:18,l:58};
+
+  const series=[
+    {arr:chipData.foreignCum, color:'#ff4d6d', label:'外資'},
+    {arr:chipData.trustCum,   color:'#a78bfa', label:'投信'},
+    {arr:chipData.dealerCum,  color:'#00e5a0', label:'自營'},
+  ];
+  const allV=series.flatMap(s=>s.arr||[]).filter(v=>v!=null);
+  if (!allV.length) return;
+  const minV=Math.min(...allV,0), maxV=Math.max(...allV,0);
+  const n=(chipData.foreignCum||[]).length||1;
+
+  const xS=i=>pad.l+(i/(n-1||1))*(w-pad.l-pad.r);
+  const yS=v=>pad.t+(1-(v-minV)/(maxV-minV||1))*(h-pad.t-pad.b);
+
+  ctx.clearRect(0,0,w,h);
+
+  // Zero line
+  const y0=yS(0);
+  ctx.strokeStyle='rgba(255,255,255,.12)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(pad.l,y0); ctx.lineTo(w-pad.r,y0); ctx.stroke();
+
+  // Y axis
+  [minV,(minV+maxV)/2,maxV].forEach(v=>{
+    const y=yS(v);
+    ctx.fillStyle='rgba(255,255,255,.22)'; ctx.font='9px DM Mono'; ctx.textAlign='right';
+    const lbl=Math.abs(v)>=1000?`${(v/1000).toFixed(1)}K`:`${v}`;
+    ctx.fillText((v>=0?'+':'')+lbl, pad.l-3, y+3);
+  });
+
+  // X axis
+  ctx.textAlign='center'; ctx.fillStyle='rgba(255,255,255,.2)';
+  const dates=chipData.dates||[];
+  const xStep=Math.max(1,Math.floor(n/5));
+  for (let i=0;i<n;i+=xStep) ctx.fillText(dates[i]||'',xS(i),h-2);
+
+  // Draw series
+  series.forEach(s=>{
+    if (!s.arr?.length) return;
+    ctx.strokeStyle=s.color; ctx.lineWidth=2;
+    ctx.beginPath(); let first=true;
+    s.arr.forEach((v,i)=>{
+      if(v==null)return;
+      const x=xS(i),y=yS(v);
+      first?ctx.moveTo(x,y):ctx.lineTo(x,y); first=false;
+    });
+    ctx.stroke();
+    // Last dot
+    const last=s.arr.filter(v=>v!=null).at(-1);
+    if(last!=null){
+      ctx.fillStyle=s.color;
+      ctx.beginPath(); ctx.arc(xS(s.arr.length-1),yS(last),3.5,0,Math.PI*2); ctx.fill();
+    }
+  });
+}
+
+// ── 成長比率 ──
+function etfGrowthRate(arr, days=30) {
+  if (!arr||arr.length<days+1) return null;
+  const now=arr.filter(v=>v!=null).at(-1);
+  const prev=arr.filter(v=>v!=null).at(-(days+1));
+  if (!prev) return null;
+  return ((now-prev)/Math.abs(prev)*100);
+}
+
+// ══════════════════════════════
+//  主渲染
+// ══════════════════════════════
+async function etfRender() {
+  const loading=document.getElementById('etfLoading');
+  const loadTxt=document.getElementById('etfLoadingTxt');
+  if(loading) loading.style.display='flex';
+
+  try {
+    // ── Step 1: 抓 TWSE 日K ──
+    const rangeMonths={'3mo':3,'6mo':6,'1y':12}[etfRange]||3;
+    if(loadTxt) loadTxt.textContent=`載入 ${etfCurrent} 日K資料…`;
+
+    const cacheKey=`${etfCurrent}_${etfRange}`;
+    let rows = etfCache[cacheKey];
+    if (!rows) {
+      rows = await etfFetchTWSEHistory(etfCurrent, rangeMonths);
+      if (!rows?.length) {
+        // Fallback: Yahoo Finance
+        if(loadTxt) loadTxt.textContent='TWSE 失敗，改用 Yahoo Finance…';
+        const yData = await etfFetchHistory_Yahoo(etfCurrent, etfRange);
+        rows = yData;
+      }
+      if (!rows?.length) throw new Error('無法取得資料');
+      etfCache[cacheKey] = rows;
+    }
+
+    const info   = ETF_INFO[etfCurrent];
+    const close  = rows.at(-1).close;
+    const prev   = rows.at(-2)?.close||close;
+    const change = (close-prev)/prev*100;
+    const up     = change>=0;
+    const closes = rows.map(r=>r.close);
+    const volumes= rows.map(r=>r.volume);
+    const ma20v  = etfSma(closes,20).at(-1);
+    const ma60v  = etfSma(closes,60).at(-1);
+    const biasV  = ma20v ? (close-ma20v)/ma20v*100 : null;
+    const avgV20 = etfAvgVol(volumes,20);
+    const volR   = avgV20 ? volumes.at(-1)/avgV20 : null;
+
+    // ── Hero KPI ──
+    const set=(id,v,s)=>{ const el=document.getElementById(id); if(el){el.textContent=v;if(s)Object.assign(el.style,s);} };
+    set('etfTicker', etfCurrent);
+    set('etfName',   info.name);
+    set('etfPrice',  close.toLocaleString('zh-TW',{minimumFractionDigits:2,maximumFractionDigits:2}),
+        {color:up?'var(--accent-red)':'var(--accent-green)'});
+    set('etfChange', `${up?'▲':'▼'}${Math.abs(change).toFixed(2)}%`,
+        {color:up?'var(--accent-red)':'var(--accent-green)'});
+    set('etfMa20',  ma20v?.toFixed(1)||'—');
+    set('etfMa60',  ma60v?.toFixed(1)||'—');
+    set('etfBias',  biasV!=null?`${biasV>=0?'+':''}${biasV.toFixed(1)}%`:'—',
+        {color:biasV>=0?'var(--accent-red)':'var(--accent-green)'});
+    set('etfVol',   volR?`${volR.toFixed(2)}x`:'—',
+        {color:volR>=2?'#f0b429':volR>=1.5?'var(--accent-red)':'var(--text-primary)'});
+
+    // ── Volume Profile + Dense Zones ──
+    const profile = etfVolumeProfile(rows, 24);
+    const zones   = etfFindDenseZones(profile);
+
+    // 均量成本線（VWAP style）
+    let cumPV=0, cumV=0;
+    const vwap = rows.map(r=>{ cumPV+=r.close*r.volume; cumV+=r.volume; return cumV>0?cumPV/cumV:null; });
+    const costLine = vwap.at(-1);
+
+    // Price chart
+    const pCanvas=document.getElementById('etfPriceChart');
+    if(pCanvas) etfDrawPriceChart(pCanvas, rows, null, zones);
+
+    // Volume chart
+    const vCanvas=document.getElementById('etfVolChart');
+    if(vCanvas) etfDrawVolChart(vCanvas, rows);
+
+    // VP chart
+    const vpCanvas=document.getElementById('etfVPChart');
+    if(vpCanvas) etfDrawVPChart(vpCanvas, profile, close, zones);
+
+    // Dense zone summary
+    const denseEl=document.getElementById('etfDenseZone');
+    if(denseEl && zones.length) {
+      denseEl.style.display='block';
+      denseEl.innerHTML = zones.map((z,i)=>{
+        const colors=['#ff4d6d','#3b82f6','#a78bfa'];
+        const rel = close>z.high ? `↑ 當前在此帶上方 +${(close-z.high).toFixed(1)}（壓力已突破）`
+                  : close<z.low  ? `↓ 當前在此帶下方 -${(z.low-close).toFixed(1)}（支撐）`
+                  :                 `⚡ 當前在此帶內（方向待確認）`;
+        return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;${i>0?'border-top:1px solid var(--border);margin-top:5px;':''}">
+          <span style="font-size:0.75rem;font-weight:700;color:${colors[i]};min-width:20px">S${i+1}</span>
+          <div style="flex:1">
+            <span style="font-family:var(--mono);font-size:0.72rem;font-weight:700;color:${colors[i]}">${z.low.toFixed(1)} ~ ${z.high.toFixed(1)}</span>
+            <span style="font-size:0.62rem;color:var(--text-muted);margin-left:6px">${rel}</span>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    // VWAP cost line info
+    const costEl=document.getElementById('etfCostLine');
+    if(costEl && costLine) {
+      const diff=(close-costLine)/costLine*100;
+      costEl.innerHTML=`<span style="font-size:0.68rem;color:var(--text-muted)">籌碼成本線 <b style="font-family:var(--mono);color:#f0b429">${costLine.toFixed(1)}</b>
+        <span style="color:${diff>=0?'var(--accent-red)':'var(--accent-green)'}">${diff>=0?'+':''}${diff.toFixed(1)}%</span>
+        <span style="color:var(--text-muted);font-size:0.6rem">（VWAP 期間均值）</span></span>`;
+    }
+
+    // ── Step 2: 法人資料 ──
+    if(loadTxt) loadTxt.textContent='載入三大法人資料（TWSE）…';
+    let chipData;
+    try {
+      chipData = await etfFetchChipHistory(etfCurrent, rows.slice(-60));
+    } catch(e) {
+      chipData = etfMockChipData_fallback(rows);
+    }
+
+    // Chip chart
+    const cCanvas=document.getElementById('etfChipChart');
+    if(cCanvas) etfDrawChipChart(cCanvas, chipData);
+
+    // Chip summary cards
+    const summaryEl=document.getElementById('etfChipSummary');
+    if(summaryEl) {
+      const items=[
+        {key:'foreignCum',daily:'foreign',label:'外資',color:'#ff4d6d'},
+        {key:'trustCum',  daily:'trust',  label:'投信',color:'#a78bfa'},
+        {key:'dealerCum', daily:'dealer', label:'自營',color:'#00e5a0'},
+      ];
+      summaryEl.innerHTML = items.map(s=>{
+        const cum  = (chipData[s.key]||[]).filter(v=>v!=null).at(-1)||0;
+        const today= (chipData[s.daily]||[]).filter(v=>v!=null).at(-1)||0;
+        const g10  = etfGrowthRate(chipData[s.key],10);
+        return `<div class="etf-chip-item">
+          <div class="etf-chip-val" style="color:${s.color}">${cum>=0?'+':''}${(cum/1000).toFixed(1)}K</div>
+          <div class="etf-chip-lbl">${s.label}累積張</div>
+          <div class="etf-chip-chg" style="color:${today>=0?'var(--accent-red)':'var(--accent-green)'}">
+            今日 ${today>=0?'+':''}${today.toLocaleString()}張
+          </div>
+          ${g10!=null?`<div style="font-size:0.58rem;color:var(--text-muted);margin-top:2px;">10日趨勢 ${g10>=0?'▲':'▼'}${Math.abs(g10).toFixed(1)}%</div>`:''}
+        </div>`;
+      }).join('');
+    }
+
+    // Growth bars
+    const growthEl=document.getElementById('etfGrowthBars');
+    if(growthEl) {
+      const items=[
+        {key:'foreignCum',label:'外資',color:'#ff4d6d'},
+        {key:'trustCum',  label:'投信',color:'#a78bfa'},
+        {key:'dealerCum', label:'自營',color:'#00e5a0'},
+      ];
+      const growths=items.map(g=>({...g, pct:etfGrowthRate(chipData[g.key],30)||0}));
+      const maxAbs=Math.max(...growths.map(g=>Math.abs(g.pct)),1);
+      growthEl.innerHTML=growths.map(g=>{
+        const pct=g.pct, up=pct>=0;
+        return `<div class="etf-growth-row">
+          <div class="etf-growth-lbl" style="color:${g.color}">${g.label}</div>
+          <div class="etf-growth-track">
+            <div class="etf-growth-fill" style="width:${Math.abs(pct)/maxAbs*100}%;background:${up?g.color:'rgba(255,255,255,.15)'}"></div>
+          </div>
+          <div class="etf-growth-val" style="color:${up?'var(--accent-red)':'var(--accent-green)'}">${up?'+':''}${pct.toFixed(1)}%</div>
+          <div class="etf-growth-pct" style="color:var(--text-muted)">近30日</div>
+        </div>`;
+      }).join('');
+    }
+
+    // ── Signal card ──
+    const sigEl=document.getElementById('etfSignalCard');
+    if(sigEl){
+      const sigs=[];
+      if(biasV>15) sigs.push({icon:'⚠️',txt:`月線乖離 ${biasV.toFixed(1)}% 過度延伸，注意回調風險`,c:'warn'});
+      if(biasV<-10) sigs.push({icon:'💡',txt:`月線乖離 ${biasV.toFixed(1)}%，可考慮逢低分批布局`,c:'bull'});
+      if(volR>=2) sigs.push({icon:'⚡',txt:`今日量 ${volR.toFixed(1)}x 均量，${up?'爆量上攻':'爆量下殺'}`,c:'gold'});
+      const inDense=zones.find(z=>close>=z.low&&close<=z.high);
+      if(inDense) sigs.push({icon:'📍',txt:`進入密集交易區 S${zones.indexOf(inDense)+1}（${inDense.low.toFixed(1)}~${inDense.high.toFixed(1)}），方向待確認`,c:'neu'});
+      const foreignToday=(chipData.foreign||[]).filter(v=>v!=null).at(-1)||0;
+      if(foreignToday>500) sigs.push({icon:'🏦',txt:`外資今日大買 +${foreignToday.toLocaleString()}張`,c:'bull'});
+      if(foreignToday<-500) sigs.push({icon:'🏦',txt:`外資今日大賣 ${foreignToday.toLocaleString()}張`,c:'warn'});
+      if(sigs.length){
+        sigEl.style.display='block';
+        sigEl.style.padding='14px 16px';
+        sigEl.innerHTML=`<div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">今日關鍵訊號</div>
+          ${sigs.map(s=>`<div style="display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);align-items:flex-start;">
+            <span style="flex-shrink:0">${s.icon}</span>
+            <span style="font-size:0.72rem;line-height:1.5;color:${s.c==='warn'?'var(--accent-red)':s.c==='bull'?'var(--accent-green)':s.c==='gold'?'#f0b429':'var(--text-secondary)'}">${s.txt}</span>
+          </div>`).join('')}`;
+      } else {
+        sigEl.style.display='none';
+      }
+    }
+
+    if(chipData.isMock) chipShowToast('⚠️ 法人資料抓取中，顯示模擬佔位','warn');
+
+  } catch(e) {
+    chipShowToast('❌ '+e.message,'warn');
+  } finally {
+    if(loading) loading.style.display='none';
+  }
+}
+
+// ── Yahoo Finance fallback ──
+async function etfFetchHistory_Yahoo(ticker, range) {
+  const d = await chipProxyFetch(
+    `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}.TW?interval=1d&range=${range}`
+  );
+  const res=d?.chart?.result?.[0];
+  if(!res) return null;
+  const q=res.indicators.quote[0];
+  return res.timestamp.map((ts,i)=>({
+    t:      new Date(ts*1000),
+    open:   q.open[i]||0,
+    high:   q.high[i]||0,
+    low:    q.low[i]||0,
+    close:  q.close[i]||0,
+    volume: q.volume[i]||0,
+  })).filter(r=>r.close>0);
+}
+
+// ── Fallback mock chip data ──
+function etfMockChipData_fallback(rows) {
+  const n=rows.length;
+  const seed=(s,sc)=>{ let c=0; return rows.map((_,i)=>{ c+=(Math.sin(i*s)*sc+Math.random()*sc*.4-sc*.15); return Math.round(c); }); };
+  const f=seed(0.3,300), t=seed(0.7,80), d=seed(1.1,50);
+  return {
+    foreign:f, trust:t, dealer:d,
+    foreignCum:f, trustCum:t, dealerCum:d,
+    dates:rows.map(r=>`${r.t.getMonth()+1}/${r.t.getDate()}`),
+    isMock:true,
+  };
+}
+
+function etfSwitch(ticker,btn){
+  document.querySelectorAll('#page-stats .etf-sw').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); etfCurrent=ticker; etfRender();
+}
+function etfSetRange(range,btn){
+  document.querySelectorAll('#page-stats .etf-range').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); etfRange=range; etfRender();
+}
+function etfRefresh(){
+  delete etfCache[`${etfCurrent}_${etfRange}`];
+  delete etfChipCache[`chip_${etfCurrent}_${etfRange}`];
+  const btn=document.getElementById('etfRefreshBtn');
+  if(btn){btn.textContent='…';btn.disabled=true;}
+  etfRender().finally(()=>{if(btn){btn.textContent='⟳';btn.disabled=false;}});
+}
+
 // chip init - called by index.html when stats page is shown
 let _chipListenersAttached = false;
 
 function chipInit() {
-  chipUpdateStats();
-  crInitStrategies();
-  chipAttachListeners();
+  // ETF 分析頁 — 主要功能
+  setTimeout(() => etfRender(), 120);
+  // 舊版籌碼函數保留但不主動初始化（頁面已換成 ETF 分析）
 }
 
 function chipAttachListeners() {
@@ -12640,7 +13694,7 @@ function chipAttachListeners() {
   </div>
 </div>
 
-<div id="chipToast" style="display:none;position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1a1e2e;border:1px solid #f0b429;color:#e8ecf5;padding:9px 16px;border-radius:10px;font-size:0.78rem;z-index:9999;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.6);pointer-events:none;"></div>
+<div id="chipToast" style="display: none; position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: rgb(26, 30, 46); border-width: 1px; border-style: solid; border-color: var(--accent-red); border-image: initial; color: rgb(232, 236, 245); padding: 9px 16px; border-radius: 10px; font-size: 0.78rem; z-index: 9999; white-space: nowrap; box-shadow: rgba(0, 0, 0, 0.6) 0px 4px 20px; pointer-events: none;">❌ HTTP 403</div>
 
 
 <!-- ══ Modal：邏輯策略說明 ══ -->
@@ -12652,6 +13706,26 @@ function chipAttachListeners() {
       <button class="cr-modal-close" onclick="document.getElementById('crLogicOverlay').classList.remove('open')">✕</button>
     </div>
     <div id="crLogicBody"></div>
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <button class="cr-btn-secondary" onclick="document.getElementById('crLogicOverlay').classList.remove('open')">關閉</button>
+      <button class="cr-btn-primary" id="crCopyLogicBtn" onclick="crCopyLogicText()">📋 複製邏輯文字</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Modal：策略文字輸出 ══ -->
+<div class="cr-modal-overlay" id="crExportOverlay" style="z-index:9000" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="cr-modal" style="max-height:88vh;">
+    <div class="cr-modal-drag"></div>
+    <div class="cr-modal-hd">
+      <div class="cr-modal-title">📋 今日分析報告</div>
+      <button class="cr-modal-close" onclick="document.getElementById('crExportOverlay').classList.remove('open')">✕</button>
+    </div>
+    <div id="crExportBody" style="font-size:0.75rem;line-height:1.8;color:var(--text-muted);"></div>
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <button class="cr-btn-secondary" onclick="document.getElementById('crExportOverlay').classList.remove('open')">關閉</button>
+      <button class="cr-btn-primary" onclick="crCopyReport()" id="crCopyBtn">📋 複製全文</button>
+    </div>
   </div>
 </div>
 
