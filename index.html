@@ -2139,7 +2139,7 @@ input::placeholder { color: var(--text-muted); }
   </div>
 
   <div class="nav-section-label">主頁</div>
-  <div class="nav-item" onclick="goPage('home',this)">
+  <div class="nav-item active" onclick="goPage('home',this)">
     <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span> 總覽主頁
   </div>
 
@@ -2174,7 +2174,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-23 20:41:25</div>
+    <div class="clock-display" id="clockDisplay">2026-03-23 21:44:24</div>
   </div>
 </aside>
 
@@ -2185,10 +2185,10 @@ input::placeholder { color: var(--text-muted); }
 <!-- ══════════════════════════════════
      MAIN
 ══════════════════════════════════ -->
-<main class="main-content" style="overflow-y: auto;">
+<main class="main-content">
 
   <!-- ── 主頁 ── -->
-  <section class="page" id="page-home">
+  <section class="page active" id="page-home">
     <div class="page-header">
       <div class="page-title-block">
         <div class="page-label">Dashboard</div>
@@ -2914,7 +2914,7 @@ input::placeholder { color: var(--text-muted); }
   </section>
 
   <!-- ── 現金流 ── -->
-  <section class="page active" id="page-stats">
+  <section class="page" id="page-stats">
     <!-- ══ Header ══ -->
     <div class="page-header" style="margin-bottom:12px;">
       <div class="page-title-block">
@@ -3090,9 +3090,9 @@ input::placeholder { color: var(--text-muted); }
     </div><!-- /etfMainPanel-risk -->
 
     <!-- Loading overlay -->
-    <div id="etfLoading" style="position: fixed; inset: 0px; z-index: 200; background: rgba(13, 15, 20, 0.85); display: none; align-items: center; justify-content: center; flex-direction: column; gap: 12px;">
+    <div id="etfLoading" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(13,15,20,.85);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;">
       <div style="font-size:2rem;" class="chip-spin">📡</div>
-      <div style="font-size:0.82rem;color:var(--text-muted);" id="etfLoadingTxt">改用 TWSE API…</div>
+      <div style="font-size:0.82rem;color:var(--text-muted);" id="etfLoadingTxt">載入中…</div>
     </div>
 
   </section>
@@ -3767,7 +3767,7 @@ input::placeholder { color: var(--text-muted); }
 
 
 <nav class="mobile-nav" id="mobileNav">
-  <div class="mobile-nav-item" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
+  <div class="mobile-nav-item active" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span><span>總覽</span>
   </div>
   <div class="mobile-nav-item" id="mn-ledger" onclick="goPage('ledger', null, 'mn-ledger')">
@@ -3776,7 +3776,7 @@ input::placeholder { color: var(--text-muted); }
   <div class="mobile-nav-item" id="mn-invest" onclick="goPage('invest', null, 'mn-invest')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span><span>投資</span>
   </div>
-  <div class="mobile-nav-item active" id="mn-stats" onclick="goPage('stats',      null, 'mn-stats')">
+  <div class="mobile-nav-item" id="mn-stats" onclick="goPage('stats',      null, 'mn-stats')">
     <span class="mobile-nav-icon">📡</span><span>雷達</span>
   </div>
 <div class="mobile-nav-item" id="mn-intel" onclick="goPage('intel',      null, 'mn-intel')">
@@ -13094,6 +13094,77 @@ const ETF_INFO = {
   '00662': { name:'富邦NASDAQ',  color:'#3b82f6', bg:'rgba(59,130,246,.12)' },
 };
 
+// ── ETF 工具函數 ──
+function etfSma(arr, n) {
+  // 回傳每個位置的 SMA 陣列（長度與 arr 相同，前 n-1 筆為 null）
+  return arr.map((_, i) => {
+    if (i < n - 1) return null;
+    return arr.slice(i - n + 1, i + 1).reduce((a, b) => a + b, 0) / n;
+  });
+}
+function etfAvgVol(arr, n) {
+  if (!arr || arr.length < n) return null;
+  return arr.slice(-n).reduce((a, b) => a + b, 0) / n;
+}
+
+// ── Yahoo Finance 日K（proxy）──
+async function etfFetchHistory_Yahoo(ticker, range='3mo') {
+  const rangeMap = { '3mo':90, '6mo':180, '1y':365 };
+  const days = rangeMap[range] || 90;
+  const to   = Math.floor(Date.now()/1000);
+  const from = to - days * 86400;
+  // 台股加 .TW，NASDAQ ETF 直接用代號
+  const sym  = ticker === '00662' ? '00662.TWO' : ticker + '.TW';
+  const url  = `https://query1.finance.yahoo.com/v8/finance/chart/${sym}?interval=1d&period1=${from}&period2=${to}`;
+  try {
+    const d = await chipProxyFetch(url, 15000);
+    if (!d?.chart?.result?.[0]) throw new Error('no data');
+    const r = d.chart.result[0];
+    const timestamps = r.timestamp || [];
+    const q = r.indicators.quote[0];
+    const rows = [];
+    for (let i = 0; i < timestamps.length; i++) {
+      if (!q.close[i]) continue;
+      rows.push({
+        date:   new Date(timestamps[i]*1000).toISOString().slice(0,10),
+        open:   q.open[i]   || q.close[i],
+        high:   q.high[i]   || q.close[i],
+        low:    q.low[i]    || q.close[i],
+        close:  q.close[i],
+        volume: q.volume[i] || 0,
+      });
+    }
+    return rows;
+  } catch(e) {
+    return [];
+  }
+}
+
+// ── Volume Profile（成交量分布）──
+function etfVolumeProfile(rows, bins=24) {
+  if (!rows.length) return [];
+  const prices = rows.map(r => r.close);
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  const step = (max - min) / bins || 1;
+  const profile = Array.from({length: bins}, (_, i) => ({
+    price: min + (i + 0.5) * step,
+    vol:   0,
+  }));
+  rows.forEach(r => {
+    const idx = Math.min(Math.floor((r.close - min) / step), bins - 1);
+    profile[idx].vol += r.volume;
+  });
+  return profile;
+}
+
+// ── 找高密度成交區（支撐/壓力帶）──
+function etfFindDenseZones(profile, topN=3) {
+  if (!profile.length) return [];
+  const sorted = [...profile].sort((a, b) => b.vol - a.vol);
+  return sorted.slice(0, topN).map(z => z.price);
+}
+
 // ── TWSE API via corsproxy ──
 async function etfFetchTWSE(path, params={}) {
   const base = 'https://www.twse.com.tw/rwd/zh';
@@ -13980,20 +14051,23 @@ async function riskCallClaude(snap, preScore) {
   "dataNote": "無法取得的資料說明"
 }`;
 
+  // 使用 claude.ai 內建 API proxy（不需要 API Key，避免 CORS 問題）
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-6',
       max_tokens: 1000,
       messages: [{ role: 'user', content: prompt }]
     })
   });
 
+  if (!res.ok) throw new Error(`API HTTP ${res.status}`);
   const data = await res.json();
+  if (data.error) throw new Error(data.error.message || 'API error');
   const text = data.content?.[0]?.text || '';
   // Parse JSON
-  const clean = text.replace(/```json|```/g, '').trim();
+  const clean = text.replace(/```json[\s\S]*?```|```/g, '').trim();
   return JSON.parse(clean);
 }
 
@@ -14034,22 +14108,79 @@ function riskRenderResult(result) {
     heroEl.style.background  = color + '08';
   }
 
-  // Dimensions
+  // Dimensions — 六邊形雷達圖
   const dimEl = document.getElementById('riskDimensions');
   if (dimEl) {
-    dimEl.innerHTML = RISK_DIMS.map(d => {
-      const score_d = result.dims[d.key] || 0;
-      const pct     = (score_d / d.max) * 100;
-      const dimColor = pct >= 80 ? '#dc2626' : pct >= 60 ? '#f59e0b' : pct >= 40 ? '#f0b429' : '#00e5a0';
+    const dims = RISK_DIMS;
+    const N = dims.length; // 5
+    const cx = 120, cy = 120, R = 90;
+    const levels = [0.25, 0.5, 0.75, 1.0];
+    // 每個頂點角度（從正上方開始，順時針）
+    const angle = i => (Math.PI * 2 * i / N) - Math.PI / 2;
+    const pt = (i, r) => [cx + r * Math.cos(angle(i)), cy + r * Math.sin(angle(i))];
+    const poly = (r) => dims.map((_, i) => pt(i, r * R).join(',')).join(' ');
+
+    // 資料點
+    const dataPoints = dims.map((d, i) => {
+      const pct = Math.min((result.dims[d.key] || 0) / d.max, 1);
+      return pt(i, pct * R);
+    });
+    const dataPoly = dataPoints.map(p => p.join(',')).join(' ');
+
+    // 顏色：整體風險色
+    const radarColor = color;
+
+    // 格線多邊形
+    const gridPolys = levels.map(l =>
+      `<polygon points="${poly(l)}" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>`
+    ).join('');
+
+    // 軸線
+    const axes = dims.map((_, i) => {
+      const [x, y] = pt(i, R);
+      return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>`;
+    }).join('');
+
+    // 標籤
+    const labels = dims.map((d, i) => {
+      const labelR = R + 22;
+      const [lx, ly] = pt(i, labelR);
+      const pct = Math.min((result.dims[d.key] || 0) / d.max, 1);
+      const dimColor = pct >= 0.8 ? '#dc2626' : pct >= 0.6 ? '#f59e0b' : pct >= 0.4 ? '#f0b429' : '#00e5a0';
+      const anchor = lx < cx - 5 ? 'end' : lx > cx + 5 ? 'start' : 'middle';
+      const scoreVal = result.dims[d.key] || 0;
+      return `<text x="${lx}" y="${ly - 5}" text-anchor="${anchor}" font-size="9" fill="${dimColor}" font-family="DM Mono,monospace" font-weight="700">${scoreVal}/${d.max}</text>
+              <text x="${lx}" y="${ly + 7}" text-anchor="${anchor}" font-size="8.5" fill="#7a8099" font-family="Noto Sans TC,sans-serif">${d.icon}${d.name}</text>`;
+    }).join('');
+
+    // 資料頂點圓點
+    const dots = dataPoints.map(([x, y]) =>
+      `<circle cx="${x}" cy="${y}" r="3.5" fill="${radarColor}" stroke="#0d0f14" stroke-width="1.5"/>`
+    ).join('');
+
+    const svgW = 240, svgH = 240;
+    const svgStr = `<svg viewBox="0 0 ${svgW} ${svgH}" width="${svgW}" height="${svgH}" style="display:block;margin:auto;">
+      ${gridPolys}
+      ${axes}
+      <polygon points="${dataPoly}" fill="${radarColor}22" stroke="${radarColor}" stroke-width="1.8" stroke-linejoin="round"/>
+      ${dots}
+      ${labels}
+    </svg>`;
+
+    // 下方分數列
+    const scoreRows = dims.map(d => {
+      const v = result.dims[d.key] || 0;
+      const pct = Math.min(v / d.max, 1);
+      const dimColor = pct >= 0.8 ? '#dc2626' : pct >= 0.6 ? '#f59e0b' : pct >= 0.4 ? '#f0b429' : '#00e5a0';
       return `<div class="risk-dim-row">
         <div class="risk-dim-name">${d.icon} ${d.name}</div>
-        <div class="risk-dim-track">
-          <div class="risk-dim-fill" style="width:${pct}%;background:${dimColor}"></div>
-        </div>
-        <div class="risk-dim-score" style="color:${dimColor}">${score_d}</div>
+        <div class="risk-dim-track"><div class="risk-dim-fill" style="width:${pct*100}%;background:${dimColor}"></div></div>
+        <div class="risk-dim-score" style="color:${dimColor}">${v}</div>
         <div class="risk-dim-max">/${d.max}</div>
       </div>`;
     }).join('');
+
+    dimEl.innerHTML = `<div style="margin-bottom:10px;">${svgStr}</div>${scoreRows}`;
   }
 
   // AI report
@@ -14297,7 +14428,7 @@ function chipAttachListeners() {
   </div>
 </div>
 
-<div id="chipToast" style="display: none; position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: rgb(26, 30, 46); border-width: 1px; border-style: solid; border-color: var(--accent-red); border-image: initial; color: rgb(232, 236, 245); padding: 9px 16px; border-radius: 10px; font-size: 0.78rem; z-index: 9999; white-space: nowrap; box-shadow: rgba(0, 0, 0, 0.6) 0px 4px 20px; pointer-events: none;">❌ K線載入失敗：無法取得K線資料</div>
+<div id="chipToast" style="display:none;position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1a1e2e;border:1px solid #f0b429;color:#e8ecf5;padding:9px 16px;border-radius:10px;font-size:0.78rem;z-index:9999;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.6);pointer-events:none;"></div>
 
 
 <!-- ══ Modal：邏輯策略說明 ══ -->
