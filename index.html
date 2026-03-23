@@ -1940,6 +1940,8 @@ input::placeholder { color: var(--text-muted); }
 /* ════════════════════════════════════
    ETF 分析頁 CSS
    ════════════════════════════════════ */
+#page-stats .etf-main-tab{padding:8px;border-radius:10px;border:1px solid var(--border);background:var(--bg-card);font-size:0.78rem;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all .2s;font-family:var(--sans)}
+#page-stats .etf-main-tab.active{background:#f0b429;border-color:#f0b429;color:#000}
 #page-stats .etf-btn-ghost{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text-muted);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
 #page-stats .etf-btn-ghost:hover{background:rgba(255,255,255,.1);color:var(--text-primary)}
 #page-stats .etf-deploy-btn{background:rgba(240,180,41,.1);border:1px solid rgba(240,180,41,.25);color:#f0b429;padding:5px 10px;border-radius:8px;cursor:pointer;font-size:0.85rem}
@@ -1988,6 +1990,41 @@ input::placeholder { color: var(--text-muted); }
 #page-stats .etf-chip-val{font-family:var(--mono);font-size:0.9rem;font-weight:700;line-height:1;margin-bottom:2px}
 #page-stats .etf-chip-lbl{font-size:0.58rem;color:var(--text-muted)}
 #page-stats .etf-chip-chg{font-family:var(--mono);font-size:0.62rem;margin-top:3px}
+
+
+/* ════════════════════════════════════
+   高檔風險評分頁 CSS
+   ════════════════════════════════════ */
+#page-risk .risk-refresh-btn{background:#f0b429;color:#000;border:none;padding:7px 16px;border-radius:20px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:var(--sans)}
+#page-risk .risk-refresh-btn:disabled{opacity:.4;cursor:not-allowed}
+#page-risk .risk-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:14px 16px}
+#page-risk .risk-card-title{font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px}
+#page-risk .risk-hero{display:flex;align-items:center;gap:16px;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px}
+#page-risk .risk-score-ring{flex-shrink:0}
+#page-risk .risk-hero-right{flex:1}
+#page-risk .risk-level{font-size:1.3rem;font-weight:900;line-height:1.2;margin-bottom:4px}
+#page-risk .risk-level-sub{font-size:0.72rem;color:var(--text-muted);line-height:1.5}
+#page-risk .risk-level-badge{margin-top:8px;display:inline-flex;padding:3px 12px;border-radius:20px;font-size:0.68rem;font-weight:700}
+/* Dimensions */
+#page-risk .risk-dim-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)}
+#page-risk .risk-dim-row:last-child{border-bottom:none}
+#page-risk .risk-dim-name{font-size:0.72rem;font-weight:600;min-width:80px;flex-shrink:0}
+#page-risk .risk-dim-track{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+#page-risk .risk-dim-fill{height:100%;border-radius:3px;transition:width 1s cubic-bezier(.4,0,.2,1)}
+#page-risk .risk-dim-score{font-family:'DM Mono',monospace;font-size:0.78rem;font-weight:700;min-width:36px;text-align:right;flex-shrink:0}
+#page-risk .risk-dim-max{font-size:0.6rem;color:var(--text-muted);min-width:24px;flex-shrink:0}
+/* Market data grid */
+#page-risk .risk-data-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+#page-risk .risk-data-item{background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;padding:9px 10px;text-align:center}
+#page-risk .risk-data-val{font-family:'DM Mono',monospace;font-size:0.95rem;font-weight:700;color:var(--text-primary);margin-bottom:2px}
+#page-risk .risk-data-lbl{font-size:0.58rem;color:var(--text-muted)}
+/* History */
+#page-risk .risk-hist-row{display:flex;align-items:center;gap:8px;padding:4px 0}
+#page-risk .risk-hist-date{font-size:0.65rem;color:var(--text-muted);font-family:'DM Mono',monospace;min-width:80px;flex-shrink:0}
+#page-risk .risk-hist-track{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+#page-risk .risk-hist-fill{height:100%;border-radius:3px}
+#page-risk .risk-hist-score{font-family:'DM Mono',monospace;font-size:0.72rem;font-weight:700;min-width:32px;text-align:right}
+#page-risk .risk-dim-skeleton{color:var(--text-muted);font-size:0.72rem;text-align:center;padding:16px}
 
 </style>
 </head>
@@ -2119,7 +2156,7 @@ input::placeholder { color: var(--text-muted); }
 
   <div class="nav-section-label">資產管理</div>
 <div class="nav-section-label">市場情報</div>
-  <div class="nav-item" onclick="goPage('intel',this)">
+<div class="nav-item" onclick="goPage('intel',this)">
     <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span> 情報瀏覽
   </div>
   <div class="nav-item" onclick="goPage('strategy',this)">
@@ -2134,10 +2171,10 @@ input::placeholder { color: var(--text-muted); }
 
   <div class="sidebar-bottom">
     <div class="sync-status">
-      <div class="sync-dot ok" id="syncDot"></div>
-      <span id="syncStatusText" style="color: var(--accent-green);">已同步</span>
+      <div class="sync-dot" id="syncDot"></div>
+      <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-23 18:28:27</div>
+    <div class="clock-display" id="clockDisplay">2026-03-23 20:41:25</div>
   </div>
 </aside>
 
@@ -2282,8 +2319,23 @@ input::placeholder { color: var(--text-muted); }
             </div>
           </div>
         </div>
-        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"></div>
-        <canvas id="wealthChart" style="width:100%;display:block;" height="220"></canvas>
+        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#f59e0b;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#ff4d6d;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總負債</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#ff4d6d;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#00e5a0;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">淨資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#00e5a0;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div></div>
+        <canvas id="wealthChart" style="width:100%;display:block;" height="220" width="346"></canvas>
         <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;" id="wealthXLabels"></div>
       </div>
 
@@ -2905,6 +2957,14 @@ input::placeholder { color: var(--text-muted); }
       </div>
     </div>
 
+    <!-- ══ 主功能分頁 ══ -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
+      <button class="etf-main-tab active" data-main="etf" onclick="etfMainSwitch('etf',this)">📈 ETF 分析</button>
+      <button class="etf-main-tab" data-main="risk" onclick="etfMainSwitch('risk',this)">⚠️ 風險評分</button>
+    </div>
+
+    <!-- ETF 內容 -->
+    <div id="etfMainPanel-etf">
     <!-- ══ 時間範圍切換 ══ -->
     <div class="etf-range-bar">
       <button class="etf-range active" data-range="3mo" onclick="etfSetRange('3mo',this)">3M</button>
@@ -2913,34 +2973,35 @@ input::placeholder { color: var(--text-muted); }
     </div>
 
     <!-- ══ 主圖：K線 + 成交量 + 密集交易區 ══ -->
+    <!-- ══ 主圖：蠟燭圖 + VRVP Overlay + 成交量 ══ -->
     <div class="etf-card" style="margin-bottom:10px;padding:14px 12px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);">價格 + 密集交易區</div>
-        <div style="display:flex;gap:6px;">
-          <span class="etf-legend-dot" style="--c:#f0b429">— 價格</span>
-          <span class="etf-legend-dot" style="--c:#3b82f6">— 20MA</span>
-          <span class="etf-legend-dot" style="--c:#a78bfa">— 60MA</span>
-          <span class="etf-legend-dot" style="--c:rgba(255,77,109,.3)">█ 密集區</span>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);">蠟燭圖 + 成交量分布</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span style="font-size:0.58rem;color:var(--text-muted);display:flex;align-items:center;gap:3px;">
+            <span style="display:inline-block;width:10px;height:10px;background:rgba(255,77,109,.5);border-radius:1px;"></span>壓力
+          </span>
+          <span style="font-size:0.58rem;color:var(--text-muted);display:flex;align-items:center;gap:3px;">
+            <span style="display:inline-block;width:10px;height:10px;background:rgba(59,130,246,.5);border-radius:1px;"></span>支撐
+          </span>
+          <span style="font-size:0.58rem;color:#f0b429;display:flex;align-items:center;gap:3px;">
+            <span style="display:inline-block;width:12px;height:2px;background:#f0b429;"></span>HVN
+          </span>
         </div>
       </div>
-      <canvas id="etfPriceChart" style="width:100%;height:160px;display:block;"></canvas>
-      <canvas id="etfVolChart" style="width:100%;height:40px;display:block;margin-top:4px;"></canvas>
+      <!-- 主圖容器（蠟燭 + VRVP overlay）-->
+      <div style="position:relative;width:100%;">
+        <canvas id="etfCandleChart" style="width:100%;height:220px;display:block;"></canvas>
+        <!-- VRVP overlay canvas（右側 25% 寬度，絕對定位）-->
+        <canvas id="etfVRVPOverlay" style="position:absolute;top:0;right:0;width:25%;height:220px;pointer-events:none;"></canvas>
+      </div>
+      <!-- 成交量柱 -->
+      <canvas id="etfVolChart" style="width:100%;height:36px;display:block;margin-top:3px;"></canvas>
+      <!-- 籌碼成本線 -->
       <div id="etfCostLine" style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border)"></div>
     </div>
 
-    <!-- ══ 成交量分布（水平直方圖）══ -->
-    <div class="etf-card" style="margin-bottom:10px;padding:14px 12px;">
-      <div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">
-        成交量分布 — 密集支撐壓力帶
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 80px;gap:8px;align-items:stretch;">
-        <canvas id="etfVPChart" style="width:100%;height:200px;display:block;"></canvas>
-        <div id="etfVPLegend" style="display:flex;flex-direction:column;justify-content:space-between;font-family:var(--mono);font-size:0.58rem;color:var(--text-muted);padding:2px 0;"></div>
-      </div>
-      <div id="etfDenseZone" style="margin-top:10px;padding:8px 10px;background:rgba(255,77,109,.05);border:1px solid rgba(255,77,109,.2);border-radius:8px;font-size:0.7rem;color:var(--text-muted);display:none;"></div>
-    </div>
-
-    <!-- ══ 法人籌碼曲線 ══ -->
+        <!-- ══ 法人籌碼曲線 ══ -->    <!-- ══ 法人籌碼曲線 ══ -->
     <div class="etf-card" style="margin-bottom:10px;padding:14px 12px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
         <div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);">法人籌碼累積</div>
@@ -2963,10 +3024,75 @@ input::placeholder { color: var(--text-muted); }
     <!-- ══ 關鍵訊號 ══ -->
     <div class="etf-card" id="etfSignalCard" style="margin-bottom:16px;display:none;"></div>
 
+    </div><!-- /etfMainPanel-etf -->
+
+    <!-- 風險評分內容 -->
+    <div id="etfMainPanel-risk" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:0.62rem;color:var(--text-muted);">AI 量化分析 · TWSE 即時資料</div>
+        <button class="cr-scan-btn" onclick="riskRunAnalysis()" id="riskRunBtn" style="font-size:0.72rem;padding:5px 14px;">▶ 開始分析</button>
+      </div>
+
+      <!-- 總分圓環 -->
+      <div class="risk-hero etf-card" id="riskHero" style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
+        <div style="flex-shrink:0">
+          <svg viewBox="0 0 120 120" width="100" height="100">
+            <circle cx="60" cy="60" r="52" fill="none" stroke="var(--border)" stroke-width="8"></circle>
+            <circle id="riskScoreArc" cx="60" cy="60" r="52" fill="none" stroke="#00e5a0" stroke-width="8" stroke-linecap="round" stroke-dasharray="327" stroke-dashoffset="327" transform="rotate(-90 60 60)" style="transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1),stroke .5s"></circle>
+            <text id="riskScoreNum" x="60" y="55" text-anchor="middle" dominant-baseline="middle" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:700;fill:#00e5a0;">—</text>
+            <text x="60" y="76" text-anchor="middle" style="font-size:11px;fill:var(--text-muted);font-family:'DM Mono',monospace;">/100</text>
+          </svg>
+        </div>
+        <div style="flex:1">
+          <div class="risk-level" id="riskLevel" style="font-size:1.1rem;font-weight:900;margin-bottom:4px;">等待分析</div>
+          <div id="riskLevelSub" style="font-size:0.7rem;color:var(--text-muted);line-height:1.5;">點擊「開始分析」啟動 AI 評分</div>
+          <div id="riskLevelBadge" style="display:none;margin-top:6px;padding:2px 10px;border-radius:20px;font-size:0.65rem;font-weight:700;display:inline-block;"></div>
+        </div>
+      </div>
+
+      <!-- 市場數據 -->
+      <div class="etf-card" style="margin-bottom:10px;padding:12px 14px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div style="font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);">市場即時數據</div>
+          <span style="font-size:0.58rem;color:var(--text-muted)" id="riskDataTime"></span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">
+          <div class="etf-kpi"><div class="etf-kpi-val" id="rdTwii">—</div><div class="etf-kpi-lbl">加權指數</div></div>
+          <div class="etf-kpi"><div class="etf-kpi-val" id="rdBias60">—</div><div class="etf-kpi-lbl">60MA乖離</div></div>
+          <div class="etf-kpi"><div class="etf-kpi-val" id="rdBias240">—</div><div class="etf-kpi-lbl">240MA乖離</div></div>
+          <div class="etf-kpi"><div class="etf-kpi-val" id="rdTsmc">—</div><div class="etf-kpi-lbl">台積電</div></div>
+          <div class="etf-kpi"><div class="etf-kpi-val" id="rdOtcBias">—</div><div class="etf-kpi-lbl">OTC乖離</div></div>
+          <div class="etf-kpi"><div class="etf-kpi-val" id="rdVolRatio">—</div><div class="etf-kpi-lbl">量比均量</div></div>
+        </div>
+      </div>
+
+      <!-- 五大維度 -->
+      <div class="etf-card" style="margin-bottom:10px;padding:12px 14px;">
+        <div style="font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">五大風險維度</div>
+        <div id="riskDimensions"><div style="color:var(--text-muted);font-size:0.72rem;text-align:center;padding:12px;">分析後顯示</div></div>
+      </div>
+
+      <!-- AI 報告 -->
+      <div class="etf-card" id="riskAiCard" style="margin-bottom:10px;padding:12px 14px;display:none;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+          <span>🤖</span>
+          <div style="font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);">AI 量化分析報告</div>
+          <button onclick="riskCopyReport()" style="margin-left:auto;font-size:0.62rem;padding:3px 9px;border-radius:7px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);color:var(--accent-blue);cursor:pointer;">📋 複製</button>
+        </div>
+        <div id="riskAiReport" style="font-size:0.73rem;color:var(--text-secondary);line-height:1.8;"></div>
+      </div>
+
+      <!-- 歷史 -->
+      <div class="etf-card" style="margin-bottom:16px;padding:12px 14px;">
+        <div style="font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">評分歷史（近10次）</div>
+        <div id="riskHistory"><div style="color:var(--text-muted);font-size:0.72rem;text-align:center;padding:8px;">尚無歷史記錄</div></div>
+      </div>
+    </div><!-- /etfMainPanel-risk -->
+
     <!-- Loading overlay -->
     <div id="etfLoading" style="position: fixed; inset: 0px; z-index: 200; background: rgba(13, 15, 20, 0.85); display: none; align-items: center; justify-content: center; flex-direction: column; gap: 12px;">
       <div style="font-size:2rem;" class="chip-spin">📡</div>
-      <div style="font-size:0.82rem;color:var(--text-muted);" id="etfLoadingTxt">TWSE 失敗，改用 Yahoo Finance…</div>
+      <div style="font-size:0.82rem;color:var(--text-muted);" id="etfLoadingTxt">改用 TWSE API…</div>
     </div>
 
   </section>
@@ -4398,7 +4524,7 @@ function goPage(name, navEl, mobileNavId) {
     if (hintEl) hintEl.textContent = '記錄 ' + mnNames[parseInt(currentLedgerMonth)-1] + ' 的帳務';
     renderAll();
   }
-  if (name === 'stats') { setTimeout(()=>{ if(typeof chipInit!=='undefined'){ chipInit(); chipAttachListeners(); } },150);
+  if (name === 'stats') { setTimeout(()=>{ if(typeof chipInit!=='undefined'){ chipInit(); chipAttachListeners(); } },150); } if (name === 'risk') { setTimeout(()=>{ if(typeof riskInit!=='undefined') riskInit(); },100);
     // set month selector to current month if not already set
     const ms = document.getElementById('cfMonthSelect');
     if (ms && !ms._initialized) {
@@ -11055,6 +11181,32 @@ const CHIP_GH_FILE = 'index.html';
 let   chip_ghToken = localStorage.getItem('gh_token_chip') || '';
 
 
+
+// ── 數字格式化（萬/億，小數點後為0不顯示，千以下阿拉伯數字）──
+function etfFmtNum(abs) {
+  if (abs >= 100000000) {
+    const v = abs / 100000000;
+    return (v % 1 === 0 ? v.toFixed(0) : parseFloat(v.toFixed(2)).toString()) + '億';
+  }
+  if (abs >= 10000) {
+    const v = abs / 10000;
+    return (v % 1 === 0 ? v.toFixed(0) : parseFloat(v.toFixed(1)).toString()) + '萬';
+  }
+  return abs.toLocaleString();  // 千以下直接阿拉伯數字
+}
+
+function etfFmt(n) {
+  if (n == null || isNaN(n)) return '—';
+  const abs  = Math.abs(n);
+  const sign = n < 0 ? '-' : '+';
+  return sign + etfFmtNum(abs);
+}
+
+function etfFmtAbs(n) {
+  if (n == null || isNaN(n)) return '—';
+  return etfFmtNum(Math.abs(n));
+}
+
 // ── Proxy（corsproxy 最穩定）──
 function chipProxy(url) {
   return `https://corsproxy.io/?${encodeURIComponent(url)}`;
@@ -11554,6 +11706,7 @@ document.querySelectorAll('#page-stats .cr-tab').forEach(tab => {
     if (panel) panel.style.display = 'block';
     if (key === 'market') chipLoadMarketData();
     if (key === 'watch')  crRenderWatchList();
+    if (key === 'risk')   { riskRenderHistory(); riskFetchMarketData(); }
   });
 });
 
@@ -12910,7 +13063,7 @@ function chipRenderBotStatus(container, data) {
         ${(data.signals||[]).filter(s=>s.foreign>0).sort((a,b)=>b.foreign-a.foreign).slice(0,5).map(s=>`
           <div style="display:flex;justify-content:space-between;font-size:0.68rem;padding:2px 0;">
             <span style="color:var(--text-primary);font-weight:600;">${s.id} ${s.name}</span>
-            <span style="font-family:var(--mono);color:var(--accent-red);">+${s.foreign.toLocaleString()}張</span>
+            <span style="font-family:var(--mono);color:var(--accent-red);">${etfFmt(s.foreign)}張</span>
           </div>`).join('')}
       </div>` : ''}
       <!-- 投信買超 Top 5 -->
@@ -12920,7 +13073,7 @@ function chipRenderBotStatus(container, data) {
         ${(data.signals||[]).filter(s=>s.trust>0).sort((a,b)=>b.trust-a.trust).slice(0,5).map(s=>`
           <div style="display:flex;justify-content:space-between;font-size:0.68rem;padding:2px 0;">
             <span style="color:var(--text-primary);font-weight:600;">${s.id} ${s.name}</span>
-            <span style="font-family:var(--mono);color:var(--accent-purple);">+${s.trust.toLocaleString()}張</span>
+            <span style="font-family:var(--mono);color:var(--accent-purple);">${etfFmt(s.trust)}張</span>
           </div>`).join('')}
       </div>` : ''}
     </div>`;
@@ -13007,349 +13160,60 @@ async function etfFetchChipDay(ticker, dateStr) {
   } catch { return null; }
 }
 
-// ── 抓近 N 個月法人資料（逐日抓）──
+// ── 抓三大法人（批次月份，非逐日）──
+// TWSE T86 是當日全市場的，無法直接抓歷史
+// 改用 TWSE 的 ETF 持股申購/贖回統計抓月報
+// 最快的真實法人資料：每月批次 (selectType=MS)
+async function etfFetchChipMonth(ticker, yearMonth) {
+  // yearMonth = 'YYYYMM'
+  try {
+    const data = await etfFetchTWSE('fund/T86', {
+      date: yearMonth + '01',
+      selectType: 'ALLBUT0999'
+    });
+    if (!data?.data) return [];
+    return data.data
+      .filter(r => r[0] === ticker)
+      .map(r => ({
+        date: yearMonth,
+        foreign: parseInt(String(r[4]).replace(/,/g,''))||0,
+        trust:   parseInt(String(r[7]).replace(/,/g,''))||0,
+        dealer:  parseInt(String(r[10]).replace(/,/g,''))||0,
+      }));
+  } catch { return []; }
+}
+
+// ── 快速法人資料：只抓最近 3 個月，每月一次 ──
 async function etfFetchChipHistory(ticker, tradingDays) {
   const cacheKey = `chip_${ticker}_${tradingDays.length}`;
   if (etfChipCache[cacheKey]) return etfChipCache[cacheKey];
 
-  // 只抓最近 60 個交易日（避免太慢）
-  const daysToFetch = tradingDays.slice(-60);
+  // 抓最近3個月的每日法人（用 STOCK_DAY_AVG 月均）
+  // 改用 Yahoo Finance 沒有法人，改用 TWSE 日報但只抓最近 20 個交易日
+  const recentDays = tradingDays.slice(-20); // 只抓近20天，約 6 秒
   const results = { foreign:[], trust:[], dealer:[], dates:[] };
 
-  // Batch fetch with delay
-  for (const day of daysToFetch) {
-    const dateStr = `${day.t.getFullYear()}${String(day.t.getMonth()+1).padStart(2,'0')}${String(day.t.getDate()).padStart(2,'0')}`;
-    const chip = await etfFetchChipDay(ticker, dateStr);
-    results.foreign.push(chip?.foreign ?? null);
-    results.trust.push(chip?.trust ?? null);
-    results.dealer.push(chip?.dealer ?? null);
+  for (const day of recentDays) {
+    const ds = `${day.t.getFullYear()}${String(day.t.getMonth()+1).padStart(2,'0')}${String(day.t.getDate()).padStart(2,'0')}`;
+    const chip = await etfFetchChipDay(ticker, ds);
+    results.foreign.push(chip?.foreign ?? 0);
+    results.trust.push(chip?.trust   ?? 0);
+    results.dealer.push(chip?.dealer ?? 0);
     results.dates.push(`${day.t.getMonth()+1}/${day.t.getDate()}`);
-    await new Promise(r=>setTimeout(r,300));
+    await new Promise(r=>setTimeout(r,200)); // 更快
   }
 
-  // 轉成累積值
-  const cumulate = arr => {
-    let cum = 0;
-    return arr.map(v => { if(v!=null) cum+=v; return cum; });
-  };
-  results.foreignCum = cumulate(results.foreign);
-  results.trustCum   = cumulate(results.trust);
-  results.dealerCum  = cumulate(results.dealer);
+  // 累積值
+  const cum = arr => { let c=0; return arr.map(v=>{c+=v; return c;}); };
+  results.foreignCum = cum(results.foreign);
+  results.trustCum   = cum(results.trust);
+  results.dealerCum  = cum(results.dealer);
   results.isMock = false;
 
   etfChipCache[cacheKey] = results;
   return results;
 }
 
-// ── 計算 SMA ──
-function etfSma(arr, n) {
-  return arr.map((v,i) => {
-    if (i < n-1) return null;
-    const slice = arr.slice(i-n+1, i+1).filter(v=>v!=null);
-    return slice.length===n ? slice.reduce((a,b)=>a+b)/n : null;
-  });
-}
-
-// ── 計算 VWAP / 均量 ──
-function etfAvgVol(volumes, n=20) {
-  if (volumes.length < n) return null;
-  return volumes.slice(-n).reduce((a,b)=>a+b,0)/n;
-}
-
-// ── Volume Profile（水平直方圖）──
-function etfVolumeProfile(rows, buckets=24) {
-  if (!rows.length) return [];
-  const prices = rows.map(r=>r.close).filter(v=>v>0);
-  const min = Math.min(...prices)*0.998;
-  const max = Math.max(...prices)*1.002;
-  const step = (max-min)/buckets;
-  const profile = Array.from({length:buckets}, (_,i) => ({
-    priceFrom: min+i*step,
-    priceTo:   min+(i+1)*step,
-    priceMid:  min+(i+0.5)*step,
-    volume:    0, count:0,
-  }));
-  rows.forEach(r => {
-    if (!r.close||!r.volume) return;
-    const idx = Math.min(Math.floor((r.close-min)/step), buckets-1);
-    profile[idx].volume += r.volume;
-    profile[idx].count++;
-  });
-  const maxVol = Math.max(...profile.map(p=>p.volume));
-  profile.forEach(p => { p.pct = maxVol>0 ? p.volume/maxVol : 0; });
-  return profile;
-}
-
-// ── 找密集交易帶（滑動視窗找連續3格最大量）──
-function etfFindDenseZones(profile) {
-  if (!profile.length) return [];
-  // 找前3大密集帶
-  const zones = [];
-  const used  = new Set();
-  const sorted = [...profile].sort((a,b)=>b.volume-a.volume);
-  for (const p of sorted) {
-    const i = profile.indexOf(p);
-    if (used.has(i)) continue;
-    // 合併相鄰
-    let lo=i, hi=i;
-    while (lo>0 && profile[lo-1].volume > p.volume*0.6 && !used.has(lo-1)) lo--;
-    while (hi<profile.length-1 && profile[hi+1].volume > p.volume*0.6 && !used.has(hi+1)) hi++;
-    for (let j=lo;j<=hi;j++) used.add(j);
-    zones.push({
-      low:   profile[lo].priceFrom,
-      high:  profile[hi].priceTo,
-      mid:   (profile[lo].priceFrom+profile[hi].priceTo)/2,
-      vol:   profile.slice(lo,hi+1).reduce((a,c)=>a+c.volume,0),
-      pct:   profile[lo].pct,
-    });
-    if (zones.length >= 3) break;
-  }
-  return zones.sort((a,b)=>a.mid-b.mid);
-}
-
-// ── 繪製價格 + MA + 密集區 + 均量帶 ──
-function etfDrawPriceChart(canvas, rows, dense, zones) {
-  if (!rows.length) return;
-  const ctx = canvas.getContext('2d');
-  const DPR = window.devicePixelRatio||1;
-  const W = canvas.offsetWidth*DPR, H=canvas.offsetHeight*DPR;
-  canvas.width=W; canvas.height=H;
-  ctx.scale(DPR,DPR);
-  const w=canvas.offsetWidth, h=canvas.offsetHeight;
-  const pad={t:8,r:8,b:28,l:56};
-
-  const closes  = rows.map(r=>r.close);
-  const ma20arr = etfSma(closes,20);
-  const ma60arr = etfSma(closes,60);
-  const allV    = [...closes,...ma20arr.filter(v=>v),...ma60arr.filter(v=>v)];
-  const minV    = Math.min(...allV)*0.995;
-  const maxV    = Math.max(...allV)*1.005;
-  const n       = rows.length;
-
-  const xS = i => pad.l+(i/(n-1))*(w-pad.l-pad.r);
-  const yS = v => pad.t+(1-(v-minV)/(maxV-minV))*(h-pad.t-pad.b);
-
-  ctx.clearRect(0,0,w,h);
-
-  // Background grid
-  for (let i=0;i<=4;i++) {
-    const y=pad.t+i*(h-pad.t-pad.b)/4;
-    const v=maxV-i*(maxV-minV)/4;
-    ctx.strokeStyle='rgba(255,255,255,.04)'; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(w-pad.r,y); ctx.stroke();
-    ctx.fillStyle='rgba(255,255,255,.28)'; ctx.font=`10px DM Mono`; ctx.textAlign='right';
-    ctx.fillText(v.toFixed(0), pad.l-4, y+4);
-  }
-
-  // X axis labels
-  ctx.textAlign='center'; ctx.fillStyle='rgba(255,255,255,.25)';
-  const xStep = Math.max(1, Math.floor(n/5));
-  for (let i=0;i<n;i+=xStep) {
-    ctx.fillText(`${rows[i].t.getMonth()+1}/${rows[i].t.getDate()}`, xS(i), h-6);
-  }
-
-  // Dense zones (all 3)
-  const zoneColors = ['rgba(255,77,109,.10)','rgba(59,130,246,.08)','rgba(167,139,250,.07)'];
-  const zoneEdge   = ['rgba(255,77,109,.4)','rgba(59,130,246,.3)','rgba(167,139,250,.3)'];
-  zones.forEach((z,zi) => {
-    const y1=yS(z.high), y2=yS(z.low);
-    ctx.fillStyle=zoneColors[zi%3];
-    ctx.fillRect(pad.l,y1,w-pad.l-pad.r,y2-y1);
-    ctx.strokeStyle=zoneEdge[zi%3]; ctx.lineWidth=1; ctx.setLineDash([3,3]);
-    ctx.beginPath(); ctx.moveTo(pad.l,yS(z.mid)); ctx.lineTo(w-pad.r,yS(z.mid)); ctx.stroke();
-    ctx.setLineDash([]);
-    // Label
-    ctx.fillStyle=zoneEdge[zi%3].replace('.3','1').replace('.4','1');
-    ctx.font='9px DM Mono'; ctx.textAlign='left';
-    ctx.fillText(z.mid.toFixed(0), pad.l+2, yS(z.mid)-3);
-  });
-
-  // MA60
-  ctx.strokeStyle='#a78bfa'; ctx.lineWidth=1.5;
-  ctx.beginPath(); let first=true;
-  ma60arr.forEach((v,i)=>{ if(!v)return; const x=xS(i),y=yS(v); first?ctx.moveTo(x,y):ctx.lineTo(x,y); first=false; });
-  ctx.stroke();
-
-  // MA20
-  ctx.strokeStyle='#3b82f6'; ctx.lineWidth=1.5;
-  ctx.beginPath(); first=true;
-  ma20arr.forEach((v,i)=>{ if(!v)return; const x=xS(i),y=yS(v); first?ctx.moveTo(x,y):ctx.lineTo(x,y); first=false; });
-  ctx.stroke();
-
-  // Price area fill
-  const info=ETF_INFO[etfCurrent];
-  const grad=ctx.createLinearGradient(0,pad.t,0,h-pad.b);
-  grad.addColorStop(0,info.color+'44'); grad.addColorStop(1,info.color+'00');
-  ctx.beginPath();
-  closes.forEach((v,i)=>{ const x=xS(i),y=yS(v); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
-  ctx.lineTo(xS(n-1),h-pad.b); ctx.lineTo(xS(0),h-pad.b); ctx.closePath();
-  ctx.fillStyle=grad; ctx.fill();
-
-  // Price line
-  ctx.strokeStyle=info.color; ctx.lineWidth=2;
-  ctx.beginPath();
-  closes.forEach((v,i)=>{ const x=xS(i),y=yS(v); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
-  ctx.stroke();
-
-  // Last price dot
-  ctx.fillStyle=info.color;
-  ctx.beginPath(); ctx.arc(xS(n-1),yS(closes.at(-1)),4,0,Math.PI*2); ctx.fill();
-}
-
-// ── 繪製 Volume Profile 水平直方圖 ──
-function etfDrawVPChart(canvas, profile, currentPrice, zones) {
-  if (!profile.length) return;
-  const ctx=canvas.getContext('2d');
-  const DPR=window.devicePixelRatio||1;
-  const W=canvas.offsetWidth*DPR, H=canvas.offsetHeight*DPR;
-  canvas.width=W; canvas.height=H;
-  ctx.scale(DPR,DPR);
-  const w=canvas.offsetWidth, h=canvas.offsetHeight;
-  const n=profile.length;
-  const rowH=h/n;
-  const chartW=w-52; // leave space for price labels
-
-  ctx.clearRect(0,0,w,h);
-
-  const priceRange=profile[n-1].priceTo - profile[0].priceFrom;
-
-  profile.slice().reverse().forEach((p,i)=>{
-    const y=i*rowH;
-    const barW=p.pct*chartW;
-    const isAbove=p.priceMid > currentPrice;
-    // Highlight dense zones
-    const inZone = zones.some(z=>p.priceMid>=z.low && p.priceMid<=z.high);
-    if (inZone) {
-      ctx.fillStyle = isAbove ? '#ff4d6d' : '#3b82f6';
-    } else {
-      ctx.fillStyle = isAbove ? 'rgba(255,77,109,.35)' : 'rgba(59,130,246,.35)';
-    }
-    if (barW>0) ctx.fillRect(0, y+0.5, barW, rowH-1);
-
-    // Price label every 4 rows
-    if (i%4===0) {
-      ctx.fillStyle='rgba(255,255,255,.25)'; ctx.font='9px DM Mono'; ctx.textAlign='left';
-      ctx.fillText(p.priceMid.toFixed(0), chartW+3, y+rowH*0.7);
-    }
-  });
-
-  // Current price line
-  if (currentPrice) {
-    const yPrice = h*(1-(currentPrice-profile[0].priceFrom)/priceRange);
-    ctx.strokeStyle='#f0b429'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
-    ctx.beginPath(); ctx.moveTo(0,yPrice); ctx.lineTo(chartW,yPrice); ctx.stroke();
-    ctx.setLineDash([]);
-    // Label
-    ctx.fillStyle='#f0b429'; ctx.font='bold 9px DM Mono'; ctx.textAlign='left';
-    ctx.fillText(`▶${currentPrice.toFixed(0)}`, chartW+3, yPrice+3);
-  }
-
-  // Zone labels on bar
-  zones.forEach((z,zi)=>{
-    const yMid=h*(1-(z.mid-profile[0].priceFrom)/priceRange);
-    const colors=['#ff4d6d','#3b82f6','#a78bfa'];
-    ctx.fillStyle=colors[zi%3]; ctx.font='bold 9px DM Mono'; ctx.textAlign='left';
-    ctx.fillText(`S${zi+1}`, 2, yMid+3);
-  });
-}
-
-// ── 繪製成交量柱狀圖（底部）──
-function etfDrawVolChart(canvas, rows) {
-  if (!rows.length) return;
-  const ctx=canvas.getContext('2d');
-  const DPR=window.devicePixelRatio||1;
-  canvas.width=canvas.offsetWidth*DPR; canvas.height=canvas.offsetHeight*DPR;
-  ctx.scale(DPR,DPR);
-  const w=canvas.offsetWidth, h=canvas.offsetHeight;
-  const n=rows.length;
-  const barW=Math.max(1,(w-8)/n-0.5);
-  const pad={l:8,r:4};
-  const vols=rows.map(r=>r.volume);
-  const maxV=Math.max(...vols)||1;
-  const avgV20=etfAvgVol(vols,20)||0;
-
-  ctx.clearRect(0,0,w,h);
-
-  // Average volume line
-  const avgY=h*(1-avgV20/maxV)*0.95;
-  ctx.strokeStyle='rgba(240,180,41,.5)'; ctx.lineWidth=1; ctx.setLineDash([3,3]);
-  ctx.beginPath(); ctx.moveTo(pad.l,avgY); ctx.lineTo(w-pad.r,avgY); ctx.stroke();
-  ctx.setLineDash([]);
-
-  rows.forEach((r,i)=>{
-    const x=pad.l+i*((w-pad.l-pad.r)/n);
-    const barH=Math.max(1,(r.volume/maxV)*h*0.95);
-    const isUp=r.close>=r.open;
-    // Highlight above-avg volume
-    const isHot=r.volume>=avgV20*1.5;
-    ctx.fillStyle=isHot?(isUp?'#ff4d6d':'#00e5a0'):(isUp?'rgba(255,77,109,.45)':'rgba(0,229,160,.45)');
-    ctx.fillRect(x, h-barH, Math.max(barW,1), barH);
-  });
-}
-
-// ── 繪製法人籌碼累積曲線 ──
-function etfDrawChipChart(canvas, chipData) {
-  if (!chipData) return;
-  const ctx=canvas.getContext('2d');
-  const DPR=window.devicePixelRatio||1;
-  canvas.width=canvas.offsetWidth*DPR; canvas.height=canvas.offsetHeight*DPR;
-  ctx.scale(DPR,DPR);
-  const w=canvas.offsetWidth, h=canvas.offsetHeight;
-  const pad={t:8,r:8,b:18,l:58};
-
-  const series=[
-    {arr:chipData.foreignCum, color:'#ff4d6d', label:'外資'},
-    {arr:chipData.trustCum,   color:'#a78bfa', label:'投信'},
-    {arr:chipData.dealerCum,  color:'#00e5a0', label:'自營'},
-  ];
-  const allV=series.flatMap(s=>s.arr||[]).filter(v=>v!=null);
-  if (!allV.length) return;
-  const minV=Math.min(...allV,0), maxV=Math.max(...allV,0);
-  const n=(chipData.foreignCum||[]).length||1;
-
-  const xS=i=>pad.l+(i/(n-1||1))*(w-pad.l-pad.r);
-  const yS=v=>pad.t+(1-(v-minV)/(maxV-minV||1))*(h-pad.t-pad.b);
-
-  ctx.clearRect(0,0,w,h);
-
-  // Zero line
-  const y0=yS(0);
-  ctx.strokeStyle='rgba(255,255,255,.12)'; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(pad.l,y0); ctx.lineTo(w-pad.r,y0); ctx.stroke();
-
-  // Y axis
-  [minV,(minV+maxV)/2,maxV].forEach(v=>{
-    const y=yS(v);
-    ctx.fillStyle='rgba(255,255,255,.22)'; ctx.font='9px DM Mono'; ctx.textAlign='right';
-    const lbl=Math.abs(v)>=1000?`${(v/1000).toFixed(1)}K`:`${v}`;
-    ctx.fillText((v>=0?'+':'')+lbl, pad.l-3, y+3);
-  });
-
-  // X axis
-  ctx.textAlign='center'; ctx.fillStyle='rgba(255,255,255,.2)';
-  const dates=chipData.dates||[];
-  const xStep=Math.max(1,Math.floor(n/5));
-  for (let i=0;i<n;i+=xStep) ctx.fillText(dates[i]||'',xS(i),h-2);
-
-  // Draw series
-  series.forEach(s=>{
-    if (!s.arr?.length) return;
-    ctx.strokeStyle=s.color; ctx.lineWidth=2;
-    ctx.beginPath(); let first=true;
-    s.arr.forEach((v,i)=>{
-      if(v==null)return;
-      const x=xS(i),y=yS(v);
-      first?ctx.moveTo(x,y):ctx.lineTo(x,y); first=false;
-    });
-    ctx.stroke();
-    // Last dot
-    const last=s.arr.filter(v=>v!=null).at(-1);
-    if(last!=null){
-      ctx.fillStyle=s.color;
-      ctx.beginPath(); ctx.arc(xS(s.arr.length-1),yS(last),3.5,0,Math.PI*2); ctx.fill();
-    }
-  });
-}
 
 // ── 成長比率 ──
 function etfGrowthRate(arr, days=30) {
@@ -13361,124 +13225,202 @@ function etfGrowthRate(arr, days=30) {
 }
 
 // ══════════════════════════════
-//  主渲染
+//  主渲染 — 兩階段（先K線，後法人）
 // ══════════════════════════════
 async function etfRender() {
-  const loading=document.getElementById('etfLoading');
-  const loadTxt=document.getElementById('etfLoadingTxt');
+  const loading = document.getElementById('etfLoading');
+  const loadTxt = document.getElementById('etfLoadingTxt');
+
+  // ── Phase 1：快速顯示 K線 + 密集區（< 3 秒）──
   if(loading) loading.style.display='flex';
+  if(loadTxt) loadTxt.textContent=`載入 ${etfCurrent} K線資料…`;
 
   try {
-    // ── Step 1: 抓 TWSE 日K ──
-    const rangeMonths={'3mo':3,'6mo':6,'1y':12}[etfRange]||3;
-    if(loadTxt) loadTxt.textContent=`載入 ${etfCurrent} 日K資料…`;
-
-    const cacheKey=`${etfCurrent}_${etfRange}`;
+    const rangeMonths = {'3mo':3,'6mo':6,'1y':12}[etfRange]||3;
+    const cacheKey    = `${etfCurrent}_${etfRange}`;
     let rows = etfCache[cacheKey];
+
     if (!rows) {
-      rows = await etfFetchTWSEHistory(etfCurrent, rangeMonths);
+      // 優先用 Yahoo Finance（快，約1秒）
+      try {
+        rows = await etfFetchHistory_Yahoo(etfCurrent, etfRange);
+      } catch {}
+      // Fallback: TWSE（較慢但更準）
       if (!rows?.length) {
-        // Fallback: Yahoo Finance
-        if(loadTxt) loadTxt.textContent='TWSE 失敗，改用 Yahoo Finance…';
-        const yData = await etfFetchHistory_Yahoo(etfCurrent, etfRange);
-        rows = yData;
+        if(loadTxt) loadTxt.textContent='改用 TWSE API…';
+        rows = await etfFetchTWSEHistory(etfCurrent, rangeMonths);
       }
-      if (!rows?.length) throw new Error('無法取得資料');
+      if (!rows?.length) throw new Error('無法取得K線資料');
       etfCache[cacheKey] = rows;
     }
 
-    const info   = ETF_INFO[etfCurrent];
-    const close  = rows.at(-1).close;
-    const prev   = rows.at(-2)?.close||close;
-    const change = (close-prev)/prev*100;
-    const up     = change>=0;
-    const closes = rows.map(r=>r.close);
-    const volumes= rows.map(r=>r.volume);
-    const ma20v  = etfSma(closes,20).at(-1);
-    const ma60v  = etfSma(closes,60).at(-1);
-    const biasV  = ma20v ? (close-ma20v)/ma20v*100 : null;
-    const avgV20 = etfAvgVol(volumes,20);
-    const volR   = avgV20 ? volumes.at(-1)/avgV20 : null;
+    etfRenderPhase1(rows);
 
-    // ── Hero KPI ──
-    const set=(id,v,s)=>{ const el=document.getElementById(id); if(el){el.textContent=v;if(s)Object.assign(el.style,s);} };
-    set('etfTicker', etfCurrent);
-    set('etfName',   info.name);
-    set('etfPrice',  close.toLocaleString('zh-TW',{minimumFractionDigits:2,maximumFractionDigits:2}),
-        {color:up?'var(--accent-red)':'var(--accent-green)'});
-    set('etfChange', `${up?'▲':'▼'}${Math.abs(change).toFixed(2)}%`,
-        {color:up?'var(--accent-red)':'var(--accent-green)'});
-    set('etfMa20',  ma20v?.toFixed(1)||'—');
-    set('etfMa60',  ma60v?.toFixed(1)||'—');
-    set('etfBias',  biasV!=null?`${biasV>=0?'+':''}${biasV.toFixed(1)}%`:'—',
-        {color:biasV>=0?'var(--accent-red)':'var(--accent-green)'});
-    set('etfVol',   volR?`${volR.toFixed(2)}x`:'—',
-        {color:volR>=2?'#f0b429':volR>=1.5?'var(--accent-red)':'var(--text-primary)'});
+  } catch(e) {
+    chipShowToast('❌ K線載入失敗：'+e.message,'warn');
+  } finally {
+    if(loading) loading.style.display='none';
+  }
 
-    // ── Volume Profile + Dense Zones ──
-    const profile = etfVolumeProfile(rows, 24);
-    const zones   = etfFindDenseZones(profile);
+  // ── Phase 2：背景載入法人資料（非同步，不擋UI）──
+  etfLoadChipAsync();
+}
 
-    // 均量成本線（VWAP style）
-    let cumPV=0, cumV=0;
-    const vwap = rows.map(r=>{ cumPV+=r.close*r.volume; cumV+=r.volume; return cumV>0?cumPV/cumV:null; });
-    const costLine = vwap.at(-1);
+function etfRenderPhase1(rows) {
+  const info   = ETF_INFO[etfCurrent];
+  const close  = rows.at(-1).close;
+  const prev   = rows.at(-2)?.close||close;
+  const change = (close-prev)/prev*100;
+  const up     = change>=0;
+  const closes = rows.map(r=>r.close);
+  const volumes= rows.map(r=>r.volume);
+  const ma20v  = etfSma(closes,20).at(-1);
+  const ma60v  = etfSma(closes,60).at(-1);
+  const biasV  = ma20v ? (close-ma20v)/ma20v*100 : null;
+  const avgV20 = etfAvgVol(volumes,20);
+  const volR   = avgV20 ? volumes.at(-1)/avgV20 : null;
 
-    // Price chart
-    const pCanvas=document.getElementById('etfPriceChart');
-    if(pCanvas) etfDrawPriceChart(pCanvas, rows, null, zones);
+  // Hero KPI
+  const set=(id,v,s)=>{const el=document.getElementById(id);if(el){el.textContent=v;if(s)Object.assign(el.style,s);}};
+  set('etfTicker', etfCurrent);
+  set('etfName',   info.name);
+  set('etfPrice',  close.toLocaleString('zh-TW',{minimumFractionDigits:2,maximumFractionDigits:2}),
+      {color:up?'var(--accent-red)':'var(--accent-green)'});
+  set('etfChange', `${up?'▲':'▼'}${Math.abs(change).toFixed(2)}%`,
+      {color:up?'var(--accent-red)':'var(--accent-green)'});
+  set('etfMa20', ma20v?.toFixed(1)||'—');
+  set('etfMa60', ma60v?.toFixed(1)||'—');
+  set('etfBias', biasV!=null?`${biasV>=0?'+':''}${biasV.toFixed(1)}%`:'—',
+      {color:biasV>=0?'var(--accent-red)':'var(--accent-green)'});
+  set('etfVol',  volR?`${volR.toFixed(2)}x`:'—',
+      {color:volR>=2?'#f0b429':volR>=1.5?'var(--accent-red)':'var(--text-primary)'});
 
-    // Volume chart
-    const vCanvas=document.getElementById('etfVolChart');
-    if(vCanvas) etfDrawVolChart(vCanvas, rows);
+  // Volume Profile + Zones
+  const profile = etfVolumeProfile(rows, 24);
+  const zones   = etfFindDenseZones(profile);
 
-    // VP chart
-    const vpCanvas=document.getElementById('etfVPChart');
-    if(vpCanvas) etfDrawVPChart(vpCanvas, profile, close, zones);
+  // VWAP cost
+  let cumPV=0,cumV=0;
+  rows.forEach(r=>{cumPV+=r.close*r.volume;cumV+=r.volume;});
+  const costLine = cumV>0?cumPV/cumV:null;
 
-    // Dense zone summary
-    const denseEl=document.getElementById('etfDenseZone');
-    if(denseEl && zones.length) {
-      denseEl.style.display='block';
-      denseEl.innerHTML = zones.map((z,i)=>{
-        const colors=['#ff4d6d','#3b82f6','#a78bfa'];
-        const rel = close>z.high ? `↑ 當前在此帶上方 +${(close-z.high).toFixed(1)}（壓力已突破）`
-                  : close<z.low  ? `↓ 當前在此帶下方 -${(z.low-close).toFixed(1)}（支撐）`
-                  :                 `⚡ 當前在此帶內（方向待確認）`;
-        return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;${i>0?'border-top:1px solid var(--border);margin-top:5px;':''}">
-          <span style="font-size:0.75rem;font-weight:700;color:${colors[i]};min-width:20px">S${i+1}</span>
-          <div style="flex:1">
-            <span style="font-family:var(--mono);font-size:0.72rem;font-weight:700;color:${colors[i]}">${z.low.toFixed(1)} ~ ${z.high.toFixed(1)}</span>
-            <span style="font-size:0.62rem;color:var(--text-muted);margin-left:6px">${rel}</span>
+  // ── 蠟燭圖 + VRVP Overlay（合一）──
+  const candleCanvas  = document.getElementById('etfCandleChart');
+  const overlayCanvas = document.getElementById('etfVRVPOverlay');
+  if (candleCanvas) etfDrawCandleVRVP(candleCanvas, overlayCanvas, rows, zones);
+
+  const vCanvas = document.getElementById('etfVolChart');
+  if (vCanvas) etfDrawVolChart(vCanvas, rows);
+
+  // ── Dense zones + 進出場建議 ──
+  const denseEl   = document.getElementById('etfDenseZone');
+  const adviceEl  = document.getElementById('etfTradeAdvice');
+
+  if (denseEl && zones.length) {
+    denseEl.style.display = 'block';
+    const colors = ['#ff4d6d','#3b82f6','#a78bfa'];
+    denseEl.innerHTML = `
+      <div style="font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">HVN 高量節點（密集成交區）</div>
+      ${zones.map((z,i)=>{
+        const isAbove = close > z.high;
+        const isBelow = close < z.low;
+        const inZn    = !isAbove && !isBelow;
+        const role    = isAbove ? '支撐' : isBelow ? '壓力' : '整理中';
+        const roleC   = isAbove ? '#00e5a0' : isBelow ? '#ff4d6d' : '#f0b429';
+        return `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;${i>0?'border-top:1px solid var(--border);':''}">
+          <div style="width:3px;height:28px;background:${colors[i]};border-radius:2px;flex-shrink:0;"></div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="font-family:var(--mono);font-size:0.75rem;font-weight:700;color:${colors[i]}">HVN${i+1}</span>
+              <span style="font-family:var(--mono);font-size:0.72rem;color:var(--text-primary);">${z.low.toFixed(1)} ～ ${z.high.toFixed(1)}</span>
+              <span style="font-size:0.6rem;font-weight:700;padding:1px 6px;border-radius:4px;background:${roleC}22;color:${roleC};border:1px solid ${roleC}44;">${role}</span>
+            </div>
+            <div style="font-size:0.6rem;color:var(--text-muted);margin-top:2px;">
+              中心 ${z.mid.toFixed(1)} · 距今 ${(close-z.mid>=0?'+':'')}${(close-z.mid).toFixed(2)} (${((close-z.mid)/close*100).toFixed(1)}%)
+            </div>
           </div>
         </div>`;
-      }).join('');
-    }
+      }).join('')}`;
+  }
 
-    // VWAP cost line info
-    const costEl=document.getElementById('etfCostLine');
-    if(costEl && costLine) {
-      const diff=(close-costLine)/costLine*100;
-      costEl.innerHTML=`<span style="font-size:0.68rem;color:var(--text-muted)">籌碼成本線 <b style="font-family:var(--mono);color:#f0b429">${costLine.toFixed(1)}</b>
-        <span style="color:${diff>=0?'var(--accent-red)':'var(--accent-green)'}">${diff>=0?'+':''}${diff.toFixed(1)}%</span>
-        <span style="color:var(--text-muted);font-size:0.6rem">（VWAP 期間均值）</span></span>`;
+  // 進出場建議
+  if (adviceEl) {
+    const advice = etfGenerateAdvice(close, zones, biasV, volR, ma20v, ma60v);
+    if (advice) {
+      adviceEl.style.display = 'block';
+      adviceEl.style.borderColor = advice.color + '44';
+      adviceEl.style.background  = advice.color + '08';
+      adviceEl.innerHTML = `
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:1.2rem;">${advice.emoji}</span>
+          <div>
+            <div style="font-size:0.78rem;font-weight:700;color:${advice.color};">${advice.title}</div>
+            <div style="font-size:0.6rem;color:var(--text-muted);margin-top:1px;">依 HVN 密集區 + 均線結構判斷</div>
+          </div>
+          <span style="margin-left:auto;font-size:0.65rem;font-weight:700;padding:3px 9px;border-radius:20px;background:${advice.color}22;color:${advice.color};border:1px solid ${advice.color}44;">${advice.action}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          ${advice.detail.map(d=>`
+            <div style="display:flex;gap:6px;align-items:flex-start;">
+              <span style="color:${advice.color};flex-shrink:0;font-size:0.7rem;">▸</span>
+              <span style="font-size:0.7rem;color:var(--text-secondary);line-height:1.5;">${d}</span>
+            </div>`).join('')}
+        </div>`;
     }
+  }
 
-    // ── Step 2: 法人資料 ──
-    if(loadTxt) loadTxt.textContent='載入三大法人資料（TWSE）…';
-    let chipData;
-    try {
-      chipData = await etfFetchChipHistory(etfCurrent, rows.slice(-60));
-    } catch(e) {
-      chipData = etfMockChipData_fallback(rows);
-    }
+  // Cost line
+  const costEl=document.getElementById('etfCostLine');
+  if(costEl && costLine) {
+    const diff=(close-costLine)/costLine*100;
+    costEl.innerHTML=`<span style="font-size:0.68rem;color:var(--text-muted)">籌碼成本線
+      <b style="font-family:var(--mono);color:#f0b429">${costLine.toFixed(1)}</b>
+      <span style="color:${diff>=0?'var(--accent-red)':'var(--accent-green)'}">${diff>=0?'+':''}${diff.toFixed(1)}%</span>
+      <span style="font-size:0.6rem;color:var(--text-muted)">（VWAP）</span></span>`;
+  }
+
+  // Signals
+  const sigEl=document.getElementById('etfSignalCard');
+  if(sigEl){
+    const sigs=[];
+    if(biasV>15)  sigs.push({icon:'⚠️',txt:`月線乖離 ${biasV.toFixed(1)}%，過度延伸`,c:'warn'});
+    if(biasV<-10) sigs.push({icon:'💡',txt:`月線乖離 ${biasV.toFixed(1)}%，可考慮逢低布局`,c:'bull'});
+    if(volR>=2)   sigs.push({icon:'⚡',txt:`今日量 ${volR.toFixed(1)}x 均量，${up?'爆量上攻':'爆量下殺'}`,c:'gold'});
+    const inDense=zones.find(z=>close>=z.low&&close<=z.high);
+    if(inDense) sigs.push({icon:'📍',txt:`在密集交易區 S${zones.indexOf(inDense)+1}（${inDense.low.toFixed(1)}~${inDense.high.toFixed(1)}）`,c:'neu'});
+    if(sigs.length){
+      sigEl.style.display='block'; sigEl.style.padding='14px 16px';
+      sigEl.innerHTML=`<div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">今日關鍵訊號</div>
+        ${sigs.map(s=>`<div style="display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);align-items:flex-start;">
+          <span>${s.icon}</span>
+          <span style="font-size:0.72rem;line-height:1.5;color:${s.c==='warn'?'var(--accent-red)':s.c==='bull'?'var(--accent-green)':s.c==='gold'?'#f0b429':'var(--text-secondary)'}">${s.txt}</span>
+        </div>`).join('')}`;
+    } else sigEl.style.display='none';
+  }
+
+  // Store rows for chip loading phase
+  etfRender._lastRows = rows;
+}
+
+async function etfLoadChipAsync() {
+  const rows = etfRender._lastRows;
+  if (!rows?.length) return;
+
+  // Show skeleton in chip section
+  const summaryEl = document.getElementById('etfChipSummary');
+  const growthEl  = document.getElementById('etfGrowthBars');
+  if(summaryEl) summaryEl.innerHTML = `
+    <div class="etf-chip-item"><div style="color:var(--text-muted);font-size:0.7rem;text-align:center;padding:8px;">法人資料<br>載入中…</div></div>
+    <div class="etf-chip-item"></div><div class="etf-chip-item"></div>`;
+
+  try {
+    const chipData = await etfFetchChipHistory(etfCurrent, rows);
 
     // Chip chart
     const cCanvas=document.getElementById('etfChipChart');
     if(cCanvas) etfDrawChipChart(cCanvas, chipData);
 
-    // Chip summary cards
-    const summaryEl=document.getElementById('etfChipSummary');
+    // Summary cards
     if(summaryEl) {
       const items=[
         {key:'foreignCum',daily:'foreign',label:'外資',color:'#ff4d6d'},
@@ -13490,10 +13432,10 @@ async function etfRender() {
         const today= (chipData[s.daily]||[]).filter(v=>v!=null).at(-1)||0;
         const g10  = etfGrowthRate(chipData[s.key],10);
         return `<div class="etf-chip-item">
-          <div class="etf-chip-val" style="color:${s.color}">${cum>=0?'+':''}${(cum/1000).toFixed(1)}K</div>
-          <div class="etf-chip-lbl">${s.label}累積張</div>
+          <div class="etf-chip-val" style="color:${s.color}">${etfFmt(cum)}張</div>
+          <div class="etf-chip-lbl">${s.label}累積</div>
           <div class="etf-chip-chg" style="color:${today>=0?'var(--accent-red)':'var(--accent-green)'}">
-            今日 ${today>=0?'+':''}${today.toLocaleString()}張
+            今日 ${etfFmt(today)}張
           </div>
           ${g10!=null?`<div style="font-size:0.58rem;color:var(--text-muted);margin-top:2px;">10日趨勢 ${g10>=0?'▲':'▼'}${Math.abs(g10).toFixed(1)}%</div>`:''}
         </div>`;
@@ -13501,91 +13443,56 @@ async function etfRender() {
     }
 
     // Growth bars
-    const growthEl=document.getElementById('etfGrowthBars');
     if(growthEl) {
       const items=[
         {key:'foreignCum',label:'外資',color:'#ff4d6d'},
         {key:'trustCum',  label:'投信',color:'#a78bfa'},
         {key:'dealerCum', label:'自營',color:'#00e5a0'},
       ];
-      const growths=items.map(g=>({...g, pct:etfGrowthRate(chipData[g.key],30)||0}));
-      const maxAbs=Math.max(...growths.map(g=>Math.abs(g.pct)),1);
-      growthEl.innerHTML=growths.map(g=>{
-        const pct=g.pct, up=pct>=0;
+      const gs=items.map(g=>({...g,pct:etfGrowthRate(chipData[g.key],30)||0}));
+      const maxA=Math.max(...gs.map(g=>Math.abs(g.pct)),1);
+      growthEl.innerHTML=gs.map(g=>{
+        const up=g.pct>=0;
         return `<div class="etf-growth-row">
           <div class="etf-growth-lbl" style="color:${g.color}">${g.label}</div>
           <div class="etf-growth-track">
-            <div class="etf-growth-fill" style="width:${Math.abs(pct)/maxAbs*100}%;background:${up?g.color:'rgba(255,255,255,.15)'}"></div>
+            <div class="etf-growth-fill" style="width:${Math.abs(g.pct)/maxA*100}%;background:${up?g.color:'rgba(255,255,255,.15)'}"></div>
           </div>
-          <div class="etf-growth-val" style="color:${up?'var(--accent-red)':'var(--accent-green)'}">${up?'+':''}${pct.toFixed(1)}%</div>
-          <div class="etf-growth-pct" style="color:var(--text-muted)">近30日</div>
+          <div class="etf-growth-val" style="color:${up?'var(--accent-red)':'var(--accent-green)'}">${up?'+':''}${g.pct.toFixed(1)}%</div>
+          <div class="etf-growth-pct">近30日</div>
         </div>`;
       }).join('');
     }
 
-    // ── Signal card ──
+    // Add foreign signal
+    const foreignToday=(chipData.foreign||[]).filter(v=>v!=null).at(-1)||0;
     const sigEl=document.getElementById('etfSignalCard');
-    if(sigEl){
-      const sigs=[];
-      if(biasV>15) sigs.push({icon:'⚠️',txt:`月線乖離 ${biasV.toFixed(1)}% 過度延伸，注意回調風險`,c:'warn'});
-      if(biasV<-10) sigs.push({icon:'💡',txt:`月線乖離 ${biasV.toFixed(1)}%，可考慮逢低分批布局`,c:'bull'});
-      if(volR>=2) sigs.push({icon:'⚡',txt:`今日量 ${volR.toFixed(1)}x 均量，${up?'爆量上攻':'爆量下殺'}`,c:'gold'});
-      const inDense=zones.find(z=>close>=z.low&&close<=z.high);
-      if(inDense) sigs.push({icon:'📍',txt:`進入密集交易區 S${zones.indexOf(inDense)+1}（${inDense.low.toFixed(1)}~${inDense.high.toFixed(1)}），方向待確認`,c:'neu'});
-      const foreignToday=(chipData.foreign||[]).filter(v=>v!=null).at(-1)||0;
-      if(foreignToday>500) sigs.push({icon:'🏦',txt:`外資今日大買 +${foreignToday.toLocaleString()}張`,c:'bull'});
-      if(foreignToday<-500) sigs.push({icon:'🏦',txt:`外資今日大賣 ${foreignToday.toLocaleString()}張`,c:'warn'});
-      if(sigs.length){
-        sigEl.style.display='block';
-        sigEl.style.padding='14px 16px';
-        sigEl.innerHTML=`<div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">今日關鍵訊號</div>
-          ${sigs.map(s=>`<div style="display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);align-items:flex-start;">
-            <span style="flex-shrink:0">${s.icon}</span>
-            <span style="font-size:0.72rem;line-height:1.5;color:${s.c==='warn'?'var(--accent-red)':s.c==='bull'?'var(--accent-green)':s.c==='gold'?'#f0b429':'var(--text-secondary)'}">${s.txt}</span>
-          </div>`).join('')}`;
-      } else {
-        sigEl.style.display='none';
-      }
+    if(sigEl && Math.abs(foreignToday)>300) {
+      const isBuy=foreignToday>0;
+      const newSig=`<div style="display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);align-items:flex-start;">
+        <span>🏦</span>
+        <span style="font-size:0.72rem;line-height:1.5;color:${isBuy?'var(--accent-green)':'var(--accent-red)'}">
+          外資今日${isBuy?'買超':'賣超'} ${etfFmtAbs(foreignToday)}張
+        </span></div>`;
+      sigEl.style.display='block';
+      sigEl.innerHTML += newSig;
     }
 
-    if(chipData.isMock) chipShowToast('⚠️ 法人資料抓取中，顯示模擬佔位','warn');
+    if(chipData.isMock) chipShowToast('⚠️ TWSE 法人資料暫時無法取得，顯示模擬','warn');
+    else chipShowToast('✅ 法人資料載入完成','ok');
 
   } catch(e) {
-    chipShowToast('❌ '+e.message,'warn');
-  } finally {
-    if(loading) loading.style.display='none';
+    chipShowToast('⚠️ 法人資料載入失敗：'+e.message,'warn');
   }
 }
 
-// ── Yahoo Finance fallback ──
-async function etfFetchHistory_Yahoo(ticker, range) {
-  const d = await chipProxyFetch(
-    `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}.TW?interval=1d&range=${range}`
-  );
-  const res=d?.chart?.result?.[0];
-  if(!res) return null;
-  const q=res.indicators.quote[0];
-  return res.timestamp.map((ts,i)=>({
-    t:      new Date(ts*1000),
-    open:   q.open[i]||0,
-    high:   q.high[i]||0,
-    low:    q.low[i]||0,
-    close:  q.close[i]||0,
-    volume: q.volume[i]||0,
-  })).filter(r=>r.close>0);
-}
 
-// ── Fallback mock chip data ──
-function etfMockChipData_fallback(rows) {
-  const n=rows.length;
-  const seed=(s,sc)=>{ let c=0; return rows.map((_,i)=>{ c+=(Math.sin(i*s)*sc+Math.random()*sc*.4-sc*.15); return Math.round(c); }); };
-  const f=seed(0.3,300), t=seed(0.7,80), d=seed(1.1,50);
-  return {
-    foreign:f, trust:t, dealer:d,
-    foreignCum:f, trustCum:t, dealerCum:d,
-    dates:rows.map(r=>`${r.t.getMonth()+1}/${r.t.getDate()}`),
-    isMock:true,
-  };
+function etfMainSwitch(key, btn) {
+  document.querySelectorAll('#page-stats .etf-main-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('etfMainPanel-etf').style.display  = key==='etf'  ? 'block' : 'none';
+  document.getElementById('etfMainPanel-risk').style.display = key==='risk' ? 'block' : 'none';
+  if (key==='risk') { riskRenderHistory(); riskFetchMarketData(); }
 }
 
 function etfSwitch(ticker,btn){
@@ -13602,6 +13509,701 @@ function etfRefresh(){
   const btn=document.getElementById('etfRefreshBtn');
   if(btn){btn.textContent='…';btn.disabled=true;}
   etfRender().finally(()=>{if(btn){btn.textContent='⟳';btn.disabled=false;}});
+}
+
+
+// ══════════════════════════════════════════════
+//  蠟燭圖 + VRVP Overlay（TradingView 風格）
+// ══════════════════════════════════════════════
+
+function etfDrawCandleVRVP(candleCanvas, overlayCanvas, rows, zones) {
+  if (!rows?.length) return;
+
+  const DPR   = window.devicePixelRatio || 1;
+  const w     = candleCanvas.offsetWidth;
+  const h     = candleCanvas.offsetHeight;
+  candleCanvas.width  = w * DPR;
+  candleCanvas.height = h * DPR;
+  const ctx = candleCanvas.getContext('2d');
+  ctx.scale(DPR, DPR);
+
+  const pad   = { t: 10, r: 8, b: 24, l: 52 };
+  const chartW = w - pad.l - pad.r;
+  const chartH = h - pad.t - pad.b;
+  const n      = rows.length;
+
+  // Price range
+  const allH = rows.map(r => r.high).filter(v => v > 0);
+  const allL = rows.map(r => r.low).filter(v => v > 0);
+  const minP  = Math.min(...allL) * 0.997;
+  const maxP  = Math.max(...allH) * 1.003;
+
+  const xS = i  => pad.l + (i / (n - 1)) * chartW;
+  const yS = v  => pad.t + (1 - (v - minP) / (maxP - minP)) * chartH;
+
+  ctx.clearRect(0, 0, w, h);
+
+  // ── Grid ──
+  const gridCount = 5;
+  for (let i = 0; i <= gridCount; i++) {
+    const y = pad.t + (i / gridCount) * chartH;
+    const v = maxP - (i / gridCount) * (maxP - minP);
+    ctx.strokeStyle = 'rgba(255,255,255,.04)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,.3)';
+    ctx.font = `10px DM Mono`;
+    ctx.textAlign = 'right';
+    ctx.fillText(v.toFixed(1), pad.l - 4, y + 3.5);
+  }
+
+  // ── X axis dates ──
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(255,255,255,.25)';
+  ctx.font = '9px DM Mono';
+  const xStep = Math.max(1, Math.floor(n / 5));
+  for (let i = 0; i < n; i += xStep) {
+    const d = rows[i].t;
+    ctx.fillText(`${d.getMonth()+1}/${d.getDate()}`, xS(i), h - 6);
+  }
+
+  // ── Dense zone bands（背景橫帶）──
+  const zoneColors = [
+    { fill: 'rgba(255,77,109,.08)',  edge: 'rgba(255,77,109,.5)'  },
+    { fill: 'rgba(59,130,246,.07)',  edge: 'rgba(59,130,246,.45)' },
+    { fill: 'rgba(167,139,250,.06)', edge: 'rgba(167,139,250,.4)' },
+  ];
+  zones.forEach((z, zi) => {
+    const y1 = yS(z.high), y2 = yS(z.low);
+    ctx.fillStyle = zoneColors[zi % 3].fill;
+    ctx.fillRect(pad.l, y1, chartW, y2 - y1);
+    // HVN line at zone mid
+    ctx.strokeStyle = zoneColors[zi % 3].edge;
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(pad.l, yS(z.mid)); ctx.lineTo(w - pad.r, yS(z.mid)); ctx.stroke();
+    // HVN label
+    ctx.fillStyle = zoneColors[zi % 3].edge;
+    ctx.font = 'bold 9px DM Mono';
+    ctx.textAlign = 'left';
+    ctx.fillText(`HVN${zi + 1} ${z.mid.toFixed(1)}`, pad.l + 3, yS(z.mid) - 3);
+  });
+
+  // ── MA lines ──
+  const closes  = rows.map(r => r.close);
+  const ma20arr = etfSma(closes, 20);
+  const ma60arr = etfSma(closes, 60);
+
+  [[ma20arr, '#3b82f6', 1.5], [ma60arr, '#a78bfa', 1.5]].forEach(([arr, color, lw]) => {
+    ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.setLineDash([]);
+    ctx.beginPath(); let first = true;
+    arr.forEach((v, i) => {
+      if (!v) return;
+      const x = xS(i), y = yS(v);
+      first ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      first = false;
+    });
+    ctx.stroke();
+  });
+
+  // ── Candlesticks ──
+  const candleW = Math.max(1, (chartW / n) * 0.7);
+  rows.forEach((r, i) => {
+    if (!r.open || !r.close || !r.high || !r.low) return;
+    const x     = xS(i);
+    const isUp  = r.close >= r.open;
+    const color = isUp ? '#ff4d6d' : '#00e5a0';
+    const bodyT = yS(Math.max(r.open, r.close));
+    const bodyB = yS(Math.min(r.open, r.close));
+    const bodyH = Math.max(1, bodyB - bodyT);
+
+    // Wick
+    ctx.strokeStyle = color; ctx.lineWidth = 1; ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.moveTo(x, yS(r.high)); ctx.lineTo(x, bodyT);
+    ctx.moveTo(x, bodyB);      ctx.lineTo(x, yS(r.low));
+    ctx.stroke();
+
+    // Body
+    ctx.fillStyle = isUp ? 'rgba(255,77,109,.85)' : 'rgba(0,229,160,.85)';
+    ctx.fillRect(x - candleW / 2, bodyT, candleW, bodyH);
+
+    // Border
+    ctx.strokeStyle = color; ctx.lineWidth = 0.5;
+    ctx.strokeRect(x - candleW / 2, bodyT, candleW, bodyH);
+  });
+
+  // ── Current price line ──
+  const lastClose = rows.at(-1).close;
+  const lastY     = yS(lastClose);
+  ctx.strokeStyle = '#f0b429'; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+  ctx.beginPath(); ctx.moveTo(pad.l, lastY); ctx.lineTo(w - pad.r, lastY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#f0b429';
+  ctx.font = 'bold 10px DM Mono';
+  ctx.textAlign = 'right';
+  ctx.fillText(lastClose.toFixed(2), pad.l - 4, lastY + 4);
+
+  // ── VRVP Overlay（右側疊加）──
+  if (!overlayCanvas) return;
+  const ovW = overlayCanvas.offsetWidth;
+  const ovH = overlayCanvas.offsetHeight;
+  overlayCanvas.width  = ovW * DPR;
+  overlayCanvas.height = ovH * DPR;
+  const octx = overlayCanvas.getContext('2d');
+  octx.scale(DPR, DPR);
+  octx.clearRect(0, 0, ovW, ovH);
+
+  // Build VP profile
+  const profile = etfVolumeProfile(rows, 40);
+  if (!profile.length) return;
+
+  const priceRange = maxP - minP;
+  const maxPct     = Math.max(...profile.map(p => p.pct));
+
+  profile.forEach(p => {
+    // Map price to y coordinate (same scale as candle chart)
+    const y1 = pad.t + (1 - (p.priceTo  - minP) / priceRange) * chartH;
+    const y2 = pad.t + (1 - (p.priceFrom - minP) / priceRange) * chartH;
+    const rowH = Math.max(1, y2 - y1);
+
+    const barW   = p.pct * (ovW * 0.88);
+    const isAbove = p.priceMid > lastClose;
+
+    // HVN highlight (top 15%)
+    const isHVN = p.pct >= maxPct * 0.85;
+
+    if (isHVN) {
+      // High Volume Node — bright solid
+      octx.fillStyle = isAbove ? 'rgba(255,77,109,.85)' : 'rgba(59,130,246,.85)';
+    } else {
+      octx.fillStyle = isAbove ? 'rgba(255,77,109,.35)' : 'rgba(59,130,246,.35)';
+    }
+    if (barW > 0) octx.fillRect(ovW - barW, y1 + 0.5, barW, rowH - 1);
+  });
+
+  // Current price line on overlay
+  const cpY = pad.t + (1 - (lastClose - minP) / priceRange) * chartH;
+  octx.strokeStyle = '#f0b429'; octx.lineWidth = 1.5; octx.setLineDash([]);
+  octx.beginPath(); octx.moveTo(0, cpY); octx.lineTo(ovW, cpY); octx.stroke();
+}
+
+// ── 生成進出場建議 ──
+function etfGenerateAdvice(close, zones, biasV, volR, ma20, ma60) {
+  if (!zones.length) return null;
+
+  const advice = { action: '', title: '', detail: [], color: '', emoji: '' };
+
+  // 找離當前最近的支撐和壓力
+  const supports  = zones.filter(z => z.mid < close).sort((a, b) => b.mid - a.mid);
+  const resists   = zones.filter(z => z.mid > close).sort((a, b) => a.mid - b.mid);
+  const inZone    = zones.find(z => close >= z.low && close <= z.high);
+
+  const nearSupport = supports[0];
+  const nearResist  = resists[0];
+
+  const isBull = ma20 && ma60 && close > ma20 && ma20 > ma60;
+  const isBear = ma20 && ma60 && close < ma20 && ma20 < ma60;
+
+  if (inZone) {
+    // 在密集區內
+    if (isBull) {
+      advice.action = 'WATCH';
+      advice.title  = '在密集區整理，偏多觀望';
+      advice.emoji  = '⚡';
+      advice.color  = '#f0b429';
+      advice.detail = [
+        `當前在 HVN 密集區 ${inZone.low.toFixed(1)}～${inZone.high.toFixed(1)}（高成交量節點）`,
+        `多頭排列成立，突破 ${inZone.high.toFixed(1)} 可考慮進場追多`,
+        `守住 ${inZone.low.toFixed(1)} 為多頭前提，跌破觀望`,
+      ];
+    } else if (isBear) {
+      advice.action = 'WAIT';
+      advice.title  = '在密集區承壓，偏空等待';
+      advice.emoji  = '🔻';
+      advice.color  = '#ff4d6d';
+      advice.detail = [
+        `當前在 HVN 密集區 ${inZone.low.toFixed(1)}～${inZone.high.toFixed(1)} 受壓`,
+        `空頭排列，建議等跌破 ${inZone.low.toFixed(1)} 再判斷方向`,
+        `反彈至 ${inZone.high.toFixed(1)} 可評估減碼`,
+      ];
+    } else {
+      advice.action = 'WAIT';
+      advice.title  = '密集區盤整，等待方向';
+      advice.emoji  = '⚖️';
+      advice.color  = '#a78bfa';
+      advice.detail = [
+        `整理於 HVN 密集區 ${inZone.low.toFixed(1)}～${inZone.high.toFixed(1)} 內`,
+        nearResist ? `突破 ${nearResist.low.toFixed(1)} 往上看 ${nearResist.mid.toFixed(1)}` : '',
+        nearSupport ? `守住 ${nearSupport.high.toFixed(1)} 支撐為關鍵` : '',
+      ].filter(Boolean);
+    }
+  } else if (nearSupport && (close - nearSupport.mid) / close < 0.03) {
+    // 靠近支撐帶（3% 內）
+    advice.action = 'BUY';
+    advice.title  = '靠近支撐帶，可考慮分批布局';
+    advice.emoji  = '💡';
+    advice.color  = '#00e5a0';
+    advice.detail = [
+      `支撐區 ${nearSupport.low.toFixed(1)}～${nearSupport.high.toFixed(1)}（HVN 高量節點）`,
+      `當前距支撐 ${(close - nearSupport.high).toFixed(1)}，在支撐上方`,
+      biasV < -5 ? `月線乖離 ${biasV.toFixed(1)}% 偏低，增加布局吸引力` : '',
+      `若跌破 ${nearSupport.low.toFixed(1)} 需止損`,
+    ].filter(Boolean);
+  } else if (nearResist && (nearResist.mid - close) / close < 0.03) {
+    // 靠近壓力帶（3% 內）
+    advice.action = 'SELL';
+    advice.title  = '靠近壓力帶，注意減碼';
+    advice.emoji  = '⚠️';
+    advice.color  = '#ff4d6d';
+    advice.detail = [
+      `壓力區 ${nearResist.low.toFixed(1)}～${nearResist.high.toFixed(1)}（HVN 高量節點）`,
+      `當前距壓力 ${(nearResist.low - close).toFixed(1)}，逼近壓力帶`,
+      biasV > 10 ? `月線乖離 ${biasV.toFixed(1)}% 偏高，追高風險增加` : '',
+      `突破 ${nearResist.high.toFixed(1)} 成交量確認後再追多`,
+    ].filter(Boolean);
+  } else {
+    // 兩區之間
+    advice.action = 'HOLD';
+    advice.title  = isBull ? '多頭趨勢中，持股續抱' : isBear ? '空頭格局，輕倉觀望' : '區間中段，持觀望';
+    advice.emoji  = isBull ? '🐂' : isBear ? '🐻' : '⚖️';
+    advice.color  = isBull ? '#00e5a0' : isBear ? '#3b82f6' : '#f0b429';
+    advice.detail = [
+      nearSupport ? `最近支撐：${nearSupport.low.toFixed(1)}～${nearSupport.high.toFixed(1)}` : '',
+      nearResist  ? `最近壓力：${nearResist.low.toFixed(1)}～${nearResist.high.toFixed(1)}` : '',
+      isBull ? '均線多頭排列，回測 20MA 可加碼' : isBear ? '均線空頭排列，反彈壓力帶可減碼' : '',
+    ].filter(Boolean);
+  }
+
+  return advice;
+}
+
+
+// ══════════════════════════════════════════════
+//  台股高檔風險評分系統
+// ══════════════════════════════════════════════
+const RISK_HISTORY_KEY = 'risk_score_history_v1';
+let riskMarketSnapshot = null;
+
+const RISK_DIMS = [
+  { key:'chip',    name:'籌碼先知',   max:25, weight:0.25, icon:'🔮' },
+  { key:'volume',  name:'量價形態',   max:25, weight:0.25, icon:'📊' },
+  { key:'retail',  name:'散戶熱度',   max:20, weight:0.20, icon:'🔥' },
+  { key:'tsmc',    name:'權值動能',   max:20, weight:0.20, icon:'💎' },
+  { key:'breadth', name:'市場廣度',   max:10, weight:0.10, icon:'🌊' },
+];
+
+function riskScoreColor(score) {
+  if (score >= 80) return '#dc2626';
+  if (score >= 60) return '#f59e0b';
+  if (score >= 40) return '#f0b429';
+  if (score >= 20) return '#00e5a0';
+  return '#3b82f6';
+}
+function riskLevelText(score) {
+  if (score >= 80) return { level:'🚨 極度危險', sub:'市場高檔特徵全面出現，強烈建議降低持股', badge:'極高風險', color:'#dc2626' };
+  if (score >= 60) return { level:'⚠️ 高度警戒', sub:'多項風險指標亮燈，建議控制倉位', badge:'高風險', color:'#f59e0b' };
+  if (score >= 40) return { level:'🟡 中度警示', sub:'部分指標出現疑慮，密切觀察', badge:'中風險', color:'#f0b429' };
+  if (score >= 20) return { level:'🟢 低度風險', sub:'市場結構尚健康，正常持股', badge:'低風險', color:'#00e5a0' };
+  return { level:'💙 安全區間', sub:'無明顯高檔特徵，可積極布局', badge:'安全', color:'#3b82f6' };
+}
+
+// ── 抓市場快照資料 ──
+async function riskFetchMarketData() {
+  const setSafe = (id,v,c) => {
+    const el=document.getElementById(id);
+    if(el){el.textContent=v;if(c)el.style.color=c;}
+  };
+
+  try {
+    // 加權指數歷史（算乖離）
+    const twiiData = await chipProxyFetch(
+      'https://query1.finance.yahoo.com/v8/finance/chart/%5ETWII?interval=1d&range=12mo'
+    );
+    const twiiCloses = twiiData?.chart?.result?.[0]?.indicators?.quote?.[0]?.close?.filter(v=>v!=null&&v>0) || [];
+    const twiiNow = twiiCloses.at(-1);
+    const twiiVols  = twiiData?.chart?.result?.[0]?.indicators?.quote?.[0]?.volume?.filter(v=>v>0) || [];
+
+    const sma = (arr, n) => arr.length>=n ? arr.slice(-n).reduce((a,b)=>a+b)/n : null;
+    const ma60  = sma(twiiCloses, 60);
+    const ma240 = sma(twiiCloses, 240);
+    const bias60  = ma60  ? (twiiNow-ma60)/ma60*100   : null;
+    const bias240 = ma240 ? (twiiNow-ma240)/ma240*100 : null;
+
+    // 近20日均量 vs 最新量
+    const avgVol = sma(twiiVols, 20);
+    const lastVol= twiiVols.at(-1);
+    const volRatio = avgVol && lastVol ? lastVol/avgVol : null;
+
+    // OTC 乖離
+    let otcBias = null;
+    try {
+      const otcData = await chipProxyFetch(
+        'https://query1.finance.yahoo.com/v8/finance/chart/%5ETWOII?interval=1d&range=3mo'
+      );
+      const otcCloses = otcData?.chart?.result?.[0]?.indicators?.quote?.[0]?.close?.filter(v=>v!=null&&v>0)||[];
+      const otcNow = otcCloses.at(-1);
+      const otcMa20 = sma(otcCloses, 20);
+      otcBias = otcMa20 ? (otcNow-otcMa20)/otcMa20*100 : null;
+    } catch {}
+
+    // 台積電
+    let tsmcNow = null, tsmcBias = null;
+    try {
+      const tsmcData = await chipProxyFetch(
+        'https://query1.finance.yahoo.com/v8/finance/chart/2330.TW?interval=1d&range=3mo'
+      );
+      const tsmcCloses = tsmcData?.chart?.result?.[0]?.indicators?.quote?.[0]?.close?.filter(v=>v!=null&&v>0)||[];
+      tsmcNow  = tsmcCloses.at(-1);
+      const tsmcMa20 = sma(tsmcCloses, 20);
+      tsmcBias = tsmcMa20 ? (tsmcNow-tsmcMa20)/tsmcMa20*100 : null;
+    } catch {}
+
+    // 更新 UI
+    setSafe('rdTwii',    twiiNow?.toLocaleString('zh-TW',{maximumFractionDigits:0})||'—',
+            bias60>=0?'var(--accent-red)':'var(--accent-green)');
+    setSafe('rdBias60',  bias60!=null ? `${bias60>=0?'+':''}${bias60.toFixed(1)}%` : '—',
+            bias60!=null?(Math.abs(bias60)>15?'#f59e0b':bias60>=0?'var(--accent-red)':'var(--accent-green)'):'');
+    setSafe('rdBias240', bias240!=null ? `${bias240>=0?'+':''}${bias240.toFixed(1)}%` : '—',
+            bias240!=null?(bias240>20?'#dc2626':bias240>10?'#f59e0b':bias240>=0?'var(--accent-red)':'var(--accent-green)'):'');
+    setSafe('rdTsmc',    tsmcNow?.toLocaleString('zh-TW',{maximumFractionDigits:0})||'—');
+    setSafe('rdOtcBias', otcBias!=null ? `${otcBias>=0?'+':''}${otcBias.toFixed(1)}%` : '—',
+            otcBias!=null?(otcBias<-5?'var(--accent-blue)':otcBias<0?'var(--accent-green)':'var(--accent-red)'):'');
+    setSafe('rdVolRatio', volRatio ? `${volRatio.toFixed(2)}x` : '—',
+            volRatio?(volRatio>=1.5?'#f59e0b':volRatio>=1?'var(--accent-red)':'var(--text-muted)'):'');
+
+    const timeEl = document.getElementById('riskDataTime');
+    if(timeEl) timeEl.textContent = '更新 ' + new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});
+
+    riskMarketSnapshot = { twiiNow, ma60, ma240, bias60, bias240, otcBias, tsmcNow, tsmcBias, volRatio, twiiCloses, twiiVols };
+    return riskMarketSnapshot;
+
+  } catch(e) {
+    chipShowToast('❌ 市場資料抓取失敗：'+e.message,'warn');
+    return null;
+  }
+}
+
+// ── 規則式預評分（不用 AI）──
+function riskPreScore(snap) {
+  if (!snap) return { total:0, dims:{} };
+  const { bias60, bias240, otcBias, tsmcBias, volRatio, twiiCloses, twiiVols } = snap;
+  const dims = {};
+
+  // 1. 籌碼（無法直接抓，給基準分）
+  dims.chip = 10; // 基準分（真實資料需 TWSE 選擇權 API）
+
+  // 2. 量價形態
+  let vol = 0;
+  if (bias240 > 25) vol += 10;
+  else if (bias240 > 15) vol += 6;
+  else if (bias240 > 8)  vol += 3;
+  if (volRatio >= 1.5) vol += 8;
+  else if (volRatio >= 1.2) vol += 4;
+  // 月線乖離
+  if (bias60 > 15)  vol += 7;
+  else if (bias60 > 8) vol += 4;
+  dims.volume = Math.min(vol, 25);
+
+  // 3. 散戶熱度（用 OTC 乖離估算）
+  let retail = 0;
+  if (otcBias > 20) retail += 12;
+  else if (otcBias > 10) retail += 7;
+  else if (otcBias > 5)  retail += 4;
+  // 大盤也高 → 熱度更高
+  if (bias60 > 10 && otcBias > 10) retail += 5;
+  dims.retail = Math.min(retail, 20);
+
+  // 4. 權值動能（台積電乖離）
+  let tsmc = 0;
+  if (tsmcBias > 20) tsmc += 15;
+  else if (tsmcBias > 10) tsmc += 9;
+  else if (tsmcBias > 5)  tsmc += 5;
+  // 背離檢測：大盤高但台積電乖離小
+  if (bias240 > 15 && tsmcBias < 5) tsmc += 8; // 可能背離
+  dims.tsmc = Math.min(tsmc, 20);
+
+  // 5. 市場廣度（OTC vs 加權差值）
+  let breadth = 0;
+  if (otcBias !== null && bias60 !== null) {
+    const diff = bias60 - otcBias;
+    if (diff > 5)  breadth += 7;  // 加權比 OTC 強很多 → 拉大出小
+    else if (diff > 2) breadth += 4;
+    else if (diff < -3) breadth += 2; // OTC 比較強 → 健康
+  }
+  dims.breadth = Math.min(breadth, 10);
+
+  const total = Object.values(dims).reduce((a,b)=>a+b, 0);
+  return { total, dims };
+}
+
+// ── 呼叫 Claude API 做深度分析 ──
+async function riskCallClaude(snap, preScore) {
+  const prompt = `你是台股量化分析助手。請針對以下即時市場數據，進行「台股高檔風險評分」分析。
+
+【即時市場數據】
+- 加權指數：${snap.twiiNow?.toLocaleString() || '—'}
+- 60MA 乖離率：${snap.bias60?.toFixed(2) || '—'}%
+- 240MA 乖離率：${snap.bias240?.toFixed(2) || '—'}%
+- OTC 月線乖離：${snap.otcBias?.toFixed(2) || '—'}%
+- 台積電 月線乖離：${snap.tsmcBias?.toFixed(2) || '—'}%
+- 近日量比均量：${snap.volRatio?.toFixed(2) || '—'}x
+
+【初步規則式評分】
+- 量價形態：${preScore.dims.volume}/25
+- 散戶熱度：${preScore.dims.retail}/20
+- 權值動能：${preScore.dims.tsmc}/20
+- 市場廣度：${preScore.dims.breadth}/10
+- 初步合計（不含籌碼）：${preScore.total}/75
+
+【評分標準】
+請根據以下五大維度，給出最終評分（0-100分）：
+1. 籌碼先知度 (25分)：選擇權 Put/Call Ratio、外資期貨空單水位
+2. 量價與形態 (25分)：天量成交、月線乖離、M頭型態
+3. 散戶瘋狂度 (20分)：融資維持率、ETF 異常偏離
+4. 權值股動能 (20分)：台積電背離、測幅滿足感
+5. 市場廣度 (10分)：漲跌家數背離
+
+請用以下 JSON 格式回應（只回 JSON，不要其他文字）：
+{
+  "total": 數字(0-100),
+  "dims": {
+    "chip": 數字(0-25),
+    "volume": 數字(0-25),
+    "retail": 數字(0-20),
+    "tsmc": 數字(0-20),
+    "breadth": 數字(0-10)
+  },
+  "analysis": "3-5句整體分析",
+  "warnings": ["警示1", "警示2"],
+  "advice": "操作建議（1-2句）",
+  "dataNote": "無法取得的資料說明"
+}`;
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+
+  const data = await res.json();
+  const text = data.content?.[0]?.text || '';
+  // Parse JSON
+  const clean = text.replace(/```json|```/g, '').trim();
+  return JSON.parse(clean);
+}
+
+// ── 渲染評分結果 ──
+function riskRenderResult(result) {
+  const score = result.total;
+  const color = riskScoreColor(score);
+  const level = riskLevelText(score);
+
+  // Score ring
+  const arc = document.getElementById('riskScoreArc');
+  const num = document.getElementById('riskScoreNum');
+  if (arc) {
+    const circumference = 327;
+    arc.style.strokeDashoffset = circumference - (score / 100) * circumference;
+    arc.style.stroke = color;
+  }
+  if (num) { num.textContent = score; num.style.fill = color; }
+
+  // Level
+  const levelEl = document.getElementById('riskLevel');
+  const subEl   = document.getElementById('riskLevelSub');
+  const badgeEl = document.getElementById('riskLevelBadge');
+  if (levelEl) { levelEl.textContent = level.level; levelEl.style.color = color; }
+  if (subEl)   { subEl.textContent   = level.sub; }
+  if (badgeEl) {
+    badgeEl.style.display = 'inline-flex';
+    badgeEl.style.background = color + '22';
+    badgeEl.style.color      = color;
+    badgeEl.style.border     = `1px solid ${color}44`;
+    badgeEl.textContent      = level.badge;
+  }
+
+  // Hero border
+  const heroEl = document.getElementById('riskHero');
+  if (heroEl) {
+    heroEl.style.borderColor = color + '55';
+    heroEl.style.background  = color + '08';
+  }
+
+  // Dimensions
+  const dimEl = document.getElementById('riskDimensions');
+  if (dimEl) {
+    dimEl.innerHTML = RISK_DIMS.map(d => {
+      const score_d = result.dims[d.key] || 0;
+      const pct     = (score_d / d.max) * 100;
+      const dimColor = pct >= 80 ? '#dc2626' : pct >= 60 ? '#f59e0b' : pct >= 40 ? '#f0b429' : '#00e5a0';
+      return `<div class="risk-dim-row">
+        <div class="risk-dim-name">${d.icon} ${d.name}</div>
+        <div class="risk-dim-track">
+          <div class="risk-dim-fill" style="width:${pct}%;background:${dimColor}"></div>
+        </div>
+        <div class="risk-dim-score" style="color:${dimColor}">${score_d}</div>
+        <div class="risk-dim-max">/${d.max}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // AI report
+  if (result.analysis || result.warnings || result.advice) {
+    const aiCard = document.getElementById('riskAiCard');
+    const aiReport = document.getElementById('riskAiReport');
+    if (aiCard) aiCard.style.display = 'block';
+    if (aiReport) {
+      aiReport.innerHTML = `
+        ${result.analysis ? `<div style="margin-bottom:10px;padding:10px;background:var(--bg-card2);border-radius:8px;color:var(--text-secondary);font-size:0.73rem;line-height:1.8;">${result.analysis}</div>` : ''}
+        ${result.warnings?.length ? `
+        <div style="margin-bottom:10px;">
+          <div style="font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f59e0b;margin-bottom:6px;">⚠️ 風險警示</div>
+          ${result.warnings.map(w=>`<div style="display:flex;gap:6px;padding:3px 0;font-size:0.7rem;color:#fca5a5;">
+            <span style="flex-shrink:0;color:#f59e0b;">▸</span><span>${w}</span>
+          </div>`).join('')}
+        </div>` : ''}
+        ${result.advice ? `<div style="padding:10px;background:rgba(0,229,160,.06);border:1px solid rgba(0,229,160,.2);border-radius:8px;font-size:0.72rem;color:var(--accent-green);line-height:1.6;">
+          💡 ${result.advice}
+        </div>` : ''}
+        ${result.dataNote ? `<div style="margin-top:8px;font-size:0.62rem;color:var(--text-muted);">⚠️ ${result.dataNote}</div>` : ''}`;
+    }
+  }
+
+  // Save history
+  riskSaveHistory(score, level.badge, color);
+  riskRenderHistory();
+  window._lastRiskResult = result;
+}
+
+// ── 歷史記錄 ──
+function riskSaveHistory(score, badge, color) {
+  try {
+    const h = JSON.parse(localStorage.getItem(RISK_HISTORY_KEY) || '[]');
+    h.unshift({ score, badge, color, time: new Date().toLocaleString('zh-TW') });
+    localStorage.setItem(RISK_HISTORY_KEY, JSON.stringify(h.slice(0, 10)));
+  } catch {}
+}
+
+function riskRenderHistory() {
+  const el = document.getElementById('riskHistory');
+  if (!el) return;
+  try {
+    const h = JSON.parse(localStorage.getItem(RISK_HISTORY_KEY) || '[]');
+    if (!h.length) { el.innerHTML = '<div style="color:var(--text-muted);font-size:0.72rem;text-align:center;padding:12px;">尚無歷史記錄</div>'; return; }
+    el.innerHTML = h.map(r => `
+      <div class="risk-hist-row">
+        <div class="risk-hist-date">${r.time}</div>
+        <div class="risk-hist-track">
+          <div class="risk-hist-fill" style="width:${r.score}%;background:${r.color}"></div>
+        </div>
+        <div class="risk-hist-score" style="color:${r.color}">${r.score}</div>
+        <div style="font-size:0.6rem;min-width:40px;text-align:right;color:${r.color}">${r.badge}</div>
+      </div>`).join('');
+  } catch {}
+}
+
+// ── 複製報告 ──
+function riskCopyReport() {
+  const r = window._lastRiskResult;
+  if (!r) return;
+  const s = riskMarketSnapshot;
+  const text = `台股高檔風險評分報告
+產生時間：${new Date().toLocaleString('zh-TW')}
+
+【總分】${r.total}/100（${riskLevelText(r.total).badge}）
+
+【五大維度】
+籌碼先知：${r.dims.chip}/25
+量價形態：${r.dims.volume}/25
+散戶熱度：${r.dims.retail}/20
+權值動能：${r.dims.tsmc}/20
+市場廣度：${r.dims.breadth}/10
+
+【即時數據】
+加權指數：${s?.twiiNow?.toLocaleString()||'—'}
+60MA乖離：${s?.bias60?.toFixed(2)||'—'}%
+240MA乖離：${s?.bias240?.toFixed(2)||'—'}%
+台積電乖離：${s?.tsmcBias?.toFixed(2)||'—'}%
+OTC乖離：${s?.otcBias?.toFixed(2)||'—'}%
+量比均量：${s?.volRatio?.toFixed(2)||'—'}x
+
+【AI分析】
+${r.analysis||'—'}
+
+【風險警示】
+${r.warnings?.map(w=>'• '+w).join('\n')||'無'}
+
+【操作建議】
+${r.advice||'—'}
+
+由 籌碼雷達 II 高檔風險評分系統產生`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    chipShowToast('✅ 報告已複製', 'ok');
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    chipShowToast('✅ 報告已複製', 'ok');
+  });
+}
+
+// ── 主流程 ──
+async function riskRunAnalysis() {
+  const btn = document.getElementById('riskRunBtn');
+  if (btn) { btn.textContent = '分析中…'; btn.disabled = true; }
+  chipShowToast('📡 抓取市場數據…', 'ok');
+
+  try {
+    // Step 1: 抓市場資料
+    const snap = await riskFetchMarketData();
+    if (!snap) throw new Error('市場資料取得失敗');
+
+    chipShowToast('🤖 AI 分析中…', 'ok');
+
+    // Step 2: 呼叫 Claude 分析
+    let result;
+    try {
+      result = await riskCallClaude(snap, riskPreScore(snap));
+    } catch(e) {
+      // API 失敗：用規則式評分
+      const pre = riskPreScore(snap);
+      result = {
+        ...pre,
+        analysis: '（AI API 未連接，以下為規則式評分）市場數據顯示當前乖離率偏高，建議持續觀察。',
+        warnings: [
+          snap.bias240 > 20 ? `年線乖離 ${snap.bias240?.toFixed(1)}% 偏高，歷史上超過 25% 後回調機率升高` : null,
+          snap.bias60 > 15  ? `月線乖離 ${snap.bias60?.toFixed(1)}% 過熱，注意短期回調` : null,
+          snap.volRatio >= 1.5 ? `近期出現量比 ${snap.volRatio?.toFixed(2)}x 爆量，留意高點換手` : null,
+        ].filter(Boolean),
+        advice: '建議參考五大維度評分，密切追蹤籌碼與量價變化。',
+        dataNote: '籌碼面（選擇權/期貨）需 TWSE 官方 API，目前給予基準分。'
+      };
+    }
+
+    riskRenderResult(result);
+    chipShowToast('✅ 分析完成', 'ok');
+
+  } catch(e) {
+    chipShowToast('❌ ' + e.message, 'warn');
+  } finally {
+    if (btn) { btn.textContent = '▶ 重新分析'; btn.disabled = false; }
+  }
+}
+
+// 初始化：載入歷史 + 抓市場數據
+function riskInit() {
+  riskRenderHistory();
+  riskFetchMarketData(); // 自動抓一次市場快照
 }
 
 // chip init - called by index.html when stats page is shown
@@ -13630,6 +14232,7 @@ function chipAttachListeners() {
       if (panel) panel.style.display = 'block';
       if (key === 'market') chipLoadMarketData();
       if (key === 'watch')  crRenderWatchList();
+    if (key === 'risk')   { riskRenderHistory(); riskFetchMarketData(); }
     });
   });
 
@@ -13694,7 +14297,7 @@ function chipAttachListeners() {
   </div>
 </div>
 
-<div id="chipToast" style="display: none; position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: rgb(26, 30, 46); border-width: 1px; border-style: solid; border-color: var(--accent-red); border-image: initial; color: rgb(232, 236, 245); padding: 9px 16px; border-radius: 10px; font-size: 0.78rem; z-index: 9999; white-space: nowrap; box-shadow: rgba(0, 0, 0, 0.6) 0px 4px 20px; pointer-events: none;">❌ HTTP 403</div>
+<div id="chipToast" style="display: none; position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: rgb(26, 30, 46); border-width: 1px; border-style: solid; border-color: var(--accent-red); border-image: initial; color: rgb(232, 236, 245); padding: 9px 16px; border-radius: 10px; font-size: 0.78rem; z-index: 9999; white-space: nowrap; box-shadow: rgba(0, 0, 0, 0.6) 0px 4px 20px; pointer-events: none;">❌ K線載入失敗：無法取得K線資料</div>
 
 
 <!-- ══ Modal：邏輯策略說明 ══ -->
