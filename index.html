@@ -2169,7 +2169,7 @@ input::placeholder { color: var(--text-muted); }
   </div>
 
   <div class="nav-section-label">主頁</div>
-  <div class="nav-item active" onclick="goPage('home',this)">
+  <div class="nav-item" onclick="goPage('home',this)">
     <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span> 總覽主頁
   </div>
 
@@ -2204,7 +2204,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-23 22:26:08</div>
+    <div class="clock-display" id="clockDisplay">2026-03-23 22:36:54</div>
   </div>
 </aside>
 
@@ -2215,10 +2215,10 @@ input::placeholder { color: var(--text-muted); }
 <!-- ══════════════════════════════════
      MAIN
 ══════════════════════════════════ -->
-<main class="main-content">
+<main class="main-content" style="overflow-y: auto;">
 
   <!-- ── 主頁 ── -->
-  <section class="page active" id="page-home">
+  <section class="page" id="page-home">
     <div class="page-header">
       <div class="page-title-block">
         <div class="page-label">Dashboard</div>
@@ -2349,23 +2349,8 @@ input::placeholder { color: var(--text-muted); }
             </div>
           </div>
         </div>
-        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">總資產</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#f59e0b;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#ff4d6d;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">總負債</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#ff4d6d;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#00e5a0;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">淨資產</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#00e5a0;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div></div>
-        <canvas id="wealthChart" style="width:100%;display:block;" height="220" width="346"></canvas>
+        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"></div>
+        <canvas id="wealthChart" style="width:100%;display:block;" height="220"></canvas>
         <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;" id="wealthXLabels"></div>
       </div>
 
@@ -2944,7 +2929,7 @@ input::placeholder { color: var(--text-muted); }
   </section>
 
   <!-- ── 現金流 ── -->
-  <section class="page" id="page-stats">
+  <section class="page active" id="page-stats">
     <!-- ══ Header ══ -->
     <div class="page-header" style="margin-bottom:12px;">
       <div class="page-title-block">
@@ -3122,7 +3107,7 @@ input::placeholder { color: var(--text-muted); }
     <!-- Loading overlay -->
     <div id="etfLoading" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(13,15,20,.85);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;">
       <div style="font-size:2rem;" class="chip-spin">📡</div>
-      <div style="font-size:0.82rem;color:var(--text-muted);" id="etfLoadingTxt">載入中…</div>
+      <div style="font-size:0.82rem;color:var(--text-muted);" id="etfLoadingTxt">載入 0050 K線資料…</div>
     </div>
 
   </section>
@@ -3797,7 +3782,7 @@ input::placeholder { color: var(--text-muted); }
 
 
 <nav class="mobile-nav" id="mobileNav">
-  <div class="mobile-nav-item active" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
+  <div class="mobile-nav-item" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span><span>總覽</span>
   </div>
   <div class="mobile-nav-item" id="mn-ledger" onclick="goPage('ledger', null, 'mn-ledger')">
@@ -3806,7 +3791,7 @@ input::placeholder { color: var(--text-muted); }
   <div class="mobile-nav-item" id="mn-invest" onclick="goPage('invest', null, 'mn-invest')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span><span>投資</span>
   </div>
-  <div class="mobile-nav-item" id="mn-stats" onclick="goPage('stats',      null, 'mn-stats')">
+  <div class="mobile-nav-item active" id="mn-stats" onclick="goPage('stats',      null, 'mn-stats')">
     <span class="mobile-nav-icon">📡</span><span>雷達</span>
   </div>
 <div class="mobile-nav-item" id="mn-intel" onclick="goPage('intel',      null, 'mn-intel')">
@@ -11239,18 +11224,38 @@ function etfFmtAbs(n) {
   return etfFmtNum(Math.abs(n));
 }
 
-// ── Proxy（corsproxy 最穩定）──
+// ── Proxy（多重備援）──
+const PROXY_LIST = [
+  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+];
+let _proxyIdx = 0; // 記住上次成功的 proxy
+
 function chipProxy(url) {
-  return `https://corsproxy.io/?${encodeURIComponent(url)}`;
+  return PROXY_LIST[_proxyIdx](url);
 }
+
 async function chipProxyFetch(url, timeout=12000) {
-  const r = await fetch(chipProxy(url), {signal:AbortSignal.timeout(timeout)});
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
-  const wrap = await r.json();
-  const raw  = typeof wrap.contents === 'string' ? wrap.contents
-             : typeof wrap         === 'string'  ? wrap
-             : JSON.stringify(wrap);
-  return JSON.parse(raw);
+  // 嘗試目前的 proxy，失敗則輪換
+  for (let attempt = 0; attempt < PROXY_LIST.length; attempt++) {
+    const idx = (_proxyIdx + attempt) % PROXY_LIST.length;
+    const proxyUrl = PROXY_LIST[idx](url);
+    try {
+      const r = await fetch(proxyUrl, { signal: AbortSignal.timeout(timeout) });
+      if (!r.ok) continue;
+      const wrap = await r.json();
+      // allorigins 回傳 {contents: "..."}，其他直接是 JSON
+      const raw = typeof wrap?.contents === 'string' ? wrap.contents
+                : typeof wrap === 'string'           ? wrap
+                : JSON.stringify(wrap);
+      const data = JSON.parse(raw);
+      _proxyIdx = idx; // 記住成功的 proxy
+      return data;
+    } catch(e) {
+      if (attempt === PROXY_LIST.length - 1) throw new Error(`所有 Proxy 失敗: ${e.message}`);
+    }
+  }
 }
 
 
@@ -14083,10 +14088,14 @@ async function riskCallClaude(snap, preScore) {
   "dataNote": "無法取得的資料說明"
 }`;
 
-  // 使用 claude.ai 內建 API proxy（不需要 API Key，避免 CORS 問題）
+  // Claude AI API（加 anthropic-dangerous-direct-browser-access 允許瀏覽器直呼叫）
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
     body: JSON.stringify({
       model: 'claude-sonnet-4-6',
       max_tokens: 1000,
@@ -14094,11 +14103,13 @@ async function riskCallClaude(snap, preScore) {
     })
   });
 
-  if (!res.ok) throw new Error(`API HTTP ${res.status}`);
+  if (!res.ok) {
+    const errBody = await res.json().catch(() => ({}));
+    throw new Error(errBody?.error?.message || `API HTTP ${res.status}`);
+  }
   const data = await res.json();
   if (data.error) throw new Error(data.error.message || 'API error');
   const text = data.content?.[0]?.text || '';
-  // Parse JSON
   const clean = text.replace(/```json[\s\S]*?```|```/g, '').trim();
   return JSON.parse(clean);
 }
@@ -14505,13 +14516,17 @@ const DIAG_TARGETS = [
       const t0 = Date.now();
       const r = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
         body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:10, messages:[{role:'user',content:'hi'}] })
       });
       const ping = Date.now() - t0;
-      if (r.status === 200 || r.status === 401) return { ok: true, ping, note: r.status===401?'API Key 未設定':'✅ 正常' };
-      const j = await r.json().catch(()=>({}));
-      if (r.status === 529 || (j.error?.type === 'overloaded_error')) return { ok: false, ping, note: '伺服器過載' };
+      if (r.status === 200) return { ok: true, ping, note: '✅ 正常' };
+      if (r.status === 401) return { ok: false, ping, note: '需要 API Key' };
+      if (r.status === 529) return { ok: false, ping, note: '伺服器過載' };
       return { ok: r.ok, ping, note: `HTTP ${r.status}` };
     }
   },
@@ -14520,9 +14535,20 @@ const DIAG_TARGETS = [
     desc: '台股 K 線、法人資料',
     test: async () => {
       const t0 = Date.now();
-      const r = await fetch('https://corsproxy.io/?url=' + encodeURIComponent('https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20260101&stockNo=0050&response=json'), { signal: AbortSignal.timeout(8000) });
-      const ping = Date.now() - t0;
-      return { ok: r.ok, ping, note: r.ok ? '✅ 正常' : `HTTP ${r.status}` };
+      const twseUrl = 'https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20260101&stockNo=0050&response=json';
+      // 嘗試多個 proxy
+      const proxies = [
+        `https://api.allorigins.win/get?url=${encodeURIComponent(twseUrl)}`,
+        `https://corsproxy.io/?${encodeURIComponent(twseUrl)}`,
+      ];
+      for (const p of proxies) {
+        try {
+          const r = await fetch(p, { signal: AbortSignal.timeout(8000) });
+          const ping = Date.now() - t0;
+          if (r.ok) return { ok: true, ping, note: '✅ 正常' };
+        } catch {}
+      }
+      return { ok: false, ping: Date.now()-t0, note: '逾時/失敗' };
     }
   },
   {
