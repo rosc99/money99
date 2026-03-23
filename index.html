@@ -2169,7 +2169,7 @@ input::placeholder { color: var(--text-muted); }
   </div>
 
   <div class="nav-section-label">主頁</div>
-  <div class="nav-item" onclick="goPage('home',this)">
+  <div class="nav-item active" onclick="goPage('home',this)">
     <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span> 總覽主頁
   </div>
 
@@ -2204,7 +2204,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-23 22:36:54</div>
+    <div class="clock-display" id="clockDisplay">2026-03-23 22:46:30</div>
   </div>
 </aside>
 
@@ -2215,10 +2215,10 @@ input::placeholder { color: var(--text-muted); }
 <!-- ══════════════════════════════════
      MAIN
 ══════════════════════════════════ -->
-<main class="main-content" style="overflow-y: auto;">
+<main class="main-content">
 
   <!-- ── 主頁 ── -->
-  <section class="page" id="page-home">
+  <section class="page active" id="page-home">
     <div class="page-header">
       <div class="page-title-block">
         <div class="page-label">Dashboard</div>
@@ -2929,7 +2929,7 @@ input::placeholder { color: var(--text-muted); }
   </section>
 
   <!-- ── 現金流 ── -->
-  <section class="page active" id="page-stats">
+  <section class="page" id="page-stats">
     <!-- ══ Header ══ -->
     <div class="page-header" style="margin-bottom:12px;">
       <div class="page-title-block">
@@ -3107,7 +3107,7 @@ input::placeholder { color: var(--text-muted); }
     <!-- Loading overlay -->
     <div id="etfLoading" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(13,15,20,.85);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;">
       <div style="font-size:2rem;" class="chip-spin">📡</div>
-      <div style="font-size:0.82rem;color:var(--text-muted);" id="etfLoadingTxt">載入 0050 K線資料…</div>
+      <div style="font-size:0.82rem;color:var(--text-muted);" id="etfLoadingTxt">載入中…</div>
     </div>
 
   </section>
@@ -3782,7 +3782,7 @@ input::placeholder { color: var(--text-muted); }
 
 
 <nav class="mobile-nav" id="mobileNav">
-  <div class="mobile-nav-item" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
+  <div class="mobile-nav-item active" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span><span>總覽</span>
   </div>
   <div class="mobile-nav-item" id="mn-ledger" onclick="goPage('ledger', null, 'mn-ledger')">
@@ -3791,7 +3791,7 @@ input::placeholder { color: var(--text-muted); }
   <div class="mobile-nav-item" id="mn-invest" onclick="goPage('invest', null, 'mn-invest')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span><span>投資</span>
   </div>
-  <div class="mobile-nav-item active" id="mn-stats" onclick="goPage('stats',      null, 'mn-stats')">
+  <div class="mobile-nav-item" id="mn-stats" onclick="goPage('stats',      null, 'mn-stats')">
     <span class="mobile-nav-icon">📡</span><span>雷達</span>
   </div>
 <div class="mobile-nav-item" id="mn-intel" onclick="goPage('intel',      null, 'mn-intel')">
@@ -11226,7 +11226,7 @@ function etfFmtAbs(n) {
 
 // ── Proxy（多重備援）──
 const PROXY_LIST = [
-  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
   url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
   url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
 ];
@@ -14184,16 +14184,26 @@ function riskRenderResult(result) {
       return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>`;
     }).join('');
 
-    // 標籤
+    // 標籤 — 擴展 labelR，並用 foreignObject 放多行文字
+    // 改為獨立計算每個頂點的文字錨點與偏移
     const labels = dims.map((d, i) => {
-      const labelR = R + 22;
+      const labelR = R + 30;
       const [lx, ly] = pt(i, labelR);
       const pct = Math.min((result.dims[d.key] || 0) / d.max, 1);
       const dimColor = pct >= 0.8 ? '#dc2626' : pct >= 0.6 ? '#f59e0b' : pct >= 0.4 ? '#f0b429' : '#00e5a0';
-      const anchor = lx < cx - 5 ? 'end' : lx > cx + 5 ? 'start' : 'middle';
       const scoreVal = result.dims[d.key] || 0;
-      return `<text x="${lx}" y="${ly - 5}" text-anchor="${anchor}" font-size="9" fill="${dimColor}" font-family="DM Mono,monospace" font-weight="700">${scoreVal}/${d.max}</text>
-              <text x="${lx}" y="${ly + 7}" text-anchor="${anchor}" font-size="8.5" fill="#7a8099" font-family="Noto Sans TC,sans-serif">${d.icon}${d.name}</text>`;
+
+      // 根據頂點位置決定文字對齊與偏移
+      const ang = angle(i) * 180 / Math.PI; // -90 ~ 270
+      let anchor = 'middle', dx = 0, dyScore = -8, dyName = 6;
+      if (lx < cx - 8)      { anchor = 'end';   dx = -2; }
+      else if (lx > cx + 8) { anchor = 'start'; dx =  2; }
+      // 頂部節點往上多推一點，底部往下
+      if (ly < cy - 20) { dyScore = -14; dyName = 0; }
+      if (ly > cy + 20) { dyScore = 2;  dyName = 16; }
+
+      return `<text x="${lx+dx}" y="${ly+dyScore}" text-anchor="${anchor}" font-size="9.5" fill="${dimColor}" font-family="DM Mono,monospace" font-weight="700">${scoreVal}/${d.max}</text>
+              <text x="${lx+dx}" y="${ly+dyName}" text-anchor="${anchor}" font-size="9" fill="#9da3ba" font-family="Noto Sans TC,sans-serif">${d.icon}${d.name}</text>`;
     }).join('');
 
     // 資料頂點圓點
@@ -14201,8 +14211,10 @@ function riskRenderResult(result) {
       `<circle cx="${x}" cy="${y}" r="3.5" fill="${radarColor}" stroke="#0d0f14" stroke-width="1.5"/>`
     ).join('');
 
-    const svgW = 240, svgH = 240;
-    const svgStr = `<svg viewBox="0 0 ${svgW} ${svgH}" width="${svgW}" height="${svgH}" style="display:block;margin:auto;">
+    // 擴大 viewBox 讓四周標籤不被裁切
+    const pad = 40;
+    const svgW = 240 + pad*2, svgH = 240 + pad*2;
+    const svgStr = `<svg viewBox="${-pad} ${-pad} ${svgW} ${svgH}" width="${svgW}" height="${svgH}" style="display:block;margin:auto;max-width:100%;">
       ${gridPolys}
       ${axes}
       <polygon points="${dataPoly}" fill="${radarColor}22" stroke="${radarColor}" stroke-width="1.8" stroke-linejoin="round"/>
@@ -14539,7 +14551,7 @@ const DIAG_TARGETS = [
       // 嘗試多個 proxy
       const proxies = [
         `https://api.allorigins.win/get?url=${encodeURIComponent(twseUrl)}`,
-        `https://corsproxy.io/?${encodeURIComponent(twseUrl)}`,
+        `https://corsproxy.io/?url=${encodeURIComponent(twseUrl)}`,
       ];
       for (const p of proxies) {
         try {
