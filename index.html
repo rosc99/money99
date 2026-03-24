@@ -2205,7 +2205,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-24 23:57:55</div>
+    <div class="clock-display" id="clockDisplay">2026-03-25 01:23:33</div>
   </div>
 </aside>
 
@@ -2350,23 +2350,8 @@ input::placeholder { color: var(--text-muted); }
             </div>
           </div>
         </div>
-        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">總資產</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#f59e0b;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#ff4d6d;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">總負債</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#ff4d6d;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#00e5a0;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">淨資產</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#00e5a0;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div></div>
-        <canvas id="wealthChart" style="width:100%;display:block;" height="220" width="346"></canvas>
+        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"></div>
+        <canvas id="wealthChart" style="width:100%;display:block;" height="220"></canvas>
         <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;" id="wealthXLabels"></div>
       </div>
 
@@ -13589,12 +13574,24 @@ function etfRenderPhase1(rows) {
     const inDense=zones.find(z=>close>=z.low&&close<=z.high);
     if(inDense) sigs.push({icon:'📍',txt:`在密集交易區 S${zones.indexOf(inDense)+1}（${inDense.low.toFixed(1)}~${inDense.high.toFixed(1)}）`,c:'neu'});
     if(sigs.length){
-      sigEl.style.display='block'; sigEl.style.padding='14px 16px';
-      sigEl.innerHTML=`<div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">今日關鍵訊號</div>
-        ${sigs.map(s=>`<div style="display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);align-items:flex-start;">
-          <span>${s.icon}</span>
-          <span style="font-size:0.72rem;line-height:1.5;color:${s.c==='warn'?'var(--accent-red)':s.c==='bull'?'var(--accent-green)':s.c==='gold'?'#f0b429':'var(--text-secondary)'}">${s.txt}</span>
-        </div>`).join('')}`;
+      sigEl.style.display='block'; sigEl.style.padding='10px 14px';
+      sigEl.innerHTML=`
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div style="font-size:0.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);">今日訊號</div>
+          <div style="font-size:0.58rem;color:var(--text-muted);">${sigs.length} 項觸發</div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          ${sigs.map(s=>`<div style="display:flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;background:${
+            s.c==='warn'?'rgba(255,77,109,.1)':s.c==='bull'?'rgba(0,229,160,.1)':s.c==='gold'?'rgba(245,158,11,.1)':'rgba(122,128,153,.1)'
+          };border:1px solid ${
+            s.c==='warn'?'rgba(255,77,109,.25)':s.c==='bull'?'rgba(0,229,160,.25)':s.c==='gold'?'rgba(245,158,11,.25)':'rgba(122,128,153,.2)'
+          };">
+            <span style="font-size:0.72rem;">${s.icon}</span>
+            <span style="font-size:0.66rem;font-weight:600;color:${
+              s.c==='warn'?'var(--accent-red)':s.c==='bull'?'var(--accent-green)':s.c==='gold'?'#f0b429':'var(--text-secondary)'
+            };">${s.txt}</span>
+          </div>`).join('')}
+        </div>`;
     } else sigEl.style.display='none';
   }
 
@@ -13672,11 +13669,16 @@ async function etfLoadChipAsync() {
     if(sigEl && Math.abs(foreignToday)>300 && !chipData.isMock) {
       const isBuy=foreignToday>0;
       sigEl.style.display='block';
-      sigEl.innerHTML += `<div style="display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);align-items:flex-start;">
-        <span>🏦</span>
+      // 先移除舊的外資訊號，避免重複累加
+      sigEl.querySelectorAll('[data-chip-foreign]').forEach(el=>el.remove());
+      const foreignRow=document.createElement('div');
+      foreignRow.setAttribute('data-chip-foreign','1');
+      foreignRow.style.cssText='display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);align-items:flex-start;';
+      foreignRow.innerHTML=`<span>🏦</span>
         <span style="font-size:0.72rem;line-height:1.5;color:${isBuy?'var(--accent-green)':'var(--accent-red)'}">
           外資今日${isBuy?'買超':'賣超'} ${etfFmtAbs(foreignToday)}張
-        </span></div>`;
+        </span>`;
+      sigEl.appendChild(foreignRow);
     }
 
     if(chipData.isMock) chipShowToast('⚠️ TWSE 法人連線失敗，顯示模擬數據 — 點 🔌 診斷連線','warn');
