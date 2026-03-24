@@ -2205,7 +2205,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-24 08:29:23</div>
+    <div class="clock-display" id="clockDisplay">2026-03-24 10:10:56</div>
   </div>
 </aside>
 
@@ -2350,23 +2350,8 @@ input::placeholder { color: var(--text-muted); }
             </div>
           </div>
         </div>
-        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">總資產</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#f59e0b;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#ff4d6d;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">總負債</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#ff4d6d;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#00e5a0;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">淨資產</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#00e5a0;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div></div>
-        <canvas id="wealthChart" style="width:100%;display:block;" height="220" width="346"></canvas>
+        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"></div>
+        <canvas id="wealthChart" style="width:100%;display:block;" height="220"></canvas>
         <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;" id="wealthXLabels"></div>
       </div>
 
@@ -3048,7 +3033,10 @@ input::placeholder { color: var(--text-muted); }
     </div>
 
     <!-- ══ 關鍵訊號 ══ -->
-    <div class="etf-card" id="etfSignalCard" style="margin-bottom:16px;display:none;"></div>
+    <div class="etf-card" id="etfSignalCard" style="margin-bottom:10px;display:none;"></div>
+
+    <!-- ══ 策略狀態機 ══ -->
+    <div id="etfStrategyState" style="margin-bottom:16px;display:none;border:1px solid var(--border);border-radius:12px;padding:14px 16px;background:var(--bg-card);transition:border-color .3s,background .3s;"></div>
 
     </div><!-- /etfMainPanel-etf -->
 
@@ -13443,34 +13431,101 @@ function etfRenderPhase1(rows) {
   rows.forEach(r=>{cumPV+=r.close*r.volume;cumV+=r.volume;});
   const costLine = cumV>0?cumPV/cumV:null;
 
+  // ══════════════════════════════════════════════════
+  //  模組 2：固定策略警戒線 Fixed Strategy Levels
+  //  基準：近 180 天最高價（Rolling 6-Month High）
+  // ══════════════════════════════════════════════════
+  const rollingHigh = Math.max(...rows.slice(-180).map(r => r.high || r.close));
+  const strategyLevels = {
+    L1: rollingHigh * 0.95,   // -5%  加碼一成點位
+    L2: rollingHigh * 0.90,   // -10% 加碼兩成點位（20萬）
+    L3: rollingHigh * 0.80,   // -20% 海嘯模式 / 質押上限警戒
+  };
+
+  // ══════════════════════════════════════════════════
+  //  模組 1：籌碼極性翻轉 HVN Polarity Flip
+  //  現價 < HVN×0.99 → 永久標「套牢壓力帶」(紅)
+  //  現價 ≥ HVN      → 「籌碼支撐」(藍)
+  // ══════════════════════════════════════════════════
+  const refinedHvns = zones.map(z => {
+    const isResistance = close < z.mid * 0.99;
+    return {
+      ...z,
+      isResistance,
+      status:    isResistance ? '套牢壓力帶' : '籌碼支撐',
+      lineColor: isResistance ? '#ff4d6d'    : '#3b82f6',
+      lineWidth: isResistance ? 2.5          : 1.5,
+    };
+  });
+  const biggestHvn = refinedHvns[0]; // 最大籌碼密集區
+
+  // ══════════════════════════════════════════════════
+  //  模組 3：型態破壞與轉空判斷 Trend Breakdown Logic
+  //  三重觸發：跌破60MA ＋ 跌破最大HVN ＋ 20MA向下
+  //  打底信號：重回20MA ＋ 乖離率轉正
+  // ══════════════════════════════════════════════════
+  const ma20arr_full = etfSma(rows.map(r => r.close), 20);
+  const ma60arr_full = etfSma(rows.map(r => r.close), 60);
+  const ma20_cur  = ma20arr_full.at(-1) || ma20v;
+  const ma60_cur  = ma60arr_full.at(-1) || ma60v;
+  const ma20_prev = ma20arr_full.at(-6) || ma20_cur;
+
+  const isBelowMa60    = close < (ma60_cur || Infinity);
+  const isBelowBigHvn  = biggestHvn ? close < biggestHvn.mid * 0.99 : false;
+  const isMa20Down     = ma20_cur < ma20_prev;
+  const isMa20Recovery = close > (ma20_cur || 0) && biasV !== null && biasV > 0;
+  const isBearBreakdown = isBelowMa60 && isBelowBigHvn && isMa20Down;
+
+  let strategyStatus, strategyColor, strategyPhase;
+  if (isBearBreakdown) {
+    strategyStatus = '⚠ 警告：型態破壞 — 停止定期定額，啟動還款計畫';
+    strategyColor  = '#ff4d6d';
+    strategyPhase  = 'bear';
+  } else if (isMa20Recovery && !isBelowMa60) {
+    strategyStatus = '✅ 打底信號：重回20MA且乖離轉正 — 重啟定期定額';
+    strategyColor  = '#00e5a0';
+    strategyPhase  = 'recover';
+  } else if (close < strategyLevels.L3) {
+    strategyStatus = '🚨 海嘯模式：已達 -20%，質押上限警戒';
+    strategyColor  = '#ff4d6d';
+    strategyPhase  = 'tsunami';
+  } else if (close < strategyLevels.L2) {
+    strategyStatus = '🎯 加碼兩成點位：執行質押加碼 (20萬)';
+    strategyColor  = '#f59e0b';
+    strategyPhase  = 'add2';
+  } else if (close < strategyLevels.L1) {
+    strategyStatus = '📍 加碼一成點位：L1 區間，觀察進場';
+    strategyColor  = '#a78bfa';
+    strategyPhase  = 'add1';
+  } else {
+    strategyStatus = '🐂 牛市運行中 — 定期定額持續執行';
+    strategyColor  = '#00e5a0';
+    strategyPhase  = 'bull';
+  }
+
   // ── 合體 K線 + VRVP canvas ──
   const mainCanvas = document.getElementById('etfMainCanvas');
-  if (mainCanvas) etfDrawCandleWithVRVP(mainCanvas, rows, zones, ma20v, ma60v);
+  if (mainCanvas) etfDrawCandleWithVRVP(mainCanvas, rows, refinedHvns, ma20v, ma60v, strategyLevels, strategyStatus, strategyColor, strategyPhase);
   const volCanvas = document.getElementById('etfVolCanvas');
   if (volCanvas) etfDrawVolBars(volCanvas, rows);
 
-  // ── Dense zones + 進出場建議 ──
-  const denseEl   = document.getElementById('etfDenseZone');
-  const adviceEl  = document.getElementById('etfTradeAdvice');
+  // ── Dense zones HVN 極性面板 ──
+  const denseEl  = document.getElementById('etfDenseZone');
+  const adviceEl = document.getElementById('etfTradeAdvice');
 
-  if (denseEl && zones.length) {
+  if (denseEl && refinedHvns.length) {
     denseEl.style.display = 'block';
-    const colors = ['#ff4d6d','#3b82f6','#a78bfa'];
     denseEl.innerHTML = `
-      <div style="font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">HVN 高量節點（密集成交區）</div>
-      ${zones.map((z,i)=>{
-        const isAbove = close > z.high;
-        const isBelow = close < z.low;
-        const inZn    = !isAbove && !isBelow;
-        const role    = isAbove ? '支撐' : isBelow ? '壓力' : '整理中';
-        const roleC   = isAbove ? '#00e5a0' : isBelow ? '#ff4d6d' : '#f0b429';
+      <div style="font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">HVN 高量節點 · 籌碼極性翻轉</div>
+      ${refinedHvns.map((z,i)=>{
+        const rc = z.lineColor;
         return `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;${i>0?'border-top:1px solid var(--border);':''}">
-          <div style="width:3px;height:28px;background:${colors[i]};border-radius:2px;flex-shrink:0;"></div>
+          <div style="width:3px;height:28px;background:${rc};border-radius:2px;flex-shrink:0;"></div>
           <div style="flex:1;">
-            <div style="display:flex;align-items:center;gap:6px;">
-              <span style="font-family:var(--mono);font-size:0.75rem;font-weight:700;color:${colors[i]}">HVN${i+1}</span>
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              <span style="font-family:var(--mono);font-size:0.75rem;font-weight:700;color:${rc}">HVN${i+1}</span>
               <span style="font-family:var(--mono);font-size:0.72rem;color:var(--text-primary);">${z.low.toFixed(1)} ～ ${z.high.toFixed(1)}</span>
-              <span style="font-size:0.6rem;font-weight:700;padding:1px 6px;border-radius:4px;background:${roleC}22;color:${roleC};border:1px solid ${roleC}44;">${role}</span>
+              <span style="font-size:0.6rem;font-weight:700;padding:1px 6px;border-radius:4px;background:${rc}22;color:${rc};border:1px solid ${rc}44;">${z.status}</span>
             </div>
             <div style="font-size:0.6rem;color:var(--text-muted);margin-top:2px;">
               中心 ${z.mid.toFixed(1)} · 距今 ${(close-z.mid>=0?'+':'')}${(close-z.mid).toFixed(2)} (${((close-z.mid)/close*100).toFixed(1)}%)
@@ -13524,7 +13579,7 @@ function etfRenderPhase1(rows) {
     if(biasV<-10) sigs.push({icon:'💡',txt:`月線乖離 ${biasV.toFixed(1)}%，可考慮逢低布局`,c:'bull'});
     if(volR>=2)   sigs.push({icon:'⚡',txt:`今日量 ${volR.toFixed(1)}x 均量，${up?'爆量上攻':'爆量下殺'}`,c:'gold'});
     const inDense=zones.find(z=>close>=z.low&&close<=z.high);
-    if(inDense) sigs.push({icon:'📍',txt:`在密集交易區 S${zones.indexOf(inDense)+1}（${inDense.low.toFixed(1)}~${inDense.high.toFixed(1)}）`,c:'neu'});
+    if(inDense) sigs.push({icon:'📍',txt:`在密集交易區 HVN${zones.indexOf(inDense)+1}（${inDense.low.toFixed(1)}~${inDense.high.toFixed(1)}）`,c:'neu'});
     if(sigs.length){
       sigEl.style.display='block'; sigEl.style.padding='14px 16px';
       sigEl.innerHTML=`<div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">今日關鍵訊號</div>
@@ -13533,6 +13588,56 @@ function etfRenderPhase1(rows) {
           <span style="font-size:0.72rem;line-height:1.5;color:${s.c==='warn'?'var(--accent-red)':s.c==='bull'?'var(--accent-green)':s.c==='gold'?'#f0b429':'var(--text-secondary)'}">${s.txt}</span>
         </div>`).join('')}`;
     } else sigEl.style.display='none';
+  }
+
+  // ══ 策略狀態機卡片 ══
+  const stateEl = document.getElementById('etfStrategyState');
+  if (stateEl) {
+    stateEl.style.display = 'block';
+    stateEl.style.borderColor = strategyColor + '55';
+    stateEl.style.background  = strategyColor + '0d';
+
+    const cond = [
+      { ok: isBelowMa60,   lbl: '跌破季線 (60MA)',     warn: true },
+      { ok: isBelowBigHvn, lbl: '跌破最大籌碼密集區',   warn: true },
+      { ok: isMa20Down,    lbl: '月線 (20MA) 轉向下',   warn: true },
+    ];
+    const condHtml = cond.map(c=>`
+      <div style="display:flex;align-items:center;gap:5px;font-size:0.63rem;">
+        <span style="width:7px;height:7px;border-radius:50%;flex-shrink:0;background:${c.ok?'#ff4d6d':'var(--border)'}"></span>
+        <span style="color:${c.ok?'var(--accent-red)':'var(--text-muted)'}">${c.lbl}</span>
+      </div>`).join('');
+
+    stateEl.innerHTML = `
+      <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:200px;">
+          <div style="font-size:0.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px;">型態破壞偵測器</div>
+          <div style="font-size:0.82rem;font-weight:700;color:${strategyColor};line-height:1.4;margin-bottom:10px;">${strategyStatus}</div>
+          <div style="display:flex;flex-direction:column;gap:4px;">${condHtml}</div>
+          ${isBearBreakdown?`<div style="margin-top:10px;padding:8px 10px;border-radius:8px;background:rgba(255,77,109,.1);border:1px solid rgba(255,77,109,.25);font-size:0.68rem;color:var(--accent-red);line-height:1.6;">
+            ⚠ 三重條件全部觸發 — 陰跌轉熊<br>→ 停止定期定額，不可攤平<br>→ 啟動還款計畫，降低質押比率</div>`
+          :isMa20Recovery&&!isBelowMa60?`<div style="margin-top:10px;padding:8px 10px;border-radius:8px;background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.25);font-size:0.68rem;color:var(--accent-green);line-height:1.6;">
+            ✅ 打底信號確認：價格重回20MA + 乖離轉正<br>→ 可重啟定期定額</div>`:''}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;min-width:150px;">
+          <div style="font-size:0.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:2px;">固定加碼警戒線</div>
+          ${[
+            {lbl:'L1 加碼一成',      price:strategyLevels.L1, color:'#a78bfa', pct:'-5%' },
+            {lbl:'L2 加碼兩成(20萬)', price:strategyLevels.L2, color:'#f59e0b', pct:'-10%'},
+            {lbl:'L3 海嘯/質押上限',  price:strategyLevels.L3, color:'#ff4d6d', pct:'-20%'},
+          ].map(lv=>{
+            const hit = close <= lv.price;
+            return `<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:7px;background:${lv.color}${hit?'22':'10'};border:1px solid ${lv.color}${hit?'55':'25'};">
+              <div style="flex:1;">
+                <div style="font-size:0.58rem;color:${lv.color};font-weight:600;">${lv.pct} ${lv.lbl}</div>
+                <div style="font-family:var(--mono);font-size:0.78rem;font-weight:700;color:${lv.color};">${lv.price.toFixed(2)}</div>
+              </div>
+              <div style="font-size:0.62rem;font-weight:700;color:${hit?'var(--accent-green)':'var(--text-muted)'};">${hit?'✓ 達標':'—'}</div>
+            </div>`;
+          }).join('')}
+          <div style="font-size:0.58rem;color:var(--text-muted);margin-top:2px;">基準：近180日高 ${rollingHigh.toFixed(2)}</div>
+        </div>
+      </div>`;
   }
 
   // Store rows for chip loading phase
@@ -13652,7 +13757,7 @@ function etfRefresh(){
 // ══════════════════════════════════════════════
 //  K線 + VRVP 疊加圖（合體 canvas）
 // ══════════════════════════════════════════════
-function etfDrawCandleWithVRVP(canvas, rows, zones, ma20Last, ma60Last) {
+function etfDrawCandleWithVRVP(canvas, rows, zones, ma20Last, ma60Last, strategyLevels, strategyStatus, strategyColor, strategyPhase) {
   if (!rows?.length) return;
   const DPR = window.devicePixelRatio || 1;
   const W   = canvas.offsetWidth  || 340;
@@ -13664,13 +13769,12 @@ function etfDrawCandleWithVRVP(canvas, rows, zones, ma20Last, ma60Last) {
   ctx.clearRect(0, 0, W, H);
 
   const BINS     = 40;
-  const VRVP_W   = Math.round(W * 0.22);  // 右側 22% 給 VRVP
+  const VRVP_W   = Math.round(W * 0.22);
   const PAD      = { t: 10, b: 28, l: 50, r: VRVP_W + 6 };
   const chartW   = W - PAD.l - PAD.r;
   const chartH   = H - PAD.t - PAD.b;
   const n        = rows.length;
 
-  // Price range (use high/low for full range)
   const allH = rows.map(r => r.high || r.close);
   const allL = rows.map(r => r.low  || r.close);
   const minP = Math.min(...allL) * 0.9985;
@@ -13709,9 +13813,9 @@ function etfDrawCandleWithVRVP(canvas, rows, zones, ma20Last, ma60Last) {
   const maxPct  = Math.max(...profile.map(p => p.pct), 0.001);
   const hvnThreshold = maxPct * 0.72;
   const lastClose = rows.at(-1).close;
-  const vrvpX0   = W - VRVP_W;  // VRVP 起始 X
+  const vrvpX0   = W - VRVP_W;
 
-  // ── Draw VRVP bars (right side, vertical) ──
+  // ── Draw VRVP bars ──
   profile.forEach(p => {
     const y1   = yS(p.priceTo);
     const y2   = yS(p.priceFrom);
@@ -13719,40 +13823,83 @@ function etfDrawCandleWithVRVP(canvas, rows, zones, ma20Last, ma60Last) {
     const barW = (p.pct / maxPct) * (VRVP_W - 4);
     const isAbove = p.priceMid > lastClose;
     const isHVN   = p.pct >= hvnThreshold;
-
-    // Semi-transparent bg fill for all bars
     ctx.fillStyle = isAbove
       ? (isHVN ? 'rgba(255,77,109,0.75)' : 'rgba(255,77,109,0.22)')
       : (isHVN ? 'rgba(59,130,246,0.75)' : 'rgba(59,130,246,0.22)');
     if (barW > 0) ctx.fillRect(vrvpX0, y1, barW, barH);
   });
 
-  // ── VRVP separator line ──
+  // ── VRVP separator ──
   ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-  ctx.lineWidth = 1;
-  ctx.setLineDash([]);
+  ctx.lineWidth = 1; ctx.setLineDash([]);
   ctx.beginPath(); ctx.moveTo(vrvpX0, PAD.t); ctx.lineTo(vrvpX0, H - PAD.b); ctx.stroke();
 
-  // ── HVN zone background bands on chart area ──
-  const zoneColors = [
-    { fill:'rgba(255,77,109,.07)',  edge:'rgba(255,77,109,.6)',  label:'#ff4d6d' },
-    { fill:'rgba(59,130,246,.07)',  edge:'rgba(59,130,246,.55)', label:'#3b82f6' },
-    { fill:'rgba(167,139,250,.06)', edge:'rgba(167,139,250,.5)', label:'#a78bfa' },
-  ];
+  // ══ 模組 1：HVN 極性翻轉帶 ══
   zones.forEach((z, zi) => {
     const y1 = yS(z.high), y2 = yS(z.low);
-    const c  = zoneColors[zi % 3];
-    ctx.fillStyle = c.fill;
+    const isResist   = z.isResistance || false;
+    const lineColor  = z.lineColor  || (isResist ? '#ff4d6d' : '#3b82f6');
+    const lineWidth  = z.lineWidth  || 1.5;
+    const bandFill   = isResist ? 'rgba(255,77,109,.10)' : 'rgba(59,130,246,.06)';
+    const statusTxt  = z.status || '';
+
+    // Band fill
+    ctx.fillStyle = bandFill;
     ctx.fillRect(PAD.l, y1, chartW, y2 - y1);
-    ctx.strokeStyle = c.edge;
-    ctx.lineWidth = 1.5;
+
+    // Resistance 斜紋填充（套牢壓力視覺化）
+    if (isResist) {
+      ctx.save();
+      ctx.strokeStyle = 'rgba(255,77,109,0.15)';
+      ctx.lineWidth   = 1;
+      const y1c = Math.min(y1, y2), y2c = Math.max(y1, y2);
+      for (let hx = PAD.l - (y2c - y1c); hx < W - VRVP_W + (y2c - y1c); hx += 7) {
+        ctx.beginPath();
+        ctx.moveTo(Math.max(PAD.l, hx),            y1c);
+        ctx.lineTo(Math.min(W - VRVP_W, hx + (y2c - y1c)), y2c);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // Mid line
+    ctx.strokeStyle = lineColor;
+    ctx.lineWidth   = lineWidth;
     ctx.setLineDash([]);
     ctx.beginPath(); ctx.moveTo(PAD.l, yS(z.mid)); ctx.lineTo(W - VRVP_W, yS(z.mid)); ctx.stroke();
-    ctx.fillStyle = c.label;
-    ctx.font = 'bold 9px DM Mono';
+
+    // Label
+    const label = `HVN${zi+1} ${z.mid.toFixed(1)}${statusTxt ? ' ▸ ' + statusTxt : ''}`;
+    ctx.fillStyle = lineColor;
+    ctx.font = `${isResist ? 'bold' : '600'} 9px DM Mono`;
     ctx.textAlign = 'left';
-    ctx.fillText(`HVN${zi+1} ${z.mid.toFixed(1)}`, PAD.l + 4, yS(z.mid) - 3);
+    ctx.fillText(label, PAD.l + 4, yS(z.mid) - 3);
   });
+
+  // ══ 模組 2：固定策略警戒線 L1 / L2 / L3 ══
+  if (strategyLevels) {
+    const lvDefs = [
+      { price: strategyLevels.L1, color: '#a78bfa', label: 'L1 -5% 加碼一成點位' },
+      { price: strategyLevels.L2, color: '#f59e0b', label: 'L2 -10% 加碼兩成(20萬)' },
+      { price: strategyLevels.L3, color: '#ff4d6d', label: 'L3 -20% 海嘯/質押上限' },
+    ];
+    lvDefs.forEach(lv => {
+      if (lv.price < minP || lv.price > maxP) return;
+      const ly = yS(lv.price);
+      ctx.save();
+      ctx.strokeStyle = lv.color;
+      ctx.lineWidth   = 1.5;
+      ctx.setLineDash([7, 4]);
+      ctx.globalAlpha = 0.82;
+      ctx.beginPath(); ctx.moveTo(PAD.l, ly); ctx.lineTo(W - VRVP_W, ly); ctx.stroke();
+      ctx.setLineDash([]); ctx.globalAlpha = 1;
+      ctx.fillStyle = lv.color;
+      ctx.font = 'bold 9px DM Mono';
+      ctx.textAlign = 'right';
+      ctx.fillText(`${lv.label} ${lv.price.toFixed(1)}`, W - VRVP_W - 4, ly - 3);
+      ctx.restore();
+    });
+  }
 
   // ── MA lines ──
   const closes  = rows.map(r => r.close);
@@ -13776,25 +13923,17 @@ function etfDrawCandleWithVRVP(canvas, rows, zones, ma20Last, ma60Last) {
     if (!r.open || !r.close) return;
     const x     = xS(i);
     const isUp  = r.close >= r.open;
-    const upC   = '#ff4d6d';
-    const dnC   = '#00e5a0';
-    const color = isUp ? upC : dnC;
+    const color = isUp ? '#ff4d6d' : '#00e5a0';
     const bodyT = yS(Math.max(r.open, r.close));
     const bodyB = yS(Math.min(r.open, r.close));
     const bodyH = Math.max(1.5, bodyB - bodyT);
-
-    // Wick
     ctx.strokeStyle = color; ctx.lineWidth = 1; ctx.setLineDash([]);
     ctx.beginPath();
     ctx.moveTo(x, yS(r.high || r.close)); ctx.lineTo(x, bodyT);
     ctx.moveTo(x, bodyB);                  ctx.lineTo(x, yS(r.low || r.close));
     ctx.stroke();
-
-    // Body
     ctx.fillStyle = isUp ? 'rgba(255,77,109,0.85)' : 'rgba(0,229,160,0.85)';
     ctx.fillRect(x - candleW / 2, bodyT, candleW, bodyH);
-
-    // Border
     ctx.strokeStyle = color; ctx.lineWidth = 0.5;
     ctx.strokeRect(x - candleW / 2, bodyT, candleW, bodyH);
   });
@@ -13805,24 +13944,142 @@ function etfDrawCandleWithVRVP(canvas, rows, zones, ma20Last, ma60Last) {
   ctx.beginPath(); ctx.moveTo(PAD.l, cpY); ctx.lineTo(W - VRVP_W, cpY); ctx.stroke();
   ctx.setLineDash([]);
 
-  // Price badge on VRVP side
+  // Price badge VRVP side
   const labelTxt = lastClose.toFixed(2);
   const lblW     = ctx.measureText(labelTxt).width + 10;
   ctx.fillStyle = '#f0b429';
   ctx.beginPath();
   const lblX = W - lblW - 2;
-  roundRect(ctx, lblX, cpY - 8, lblW, 16, 3);
-  ctx.fill();
+  roundRect(ctx, lblX, cpY - 8, lblW, 16, 3); ctx.fill();
   ctx.fillStyle = '#0d0f14';
-  ctx.font = 'bold 10px DM Mono';
-  ctx.textAlign = 'center';
+  ctx.font = 'bold 10px DM Mono'; ctx.textAlign = 'center';
   ctx.fillText(labelTxt, lblX + lblW / 2, cpY + 4);
-
-  // Price label on Y axis
-  ctx.fillStyle = '#f0b429';
-  ctx.font = 'bold 10px DM Mono';
-  ctx.textAlign = 'right';
+  ctx.fillStyle = '#f0b429'; ctx.textAlign = 'right';
   ctx.fillText(lastClose.toFixed(2), PAD.l - 4, cpY + 4);
+
+  // ══ 模組 3：右上角策略狀態徽章 ══
+  if (strategyStatus) {
+    ctx.save();
+    ctx.font = 'bold 10px DM Mono';
+    const badgeColor = strategyColor || '#00e5a0';
+    const isBear = strategyPhase === 'bear' || strategyPhase === 'tsunami';
+    const maxW   = chartW * 0.62;
+    const raw    = ctx.measureText(strategyStatus).width;
+    const bw     = Math.min(raw, maxW) + 16;
+    const bh     = 20;
+    const bx     = W - VRVP_W - bw - 4;
+    const by     = PAD.t + 4;
+
+    ctx.globalAlpha = 0.92;
+    ctx.fillStyle   = '#0d0f14';
+    roundRect(ctx, bx, by, bw, bh, 5); ctx.fill();
+
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = badgeColor;
+    ctx.lineWidth   = isBear ? 2 : 1.2;
+    ctx.setLineDash([]);
+    roundRect(ctx, bx, by, bw, bh, 5); ctx.stroke();
+
+    ctx.fillStyle = badgeColor;
+    ctx.textAlign = 'left';
+    ctx.save();
+    ctx.beginPath(); ctx.rect(bx + 4, by, bw - 8, bh); ctx.clip();
+    ctx.fillText(strategyStatus, bx + 8, by + bh - 5);
+    ctx.restore();
+    ctx.restore();
+  }
+}
+
+// ── 法人籌碼累積曲線圖 ──
+function etfDrawChipChart(canvas, chipData) {
+  if (!canvas || !chipData) return;
+  const DPR = window.devicePixelRatio || 1;
+  const W   = canvas.offsetWidth  || 340;
+  const H   = canvas.offsetHeight || 140;
+  canvas.width  = W * DPR;
+  canvas.height = H * DPR;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(DPR, DPR);
+  ctx.clearRect(0, 0, W, H);
+
+  const PAD = { t: 8, b: 18, l: 38, r: 8 };
+  const cW  = W - PAD.l - PAD.r;
+  const cH  = H - PAD.t - PAD.b;
+
+  const series = [
+    { key: 'foreignCum', color: '#ff4d6d', label: '外資' },
+    { key: 'trustCum',   color: '#a78bfa', label: '投信' },
+    { key: 'dealerCum',  color: '#00e5a0', label: '自營' },
+  ].map(s => ({
+    ...s,
+    data: (chipData[s.key] || []).filter((v, i, a) => {
+      // align length to shortest non-null run
+      return v !== null && v !== undefined;
+    }),
+  })).filter(s => s.data.length > 1);
+
+  if (!series.length) {
+    ctx.fillStyle = 'rgba(255,255,255,0.15)';
+    ctx.font = '11px DM Mono';
+    ctx.textAlign = 'center';
+    ctx.fillText('籌碼資料載入中…', W / 2, H / 2);
+    return;
+  }
+
+  const allVals = series.flatMap(s => s.data);
+  const minV = Math.min(...allVals);
+  const maxV = Math.max(...allVals);
+  const vRange = maxV - minV || 1;
+
+  const n  = Math.max(...series.map(s => s.data.length));
+  const xS = i => PAD.l + (i / Math.max(n - 1, 1)) * cW;
+  const yS = v => PAD.t + (1 - (v - minV) / vRange) * cH;
+
+  // Grid
+  [0, 0.5, 1].forEach(f => {
+    const v = minV + f * vRange;
+    const y = yS(v);
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.lineWidth = 1; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(PAD.l, y); ctx.lineTo(W - PAD.r, y); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.22)';
+    ctx.font = '8px DM Mono'; ctx.textAlign = 'right';
+    const label = Math.abs(v) >= 10000 ? (v/10000).toFixed(1)+'萬' : v.toFixed(0);
+    ctx.fillText(label, PAD.l - 2, y + 3);
+  });
+
+  // Zero line
+  if (minV < 0 && maxV > 0) {
+    const zy = yS(0);
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(PAD.l, zy); ctx.lineTo(W - PAD.r, zy); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Series lines
+  series.forEach(s => {
+    ctx.strokeStyle = s.color;
+    ctx.lineWidth   = 1.5;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    let first = true;
+    s.data.forEach((v, i) => {
+      const x = xS(i + (n - s.data.length));
+      const y = yS(v);
+      first ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      first = false;
+    });
+    ctx.stroke();
+
+    // Endpoint dot
+    if (s.data.length) {
+      const lx = xS(n - 1);
+      const ly = yS(s.data.at(-1));
+      ctx.fillStyle = s.color;
+      ctx.beginPath(); ctx.arc(lx, ly, 2.5, 0, Math.PI * 2); ctx.fill();
+    }
+  });
 }
 
 // ── Volume bars (separate small canvas) ──
