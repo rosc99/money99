@@ -2204,7 +2204,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-24 07:48:43</div>
+    <div class="clock-display" id="clockDisplay">2026-03-24 08:11:07</div>
   </div>
 </aside>
 
@@ -2349,8 +2349,23 @@ input::placeholder { color: var(--text-muted); }
             </div>
           </div>
         </div>
-        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"></div>
-        <canvas id="wealthChart" style="width:100%;display:block;" height="220"></canvas>
+        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#f59e0b;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#ff4d6d;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總負債</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#ff4d6d;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#00e5a0;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">淨資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#00e5a0;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div></div>
+        <canvas id="wealthChart" style="width:100%;display:block;" height="220" width="346"></canvas>
         <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;" id="wealthXLabels"></div>
       </div>
 
@@ -2987,31 +3002,26 @@ input::placeholder { color: var(--text-muted); }
       <button class="etf-range" data-range="1y" onclick="etfSetRange('1y',this)">1Y</button>
     </div>
 
-    <!-- ══ 主圖：K線 + 成交量 + 密集交易區 ══ -->
-    <!-- ══ 主圖：蠟燭圖 + VRVP Overlay + 成交量 ══ -->
+    <!-- ══ 主圖：K線 + VRVP 疊加 ══ -->
     <div class="etf-card" style="margin-bottom:10px;padding:14px 12px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
         <div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);">蠟燭圖 + 成交量分布</div>
         <div style="display:flex;gap:8px;align-items:center;">
           <span style="font-size:0.58rem;color:var(--text-muted);display:flex;align-items:center;gap:3px;">
-            <span style="display:inline-block;width:10px;height:10px;background:rgba(255,77,109,.5);border-radius:1px;"></span>壓力
+            <span style="display:inline-block;width:10px;height:10px;background:rgba(255,77,109,.55);border-radius:1px;"></span>壓力
           </span>
           <span style="font-size:0.58rem;color:var(--text-muted);display:flex;align-items:center;gap:3px;">
-            <span style="display:inline-block;width:10px;height:10px;background:rgba(59,130,246,.5);border-radius:1px;"></span>支撐
+            <span style="display:inline-block;width:10px;height:10px;background:rgba(59,130,246,.55);border-radius:1px;"></span>支撐
           </span>
           <span style="font-size:0.58rem;color:#f0b429;display:flex;align-items:center;gap:3px;">
             <span style="display:inline-block;width:12px;height:2px;background:#f0b429;"></span>HVN
           </span>
         </div>
       </div>
-      <!-- 主圖容器（蠟燭 + VRVP overlay）-->
-      <div style="position:relative;width:100%;">
-        <canvas id="etfCandleChart" style="width:100%;height:220px;display:block;"></canvas>
-        <!-- VRVP overlay canvas（右側 25% 寬度，絕對定位）-->
-        <canvas id="etfVRVPOverlay" style="position:absolute;top:0;right:0;width:25%;height:220px;pointer-events:none;"></canvas>
-      </div>
+      <!-- 主 canvas：K線 + 右側 VRVP 疊加 -->
+      <canvas id="etfMainCanvas" style="width:100%;height:280px;display:block;"></canvas>
       <!-- 成交量柱 -->
-      <canvas id="etfVolChart" style="width:100%;height:36px;display:block;margin-top:3px;"></canvas>
+      <canvas id="etfVolCanvas" style="width:100%;height:40px;display:block;margin-top:2px;"></canvas>
       <!-- 籌碼成本線 -->
       <div id="etfCostLine" style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border)"></div>
     </div>
@@ -3044,7 +3054,7 @@ input::placeholder { color: var(--text-muted); }
     <!-- 風險評分內容 -->
     <div id="etfMainPanel-risk" style="display:none">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <div style="font-size:0.62rem;color:var(--text-muted);">AI 量化分析 · TWSE 即時資料</div>
+        <div style="font-size:0.62rem;color:var(--text-muted);">規則式量化分析 · TWSE 即時資料</div>
         <button class="cr-scan-btn" onclick="riskRunAnalysis()" id="riskRunBtn" style="font-size:0.72rem;padding:5px 14px;">▶ 開始分析</button>
       </div>
 
@@ -3060,7 +3070,7 @@ input::placeholder { color: var(--text-muted); }
         </div>
         <div style="flex:1">
           <div class="risk-level" id="riskLevel" style="font-size:1.1rem;font-weight:900;margin-bottom:4px;">等待分析</div>
-          <div id="riskLevelSub" style="font-size:0.7rem;color:var(--text-muted);line-height:1.5;">點擊「開始分析」啟動 AI 評分</div>
+          <div id="riskLevelSub" style="font-size:0.7rem;color:var(--text-muted);line-height:1.5;">點擊「開始分析」啟動規則式評分</div>
           <div id="riskLevelBadge" style="display:none;margin-top:6px;padding:2px 10px;border-radius:20px;font-size:0.65rem;font-weight:700;display:inline-block;"></div>
         </div>
       </div>
@@ -3091,7 +3101,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="etf-card" id="riskAiCard" style="margin-bottom:10px;padding:12px 14px;display:none;">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
           <span>🤖</span>
-          <div style="font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);">AI 量化分析報告</div>
+          <div style="font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);">量化分析報告</div>
           <button onclick="riskCopyReport()" style="margin-left:auto;font-size:0.62rem;padding:3px 9px;border-radius:7px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);color:var(--accent-blue);cursor:pointer;">📋 複製</button>
         </div>
         <div id="riskAiReport" style="font-size:0.73rem;color:var(--text-secondary);line-height:1.8;"></div>
@@ -13182,18 +13192,29 @@ async function etfFetchHistory_Yahoo(ticker, range='3mo') {
 // ── Volume Profile（成交量分布）──
 function etfVolumeProfile(rows, bins=24) {
   if (!rows.length) return [];
-  const prices = rows.map(r => r.close);
-  const min = Math.min(...prices);
-  const max = Math.max(...prices);
+  const allPrices = rows.flatMap(r => [r.high, r.low, r.close]).filter(v => v > 0);
+  const min  = Math.min(...allPrices);
+  const max  = Math.max(...allPrices);
   const step = (max - min) / bins || 1;
   const profile = Array.from({length: bins}, (_, i) => ({
-    price: min + (i + 0.5) * step,
-    vol:   0,
+    priceFrom: min + i * step,
+    priceTo:   min + (i + 1) * step,
+    priceMid:  min + (i + 0.5) * step,
+    price:     min + (i + 0.5) * step,
+    vol: 0, pct: 0,
   }));
   rows.forEach(r => {
-    const idx = Math.min(Math.floor((r.close - min) / step), bins - 1);
-    profile[idx].vol += r.volume;
+    const lo   = r.low  || r.close;
+    const hi   = r.high || r.close;
+    const span = hi - lo || step;
+    const vol  = r.volume || 0;
+    for (let b = 0; b < bins; b++) {
+      const overlap = Math.max(0, Math.min(hi, profile[b].priceTo) - Math.max(lo, profile[b].priceFrom));
+      profile[b].vol += vol * (overlap / span);
+    }
   });
+  const maxVol = Math.max(...profile.map(p => p.vol), 1);
+  profile.forEach(p => { p.pct = p.vol / maxVol; });
   return profile;
 }
 
@@ -13201,13 +13222,11 @@ function etfVolumeProfile(rows, bins=24) {
 // 回傳 { mid, high, low } 物件陣列
 function etfFindDenseZones(profile, topN=3) {
   if (!profile.length) return [];
-  const step = profile.length > 1 ? Math.abs(profile[1].price - profile[0].price) : 1;
-  const half = step * 0.5;
   const sorted = [...profile].sort((a, b) => b.vol - a.vol);
   return sorted.slice(0, topN).map(z => ({
-    mid:  z.price,
-    high: z.price + half,
-    low:  z.price - half,
+    mid:  z.priceMid || z.price,
+    high: z.priceTo  || (z.price + (z.priceTo - z.priceFrom) * 0.5),
+    low:  z.priceFrom|| (z.price - (z.priceTo - z.priceFrom) * 0.5),
     vol:  z.vol,
   }));
 }
@@ -13423,13 +13442,11 @@ function etfRenderPhase1(rows) {
   rows.forEach(r=>{cumPV+=r.close*r.volume;cumV+=r.volume;});
   const costLine = cumV>0?cumPV/cumV:null;
 
-  // ── 蠟燭圖 + VRVP Overlay（合一）──
-  const candleCanvas  = document.getElementById('etfCandleChart');
-  const overlayCanvas = document.getElementById('etfVRVPOverlay');
-  if (candleCanvas) etfDrawCandleVRVP(candleCanvas, overlayCanvas, rows, zones);
-
-  const vCanvas = document.getElementById('etfVolChart');
-  if (vCanvas) etfDrawVolChart(vCanvas, rows);
+  // ── 合體 K線 + VRVP canvas ──
+  const mainCanvas = document.getElementById('etfMainCanvas');
+  if (mainCanvas) etfDrawCandleWithVRVP(mainCanvas, rows, zones, ma20v, ma60v);
+  const volCanvas = document.getElementById('etfVolCanvas');
+  if (volCanvas) etfDrawVolBars(volCanvas, rows);
 
   // ── Dense zones + 進出場建議 ──
   const denseEl   = document.getElementById('etfDenseZone');
@@ -13632,88 +13649,115 @@ function etfRefresh(){
 
 
 // ══════════════════════════════════════════════
-//  蠟燭圖 + VRVP Overlay（TradingView 風格）
+//  K線 + VRVP 疊加圖（合體 canvas）
 // ══════════════════════════════════════════════
-
-function etfDrawCandleVRVP(candleCanvas, overlayCanvas, rows, zones) {
+function etfDrawCandleWithVRVP(canvas, rows, zones, ma20Last, ma60Last) {
   if (!rows?.length) return;
-
-  const DPR   = window.devicePixelRatio || 1;
-  const w     = candleCanvas.offsetWidth;
-  const h     = candleCanvas.offsetHeight;
-  candleCanvas.width  = w * DPR;
-  candleCanvas.height = h * DPR;
-  const ctx = candleCanvas.getContext('2d');
+  const DPR = window.devicePixelRatio || 1;
+  const W   = canvas.offsetWidth  || 340;
+  const H   = canvas.offsetHeight || 280;
+  canvas.width  = W * DPR;
+  canvas.height = H * DPR;
+  const ctx = canvas.getContext('2d');
   ctx.scale(DPR, DPR);
+  ctx.clearRect(0, 0, W, H);
 
-  const pad   = { t: 10, r: 8, b: 24, l: 52 };
-  const chartW = w - pad.l - pad.r;
-  const chartH = h - pad.t - pad.b;
-  const n      = rows.length;
+  const BINS     = 40;
+  const VRVP_W   = Math.round(W * 0.22);  // 右側 22% 給 VRVP
+  const PAD      = { t: 10, b: 28, l: 50, r: VRVP_W + 6 };
+  const chartW   = W - PAD.l - PAD.r;
+  const chartH   = H - PAD.t - PAD.b;
+  const n        = rows.length;
 
-  // Price range
-  const allH = rows.map(r => r.high).filter(v => v > 0);
-  const allL = rows.map(r => r.low).filter(v => v > 0);
-  const minP  = Math.min(...allL) * 0.997;
-  const maxP  = Math.max(...allH) * 1.003;
+  // Price range (use high/low for full range)
+  const allH = rows.map(r => r.high || r.close);
+  const allL = rows.map(r => r.low  || r.close);
+  const minP = Math.min(...allL) * 0.9985;
+  const maxP = Math.max(...allH) * 1.0015;
+  const priceRange = maxP - minP;
 
-  const xS = i  => pad.l + (i / (n - 1)) * chartW;
-  const yS = v  => pad.t + (1 - (v - minP) / (maxP - minP)) * chartH;
+  const xS = i => PAD.l + (i / Math.max(n - 1, 1)) * chartW;
+  const yS = v => PAD.t + (1 - (v - minP) / priceRange) * chartH;
 
-  ctx.clearRect(0, 0, w, h);
-
-  // ── Grid ──
-  const gridCount = 5;
-  for (let i = 0; i <= gridCount; i++) {
-    const y = pad.t + (i / gridCount) * chartH;
-    const v = maxP - (i / gridCount) * (maxP - minP);
-    ctx.strokeStyle = 'rgba(255,255,255,.04)';
+  // ── Background grid ──
+  const gridLines = 6;
+  for (let i = 0; i <= gridLines; i++) {
+    const v = maxP - (i / gridLines) * priceRange;
+    const y = yS(v);
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
     ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
-    ctx.fillStyle = 'rgba(255,255,255,.3)';
+    ctx.beginPath(); ctx.moveTo(PAD.l, y); ctx.lineTo(W - VRVP_W, y); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.28)';
     ctx.font = `10px DM Mono`;
     ctx.textAlign = 'right';
-    ctx.fillText(v.toFixed(1), pad.l - 4, y + 3.5);
+    ctx.fillText(v.toFixed(1), PAD.l - 4, y + 3.5);
   }
 
   // ── X axis dates ──
-  ctx.textAlign = 'center';
-  ctx.fillStyle = 'rgba(255,255,255,.25)';
+  ctx.fillStyle = 'rgba(255,255,255,0.22)';
   ctx.font = '9px DM Mono';
-  const xStep = Math.max(1, Math.floor(n / 5));
-  for (let i = 0; i < n; i += xStep) {
+  ctx.textAlign = 'center';
+  const step = Math.max(1, Math.floor(n / 5));
+  for (let i = 0; i < n; i += step) {
     const d = rows[i].t;
-    ctx.fillText(`${d.getMonth()+1}/${d.getDate()}`, xS(i), h - 6);
+    ctx.fillText(`${d.getMonth()+1}/${d.getDate()}`, xS(i), H - 6);
   }
 
-  // ── Dense zone bands（背景橫帶）──
+  // ── VRVP profile build ──
+  const profile = etfVolumeProfile(rows, BINS);
+  const maxPct  = Math.max(...profile.map(p => p.pct), 0.001);
+  const hvnThreshold = maxPct * 0.72;
+  const lastClose = rows.at(-1).close;
+  const vrvpX0   = W - VRVP_W;  // VRVP 起始 X
+
+  // ── Draw VRVP bars (right side, vertical) ──
+  profile.forEach(p => {
+    const y1   = yS(p.priceTo);
+    const y2   = yS(p.priceFrom);
+    const barH = Math.max(1, y2 - y1 - 0.5);
+    const barW = (p.pct / maxPct) * (VRVP_W - 4);
+    const isAbove = p.priceMid > lastClose;
+    const isHVN   = p.pct >= hvnThreshold;
+
+    // Semi-transparent bg fill for all bars
+    ctx.fillStyle = isAbove
+      ? (isHVN ? 'rgba(255,77,109,0.75)' : 'rgba(255,77,109,0.22)')
+      : (isHVN ? 'rgba(59,130,246,0.75)' : 'rgba(59,130,246,0.22)');
+    if (barW > 0) ctx.fillRect(vrvpX0, y1, barW, barH);
+  });
+
+  // ── VRVP separator line ──
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(vrvpX0, PAD.t); ctx.lineTo(vrvpX0, H - PAD.b); ctx.stroke();
+
+  // ── HVN zone background bands on chart area ──
   const zoneColors = [
-    { fill: 'rgba(255,77,109,.08)',  edge: 'rgba(255,77,109,.5)'  },
-    { fill: 'rgba(59,130,246,.07)',  edge: 'rgba(59,130,246,.45)' },
-    { fill: 'rgba(167,139,250,.06)', edge: 'rgba(167,139,250,.4)' },
+    { fill:'rgba(255,77,109,.07)',  edge:'rgba(255,77,109,.6)',  label:'#ff4d6d' },
+    { fill:'rgba(59,130,246,.07)',  edge:'rgba(59,130,246,.55)', label:'#3b82f6' },
+    { fill:'rgba(167,139,250,.06)', edge:'rgba(167,139,250,.5)', label:'#a78bfa' },
   ];
   zones.forEach((z, zi) => {
     const y1 = yS(z.high), y2 = yS(z.low);
-    ctx.fillStyle = zoneColors[zi % 3].fill;
-    ctx.fillRect(pad.l, y1, chartW, y2 - y1);
-    // HVN line at zone mid
-    ctx.strokeStyle = zoneColors[zi % 3].edge;
+    const c  = zoneColors[zi % 3];
+    ctx.fillStyle = c.fill;
+    ctx.fillRect(PAD.l, y1, chartW, y2 - y1);
+    ctx.strokeStyle = c.edge;
     ctx.lineWidth = 1.5;
     ctx.setLineDash([]);
-    ctx.beginPath(); ctx.moveTo(pad.l, yS(z.mid)); ctx.lineTo(w - pad.r, yS(z.mid)); ctx.stroke();
-    // HVN label
-    ctx.fillStyle = zoneColors[zi % 3].edge;
+    ctx.beginPath(); ctx.moveTo(PAD.l, yS(z.mid)); ctx.lineTo(W - VRVP_W, yS(z.mid)); ctx.stroke();
+    ctx.fillStyle = c.label;
     ctx.font = 'bold 9px DM Mono';
     ctx.textAlign = 'left';
-    ctx.fillText(`HVN${zi + 1} ${z.mid.toFixed(1)}`, pad.l + 3, yS(z.mid) - 3);
+    ctx.fillText(`HVN${zi+1} ${z.mid.toFixed(1)}`, PAD.l + 4, yS(z.mid) - 3);
   });
 
   // ── MA lines ──
   const closes  = rows.map(r => r.close);
   const ma20arr = etfSma(closes, 20);
   const ma60arr = etfSma(closes, 60);
-
-  [[ma20arr, '#3b82f6', 1.5], [ma60arr, '#a78bfa', 1.5]].forEach(([arr, color, lw]) => {
+  [[ma20arr, '#3b82f6', 1.8], [ma60arr, '#a78bfa', 1.8]].forEach(([arr, color, lw]) => {
     ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.setLineDash([]);
     ctx.beginPath(); let first = true;
     arr.forEach((v, i) => {
@@ -13726,25 +13770,27 @@ function etfDrawCandleVRVP(candleCanvas, overlayCanvas, rows, zones) {
   });
 
   // ── Candlesticks ──
-  const candleW = Math.max(1, (chartW / n) * 0.7);
+  const candleW = Math.max(1.5, (chartW / n) * 0.72);
   rows.forEach((r, i) => {
-    if (!r.open || !r.close || !r.high || !r.low) return;
+    if (!r.open || !r.close) return;
     const x     = xS(i);
     const isUp  = r.close >= r.open;
-    const color = isUp ? '#ff4d6d' : '#00e5a0';
+    const upC   = '#ff4d6d';
+    const dnC   = '#00e5a0';
+    const color = isUp ? upC : dnC;
     const bodyT = yS(Math.max(r.open, r.close));
     const bodyB = yS(Math.min(r.open, r.close));
-    const bodyH = Math.max(1, bodyB - bodyT);
+    const bodyH = Math.max(1.5, bodyB - bodyT);
 
     // Wick
     ctx.strokeStyle = color; ctx.lineWidth = 1; ctx.setLineDash([]);
     ctx.beginPath();
-    ctx.moveTo(x, yS(r.high)); ctx.lineTo(x, bodyT);
-    ctx.moveTo(x, bodyB);      ctx.lineTo(x, yS(r.low));
+    ctx.moveTo(x, yS(r.high || r.close)); ctx.lineTo(x, bodyT);
+    ctx.moveTo(x, bodyB);                  ctx.lineTo(x, yS(r.low || r.close));
     ctx.stroke();
 
     // Body
-    ctx.fillStyle = isUp ? 'rgba(255,77,109,.85)' : 'rgba(0,229,160,.85)';
+    ctx.fillStyle = isUp ? 'rgba(255,77,109,0.85)' : 'rgba(0,229,160,0.85)';
     ctx.fillRect(x - candleW / 2, bodyT, candleW, bodyH);
 
     // Border
@@ -13752,60 +13798,75 @@ function etfDrawCandleVRVP(candleCanvas, overlayCanvas, rows, zones) {
     ctx.strokeRect(x - candleW / 2, bodyT, candleW, bodyH);
   });
 
-  // ── Current price line ──
-  const lastClose = rows.at(-1).close;
-  const lastY     = yS(lastClose);
-  ctx.strokeStyle = '#f0b429'; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
-  ctx.beginPath(); ctx.moveTo(pad.l, lastY); ctx.lineTo(w - pad.r, lastY); ctx.stroke();
+  // ── Current price dashed line ──
+  const cpY = yS(lastClose);
+  ctx.strokeStyle = '#f0b429'; ctx.lineWidth = 1.2; ctx.setLineDash([4, 3]);
+  ctx.beginPath(); ctx.moveTo(PAD.l, cpY); ctx.lineTo(W - VRVP_W, cpY); ctx.stroke();
   ctx.setLineDash([]);
+
+  // Price badge on VRVP side
+  const labelTxt = lastClose.toFixed(2);
+  const lblW     = ctx.measureText(labelTxt).width + 10;
+  ctx.fillStyle = '#f0b429';
+  ctx.beginPath();
+  const lblX = W - lblW - 2;
+  roundRect(ctx, lblX, cpY - 8, lblW, 16, 3);
+  ctx.fill();
+  ctx.fillStyle = '#0d0f14';
+  ctx.font = 'bold 10px DM Mono';
+  ctx.textAlign = 'center';
+  ctx.fillText(labelTxt, lblX + lblW / 2, cpY + 4);
+
+  // Price label on Y axis
   ctx.fillStyle = '#f0b429';
   ctx.font = 'bold 10px DM Mono';
   ctx.textAlign = 'right';
-  ctx.fillText(lastClose.toFixed(2), pad.l - 4, lastY + 4);
-
-  // ── VRVP Overlay（右側疊加）──
-  if (!overlayCanvas) return;
-  const ovW = overlayCanvas.offsetWidth;
-  const ovH = overlayCanvas.offsetHeight;
-  overlayCanvas.width  = ovW * DPR;
-  overlayCanvas.height = ovH * DPR;
-  const octx = overlayCanvas.getContext('2d');
-  octx.scale(DPR, DPR);
-  octx.clearRect(0, 0, ovW, ovH);
-
-  // Build VP profile
-  const profile = etfVolumeProfile(rows, 40);
-  if (!profile.length) return;
-
-  const priceRange = maxP - minP;
-  const maxPct     = Math.max(...profile.map(p => p.pct));
-
-  profile.forEach(p => {
-    // Map price to y coordinate (same scale as candle chart)
-    const y1 = pad.t + (1 - (p.priceTo  - minP) / priceRange) * chartH;
-    const y2 = pad.t + (1 - (p.priceFrom - minP) / priceRange) * chartH;
-    const rowH = Math.max(1, y2 - y1);
-
-    const barW   = p.pct * (ovW * 0.88);
-    const isAbove = p.priceMid > lastClose;
-
-    // HVN highlight (top 15%)
-    const isHVN = p.pct >= maxPct * 0.85;
-
-    if (isHVN) {
-      // High Volume Node — bright solid
-      octx.fillStyle = isAbove ? 'rgba(255,77,109,.85)' : 'rgba(59,130,246,.85)';
-    } else {
-      octx.fillStyle = isAbove ? 'rgba(255,77,109,.35)' : 'rgba(59,130,246,.35)';
-    }
-    if (barW > 0) octx.fillRect(ovW - barW, y1 + 0.5, barW, rowH - 1);
-  });
-
-  // Current price line on overlay
-  const cpY = pad.t + (1 - (lastClose - minP) / priceRange) * chartH;
-  octx.strokeStyle = '#f0b429'; octx.lineWidth = 1.5; octx.setLineDash([]);
-  octx.beginPath(); octx.moveTo(0, cpY); octx.lineTo(ovW, cpY); octx.stroke();
+  ctx.fillText(lastClose.toFixed(2), PAD.l - 4, cpY + 4);
 }
+
+// ── Volume bars (separate small canvas) ──
+function etfDrawVolBars(canvas, rows) {
+  if (!rows?.length) return;
+  const DPR = window.devicePixelRatio || 1;
+  const W   = canvas.offsetWidth  || 340;
+  const H   = canvas.offsetHeight || 40;
+  canvas.width  = W * DPR;
+  canvas.height = H * DPR;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(DPR, DPR);
+  ctx.clearRect(0, 0, W, H);
+
+  const VRVP_W = Math.round(W * 0.22);
+  const PAD    = { l: 50, r: VRVP_W + 6 };
+  const chartW = W - PAD.l - PAD.r;
+  const n      = rows.length;
+  const maxVol = Math.max(...rows.map(r => r.volume || 0), 1);
+
+  rows.forEach((r, i) => {
+    const x     = PAD.l + (i / Math.max(n - 1, 1)) * chartW;
+    const barW  = Math.max(1, (chartW / n) * 0.72);
+    const barH  = ((r.volume || 0) / maxVol) * (H - 2);
+    const isUp  = (r.close || 0) >= (r.open || 0);
+    ctx.fillStyle = isUp ? 'rgba(255,77,109,0.55)' : 'rgba(0,229,160,0.45)';
+    ctx.fillRect(x - barW / 2, H - barH, barW, barH);
+  });
+}
+
+// ── roundRect polyfill ──
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
 
 // ── 生成進出場建議 ──
 function etfGenerateAdvice(close, zones, biasV, volR, ma20, ma60) {
@@ -14057,6 +14118,81 @@ function riskPreScore(snap) {
 }
 
 // ── 規則式診斷報告（根據使用者邏輯）──
+// ══════════════════════════════════════════════
+//  風險警示說明字典
+// ══════════════════════════════════════════════
+const RISK_EXPLAIN = {
+  '240MA乖離極度': {
+    title: '240MA 乖離率 > 25%：極度過熱',
+    body: `<b>240MA（約一年均線）乖離率</b>代表目前股價偏離「一年平均成本」多遠。<br><br>
+當乖離超過 25%，歷史上台灣加權指數在之後 3 個月內有 70%+ 的機率出現顯著回調（8–15%）。<br><br>
+⚠️ <b>這不代表馬上崩</b>，但代表「安全邊際已耗盡」——任何利空（地緣政治、財報不如預期）都可能觸發快速修正。`
+  },
+  '240MA乖離偏高': {
+    title: '240MA 乖離率 > 15%：偏高警戒',
+    body: `240MA 乖離超過 15% 代表股價已明顯高於一年均成本線。<br><br>
+尚未到極度危險區，但上漲空間相對有限，下跌風險大於上漲空間。<br><br>
+💡 建議：<b>持股但不追高</b>，等乖離回落到 10% 以下再考慮加碼。`
+  },
+  '60MA乖離過熱': {
+    title: '60MA 乖離率 > 15%：短線過熱',
+    body: `60MA（約三個月均線）乖離過大，代表短線漲太快、太急。<br><br>
+通常在這個位置進場，短線 1–2 個月內容易套在高點，因為股價有「向均線靠攏」的傾向。<br><br>
+💡 不是要賣出，而是<b>不要此時追高加碼</b>，等回測 60MA 再布局。`
+  },
+  '爆量換手': {
+    title: '量比 > 1.5x：爆量換手訊號',
+    body: `<b>量比</b>是今日成交量除以近 20 日平均量。> 1.5x 代表今日成交放大超過 50%。<br><br>
+爆量本身不一定是壞事，但在高點出現爆量，通常代表：<br>
+• 主力、法人趁高點賣出，散戶追高接棒<br>
+• 籌碼出現大幅換手，短線籌碼不穩定<br><br>
+💡 需搭配價格方向判斷：爆量收黑（跌）是明確警訊；爆量收紅需觀察次日是否「量縮」確認。`
+  },
+  '虛胖背離': {
+    title: '台積電 vs 大盤：指數虛胖背離',
+    body: `台積電（2330）佔台灣加權指數約 <b>30–35% 權重</b>，是最重要的單一成分股。<br><br>
+<b>「虛胖背離」</b>是指：<br>
+• 大盤指數的乖離率偏高（看起來強）<br>
+• 但台積電自己的乖離率卻明顯偏低（其實在走弱）<br><br>
+這代表是「其他股票撐住指數」，台積電沒有帶頭向上的動力。<br><br>
+就像一個表面健壯、但心臟已在發出警報的人。這種背離往往是指數後續走弱的<b>前導訊號</b>，平均領先大盤轉弱 2–6 週。`
+  },
+};
+
+function riskShowExplain(key) {
+  const data = RISK_EXPLAIN[key];
+  if (!data) return;
+  let modal = document.getElementById('riskExplainModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'riskExplainModal';
+    modal.style.cssText = `
+      position:fixed;inset:0;z-index:9999;display:flex;align-items:flex-end;
+      background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);
+    `;
+    modal.addEventListener('click', e => { if(e.target===modal) modal.remove(); });
+    document.body.appendChild(modal);
+  }
+  modal.innerHTML = `
+    <div style="
+      width:100%;max-height:75vh;overflow-y:auto;
+      background:var(--bg-card);border-radius:16px 16px 0 0;
+      padding:20px 18px 32px;border-top:1px solid var(--border);
+      animation: slideUp .25s cubic-bezier(.4,0,.2,1);
+    ">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <div style="font-size:0.82rem;font-weight:700;color:var(--text-primary);line-height:1.4;">${data.title}</div>
+        <button onclick="document.getElementById('riskExplainModal').remove()"
+          style="background:var(--bg-card2);border:1px solid var(--border);border-radius:50%;
+                 width:28px;height:28px;cursor:pointer;color:var(--text-secondary);font-size:1rem;
+                 display:flex;align-items:center;justify-content:center;flex-shrink:0;">✕</button>
+      </div>
+      <div style="font-size:0.74rem;color:var(--text-secondary);line-height:1.85;">${data.body}</div>
+    </div>
+  `;
+  modal.style.display = 'flex';
+}
+
 function riskBuildReport(snap, pre) {
   const { bias240, bias60, otcBias, tsmcBias, volRatio } = snap;
   const total = pre.total;
@@ -14081,19 +14217,19 @@ function riskBuildReport(snap, pre) {
   // ③ 過熱警告（即使總分低，240MA 乖離仍是紅燈）
   const warnings = [];
   if (extreme240) {
-    warnings.push(`🚨 240MA 乖離率 ${bias240.toFixed(1)}% 極度高估（>25%）：判定為高檔風險極大，歷史上此水位後 3 個月平均回落 8–15%`);
-    warnings.push(`⚠️ 矛盾警示：總分 ${total} 分顯示籌碼未見頂，但乖離空間已耗盡。「形態尚未破壞，但空間已到」── 任何利空均可觸發 1000–2000 點乖離修正`);
+    warnings.push({ text: `🚨 240MA 乖離率 ${bias240.toFixed(1)}% 極度高估（>25%）：判定為高檔風險極大，歷史上此水位後 3 個月平均回落 8–15%`, key: '240MA乖離極度' });
+    warnings.push({ text: `⚠️ 矛盾警示：總分 ${total} 分顯示籌碼未見頂，但乖離空間已耗盡。「形態尚未破壞，但空間已到」── 任何利空均可觸發 1000–2000 點乖離修正`, key: '240MA乖離極度' });
   } else if (high240) {
-    warnings.push(`⚠️ 240MA 乖離 ${bias240.toFixed(1)}% 偏高（>15%），建議控制倉位`);
+    warnings.push({ text: `⚠️ 240MA 乖離 ${bias240.toFixed(1)}% 偏高（>15%），建議控制倉位`, key: '240MA乖離偏高' });
   }
   if (bias60 != null && bias60 > 15) {
-    warnings.push(`📈 60MA 乖離 ${bias60.toFixed(1)}% 過熱，注意短期回調風險`);
+    warnings.push({ text: `📈 60MA 乖離 ${bias60.toFixed(1)}% 過熱，注意短期回調風險`, key: '60MA乖離過熱' });
   }
   if (volRatio != null && volRatio >= 1.5) {
-    warnings.push(`📊 量比 ${volRatio.toFixed(2)}x 出現爆量，留意高點換手訊號`);
+    warnings.push({ text: `📊 量比 ${volRatio.toFixed(2)}x 出現爆量，留意高點換手訊號`, key: '爆量換手' });
   }
   if (tsmcBias != null && bias240 > 15 && tsmcBias < 5) {
-    warnings.push(`💎 台積電乖離（${tsmcBias.toFixed(1)}%）遠低於大盤，可能出現指數虛胖背離`);
+    warnings.push({ text: `💎 台積電乖離（${tsmcBias.toFixed(1)}%）遠低於大盤，可能出現指數虛胖背離`, key: '虛胖背離' });
   }
 
   // ④ 分析文字
@@ -14333,9 +14469,19 @@ function riskRenderResult(result) {
         ${result.warnings?.length ? `
         <div style="margin-bottom:10px;">
           <div style="font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f59e0b;margin-bottom:6px;">⚠️ 風險警示</div>
-          ${result.warnings.map(w=>`<div style="display:flex;gap:6px;padding:3px 0;font-size:0.7rem;color:#fca5a5;">
-            <span style="flex-shrink:0;color:#f59e0b;">▸</span><span>${w}</span>
-          </div>`).join('')}
+          ${result.warnings.map(w=>{
+            const txt = w.text || w;
+            const key = w.key || '';
+            return `<div style="display:flex;gap:6px;padding:5px 0;font-size:0.7rem;color:#fca5a5;align-items:flex-start;border-bottom:1px solid rgba(255,255,255,0.04);">
+              <span style="flex-shrink:0;color:#f59e0b;margin-top:1px;">▸</span>
+              <span style="flex:1;line-height:1.6;">${txt}</span>
+              ${key ? `<button onclick="riskShowExplain('${key}')" style="
+                flex-shrink:0;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.35);
+                border-radius:50%;width:18px;height:18px;cursor:pointer;color:#f59e0b;
+                font-size:0.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;
+                margin-top:1px;transition:background 0.2s;" title="查看說明">?</button>` : ''}
+            </div>`;
+          }).join('')}
         </div>` : ''}
         ${result.advice ? `<div style="padding:10px;background:rgba(0,229,160,.06);border:1px solid rgba(0,229,160,.2);border-radius:8px;font-size:0.72rem;color:var(--accent-green);line-height:1.6;">
           💡 ${result.advice}
@@ -14406,7 +14552,7 @@ OTC乖離：${s?.otcBias?.toFixed(2)||'—'}%
 ${r.analysis||'—'}
 
 【風險警示】
-${r.warnings?.map(w=>'• '+w).join('\n')||'無'}
+${r.warnings?.map(w=>'• '+(w.text||w)).join('\n')||'無'}
 
 【操作建議】
 ${r.advice||'—'}
@@ -14590,27 +14736,6 @@ function chipAttachListeners() {
 <script>
 const DIAG_TARGETS = [
   {
-    icon: '🤖', name: 'Claude AI API',
-    desc: 'AI 量化分析功能',
-    test: async () => {
-      const t0 = Date.now();
-      const r = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
-        },
-        body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:10, messages:[{role:'user',content:'hi'}] })
-      });
-      const ping = Date.now() - t0;
-      if (r.status === 200) return { ok: true, ping, note: '✅ 正常' };
-      if (r.status === 401) return { ok: false, ping, note: '需要 API Key' };
-      if (r.status === 529) return { ok: false, ping, note: '伺服器過載' };
-      return { ok: r.ok, ping, note: `HTTP ${r.status}` };
-    }
-  },
-  {
     icon: '📡', name: 'TWSE 台灣證交所',
     desc: '台股 K 線、法人資料',
     test: async () => {
@@ -14718,7 +14843,7 @@ async function diagRun() {
 
   const total = DIAG_TARGETS.length;
   const color = passed === total ? '#00e5a0' : passed >= 2 ? '#f59e0b' : '#ff4d6d';
-  sumEl.innerHTML = `<span style="color:${color};font-weight:700;">${passed}/${total} 項目通過</span>　${passed < total ? '⚠️ AI 未連接時將使用規則式評分，K線可能無法載入' : '所有連線正常 🎉'}`;
+  sumEl.innerHTML = `<span style="color:${color};font-weight:700;">${passed}/${total} 項目通過</span>　${passed < total ? '⚠️ 部分連線異常，K線資料可能載入失敗' : '所有連線正常 🎉'}`;
 }
 </script>
 
