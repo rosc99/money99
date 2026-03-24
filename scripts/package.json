@@ -1,1 +1,12 @@
-
+{
+  "name": "money99-alert",
+  "version": "1.0.0",
+  "description": "每日市場警報腳本",
+  "main": "check.js",
+  "scripts": {
+    "start": "node check.js"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
