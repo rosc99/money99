@@ -2205,7 +2205,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-25 20:02:33</div>
+    <div class="clock-display" id="clockDisplay">2026-03-25 21:58:20</div>
   </div>
 </aside>
 
@@ -2350,8 +2350,23 @@ input::placeholder { color: var(--text-muted); }
             </div>
           </div>
         </div>
-        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"></div>
-        <canvas id="wealthChart" style="width:100%;display:block;" height="220"></canvas>
+        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#f59e0b;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#ff4d6d;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">總負債</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#ff4d6d;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div><div style="display:flex;align-items:center;gap:6px;">
+        <span style="width:20px;height:3px;background:#00e5a0;border-radius:2px;display:inline-block;"></span>
+        <span style="font-size:0.72rem;color:var(--text-secondary);">淨資產</span>
+        <span style="font-family:var(--mono);font-size:0.8rem;color:#00e5a0;">$0</span>
+        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
+      </div></div>
+        <canvas id="wealthChart" style="width:100%;display:block;" height="220" width="346"></canvas>
         <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;" id="wealthXLabels"></div>
       </div>
 
@@ -2974,9 +2989,10 @@ input::placeholder { color: var(--text-muted); }
     </div>
 
     <!-- ══ 主功能分頁 ══ -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;">
       <button class="etf-main-tab active" data-main="etf" onclick="etfMainSwitch('etf',this)">📈 ETF 分析</button>
       <button class="etf-main-tab" data-main="risk" onclick="etfMainSwitch('risk',this)">⚠️ 風險評分</button>
+      <button class="etf-main-tab" data-main="pressure" onclick="etfMainSwitch('pressure',this)">🔴 資金壓力</button>
     </div>
 
     <!-- ETF 內容 -->
@@ -3102,6 +3118,148 @@ input::placeholder { color: var(--text-muted); }
         <div id="riskHistory"><div style="color:var(--text-muted);font-size:0.72rem;text-align:center;padding:8px;">尚無歷史記錄</div></div>
       </div>
     </div><!-- /etfMainPanel-risk -->
+
+    <!-- ══ 資金壓力分析 Panel ══ -->
+    <div id="etfMainPanel-pressure" style="display:none">
+
+      <!-- 狀態列 -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:0.62rem;color:var(--text-muted);">台股籌碼壓力 · 資金高檔風險評估</div>
+        <div id="prs-badge" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:0.65rem;font-family:var(--mono);font-weight:600;border:1px solid var(--border);color:var(--text-muted);">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--text-muted);animation:pulse .8s steps(1) infinite;"></span>
+          <span id="prs-badge-text">輸入數據</span>
+        </div>
+      </div>
+
+      <!-- 數據輸入 -->
+      <div class="etf-card" style="margin-bottom:10px;padding:14px 12px;">
+        <div style="font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">數據輸入</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+          <div>
+            <div style="font-size:0.6rem;color:var(--text-muted);margin-bottom:4px;letter-spacing:.05em;">外資台指期貨淨空單（口）</div>
+            <div class="db-input-wrap"><input type="number" id="prs-fs" placeholder="例：28000" min="0"></div>
+          </div>
+          <div>
+            <div style="font-size:0.6rem;color:var(--text-muted);margin-bottom:4px;letter-spacing:.05em;">昨日外資空單（口）</div>
+            <div class="db-input-wrap"><input type="number" id="prs-fsp" placeholder="例：25000" min="0"></div>
+          </div>
+          <div>
+            <div style="font-size:0.6rem;color:var(--text-muted);margin-bottom:4px;letter-spacing:.05em;">大盤融資餘額（億元）</div>
+            <div class="db-input-wrap"><input type="number" id="prs-mb" placeholder="例：2800" min="0"></div>
+          </div>
+          <div>
+            <div style="font-size:0.6rem;color:var(--text-muted);margin-bottom:4px;letter-spacing:.05em;">融資維持率（%）</div>
+            <div class="db-input-wrap"><input type="number" id="prs-mr" placeholder="例：168" min="100" max="300"></div>
+          </div>
+          <div>
+            <div style="font-size:0.6rem;color:var(--text-muted);margin-bottom:4px;letter-spacing:.05em;">0050 近5日漲跌（%）</div>
+            <div class="db-input-wrap"><input type="number" id="prs-etf" placeholder="例：-1.2" step="0.1"></div>
+          </div>
+          <div>
+            <div style="font-size:0.6rem;color:var(--text-muted);margin-bottom:4px;letter-spacing:.05em;">2330 近5日漲跌（%）</div>
+            <div class="db-input-wrap"><input type="number" id="prs-tsmc" placeholder="例：+0.8" step="0.1"></div>
+          </div>
+        </div>
+        <button onclick="prsAnalyze()" style="width:100%;background:var(--accent-green);color:#000;border:none;border-radius:8px;padding:9px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:var(--sans);transition:opacity .2s;">▶ 執行籌碼壓力分析</button>
+      </div>
+
+      <!-- 四大指標 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+        <!-- 外資空單 -->
+        <div class="etf-card prs-gauge" id="prs-card-fs" style="padding:12px;">
+          <div style="font-size:0.58rem;color:var(--text-muted);letter-spacing:.06em;margin-bottom:6px;">外資台指期貨淨空單</div>
+          <div style="font-family:var(--mono);font-size:1.3rem;font-weight:600;color:var(--text-muted);" id="prs-val-fs">－</div>
+          <div style="font-size:0.6rem;color:var(--text-muted);margin:3px 0 8px;" id="prs-sub-fs">尚未輸入</div>
+          <div style="height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:6px;"><div id="prs-bar-fs" style="height:100%;width:0%;background:var(--accent-green);border-radius:2px;transition:width .8s,background .4s;"></div></div>
+          <div style="font-size:0.62rem;font-family:var(--mono);color:var(--text-muted);" id="prs-vd-fs">等待輸入</div>
+        </div>
+        <!-- 融資餘額 -->
+        <div class="etf-card prs-gauge" id="prs-card-mb" style="padding:12px;">
+          <div style="font-size:0.58rem;color:var(--text-muted);letter-spacing:.06em;margin-bottom:6px;">大盤融資餘額</div>
+          <div style="font-family:var(--mono);font-size:1.3rem;font-weight:600;color:var(--text-muted);" id="prs-val-mb">－</div>
+          <div style="font-size:0.6rem;color:var(--text-muted);margin:3px 0 8px;" id="prs-sub-mb">尚未輸入</div>
+          <div style="height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:6px;"><div id="prs-bar-mb" style="height:100%;width:0%;background:var(--accent-green);border-radius:2px;transition:width .8s,background .4s;"></div></div>
+          <div style="font-size:0.62rem;font-family:var(--mono);color:var(--text-muted);" id="prs-vd-mb">等待輸入</div>
+        </div>
+        <!-- 融資維持率 -->
+        <div class="etf-card prs-gauge" id="prs-card-mr" style="padding:12px;">
+          <div style="font-size:0.58rem;color:var(--text-muted);letter-spacing:.06em;margin-bottom:6px;">融資維持率</div>
+          <div style="font-family:var(--mono);font-size:1.3rem;font-weight:600;color:var(--text-muted);" id="prs-val-mr">－</div>
+          <div style="font-size:0.6rem;color:var(--text-muted);margin:3px 0 8px;" id="prs-sub-mr">安全線 165%</div>
+          <div style="height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:6px;"><div id="prs-bar-mr" style="height:100%;width:0%;background:var(--accent-green);border-radius:2px;transition:width .8s,background .4s;"></div></div>
+          <div style="font-size:0.62rem;font-family:var(--mono);color:var(--text-muted);" id="prs-vd-mr">等待輸入</div>
+        </div>
+        <!-- 籌碼背離 -->
+        <div class="etf-card prs-gauge" id="prs-card-dv" style="padding:12px;">
+          <div style="font-size:0.58rem;color:var(--text-muted);letter-spacing:.06em;margin-bottom:6px;">法人 vs 散戶背離</div>
+          <div style="font-family:var(--mono);font-size:1.3rem;font-weight:600;color:var(--text-muted);" id="prs-val-dv">－</div>
+          <div style="font-size:0.6rem;color:var(--text-muted);margin:3px 0 8px;" id="prs-sub-dv">需輸入ETF及台積電</div>
+          <div style="height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:6px;"><div id="prs-bar-dv" style="height:100%;width:0%;background:var(--accent-green);border-radius:2px;transition:width .8s,background .4s;"></div></div>
+          <div style="font-size:0.62rem;font-family:var(--mono);color:var(--text-muted);" id="prs-vd-dv">等待輸入</div>
+        </div>
+      </div>
+
+      <!-- 綜合壓力 -->
+      <div class="etf-card" style="margin-bottom:10px;padding:14px 12px;" id="prs-overall-card">
+        <div style="font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">綜合壓力指數</div>
+        <div id="prs-placeholder" style="text-align:center;padding:16px;color:var(--text-muted);font-size:0.72rem;font-family:var(--mono);">輸入數據後顯示綜合壓力評估</div>
+        <div id="prs-result" style="display:none;">
+          <div style="text-align:center;margin-bottom:8px;">
+            <div style="font-family:var(--mono);font-size:2.8rem;font-weight:400;transition:color 1s;" id="prs-score">0</div>
+            <div style="font-size:0.75rem;font-weight:600;transition:color 1s;margin-top:2px;" id="prs-verdict">－</div>
+          </div>
+          <!-- Meter -->
+          <div style="position:relative;height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin:10px 0 4px;">
+            <div style="position:absolute;inset:0;background:linear-gradient(90deg,var(--accent-green) 0%,var(--accent-amber) 50%,var(--accent-red) 100%);border-radius:4px;"></div>
+            <div id="prs-mask" style="position:absolute;top:0;right:0;bottom:0;background:var(--bg-card2);border-radius:0 4px 4px 0;transition:width 1s cubic-bezier(.4,0,.2,1);width:100%;"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:0.55rem;font-family:var(--mono);color:var(--text-muted);margin-bottom:10px;">
+            <span>低壓 0</span><span>警戒 50</span><span>危險 100</span>
+          </div>
+          <!-- Signals -->
+          <div id="prs-signals" style="display:flex;flex-direction:column;gap:6px;"></div>
+        </div>
+      </div>
+
+      <!-- 警戒矩陣 -->
+      <div class="etf-card" style="margin-bottom:10px;padding:14px 12px;overflow-x:auto;">
+        <div style="font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">警戒矩陣參考</div>
+        <table style="width:100%;border-collapse:collapse;font-size:0.65rem;">
+          <thead><tr style="border-bottom:1px solid var(--border);">
+            <th style="text-align:left;padding:5px 6px;color:var(--text-muted);font-weight:600;font-size:0.58rem;letter-spacing:.08em;">指標</th>
+            <th style="text-align:left;padding:5px 6px;color:var(--accent-amber);font-weight:600;font-size:0.58rem;">⚠ 警戒</th>
+            <th style="text-align:left;padding:5px 6px;color:var(--accent-red);font-weight:600;font-size:0.58rem;">🔴 危險</th>
+          </tr></thead>
+          <tbody>
+            <tr style="border-bottom:1px solid rgba(37,42,58,0.5);"><td style="padding:7px 6px;color:var(--text-primary);font-weight:500;">外資淨空單</td><td style="padding:7px 6px;color:var(--accent-amber);font-family:var(--mono);">2.5～3萬口</td><td style="padding:7px 6px;color:var(--accent-red);font-family:var(--mono);">&gt;3.5萬且增</td></tr>
+            <tr style="border-bottom:1px solid rgba(37,42,58,0.5);"><td style="padding:7px 6px;color:var(--text-primary);font-weight:500;">融資餘額</td><td style="padding:7px 6px;color:var(--accent-amber);font-family:var(--mono);">緩步增破前高</td><td style="padding:7px 6px;color:var(--accent-red);font-family:var(--mono);">盤整融資暴增</td></tr>
+            <tr style="border-bottom:1px solid rgba(37,42,58,0.5);"><td style="padding:7px 6px;color:var(--text-primary);font-weight:500;">融資維持率</td><td style="padding:7px 6px;color:var(--accent-amber);font-family:var(--mono);">跌破165%</td><td style="padding:7px 6px;color:var(--accent-red);font-family:var(--mono);">跌破160%</td></tr>
+            <tr style="border-bottom:1px solid rgba(37,42,58,0.5);"><td style="padding:7px 6px;color:var(--text-primary);font-weight:500;">現貨+期貨</td><td style="padding:7px 6px;color:var(--accent-amber);font-family:var(--mono);">賣超+空增</td><td style="padding:7px 6px;color:var(--accent-red);font-family:var(--mono);">同步大出貨</td></tr>
+            <tr><td style="padding:7px 6px;color:var(--text-primary);font-weight:500;">主力換手</td><td style="padding:7px 6px;color:var(--accent-amber);font-family:var(--mono);">融資增不漲</td><td style="padding:7px 6px;color:var(--accent-red);font-family:var(--mono);">融資增反跌</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 提醒 -->
+      <div class="etf-card" style="margin-bottom:16px;padding:14px 12px;">
+        <div style="font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">分析邏輯提醒</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;gap:10px;padding:9px 10px;background:var(--bg-card2);border-radius:8px;font-size:0.7rem;line-height:1.7;color:var(--text-muted);">
+            <span style="flex-shrink:0;margin-top:1px;">📌</span>
+            <div>不要只看單日數值。<strong style="color:var(--text-primary);">「融資餘額增、股價不漲」</strong>是主力換手散戶的關鍵訊號。</div>
+          </div>
+          <div style="display:flex;gap:10px;padding:9px 10px;background:var(--bg-card2);border-radius:8px;font-size:0.7rem;line-height:1.7;color:var(--text-muted);">
+            <span style="flex-shrink:0;margin-top:1px;">⚡</span>
+            <div><strong style="color:var(--text-primary);">三指標同時亮紅燈</strong>（空單 × 融資 × 維持率）時，歷史上為大盤急跌前高機率前兆。</div>
+          </div>
+          <div style="display:flex;gap:10px;padding:9px 10px;background:var(--bg-card2);border-radius:8px;font-size:0.7rem;line-height:1.7;color:var(--text-muted);">
+            <span style="flex-shrink:0;margin-top:1px;">🔍</span>
+            <div>數據來源：<strong style="color:var(--text-primary);">外資空單</strong> → 期交所三大法人 / 玩股網；<strong style="color:var(--text-primary);">融資餘額</strong> → 證交所 / Goodinfo。</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /etfMainPanel-pressure -->
 
     <!-- Loading overlay -->
     <div id="etfLoading" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(13,15,20,.85);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;">
@@ -13795,8 +13953,9 @@ async function etfLoadChipAsync() {
 function etfMainSwitch(key, btn) {
   document.querySelectorAll('#page-stats .etf-main-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('etfMainPanel-etf').style.display  = key==='etf'  ? 'block' : 'none';
-  document.getElementById('etfMainPanel-risk').style.display = key==='risk' ? 'block' : 'none';
+  document.getElementById('etfMainPanel-etf').style.display      = key==='etf'      ? 'block' : 'none';
+  document.getElementById('etfMainPanel-risk').style.display     = key==='risk'     ? 'block' : 'none';
+  document.getElementById('etfMainPanel-pressure').style.display = key==='pressure' ? 'block' : 'none';
   if (key==='risk') { riskRenderHistory(); riskFetchMarketData(); }
 }
 
@@ -14685,18 +14844,17 @@ function riskRenderResult(result) {
       </div>`;
     }).join('');
 
-    // 資料日期時間標註
-    const now = new Date();
-    const dateStr = now.toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' });
-    const timeStr = now.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    const radarTimestamp = `<div style="display:flex;align-items:center;justify-content:center;gap:6px;margin:8px 0 12px;padding:5px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:20px;width:fit-content;margin-left:auto;margin-right:auto;">
-      <span style="font-size:0.58rem;color:#4a5068;letter-spacing:.08em;">資料時間</span>
-      <span style="font-family:'DM Mono',monospace;font-size:0.68rem;color:#7a8099;font-weight:500;">${dateStr}</span>
+    const _rn = new Date();
+    const _ds = _rn.toLocaleDateString('zh-TW',{year:'numeric',month:'2-digit',day:'2-digit'});
+    const _ts = _rn.toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    const radarTimestamp = `<div style="display:flex;align-items:center;justify-content:center;gap:6px;margin:6px auto 12px;padding:4px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:20px;width:fit-content;">
+      <span style="font-size:0.57rem;color:#4a5068;letter-spacing:.08em;">資料時間</span>
+      <span style="font-family:'DM Mono',monospace;font-size:0.67rem;color:#7a8099;">${_ds}</span>
       <span style="font-size:0.6rem;color:#3a4060;">|</span>
-      <span style="font-family:'DM Mono',monospace;font-size:0.68rem;color:#00e5a0;font-weight:600;">${timeStr}</span>
-      <span style="width:6px;height:6px;border-radius:50%;background:#00e5a0;box-shadow:0 0 6px #00e5a0;animation:pulse2 2s infinite;flex-shrink:0;"></span>
+      <span style="font-family:'DM Mono',monospace;font-size:0.67rem;color:#00e5a0;font-weight:600;">${_ts}</span>
+      <span style="width:5px;height:5px;border-radius:50%;background:#00e5a0;box-shadow:0 0 5px #00e5a0;animation:pulse .8s steps(1) infinite;flex-shrink:0;"></span>
     </div>`;
-    dimEl.innerHTML = `<div style="margin-bottom:6px;">${svgStr}</div>${radarTimestamp}${scoreRows}`;
+    dimEl.innerHTML = `<div style="margin-bottom:4px;">${svgStr}</div>${radarTimestamp}${scoreRows}`;
   }
 
   // AI report
@@ -15023,15 +15181,12 @@ const DIAG_TARGETS = [
     test: async () => {
       const t0 = Date.now();
       try {
-        const r = await fetch('https://api.allorigins.win/get?url=https://httpbin.org/get', { signal: AbortSignal.timeout(7000) });
+        // 用更小的測試目標避免逾時
+        const r = await fetch('https://api.allorigins.win/get?url=https://httpbin.org/status/200', { signal: AbortSignal.timeout(6000) });
         const ping = Date.now() - t0;
-        if (r.ok) {
-          const json = await r.json();
-          return { ok: !!json.contents, ping, note: json.contents ? '✅ 正常' : '回應格式異常' };
-        }
-        return { ok: false, ping, note: `HTTP ${r.status}` };
+        return { ok: r.ok, ping, note: r.ok ? '✅ 正常' : `HTTP ${r.status}` };
       } catch(e) {
-        return { ok: false, ping: Date.now()-t0, note: e.name==='TimeoutError'?'逾時':'失敗' };
+        return { ok: false, ping: Date.now()-t0, note: e.name==='TimeoutError'||e.name==='AbortError'?'逾時':'失敗' };
       }
     }
   },
@@ -15052,7 +15207,7 @@ const DIAG_TARGETS = [
         }
         return { ok: false, ping, note: `HTTP ${r.status}` };
       } catch(e) {
-        return { ok: false, ping: Date.now()-t0, note: e.name==='TimeoutError'?'逾時':'失敗' };
+        return { ok: false, ping: Date.now()-t0, note: e.name==='TimeoutError'||e.name==='AbortError'?'逾時':'失敗' };
       }
     }
   },
@@ -15073,7 +15228,7 @@ const DIAG_TARGETS = [
         }
         return { ok: false, ping, note: `HTTP ${r.status}` };
       } catch(e) {
-        return { ok: false, ping: Date.now()-t0, note: e.name==='TimeoutError'?'逾時':'失敗' };
+        return { ok: false, ping: Date.now()-t0, note: e.name==='TimeoutError'||e.name==='AbortError'?'逾時':'失敗' };
       }
     }
   },
@@ -15087,7 +15242,6 @@ const DIAG_TARGETS = [
         return { ok: true, ping: Date.now()-t0, note: '✅ 正常' };
       } catch(e) {
         const ping = Date.now() - t0;
-        // CORS block = reachable; timeout = unreachable
         return { ok: ping < 4800, ping, note: ping < 4800 ? '✅ 可達（CORS）' : '逾時/斷線' };
       }
     }
@@ -15175,11 +15329,7 @@ async function diagRun() {
   btn.textContent = '🔄 重新測試';
 
   const total = DIAG_TARGETS.length;
-  // 核心項目（前3個）必須通過才算正常
-  const corePass = [0,1,2].every(i => {
-    const stat = document.getElementById(`dstat${i}`)?.textContent || '';
-    return stat.includes('✅');
-  });
+  const corePass = passed >= 3; // TWSE + Yahoo + CORS 前三項
   const color = passed === total ? '#00e5a0' : corePass ? '#f59e0b' : '#ff4d6d';
   const msg = passed === total
     ? '所有連線正常 🎉'
@@ -15187,6 +15337,121 @@ async function diagRun() {
       ? '⚠️ 核心資料來源異常，K線 / 籌碼可能載入失敗'
       : `⚡ 部分輔助連線異常（${total-passed} 項），主要功能不受影響`;
   sumEl.innerHTML = `<span style="color:${color};font-weight:700;">${passed}/${total} 項目通過</span>　${msg}`;
+}
+
+// ══ 資金壓力分析 ══
+function prsSetCard(id, level) {
+  const colors = { safe:'var(--accent-green)', warn:'var(--accent-amber)', danger:'var(--accent-red)' };
+  const c = colors[level] || 'var(--text-muted)';
+  const card = document.getElementById('prs-card-'+id);
+  if (card) card.style.borderColor = (level==='safe'?'rgba(0,229,160,0.3)':level==='warn'?'rgba(245,158,11,0.35)':'rgba(255,77,109,0.4)');
+  const bar = document.getElementById('prs-bar-'+id);
+  if (bar) bar.style.background = c;
+  ['val','vd'].forEach(p => {
+    const el = document.getElementById(`prs-${p}-${id}`);
+    if (el) el.style.color = c;
+  });
+}
+
+function prsAnalyze() {
+  const fs   = parseFloat(document.getElementById('prs-fs').value);
+  const fsp  = parseFloat(document.getElementById('prs-fsp').value);
+  const mb   = parseFloat(document.getElementById('prs-mb').value);
+  const mr   = parseFloat(document.getElementById('prs-mr').value);
+  const etf  = parseFloat(document.getElementById('prs-etf').value);
+  const tsmc = parseFloat(document.getElementById('prs-tsmc').value);
+
+  if ([fs,mb,mr].every(isNaN)) { chipShowToast('請至少輸入一項數據','warn'); return; }
+
+  let score = 0, signals = [];
+
+  // 外資空單
+  if (!isNaN(fs)) {
+    document.getElementById('prs-val-fs').textContent = fs.toLocaleString() + ' 口';
+    const delta = !isNaN(fsp) ? fs - fsp : null;
+    document.getElementById('prs-sub-fs').textContent = delta!==null ? `較昨日 ${delta>=0?'+':''}${delta.toLocaleString()} 口` : '未輸入昨日數據';
+    let lv='safe', vd='空單偏低，壓力輕微', bar=20;
+    if (fs>=35000)      { lv='danger'; vd='⚠ 超過3.5萬口，極度危險'; bar=92; score+=40; signals.push({c:'danger',t:'外資空單超 3.5 萬口'}); }
+    else if (fs>=30000) { lv='danger'; vd='⚠ 超過3萬口警戒紅線';     bar=78; score+=30; signals.push({c:'danger',t:'外資空單超 3 萬口'}); }
+    else if (fs>=25000) { lv='warn';   vd='⚡ 進入2.5～3萬口區間';   bar=55; score+=20; signals.push({c:'warn',  t:'外資空單接近警戒線'}); }
+    else                {                                                bar=Math.min(45,(fs/25000)*45); signals.push({c:'safe',t:'外資空單正常'}); }
+    if (delta!==null&&delta>2000) { score+=8; signals.push({c:'warn',t:`單日空單增 +${delta.toLocaleString()}口`}); }
+    prsSetCard('fs',lv);
+    document.getElementById('prs-bar-fs').style.width = bar+'%';
+    document.getElementById('prs-vd-fs').textContent = vd;
+  }
+
+  // 融資餘額
+  if (!isNaN(mb)) {
+    document.getElementById('prs-val-mb').textContent = mb.toLocaleString() + ' 億';
+    document.getElementById('prs-sub-mb').textContent = mb>=3000?'已超過3,000億歷史高位':'高位參考：3,000億以上';
+    let lv='safe', vd='融資餘額正常範圍', bar=20;
+    if (mb>=3200)      { lv='danger'; vd='⚠ 融資創高，籌碼極不穩'; bar=90; score+=35; signals.push({c:'danger',t:`融資 ${mb.toLocaleString()}億，極高風險`}); }
+    else if (mb>=3000) { lv='danger'; vd='⚠ 達3,000億高位';         bar=74; score+=25; signals.push({c:'danger',t:'融資超 3,000億警戒'}); }
+    else if (mb>=2600) { lv='warn';   vd='⚡ 融資持續累積';          bar=52; score+=15; signals.push({c:'warn',  t:'融資餘額接近警戒區'}); }
+    else               {                                                bar=Math.min(42,(mb/2600)*42); signals.push({c:'safe',t:'融資餘額相對健康'}); }
+    prsSetCard('mb',lv);
+    document.getElementById('prs-bar-mb').style.width = bar+'%';
+    document.getElementById('prs-vd-mb').textContent = vd;
+  }
+
+  // 融資維持率
+  if (!isNaN(mr)) {
+    document.getElementById('prs-val-mr').textContent = mr.toFixed(1) + '%';
+    let lv='safe', vd='維持率健康，斷頭風險低', bar=15;
+    if (mr<=160)      { lv='danger'; vd='🔴 跌破160%，多殺多高風險'; bar=92; score+=40; signals.push({c:'danger',t:`維持率 ${mr.toFixed(1)}%，斷頭警報`}); }
+    else if (mr<=165) { lv='danger'; vd='⚠ 跌破165%警戒線';           bar=70; score+=28; signals.push({c:'danger',t:`維持率 ${mr.toFixed(1)}%，進入警戒`}); }
+    else if (mr<=170) { lv='warn';   vd='⚡ 接近165%警戒線';           bar=48; score+=12; signals.push({c:'warn',  t:`維持率 ${mr.toFixed(1)}%，留意`}); }
+    else              {                                                   bar=Math.max(8,100-((mr-160)/40)*80); signals.push({c:'safe',t:`維持率 ${mr.toFixed(1)}%，安全`}); }
+    prsSetCard('mr',lv);
+    document.getElementById('prs-bar-mr').style.width = bar+'%';
+    document.getElementById('prs-vd-mr').textContent = vd;
+  }
+
+  // 籌碼背離
+  if (!isNaN(etf) && !isNaN(tsmc)) {
+    const divScore = (fs>=25000?1:0)+(mb>=2600?1:0)+(etf<0&&mb>=2600?1:0);
+    document.getElementById('prs-val-dv').textContent = divScore>=2?'背離偵測':'方向一致';
+    document.getElementById('prs-sub-dv').textContent = `0050: ${etf>=0?'+':''}${etf.toFixed(1)}%  ／  台積電: ${tsmc>=0?'+':''}${tsmc.toFixed(1)}%`;
+    let lv='safe', vd='法人散戶方向一致', bar=15;
+    if (divScore>=3)      { lv='danger'; vd='🔴 散戶進、法人退，高危換手'; bar=85; score+=25; signals.push({c:'danger',t:'籌碼背離：散戶接盤'}); }
+    else if (divScore>=2) { lv='warn';   vd='⚡ 初步背離，留意換手';       bar=52; score+=12; signals.push({c:'warn',  t:'初步法人散戶背離'}); }
+    else                  {                                                  signals.push({c:'safe',t:'籌碼方向無明顯背離'}); }
+    prsSetCard('dv',lv);
+    document.getElementById('prs-bar-dv').style.width = bar+'%';
+    document.getElementById('prs-vd-dv').textContent = vd;
+  } else {
+    document.getElementById('prs-val-dv').textContent = '－';
+    document.getElementById('prs-sub-dv').textContent = '需同時輸入0050與台積電';
+  }
+
+  score = Math.min(100, score);
+
+  // 綜合顯示
+  document.getElementById('prs-placeholder').style.display = 'none';
+  document.getElementById('prs-result').style.display = 'block';
+
+  const sc = score>=65?'var(--accent-red)':score>=35?'var(--accent-amber)':'var(--accent-green)';
+  const sv = score>=65?'⚠ 高度壓力 — 建議縮減槓桿':score>=35?'⚡ 中等壓力 — 謹慎持倉':'✓ 低壓環境 — 籌碼相對穩定';
+  document.getElementById('prs-score').textContent = score;
+  document.getElementById('prs-score').style.color = sc;
+  document.getElementById('prs-verdict').textContent = sv;
+  document.getElementById('prs-verdict').style.color = sc;
+  document.getElementById('prs-mask').style.width = (100-score)+'%';
+
+  const badgeEl = document.getElementById('prs-badge');
+  const badgeTxt = document.getElementById('prs-badge-text');
+  badgeEl.style.borderColor = sc; badgeEl.style.color = sc;
+  badgeEl.querySelector('span').style.background = sc;
+  badgeTxt.textContent = score>=65?'高度壓力':score>=35?'中等警戒':'低壓環境';
+
+  document.getElementById('prs-signals').innerHTML = signals.map(s=>{
+    const c = s.c==='danger'?'var(--accent-red)':s.c==='warn'?'var(--accent-amber)':'var(--accent-green)';
+    return `<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--bg-card2);border-radius:6px;font-size:0.7rem;">
+      <span style="width:6px;height:6px;border-radius:50%;background:${c};flex-shrink:0;"></span>
+      <span style="color:var(--text-secondary);">${s.t}</span>
+    </div>`;
+  }).join('');
 }
 </script>
 
