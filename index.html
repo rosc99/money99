@@ -2205,7 +2205,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-25 08:41:05</div>
+    <div class="clock-display" id="clockDisplay">2026-03-25 20:02:33</div>
   </div>
 </aside>
 
@@ -4099,7 +4099,7 @@ input::placeholder { color: var(--text-muted); }
 }
 </style>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // SUPABASE CONFIG
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -14685,7 +14685,18 @@ function riskRenderResult(result) {
       </div>`;
     }).join('');
 
-    dimEl.innerHTML = `<div style="margin-bottom:10px;">${svgStr}</div>${scoreRows}`;
+    // 資料日期時間標註
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' });
+    const timeStr = now.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const radarTimestamp = `<div style="display:flex;align-items:center;justify-content:center;gap:6px;margin:8px 0 12px;padding:5px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:20px;width:fit-content;margin-left:auto;margin-right:auto;">
+      <span style="font-size:0.58rem;color:#4a5068;letter-spacing:.08em;">資料時間</span>
+      <span style="font-family:'DM Mono',monospace;font-size:0.68rem;color:#7a8099;font-weight:500;">${dateStr}</span>
+      <span style="font-size:0.6rem;color:#3a4060;">|</span>
+      <span style="font-family:'DM Mono',monospace;font-size:0.68rem;color:#00e5a0;font-weight:600;">${timeStr}</span>
+      <span style="width:6px;height:6px;border-radius:50%;background:#00e5a0;box-shadow:0 0 6px #00e5a0;animation:pulse2 2s infinite;flex-shrink:0;"></span>
+    </div>`;
+    dimEl.innerHTML = `<div style="margin-bottom:6px;">${svgStr}</div>${radarTimestamp}${scoreRows}`;
   }
 
   // AI report
@@ -14971,7 +14982,6 @@ const DIAG_TARGETS = [
     test: async () => {
       const t0 = Date.now();
       const twseUrl = 'https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20260101&stockNo=0050&response=json';
-      // 嘗試多個 proxy
       const proxies = [
         `https://api.allorigins.win/get?url=${encodeURIComponent(twseUrl)}`,
         `https://corsproxy.io/?url=${encodeURIComponent(twseUrl)}`,
@@ -14998,13 +15008,88 @@ const DIAG_TARGETS = [
     }
   },
   {
-    icon: '🔀', name: 'CORS Proxy',
+    icon: '🔀', name: 'CORS Proxy (corsproxy.io)',
     desc: 'corsproxy.io 代理伺服器',
     test: async () => {
       const t0 = Date.now();
       const r = await fetch('https://corsproxy.io/?url=https://httpbin.org/get', { signal: AbortSignal.timeout(6000) });
       const ping = Date.now() - t0;
       return { ok: r.ok, ping, note: r.ok ? '✅ 正常' : `HTTP ${r.status}` };
+    }
+  },
+  {
+    icon: '🔁', name: 'AllOrigins Proxy',
+    desc: 'api.allorigins.win 備援代理',
+    test: async () => {
+      const t0 = Date.now();
+      try {
+        const r = await fetch('https://api.allorigins.win/get?url=https://httpbin.org/get', { signal: AbortSignal.timeout(7000) });
+        const ping = Date.now() - t0;
+        if (r.ok) {
+          const json = await r.json();
+          return { ok: !!json.contents, ping, note: json.contents ? '✅ 正常' : '回應格式異常' };
+        }
+        return { ok: false, ping, note: `HTTP ${r.status}` };
+      } catch(e) {
+        return { ok: false, ping: Date.now()-t0, note: e.name==='TimeoutError'?'逾時':'失敗' };
+      }
+    }
+  },
+  {
+    icon: '📈', name: 'Yahoo Finance (TWII)',
+    desc: '加權指數即時報價驗證',
+    test: async () => {
+      const t0 = Date.now();
+      try {
+        const url = 'https://query1.finance.yahoo.com/v8/finance/chart/%5ETWII?interval=1d&range=5d';
+        const r = await fetch('https://corsproxy.io/?url=' + encodeURIComponent(url), { signal: AbortSignal.timeout(8000) });
+        const ping = Date.now() - t0;
+        if (r.ok) {
+          const json = await r.json();
+          const close = json?.chart?.result?.[0]?.indicators?.quote?.[0]?.close;
+          const last = close?.filter(v=>v!=null).at(-1);
+          return { ok: !!last, ping, note: last ? `✅ ${last.toFixed(0)} 點` : '資料為空' };
+        }
+        return { ok: false, ping, note: `HTTP ${r.status}` };
+      } catch(e) {
+        return { ok: false, ping: Date.now()-t0, note: e.name==='TimeoutError'?'逾時':'失敗' };
+      }
+    }
+  },
+  {
+    icon: '💹', name: 'Yahoo Finance (2330)',
+    desc: '台積電股價連線驗證',
+    test: async () => {
+      const t0 = Date.now();
+      try {
+        const url = 'https://query1.finance.yahoo.com/v8/finance/chart/2330.TW?interval=1d&range=5d';
+        const r = await fetch('https://corsproxy.io/?url=' + encodeURIComponent(url), { signal: AbortSignal.timeout(8000) });
+        const ping = Date.now() - t0;
+        if (r.ok) {
+          const json = await r.json();
+          const close = json?.chart?.result?.[0]?.indicators?.quote?.[0]?.close;
+          const last = close?.filter(v=>v!=null).at(-1);
+          return { ok: !!last, ping, note: last ? `✅ ${last.toFixed(0)} 元` : '資料為空' };
+        }
+        return { ok: false, ping, note: `HTTP ${r.status}` };
+      } catch(e) {
+        return { ok: false, ping: Date.now()-t0, note: e.name==='TimeoutError'?'逾時':'失敗' };
+      }
+    }
+  },
+  {
+    icon: '🌍', name: '網路可達性',
+    desc: '基礎外部網路連線',
+    test: async () => {
+      const t0 = Date.now();
+      try {
+        await fetch('https://httpbin.org/get', { signal: AbortSignal.timeout(5000) });
+        return { ok: true, ping: Date.now()-t0, note: '✅ 正常' };
+      } catch(e) {
+        const ping = Date.now() - t0;
+        // CORS block = reachable; timeout = unreachable
+        return { ok: ping < 4800, ping, note: ping < 4800 ? '✅ 可達（CORS）' : '逾時/斷線' };
+      }
     }
   },
   {
@@ -15018,6 +15103,24 @@ const DIAG_TARGETS = [
       } catch(e) {
         return { ok: false, ping: 0, note: e.message };
       }
+    }
+  },
+  {
+    icon: '⚡', name: 'Service Worker',
+    desc: '離線快取 PWA 支援',
+    test: async () => {
+      const supported = 'serviceWorker' in navigator;
+      return { ok: supported, ping: 0, note: supported ? '✅ 支援' : '不支援（不影響功能）' };
+    }
+  },
+  {
+    icon: '🔒', name: 'HTTPS / Crypto API',
+    desc: '安全環境 & 加密功能',
+    test: async () => {
+      const isHttps = location.protocol === 'https:' || location.hostname === 'localhost';
+      const hasCrypto = typeof crypto !== 'undefined' && !!crypto.subtle;
+      const ok = isHttps && hasCrypto;
+      return { ok, ping: 0, note: ok ? '✅ 安全環境' : (!isHttps ? '非 HTTPS 環境' : 'Crypto API 不可用') };
     }
   },
 ];
@@ -15072,8 +15175,18 @@ async function diagRun() {
   btn.textContent = '🔄 重新測試';
 
   const total = DIAG_TARGETS.length;
-  const color = passed === total ? '#00e5a0' : passed >= 2 ? '#f59e0b' : '#ff4d6d';
-  sumEl.innerHTML = `<span style="color:${color};font-weight:700;">${passed}/${total} 項目通過</span>　${passed < total ? '⚠️ 部分連線異常，K線資料可能載入失敗' : '所有連線正常 🎉'}`;
+  // 核心項目（前3個）必須通過才算正常
+  const corePass = [0,1,2].every(i => {
+    const stat = document.getElementById(`dstat${i}`)?.textContent || '';
+    return stat.includes('✅');
+  });
+  const color = passed === total ? '#00e5a0' : corePass ? '#f59e0b' : '#ff4d6d';
+  const msg = passed === total
+    ? '所有連線正常 🎉'
+    : !corePass
+      ? '⚠️ 核心資料來源異常，K線 / 籌碼可能載入失敗'
+      : `⚡ 部分輔助連線異常（${total-passed} 項），主要功能不受影響`;
+  sumEl.innerHTML = `<span style="color:${color};font-weight:700;">${passed}/${total} 項目通過</span>　${msg}`;
 }
 </script>
 
