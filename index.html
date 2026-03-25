@@ -2205,7 +2205,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-25 01:26:28</div>
+    <div class="clock-display" id="clockDisplay">2026-03-25 08:41:05</div>
   </div>
 </aside>
 
@@ -2350,23 +2350,8 @@ input::placeholder { color: var(--text-muted); }
             </div>
           </div>
         </div>
-        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">總資產</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#f59e0b;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#ff4d6d;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">總負債</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#ff4d6d;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#00e5a0;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">淨資產</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#00e5a0;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div></div>
-        <canvas id="wealthChart" style="width:100%;display:block;" height="220" width="346"></canvas>
+        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"></div>
+        <canvas id="wealthChart" style="width:100%;display:block;" height="220"></canvas>
         <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;" id="wealthXLabels"></div>
       </div>
 
@@ -3048,7 +3033,10 @@ input::placeholder { color: var(--text-muted); }
     </div>
 
     <!-- ══ 關鍵訊號 ══ -->
-    <div class="etf-card" id="etfSignalCard" style="margin-bottom:16px;display:none;"></div>
+    <div class="etf-card" id="etfSignalCard" style="margin-bottom:10px;display:none;"></div>
+
+    <!-- ══ 策略狀態機 ══ -->
+    <div id="etfStrategyState" style="margin-bottom:16px;display:none;border:1px solid var(--border);border-radius:12px;padding:14px 16px;background:var(--bg-card);transition:border-color .3s,background .3s;"></div>
 
     </div><!-- /etfMainPanel-etf -->
 
@@ -13288,14 +13276,14 @@ async function etfFetchChipDay(ticker, dateStr) {
       date: dateStr, selectType: 'ALLBUT0999'
     });
     if (!data?.data) return null;
-    // trim 兩端空白避免 '00662 ' !== '00662'
+    // 比對時去除空格，避免 '00662 ' 無法 match '00662'
     const row = data.data.find(r => String(r[0]).trim() === String(ticker).trim());
     if (!row) return null;
     const num = s => parseInt(String(s).replace(/,/g,'').replace(/[^\d-]/g,'')) || 0;
     return {
-      foreign: num(row[4]),   // 外資買賣超（張）
-      trust:   num(row[7]),   // 投信買賣超
-      dealer:  num(row[10]),  // 自營商買賣超
+      foreign: num(row[4]),   // 外資買賣超（張）col index 4
+      trust:   num(row[7]),   // 投信買賣超       col index 7
+      dealer:  num(row[10]),  // 自營商買賣超     col index 10
     };
   } catch { return null; }
 }
@@ -13323,94 +13311,128 @@ async function etfFetchChipMonth(ticker, yearMonth) {
   } catch { return []; }
 }
 
-// ── 快速法人資料：多重策略 ──
+// ── 快速法人資料：多重 fallback 策略 ──
 async function etfFetchChipHistory(ticker, tradingDays) {
   const cacheKey = `chip_${ticker}_${tradingDays.length}`;
   if (etfChipCache[cacheKey]) return etfChipCache[cacheKey];
 
-  const num = s => parseInt(String(s).replace(/,/g,'').replace(/[^\d-]/g,'')) || 0;
-  const cum = arr => { let c=0; return arr.map(v => v===null ? null : (c+=v, c)); };
-
-  // === 策略 A：逐日抓 T86（近 20 個交易日）===
-  const tryDailyT86 = async () => {
-    const days = tradingDays.slice(-20);
-    const res  = { foreign:[], trust:[], dealer:[], dates:[], isMock:false };
-    let hits = 0;
-
-    for (const day of days) {
-      const ds = `${day.t.getFullYear()}${String(day.t.getMonth()+1).padStart(2,'0')}${String(day.t.getDate()).padStart(2,'0')}`;
-      const chip = await etfFetchChipDay(ticker, ds);
-      if (chip !== null) {
-        res.foreign.push(chip.foreign);
-        res.trust.push(chip.trust);
-        res.dealer.push(chip.dealer);
-        if (chip.foreign!==0||chip.trust!==0||chip.dealer!==0) hits++;
-      } else {
-        res.foreign.push(null);
-        res.trust.push(null);
-        res.dealer.push(null);
-      }
-      res.dates.push(`${day.t.getMonth()+1}/${day.t.getDate()}`);
-      await new Promise(r=>setTimeout(r,180));
-    }
-
-    const validCount = res.foreign.filter(v=>v!==null).length;
-    if (validCount === 0) return null; // 完全拿不到
-
-    res.foreignCum = cum(res.foreign);
-    res.trustCum   = cum(res.trust);
-    res.dealerCum  = cum(res.dealer);
-    res.hitCount   = hits;
-    return res;
-  };
-
-  // === 策略 B：抓 TWSE ETF 三大法人月報（selectType=MS）===
-  const tryMonthlyT86 = async () => {
+  // === 策略 A：TWSE 三大法人月報（適合ETF） ===
+  // 用 fund/BFIAMU — 三大法人申購贖回（ETF 專屬）
+  const tryETFChip = async () => {
     const today = new Date();
-    const res   = { foreign:[], trust:[], dealer:[], dates:[], isMock:false };
-    let got = false;
+    const results = { foreign:[], trust:[], dealer:[], dates:[], isMock:false };
+    let gotAny = false;
 
-    for (let m=2; m>=0; m--) {
-      const d  = new Date(today.getFullYear(), today.getMonth()-m, 1);
+    for (let m = 2; m >= 0; m--) {
+      const d = new Date(today.getFullYear(), today.getMonth() - m, 1);
       const ym = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}`;
       try {
-        const data = await etfFetchTWSE('fund/T86', { date:ym+'01', selectType:'ALLBUT0999' });
-        if (!data?.data) continue;
-        const row = data.data.find(r => String(r[0]).trim()===String(ticker).trim());
-        if (!row) continue;
-        res.foreign.push(num(row[4]));
-        res.trust.push(num(row[7]));
-        res.dealer.push(num(row[10]));
-        res.dates.push(ym);
-        got = true;
+        const data = await etfFetchTWSE('fund/T86', {
+          date: ym + '01', selectType: 'ALLBUT0999'
+        });
+        if (data?.data) {
+          const row = data.data.find(r => String(r[0]).trim() === String(ticker).trim());
+          if (row) {
+            const num = s => parseInt(String(s).replace(/,/g,'').replace(/[^\d-]/g,'')) || 0;
+            results.foreign.push(num(row[4]));
+            results.trust.push(num(row[7]));
+            results.dealer.push(num(row[10]));
+            results.dates.push(ym);
+            gotAny = true;
+          }
+        }
       } catch {}
-      await new Promise(r=>setTimeout(r,300));
+      await new Promise(r => setTimeout(r, 300));
     }
-    if (!got) return null;
-    res.foreignCum = cum(res.foreign);
-    res.trustCum   = cum(res.trust);
-    res.dealerCum  = cum(res.dealer);
-    return res;
+    return gotAny ? results : null;
   };
 
-  // === 策略 C：模擬（標記 isMock）===
-  const mockFallback = () => {
-    const n   = Math.min(tradingDays.length, 20);
-    const mk  = (base, vol) => Array.from({length:n},(_,i)=>
-      base + Math.round(Math.sin(i*0.4)*vol+(Math.random()-.5)*vol*.3));
-    const f=mk(-50000,80000), t=mk(5000,15000), d=mk(2000,8000);
+  // === 策略 B：逐日抓 T86（最近20個交易日） ===
+  const tryDailyT86 = async () => {
+    const recentDays = tradingDays.slice(-20);
+    const results = { foreign:[], trust:[], dealer:[], dates:[], isMock:false };
+    let hitCount = 0;
+
+    for (const day of recentDays) {
+      const ds = `${day.t.getFullYear()}${String(day.t.getMonth()+1).padStart(2,'0')}${String(day.t.getDate()).padStart(2,'0')}`;
+      const chip = await etfFetchChipDay(ticker, ds);
+      // 只有真的從API拿到數據才算
+      if (chip !== null) {
+        results.foreign.push(chip.foreign);
+        results.trust.push(chip.trust);
+        results.dealer.push(chip.dealer);
+        results.dates.push(`${day.t.getMonth()+1}/${day.t.getDate()}`);
+        // 統計非零資料筆數
+        if (chip.foreign !== 0 || chip.trust !== 0 || chip.dealer !== 0) hitCount++;
+      } else {
+        // API 無資料（週末、假日或找不到代號）—— 填 null 不填 0
+        results.foreign.push(null);
+        results.trust.push(null);
+        results.dealer.push(null);
+        results.dates.push(`${day.t.getMonth()+1}/${day.t.getDate()}`);
+      }
+      await new Promise(r => setTimeout(r, 180));
+    }
+
+    // 過濾掉 null，再累積
+    const validF = results.foreign.filter(v => v !== null);
+    const validT = results.trust.filter(v => v !== null);
+    const validD = results.dealer.filter(v => v !== null);
+
+    // 如果外資有資料但投信/自營全為0，可能是ETF的正常現象（投信不操作該ETF）
+    // 但如果三者全為0且 hitCount=0，代表代號比對失敗
+    if (hitCount === 0 && validF.length > 0 && validF.every(v => v === 0)) {
+      return null; // 代號比對失敗，fallback 到模擬
+    }
+
+    const cum = arr => { let c=0; return arr.map(v => v===null ? null : (c+=v, c)); };
+    results.foreignCum = cum(results.foreign);
+    results.trustCum   = cum(results.trust);
+    results.dealerCum  = cum(results.dealer);
+    return results;
+  };
+
+  // === 策略 C：模擬資料（fallback，有標記）===
+  const mockData = () => {
+    const n = Math.min(tradingDays.length, 20);
+    const mkSeries = (base, vol) =>
+      Array.from({length:n}, (_,i) => base + Math.round(Math.sin(i*0.4)*vol + (Math.random()-0.5)*vol*0.3));
+    const foreign = mkSeries(-50000, 80000);
+    const trust   = mkSeries(5000,   15000);
+    const dealer  = mkSeries(2000,   8000);
+    const cum = arr => { let c=0; return arr.map(v=>(c+=v,c)); };
     return {
-      foreign:f, trust:t, dealer:d,
-      foreignCum:cum(f), trustCum:cum(t), dealerCum:cum(d),
-      dates: tradingDays.slice(-n).map(r=>`${r.t.getMonth()+1}/${r.t.getDate()}`),
+      foreign, trust, dealer,
+      foreignCum: cum(foreign),
+      trustCum:   cum(trust),
+      dealerCum:  cum(dealer),
+      dates: tradingDays.slice(-n).map(d=>`${d.t.getMonth()+1}/${d.t.getDate()}`),
       isMock: true,
     };
   };
 
+  // 依序嘗試各策略
   let result = null;
+
+  // 先試逐日 T86（最真實）
   try { result = await tryDailyT86(); } catch {}
-  if (!result) { try { result = await tryMonthlyT86(); } catch {} }
-  if (!result) result = mockFallback();
+
+  // 如果逐日失敗或代號不對，試月報
+  if (!result) {
+    try { result = await tryETFChip(); } catch {}
+    if (result) {
+      // 月報只有3筆，補充累積
+      const cum = arr => { let c=0; return arr.map(v=>(c+=v,c)); };
+      result.foreignCum = cum(result.foreign);
+      result.trustCum   = cum(result.trust);
+      result.dealerCum  = cum(result.dealer);
+    }
+  }
+
+  // 最後 fallback 到模擬
+  if (!result) {
+    result = mockData();
+  }
 
   etfChipCache[cacheKey] = result;
   return result;
@@ -13482,7 +13504,6 @@ function etfRenderPhase1(rows) {
   const avgV20 = etfAvgVol(volumes,20);
   const volR   = avgV20 ? volumes.at(-1)/avgV20 : null;
 
-  // Hero KPI
   const set=(id,v,s)=>{const el=document.getElementById(id);if(el){el.textContent=v;if(s)Object.assign(el.style,s);}};
   set('etfTicker', etfCurrent);
   set('etfName',   info.name);
@@ -13497,43 +13518,80 @@ function etfRenderPhase1(rows) {
   set('etfVol',  volR?`${volR.toFixed(2)}x`:'—',
       {color:volR>=2?'#f0b429':volR>=1.5?'var(--accent-red)':'var(--text-primary)'});
 
-  // Volume Profile + Zones
   const profile = etfVolumeProfile(rows, 24);
   const zones   = etfFindDenseZones(profile);
 
-  // VWAP cost
   let cumPV=0,cumV=0;
   rows.forEach(r=>{cumPV+=r.close*r.volume;cumV+=r.volume;});
   const costLine = cumV>0?cumPV/cumV:null;
 
-  // ── 合體 K線 + VRVP canvas ──
+  // ══ 模組 2：固定策略警戒線 ══
+  const rollingHigh = Math.max(...rows.slice(-180).map(r => r.high || r.close));
+  const strategyLevels = {
+    L1: rollingHigh * 0.95,
+    L2: rollingHigh * 0.90,
+    L3: rollingHigh * 0.80,
+  };
+
+  // ══ 模組 1：HVN 籌碼極性翻轉 ══
+  const refinedHvns = zones.map(z => {
+    const isResistance = close < z.mid * 0.99;
+    return { ...z, isResistance,
+      status:    isResistance ? '套牢壓力帶' : '籌碼支撐',
+      lineColor: isResistance ? '#ff4d6d'    : '#3b82f6',
+      lineWidth: isResistance ? 2.5          : 1.5,
+    };
+  });
+  const biggestHvn = refinedHvns[0];
+
+  // ══ 模組 3：型態破壞狀態機 ══
+  const ma20arr_full = etfSma(rows.map(r=>r.close), 20);
+  const ma60arr_full = etfSma(rows.map(r=>r.close), 60);
+  const ma20_cur  = ma20arr_full.at(-1) || ma20v;
+  const ma60_cur  = ma60arr_full.at(-1) || ma60v;
+  const ma20_prev = ma20arr_full.at(-6) || ma20_cur;
+  const isBelowMa60    = close < (ma60_cur || Infinity);
+  const isBelowBigHvn  = biggestHvn ? close < biggestHvn.mid * 0.99 : false;
+  const isMa20Down     = ma20_cur < ma20_prev;
+  const isMa20Recovery = close > (ma20_cur||0) && biasV !== null && biasV > 0;
+  const isBearBreakdown = isBelowMa60 && isBelowBigHvn && isMa20Down;
+
+  let strategyStatus, strategyColor, strategyPhase;
+  if (isBearBreakdown) {
+    strategyStatus='⚠ 警告：型態破壞 — 停止定期定額，啟動還款計畫'; strategyColor='#ff4d6d'; strategyPhase='bear';
+  } else if (isMa20Recovery && !isBelowMa60) {
+    strategyStatus='✅ 打底信號：重回20MA且乖離轉正 — 重啟定期定額'; strategyColor='#00e5a0'; strategyPhase='recover';
+  } else if (close < strategyLevels.L3) {
+    strategyStatus='🚨 海嘯模式：已達 -20%，質押上限警戒'; strategyColor='#ff4d6d'; strategyPhase='tsunami';
+  } else if (close < strategyLevels.L2) {
+    strategyStatus='🎯 加碼兩成點位：執行質押加碼 (20萬)'; strategyColor='#f59e0b'; strategyPhase='add2';
+  } else if (close < strategyLevels.L1) {
+    strategyStatus='📍 加碼一成點位：L1 區間，觀察進場'; strategyColor='#a78bfa'; strategyPhase='add1';
+  } else {
+    strategyStatus='🐂 牛市運行中 — 定期定額持續執行'; strategyColor='#00e5a0'; strategyPhase='bull';
+  }
+
   const mainCanvas = document.getElementById('etfMainCanvas');
-  if (mainCanvas) etfDrawCandleWithVRVP(mainCanvas, rows, zones, ma20v, ma60v);
+  if (mainCanvas) etfDrawCandleWithVRVP(mainCanvas, rows, refinedHvns, ma20v, ma60v, strategyLevels, strategyStatus, strategyColor, strategyPhase);
   const volCanvas = document.getElementById('etfVolCanvas');
   if (volCanvas) etfDrawVolBars(volCanvas, rows);
 
-  // ── Dense zones + 進出場建議 ──
-  const denseEl   = document.getElementById('etfDenseZone');
-  const adviceEl  = document.getElementById('etfTradeAdvice');
+  const denseEl  = document.getElementById('etfDenseZone');
+  const adviceEl = document.getElementById('etfTradeAdvice');
 
-  if (denseEl && zones.length) {
+  if (denseEl && refinedHvns.length) {
     denseEl.style.display = 'block';
-    const colors = ['#ff4d6d','#3b82f6','#a78bfa'];
     denseEl.innerHTML = `
-      <div style="font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">HVN 高量節點（密集成交區）</div>
-      ${zones.map((z,i)=>{
-        const isAbove = close > z.high;
-        const isBelow = close < z.low;
-        const inZn    = !isAbove && !isBelow;
-        const role    = isAbove ? '支撐' : isBelow ? '壓力' : '整理中';
-        const roleC   = isAbove ? '#00e5a0' : isBelow ? '#ff4d6d' : '#f0b429';
+      <div style="font-size:0.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">HVN 高量節點 · 籌碼極性翻轉</div>
+      ${refinedHvns.map((z,i)=>{
+        const rc=z.lineColor;
         return `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;${i>0?'border-top:1px solid var(--border);':''}">
-          <div style="width:3px;height:28px;background:${colors[i]};border-radius:2px;flex-shrink:0;"></div>
+          <div style="width:3px;height:28px;background:${rc};border-radius:2px;flex-shrink:0;"></div>
           <div style="flex:1;">
-            <div style="display:flex;align-items:center;gap:6px;">
-              <span style="font-family:var(--mono);font-size:0.75rem;font-weight:700;color:${colors[i]}">HVN${i+1}</span>
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              <span style="font-family:var(--mono);font-size:0.75rem;font-weight:700;color:${rc}">HVN${i+1}</span>
               <span style="font-family:var(--mono);font-size:0.72rem;color:var(--text-primary);">${z.low.toFixed(1)} ～ ${z.high.toFixed(1)}</span>
-              <span style="font-size:0.6rem;font-weight:700;padding:1px 6px;border-radius:4px;background:${roleC}22;color:${roleC};border:1px solid ${roleC}44;">${role}</span>
+              <span style="font-size:0.6rem;font-weight:700;padding:1px 6px;border-radius:4px;background:${rc}22;color:${rc};border:1px solid ${rc}44;">${z.status}</span>
             </div>
             <div style="font-size:0.6rem;color:var(--text-muted);margin-top:2px;">
               中心 ${z.mid.toFixed(1)} · 距今 ${(close-z.mid>=0?'+':'')}${(close-z.mid).toFixed(2)} (${((close-z.mid)/close*100).toFixed(1)}%)
@@ -13543,14 +13601,11 @@ function etfRenderPhase1(rows) {
       }).join('')}`;
   }
 
-  // 進出場建議
   if (adviceEl) {
     const advice = etfGenerateAdvice(close, zones, biasV, volR, ma20v, ma60v);
     if (advice) {
-      adviceEl.style.display = 'block';
-      adviceEl.style.borderColor = advice.color + '44';
-      adviceEl.style.background  = advice.color + '08';
-      adviceEl.innerHTML = `
+      adviceEl.style.display='block'; adviceEl.style.borderColor=advice.color+'44'; adviceEl.style.background=advice.color+'08';
+      adviceEl.innerHTML=`
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
           <span style="font-size:1.2rem;">${advice.emoji}</span>
           <div>
@@ -13560,16 +13615,14 @@ function etfRenderPhase1(rows) {
           <span style="margin-left:auto;font-size:0.65rem;font-weight:700;padding:3px 9px;border-radius:20px;background:${advice.color}22;color:${advice.color};border:1px solid ${advice.color}44;">${advice.action}</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:4px;">
-          ${advice.detail.map(d=>`
-            <div style="display:flex;gap:6px;align-items:flex-start;">
-              <span style="color:${advice.color};flex-shrink:0;font-size:0.7rem;">▸</span>
-              <span style="font-size:0.7rem;color:var(--text-secondary);line-height:1.5;">${d}</span>
-            </div>`).join('')}
+          ${advice.detail.map(d=>`<div style="display:flex;gap:6px;align-items:flex-start;">
+            <span style="color:${advice.color};flex-shrink:0;font-size:0.7rem;">▸</span>
+            <span style="font-size:0.7rem;color:var(--text-secondary);line-height:1.5;">${d}</span>
+          </div>`).join('')}
         </div>`;
     }
   }
 
-  // Cost line
   const costEl=document.getElementById('etfCostLine');
   if(costEl && costLine) {
     const diff=(close-costLine)/costLine*100;
@@ -13579,7 +13632,6 @@ function etfRenderPhase1(rows) {
       <span style="font-size:0.6rem;color:var(--text-muted)">（VWAP）</span></span>`;
   }
 
-  // Signals
   const sigEl=document.getElementById('etfSignalCard');
   if(sigEl){
     const sigs=[];
@@ -13587,7 +13639,7 @@ function etfRenderPhase1(rows) {
     if(biasV<-10) sigs.push({icon:'💡',txt:`月線乖離 ${biasV.toFixed(1)}%，可考慮逢低布局`,c:'bull'});
     if(volR>=2)   sigs.push({icon:'⚡',txt:`今日量 ${volR.toFixed(1)}x 均量，${up?'爆量上攻':'爆量下殺'}`,c:'gold'});
     const inDense=zones.find(z=>close>=z.low&&close<=z.high);
-    if(inDense) sigs.push({icon:'📍',txt:`在密集交易區 S${zones.indexOf(inDense)+1}（${inDense.low.toFixed(1)}~${inDense.high.toFixed(1)}）`,c:'neu'});
+    if(inDense) sigs.push({icon:'📍',txt:`在密集交易區 HVN${zones.indexOf(inDense)+1}（${inDense.low.toFixed(1)}~${inDense.high.toFixed(1)}）`,c:'neu'});
     if(sigs.length){
       sigEl.style.display='block'; sigEl.style.padding='14px 16px';
       sigEl.innerHTML=`<div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">今日關鍵訊號</div>
@@ -13598,7 +13650,54 @@ function etfRenderPhase1(rows) {
     } else sigEl.style.display='none';
   }
 
-  // Store rows for chip loading phase
+  // 策略狀態機卡片
+  const stateEl=document.getElementById('etfStrategyState');
+  if(stateEl){
+    stateEl.style.display='block';
+    stateEl.style.borderColor=strategyColor+'55';
+    stateEl.style.background=strategyColor+'0d';
+    const cond=[
+      {ok:isBelowMa60,   lbl:'跌破季線 (60MA)'},
+      {ok:isBelowBigHvn, lbl:'跌破最大籌碼密集區'},
+      {ok:isMa20Down,    lbl:'月線 (20MA) 轉向下'},
+    ];
+    stateEl.innerHTML=`
+      <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:200px;">
+          <div style="font-size:0.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px;">型態破壞偵測器</div>
+          <div style="font-size:0.82rem;font-weight:700;color:${strategyColor};line-height:1.4;margin-bottom:10px;">${strategyStatus}</div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            ${cond.map(c=>`<div style="display:flex;align-items:center;gap:5px;font-size:0.63rem;">
+              <span style="width:7px;height:7px;border-radius:50%;flex-shrink:0;background:${c.ok?'#ff4d6d':'var(--border)'}"></span>
+              <span style="color:${c.ok?'var(--accent-red)':'var(--text-muted)'}">${c.lbl}</span>
+            </div>`).join('')}
+          </div>
+          ${isBearBreakdown?`<div style="margin-top:10px;padding:8px 10px;border-radius:8px;background:rgba(255,77,109,.1);border:1px solid rgba(255,77,109,.25);font-size:0.68rem;color:var(--accent-red);line-height:1.6;">
+            ⚠ 三重條件全部觸發<br>→ 停止定期定額，不可攤平<br>→ 啟動還款計畫，降低質押比率</div>`
+          :isMa20Recovery&&!isBelowMa60?`<div style="margin-top:10px;padding:8px 10px;border-radius:8px;background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.25);font-size:0.68rem;color:var(--accent-green);line-height:1.6;">
+            ✅ 打底信號確認：重回20MA + 乖離轉正<br>→ 可重啟定期定額</div>`:''}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;min-width:150px;">
+          <div style="font-size:0.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:2px;">固定加碼警戒線</div>
+          ${[
+            {lbl:'L1 加碼一成',      price:strategyLevels.L1,color:'#a78bfa',pct:'-5%'},
+            {lbl:'L2 加碼兩成(20萬)',price:strategyLevels.L2,color:'#f59e0b',pct:'-10%'},
+            {lbl:'L3 海嘯/質押上限', price:strategyLevels.L3,color:'#ff4d6d',pct:'-20%'},
+          ].map(lv=>{
+            const hit=close<=lv.price;
+            return `<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:7px;background:${lv.color}${hit?'22':'10'};border:1px solid ${lv.color}${hit?'55':'25'};">
+              <div style="flex:1;">
+                <div style="font-size:0.58rem;color:${lv.color};font-weight:600;">${lv.pct} ${lv.lbl}</div>
+                <div style="font-family:var(--mono);font-size:0.78rem;font-weight:700;color:${lv.color};">${lv.price.toFixed(2)}</div>
+              </div>
+              <div style="font-size:0.62rem;font-weight:700;color:${hit?'var(--accent-green)':'var(--text-muted)'};">${hit?'✓ 達標':'—'}</div>
+            </div>`;
+          }).join('')}
+          <div style="font-size:0.58rem;color:var(--text-muted);margin-top:2px;">基準：近180日高 ${rollingHigh.toFixed(2)}</div>
+        </div>
+      </div>`;
+  }
+
   etfRender._lastRows = rows;
 }
 
@@ -13615,37 +13714,40 @@ async function etfLoadChipAsync() {
   try {
     const chipData = await etfFetchChipHistory(etfCurrent, rows);
 
+    // Chip chart
     const cCanvas=document.getElementById('etfChipChart');
     if(cCanvas) etfDrawChipChart(cCanvas, chipData);
 
-    // 卡片 — null 顯示「—」，不顯示誤導的 0
+    // Summary cards — 區分「真實零」與「資料缺失」
     if(summaryEl) {
       const items=[
         {key:'foreignCum',daily:'foreign',label:'外資',color:'#ff4d6d'},
         {key:'trustCum',  daily:'trust',  label:'投信',color:'#a78bfa'},
         {key:'dealerCum', daily:'dealer', label:'自營',color:'#00e5a0'},
       ];
-      const isMock = chipData.isMock;
       summaryEl.innerHTML = items.map(s=>{
         const cumArr  = (chipData[s.key]||[]).filter(v=>v!=null);
         const cumVal  = cumArr.length ? cumArr.at(-1) : null;
         const todayArr= (chipData[s.daily]||[]).filter(v=>v!=null);
         const todayVal= todayArr.length ? todayArr.at(-1) : null;
-        const g10     = etfGrowthRate(chipData[s.key],10);
-        const noData  = cumVal===null;
-        const cumTxt  = noData ? '—' : etfFmt(cumVal)+'張';
-        const todayTxt= todayVal===null ? '待更新' : `今日 ${etfFmt(todayVal)}張`;
-        const todayC  = todayVal===null ? 'var(--text-muted)'
-                      : todayVal>=0 ? 'var(--accent-red)' : 'var(--accent-green)';
+        const g10     = etfGrowthRate(chipData[s.key], 10);
+        const noData  = cumVal === null;
+        // 顯示值
+        const cumTxt  = noData ? '—' : etfFmt(cumVal) + '張';
+        const todayTxt= todayVal === null ? '資料待更新'
+                        : `今日 ${etfFmt(todayVal)}張`;
+        const todayC  = todayVal === null ? 'var(--text-muted)'
+                        : todayVal >= 0 ? 'var(--accent-red)' : 'var(--accent-green)';
         return `<div class="etf-chip-item">
-          <div class="etf-chip-val" style="color:${noData?'var(--text-muted)':s.color};">${isMock?'~':''} ${cumTxt}</div>
-          <div class="etf-chip-lbl">${s.label}累積${isMock?' (模擬)':''}</div>
+          <div class="etf-chip-val" style="color:${noData?'var(--text-muted)':s.color}">${cumTxt}</div>
+          <div class="etf-chip-lbl">${s.label}累積</div>
           <div class="etf-chip-chg" style="color:${todayC}">${todayTxt}</div>
           ${g10!=null?`<div style="font-size:0.58rem;color:var(--text-muted);margin-top:2px;">10日趨勢 ${g10>=0?'▲':'▼'}${Math.abs(g10).toFixed(1)}%</div>`:''}
         </div>`;
       }).join('');
     }
 
+    // Growth bars
     if(growthEl) {
       const items=[
         {key:'foreignCum',label:'外資',color:'#ff4d6d'},
@@ -13667,20 +13769,22 @@ async function etfLoadChipAsync() {
       }).join('');
     }
 
+    // Add foreign signal
     const foreignToday=(chipData.foreign||[]).filter(v=>v!=null).at(-1)||0;
     const sigEl=document.getElementById('etfSignalCard');
-    if(sigEl && Math.abs(foreignToday)>300 && !chipData.isMock) {
+    if(sigEl && Math.abs(foreignToday)>300) {
       const isBuy=foreignToday>0;
-      sigEl.style.display='block';
-      sigEl.innerHTML += `<div style="display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);align-items:flex-start;">
+      const newSig=`<div style="display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);align-items:flex-start;">
         <span>🏦</span>
         <span style="font-size:0.72rem;line-height:1.5;color:${isBuy?'var(--accent-green)':'var(--accent-red)'}">
           外資今日${isBuy?'買超':'賣超'} ${etfFmtAbs(foreignToday)}張
         </span></div>`;
+      sigEl.style.display='block';
+      sigEl.innerHTML += newSig;
     }
 
-    if(chipData.isMock) chipShowToast('⚠️ TWSE 法人連線失敗，顯示模擬數據 — 點 🔌 診斷連線','warn');
-    else chipShowToast(`✅ 法人資料載入完成 (${(chipData.foreign||[]).filter(v=>v!=null).length} 筆)`,'ok');
+    if(chipData.isMock) chipShowToast('⚠️ TWSE 法人資料暫時無法取得，顯示模擬數據','warn');
+    else chipShowToast('✅ 法人資料載入完成','ok');
 
   } catch(e) {
     chipShowToast('⚠️ 法人資料載入失敗：'+e.message,'warn');
@@ -13714,9 +13818,9 @@ function etfRefresh(){
 
 
 // ══════════════════════════════════════════════
-//  K線 + VRVP 疊加圖（合體 canvas）
+//  K線 + VRVP 疊加圖（含三大策略模組）
 // ══════════════════════════════════════════════
-function etfDrawCandleWithVRVP(canvas, rows, zones, ma20Last, ma60Last) {
+function etfDrawCandleWithVRVP(canvas, rows, zones, ma20Last, ma60Last, strategyLevels, strategyStatus, strategyColor, strategyPhase) {
   if (!rows?.length) return;
   const DPR = window.devicePixelRatio || 1;
   const W   = canvas.offsetWidth  || 340;
@@ -13727,166 +13831,227 @@ function etfDrawCandleWithVRVP(canvas, rows, zones, ma20Last, ma60Last) {
   ctx.scale(DPR, DPR);
   ctx.clearRect(0, 0, W, H);
 
-  const BINS     = 40;
-  const VRVP_W   = Math.round(W * 0.22);  // 右側 22% 給 VRVP
-  const PAD      = { t: 10, b: 28, l: 50, r: VRVP_W + 6 };
-  const chartW   = W - PAD.l - PAD.r;
-  const chartH   = H - PAD.t - PAD.b;
-  const n        = rows.length;
+  const BINS   = 40;
+  const VRVP_W = Math.round(W * 0.22);
+  const PAD    = { t: 10, b: 28, l: 50, r: VRVP_W + 6 };
+  const chartW = W - PAD.l - PAD.r;
+  const chartH = H - PAD.t - PAD.b;
+  const n      = rows.length;
 
-  // Price range (use high/low for full range)
   const allH = rows.map(r => r.high || r.close);
   const allL = rows.map(r => r.low  || r.close);
   const minP = Math.min(...allL) * 0.9985;
   const maxP = Math.max(...allH) * 1.0015;
-  const priceRange = maxP - minP;
+  const pR   = maxP - minP;
 
   const xS = i => PAD.l + (i / Math.max(n - 1, 1)) * chartW;
-  const yS = v => PAD.t + (1 - (v - minP) / priceRange) * chartH;
+  const yS = v => PAD.t + (1 - (v - minP) / pR) * chartH;
 
-  // ── Background grid ──
-  const gridLines = 6;
-  for (let i = 0; i <= gridLines; i++) {
-    const v = maxP - (i / gridLines) * priceRange;
+  // Grid
+  for (let i = 0; i <= 6; i++) {
+    const v = maxP - (i / 6) * pR;
     const y = yS(v);
-    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
-    ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(PAD.l, y); ctx.lineTo(W - VRVP_W, y); ctx.stroke();
-    ctx.fillStyle = 'rgba(255,255,255,0.28)';
-    ctx.font = `10px DM Mono`;
-    ctx.textAlign = 'right';
-    ctx.fillText(v.toFixed(1), PAD.l - 4, y + 3.5);
+    ctx.strokeStyle='rgba(255,255,255,0.04)'; ctx.lineWidth=1; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(PAD.l,y); ctx.lineTo(W-VRVP_W,y); ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,0.28)'; ctx.font='10px DM Mono'; ctx.textAlign='right';
+    ctx.fillText(v.toFixed(1), PAD.l-4, y+3.5);
   }
 
-  // ── X axis dates ──
-  ctx.fillStyle = 'rgba(255,255,255,0.22)';
-  ctx.font = '9px DM Mono';
-  ctx.textAlign = 'center';
-  const step = Math.max(1, Math.floor(n / 5));
-  for (let i = 0; i < n; i += step) {
-    const d = rows[i].t;
-    ctx.fillText(`${d.getMonth()+1}/${d.getDate()}`, xS(i), H - 6);
+  // X axis
+  ctx.fillStyle='rgba(255,255,255,0.22)'; ctx.font='9px DM Mono'; ctx.textAlign='center';
+  const step=Math.max(1,Math.floor(n/5));
+  for(let i=0;i<n;i+=step){
+    const d=rows[i].t;
+    ctx.fillText(`${d.getMonth()+1}/${d.getDate()}`,xS(i),H-6);
   }
 
-  // ── VRVP profile build ──
-  const profile = etfVolumeProfile(rows, BINS);
-  const maxPct  = Math.max(...profile.map(p => p.pct), 0.001);
-  const hvnThreshold = maxPct * 0.72;
-  const lastClose = rows.at(-1).close;
-  const vrvpX0   = W - VRVP_W;  // VRVP 起始 X
+  // VRVP
+  const profile=etfVolumeProfile(rows,BINS);
+  const maxPct=Math.max(...profile.map(p=>p.pct),0.001);
+  const hvnThreshold=maxPct*0.72;
+  const lastClose=rows.at(-1).close;
+  const vrvpX0=W-VRVP_W;
 
-  // ── Draw VRVP bars (right side, vertical) ──
-  profile.forEach(p => {
-    const y1   = yS(p.priceTo);
-    const y2   = yS(p.priceFrom);
-    const barH = Math.max(1, y2 - y1 - 0.5);
-    const barW = (p.pct / maxPct) * (VRVP_W - 4);
-    const isAbove = p.priceMid > lastClose;
-    const isHVN   = p.pct >= hvnThreshold;
+  profile.forEach(p=>{
+    const y1=yS(p.priceTo),y2=yS(p.priceFrom);
+    const barH=Math.max(1,y2-y1-0.5);
+    const barW=(p.pct/maxPct)*(VRVP_W-4);
+    const isAbove=p.priceMid>lastClose,isHVN=p.pct>=hvnThreshold;
+    ctx.fillStyle=isAbove?(isHVN?'rgba(255,77,109,0.75)':'rgba(255,77,109,0.22)'):(isHVN?'rgba(59,130,246,0.75)':'rgba(59,130,246,0.22)');
+    if(barW>0) ctx.fillRect(vrvpX0,y1,barW,barH);
+  });
+  ctx.strokeStyle='rgba(255,255,255,0.08)'; ctx.lineWidth=1; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(vrvpX0,PAD.t); ctx.lineTo(vrvpX0,H-PAD.b); ctx.stroke();
 
-    // Semi-transparent bg fill for all bars
-    ctx.fillStyle = isAbove
-      ? (isHVN ? 'rgba(255,77,109,0.75)' : 'rgba(255,77,109,0.22)')
-      : (isHVN ? 'rgba(59,130,246,0.75)' : 'rgba(59,130,246,0.22)');
-    if (barW > 0) ctx.fillRect(vrvpX0, y1, barW, barH);
+  // ══ 模組 1：HVN 極性翻轉帶 ══
+  (zones||[]).forEach((z,zi)=>{
+    const y1=yS(z.high),y2=yS(z.low);
+    const isResist=z.isResistance||false;
+    const lc=z.lineColor||(isResist?'#ff4d6d':'#3b82f6');
+    const lw=z.lineWidth||1.5;
+    ctx.fillStyle=isResist?'rgba(255,77,109,.10)':'rgba(59,130,246,.06)';
+    ctx.fillRect(PAD.l,y1,chartW,y2-y1);
+    // 斜紋（套牢壓力帶）
+    if(isResist){
+      ctx.save(); ctx.strokeStyle='rgba(255,77,109,0.15)'; ctx.lineWidth=1;
+      const y1c=Math.min(y1,y2),y2c=Math.max(y1,y2);
+      for(let hx=PAD.l-(y2c-y1c);hx<W-VRVP_W+(y2c-y1c);hx+=7){
+        ctx.beginPath();
+        ctx.moveTo(Math.max(PAD.l,hx),y1c);
+        ctx.lineTo(Math.min(W-VRVP_W,hx+(y2c-y1c)),y2c);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+    ctx.strokeStyle=lc; ctx.lineWidth=lw; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(PAD.l,yS(z.mid)); ctx.lineTo(W-VRVP_W,yS(z.mid)); ctx.stroke();
+    ctx.fillStyle=lc; ctx.font=`${isResist?'bold':'600'} 9px DM Mono`; ctx.textAlign='left';
+    const stxt=z.status?` ▸ ${z.status}`:'';
+    ctx.fillText(`HVN${zi+1} ${z.mid.toFixed(1)}${stxt}`,PAD.l+4,yS(z.mid)-3);
   });
 
-  // ── VRVP separator line ──
-  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-  ctx.lineWidth = 1;
+  // ══ 模組 2：固定策略警戒線 L1/L2/L3 ══
+  if(strategyLevels){
+    [{price:strategyLevels.L1,color:'#a78bfa',label:'L1 -5% 加碼一成點位'},
+     {price:strategyLevels.L2,color:'#f59e0b',label:'L2 -10% 加碼兩成(20萬)'},
+     {price:strategyLevels.L3,color:'#ff4d6d',label:'L3 -20% 海嘯/質押上限'},
+    ].forEach(lv=>{
+      if(lv.price<minP||lv.price>maxP) return;
+      const ly=yS(lv.price);
+      ctx.save(); ctx.strokeStyle=lv.color; ctx.lineWidth=1.5; ctx.setLineDash([7,4]); ctx.globalAlpha=0.82;
+      ctx.beginPath(); ctx.moveTo(PAD.l,ly); ctx.lineTo(W-VRVP_W,ly); ctx.stroke();
+      ctx.setLineDash([]); ctx.globalAlpha=1;
+      ctx.fillStyle=lv.color; ctx.font='bold 9px DM Mono'; ctx.textAlign='right';
+      ctx.fillText(`${lv.label} ${lv.price.toFixed(1)}`,W-VRVP_W-4,ly-3);
+      ctx.restore();
+    });
+  }
+
+  // MA lines
+  const closes=rows.map(r=>r.close);
+  [[etfSma(closes,20),'#3b82f6',1.8],[etfSma(closes,60),'#a78bfa',1.8]].forEach(([arr,color,lw])=>{
+    ctx.strokeStyle=color; ctx.lineWidth=lw; ctx.setLineDash([]);
+    ctx.beginPath(); let first=true;
+    arr.forEach((v,i)=>{if(!v)return; first?ctx.moveTo(xS(i),yS(v)):ctx.lineTo(xS(i),yS(v)); first=false;});
+    ctx.stroke();
+  });
+
+  // Candles
+  const cw=Math.max(1.5,(chartW/n)*0.72);
+  rows.forEach((r,i)=>{
+    if(!r.open||!r.close)return;
+    const x=xS(i),isUp=r.close>=r.open,color=isUp?'#ff4d6d':'#00e5a0';
+    const bT=yS(Math.max(r.open,r.close)),bB=yS(Math.min(r.open,r.close)),bH=Math.max(1.5,bB-bT);
+    ctx.strokeStyle=color; ctx.lineWidth=1; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(x,yS(r.high||r.close)); ctx.lineTo(x,bT);
+    ctx.moveTo(x,bB); ctx.lineTo(x,yS(r.low||r.close)); ctx.stroke();
+    ctx.fillStyle=isUp?'rgba(255,77,109,0.85)':'rgba(0,229,160,0.85)';
+    ctx.fillRect(x-cw/2,bT,cw,bH);
+    ctx.strokeStyle=color; ctx.lineWidth=0.5; ctx.strokeRect(x-cw/2,bT,cw,bH);
+  });
+
+  // Current price line
+  const cpY=yS(lastClose);
+  ctx.strokeStyle='#f0b429'; ctx.lineWidth=1.2; ctx.setLineDash([4,3]);
+  ctx.beginPath(); ctx.moveTo(PAD.l,cpY); ctx.lineTo(W-VRVP_W,cpY); ctx.stroke();
   ctx.setLineDash([]);
-  ctx.beginPath(); ctx.moveTo(vrvpX0, PAD.t); ctx.lineTo(vrvpX0, H - PAD.b); ctx.stroke();
+  const ltxt=lastClose.toFixed(2);
+  const lw2=ctx.measureText(ltxt).width+10;
+  const lx=W-lw2-2;
+  ctx.fillStyle='#f0b429'; ctx.beginPath(); roundRect(ctx,lx,cpY-8,lw2,16,3); ctx.fill();
+  ctx.fillStyle='#0d0f14'; ctx.font='bold 10px DM Mono'; ctx.textAlign='center';
+  ctx.fillText(ltxt,lx+lw2/2,cpY+4);
+  ctx.fillStyle='#f0b429'; ctx.textAlign='right';
+  ctx.fillText(lastClose.toFixed(2),PAD.l-4,cpY+4);
 
-  // ── HVN zone background bands on chart area ──
-  const zoneColors = [
-    { fill:'rgba(255,77,109,.07)',  edge:'rgba(255,77,109,.6)',  label:'#ff4d6d' },
-    { fill:'rgba(59,130,246,.07)',  edge:'rgba(59,130,246,.55)', label:'#3b82f6' },
-    { fill:'rgba(167,139,250,.06)', edge:'rgba(167,139,250,.5)', label:'#a78bfa' },
-  ];
-  zones.forEach((z, zi) => {
-    const y1 = yS(z.high), y2 = yS(z.low);
-    const c  = zoneColors[zi % 3];
-    ctx.fillStyle = c.fill;
-    ctx.fillRect(PAD.l, y1, chartW, y2 - y1);
-    ctx.strokeStyle = c.edge;
-    ctx.lineWidth = 1.5;
-    ctx.setLineDash([]);
-    ctx.beginPath(); ctx.moveTo(PAD.l, yS(z.mid)); ctx.lineTo(W - VRVP_W, yS(z.mid)); ctx.stroke();
-    ctx.fillStyle = c.label;
-    ctx.font = 'bold 9px DM Mono';
-    ctx.textAlign = 'left';
-    ctx.fillText(`HVN${zi+1} ${z.mid.toFixed(1)}`, PAD.l + 4, yS(z.mid) - 3);
+  // ══ 模組 3：右上角策略狀態徽章 ══
+  if(strategyStatus){
+    ctx.save();
+    const bc=strategyColor||'#00e5a0';
+    const isBear=strategyPhase==='bear'||strategyPhase==='tsunami';
+    ctx.font='bold 10px DM Mono';
+    const bw=Math.min(ctx.measureText(strategyStatus).width,chartW*0.62)+16;
+    const bh=20,bx=W-VRVP_W-bw-4,by=PAD.t+4;
+    ctx.globalAlpha=0.92; ctx.fillStyle='#0d0f14';
+    roundRect(ctx,bx,by,bw,bh,5); ctx.fill();
+    ctx.globalAlpha=1; ctx.strokeStyle=bc; ctx.lineWidth=isBear?2:1.2; ctx.setLineDash([]);
+    roundRect(ctx,bx,by,bw,bh,5); ctx.stroke();
+    ctx.fillStyle=bc; ctx.textAlign='left';
+    ctx.save(); ctx.beginPath(); ctx.rect(bx+4,by,bw-8,bh); ctx.clip();
+    ctx.fillText(strategyStatus,bx+8,by+bh-5); ctx.restore();
+    ctx.restore();
+  }
+}
+
+// ── 法人籌碼累積曲線圖 ──
+function etfDrawChipChart(canvas, chipData) {
+  if (!canvas || !chipData) return;
+  const DPR = window.devicePixelRatio || 1;
+  const W   = canvas.offsetWidth  || 340;
+  const H   = canvas.offsetHeight || 140;
+  canvas.width  = W * DPR;
+  canvas.height = H * DPR;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(DPR, DPR);
+  ctx.clearRect(0, 0, W, H);
+
+  const PAD = { t: 8, b: 18, l: 42, r: 8 };
+  const cW  = W - PAD.l - PAD.r;
+  const cH  = H - PAD.t - PAD.b;
+
+  const series = [
+    { key: 'foreignCum', color: '#ff4d6d', label: '外資' },
+    { key: 'trustCum',   color: '#a78bfa', label: '投信' },
+    { key: 'dealerCum',  color: '#00e5a0', label: '自營' },
+  ].map(s => ({ ...s, data: (chipData[s.key]||[]).filter(v => v !== null && v !== undefined) }))
+   .filter(s => s.data.length > 1);
+
+  if (!series.length) {
+    ctx.fillStyle = 'rgba(255,255,255,0.2)'; ctx.font = '11px DM Mono'; ctx.textAlign = 'center';
+    ctx.fillText('籌碼資料載入中…', W/2, H/2);
+    return;
+  }
+
+  const allVals = series.flatMap(s => s.data);
+  const minV = Math.min(...allVals), maxV = Math.max(...allVals);
+  const vR   = maxV - minV || 1;
+  const n    = Math.max(...series.map(s => s.data.length));
+  const xS   = i => PAD.l + (i / Math.max(n-1, 1)) * cW;
+  const yS   = v => PAD.t + (1 - (v - minV) / vR) * cH;
+
+  // Grid lines
+  [0, 0.5, 1].forEach(f => {
+    const v = minV + f * vR, y = yS(v);
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)'; ctx.lineWidth = 1; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(PAD.l, y); ctx.lineTo(W - PAD.r, y); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.22)'; ctx.font = '8px DM Mono'; ctx.textAlign = 'right';
+    const lbl = Math.abs(v) >= 10000 ? (v/10000).toFixed(1)+'萬' : v.toFixed(0);
+    ctx.fillText(lbl, PAD.l - 2, y + 3);
   });
 
-  // ── MA lines ──
-  const closes  = rows.map(r => r.close);
-  const ma20arr = etfSma(closes, 20);
-  const ma60arr = etfSma(closes, 60);
-  [[ma20arr, '#3b82f6', 1.8], [ma60arr, '#a78bfa', 1.8]].forEach(([arr, color, lw]) => {
-    ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.setLineDash([]);
+  // Zero line
+  if (minV < 0 && maxV > 0) {
+    const zy = yS(0);
+    ctx.strokeStyle = 'rgba(255,255,255,0.14)'; ctx.lineWidth = 1; ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(PAD.l, zy); ctx.lineTo(W-PAD.r, zy); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Series
+  series.forEach(s => {
+    ctx.strokeStyle = s.color; ctx.lineWidth = 1.5; ctx.setLineDash([]);
     ctx.beginPath(); let first = true;
-    arr.forEach((v, i) => {
-      if (!v) return;
-      const x = xS(i), y = yS(v);
-      first ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-      first = false;
+    s.data.forEach((v, i) => {
+      const x = xS(i + (n - s.data.length)), y = yS(v);
+      first ? ctx.moveTo(x, y) : ctx.lineTo(x, y); first = false;
     });
     ctx.stroke();
+    if (s.data.length) {
+      const lx = xS(n-1), ly = yS(s.data.at(-1));
+      ctx.fillStyle = s.color;
+      ctx.beginPath(); ctx.arc(lx, ly, 2.5, 0, Math.PI*2); ctx.fill();
+    }
   });
-
-  // ── Candlesticks ──
-  const candleW = Math.max(1.5, (chartW / n) * 0.72);
-  rows.forEach((r, i) => {
-    if (!r.open || !r.close) return;
-    const x     = xS(i);
-    const isUp  = r.close >= r.open;
-    const upC   = '#ff4d6d';
-    const dnC   = '#00e5a0';
-    const color = isUp ? upC : dnC;
-    const bodyT = yS(Math.max(r.open, r.close));
-    const bodyB = yS(Math.min(r.open, r.close));
-    const bodyH = Math.max(1.5, bodyB - bodyT);
-
-    // Wick
-    ctx.strokeStyle = color; ctx.lineWidth = 1; ctx.setLineDash([]);
-    ctx.beginPath();
-    ctx.moveTo(x, yS(r.high || r.close)); ctx.lineTo(x, bodyT);
-    ctx.moveTo(x, bodyB);                  ctx.lineTo(x, yS(r.low || r.close));
-    ctx.stroke();
-
-    // Body
-    ctx.fillStyle = isUp ? 'rgba(255,77,109,0.85)' : 'rgba(0,229,160,0.85)';
-    ctx.fillRect(x - candleW / 2, bodyT, candleW, bodyH);
-
-    // Border
-    ctx.strokeStyle = color; ctx.lineWidth = 0.5;
-    ctx.strokeRect(x - candleW / 2, bodyT, candleW, bodyH);
-  });
-
-  // ── Current price dashed line ──
-  const cpY = yS(lastClose);
-  ctx.strokeStyle = '#f0b429'; ctx.lineWidth = 1.2; ctx.setLineDash([4, 3]);
-  ctx.beginPath(); ctx.moveTo(PAD.l, cpY); ctx.lineTo(W - VRVP_W, cpY); ctx.stroke();
-  ctx.setLineDash([]);
-
-  // Price badge on VRVP side
-  const labelTxt = lastClose.toFixed(2);
-  const lblW     = ctx.measureText(labelTxt).width + 10;
-  ctx.fillStyle = '#f0b429';
-  ctx.beginPath();
-  const lblX = W - lblW - 2;
-  roundRect(ctx, lblX, cpY - 8, lblW, 16, 3);
-  ctx.fill();
-  ctx.fillStyle = '#0d0f14';
-  ctx.font = 'bold 10px DM Mono';
-  ctx.textAlign = 'center';
-  ctx.fillText(labelTxt, lblX + lblW / 2, cpY + 4);
-
-  // Price label on Y axis
-  ctx.fillStyle = '#f0b429';
-  ctx.font = 'bold 10px DM Mono';
-  ctx.textAlign = 'right';
-  ctx.fillText(lastClose.toFixed(2), PAD.l - 4, cpY + 4);
 }
 
 // ── Volume bars (separate small canvas) ──
@@ -14806,6 +14971,7 @@ const DIAG_TARGETS = [
     test: async () => {
       const t0 = Date.now();
       const twseUrl = 'https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20260101&stockNo=0050&response=json';
+      // 嘗試多個 proxy
       const proxies = [
         `https://api.allorigins.win/get?url=${encodeURIComponent(twseUrl)}`,
         `https://corsproxy.io/?url=${encodeURIComponent(twseUrl)}`,
@@ -14818,49 +14984,6 @@ const DIAG_TARGETS = [
         } catch {}
       }
       return { ok: false, ping: Date.now()-t0, note: '逾時/失敗' };
-    }
-  },
-  {
-    icon: '🏦', name: 'T86 法人資料 (00662)',
-    desc: '三大法人買賣超 — 投信/自營/外資',
-    test: async () => {
-      const t0 = Date.now();
-      // 抓最近一個有效交易日（往前找）
-      const today = new Date();
-      let dateStr = '';
-      for (let d=1; d<=7; d++) {
-        const dt = new Date(today); dt.setDate(dt.getDate()-d);
-        if (dt.getDay()===0||dt.getDay()===6) continue; // 跳過週末
-        dateStr = `${dt.getFullYear()}${String(dt.getMonth()+1).padStart(2,'0')}${String(dt.getDate()).padStart(2,'0')}`;
-        break;
-      }
-      if (!dateStr) return { ok:false, ping:0, note:'日期錯誤' };
-
-      try {
-        const url = `https://www.twse.com.tw/rwd/zh/fund/T86?date=${dateStr}&selectType=ALLBUT0999&response=json`;
-        const proxyUrl = `https://corsproxy.io/?url=${encodeURIComponent(url)}`;
-        const r = await fetch(proxyUrl, { signal: AbortSignal.timeout(10000) });
-        const ping = Date.now() - t0;
-        if (!r.ok) return { ok:false, ping, note:`HTTP ${r.status}` };
-
-        const wrap = await r.json();
-        const raw  = typeof wrap?.contents==='string' ? wrap.contents : JSON.stringify(wrap);
-        const data = JSON.parse(raw);
-
-        if (!data?.data) return { ok:false, ping, note:`無 data 欄位 stat:${data?.stat}` };
-        const row = data.data.find(r => String(r[0]).trim()==='00662');
-        if (!row) {
-          // 列出前5個代號幫助 debug
-          const sample = data.data.slice(0,3).map(r=>String(r[0]).trim()).join(', ');
-          return { ok:false, ping, note:`找不到00662，共${data.data.length}筆，前3：${sample}` };
-        }
-        const f=parseInt(String(row[4]).replace(/,/g,''))||0;
-        const t=parseInt(String(row[7]).replace(/,/g,''))||0;
-        const d=parseInt(String(row[10]).replace(/,/g,''))||0;
-        return { ok:true, ping, note:`✅ 外:${f} 投:${t} 自:${d}` };
-      } catch(e) {
-        return { ok:false, ping:Date.now()-t0, note:`錯誤: ${e.message.slice(0,30)}` };
-      }
     }
   },
   {
