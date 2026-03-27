@@ -2170,7 +2170,7 @@ input::placeholder { color: var(--text-muted); }
   </div>
 
   <div class="nav-section-label">主頁</div>
-  <div class="nav-item" onclick="goPage('home',this)">
+  <div class="nav-item active" onclick="goPage('home',this)">
     <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span> 總覽主頁
   </div>
 
@@ -2205,7 +2205,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-26 01:29:17</div>
+    <div class="clock-display" id="clockDisplay">2026-03-27 10:22:56</div>
   </div>
 </aside>
 
@@ -2216,10 +2216,10 @@ input::placeholder { color: var(--text-muted); }
 <!-- ══════════════════════════════════
      MAIN
 ══════════════════════════════════ -->
-<main class="main-content" style="overflow-y: auto;">
+<main class="main-content">
 
   <!-- ── 主頁 ── -->
-  <section class="page" id="page-home">
+  <section class="page active" id="page-home">
     <div class="page-header">
       <div class="page-title-block">
         <div class="page-label">Dashboard</div>
@@ -2350,23 +2350,8 @@ input::placeholder { color: var(--text-muted); }
             </div>
           </div>
         </div>
-        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">總資產</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#f59e0b;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#ff4d6d;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">總負債</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#ff4d6d;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div><div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:20px;height:3px;background:#00e5a0;border-radius:2px;display:inline-block;"></span>
-        <span style="font-size:0.72rem;color:var(--text-secondary);">淨資產</span>
-        <span style="font-family:var(--mono);font-size:0.8rem;color:#00e5a0;">$0</span>
-        <span style="font-size:0.65rem;color:var(--accent-green);">▲ +$0</span>
-      </div></div>
-        <canvas id="wealthChart" style="width:100%;display:block;" height="220" width="346"></canvas>
+        <div id="wealthLegend" style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;"></div>
+        <canvas id="wealthChart" style="width:100%;display:block;" height="220"></canvas>
         <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 2px;" id="wealthXLabels"></div>
       </div>
 
@@ -2945,7 +2930,7 @@ input::placeholder { color: var(--text-muted); }
   </section>
 
   <!-- ── 現金流 ── -->
-  <section class="page active" id="page-stats">
+  <section class="page" id="page-stats">
     <!-- ══ Header ══ -->
     <div class="page-header" style="margin-bottom:12px;">
       <div class="page-title-block">
@@ -3264,7 +3249,7 @@ input::placeholder { color: var(--text-muted); }
     <!-- Loading overlay -->
     <div id="etfLoading" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(13,15,20,.85);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;">
       <div style="font-size:2rem;" class="chip-spin">📡</div>
-      <div style="font-size:0.82rem;color:var(--text-muted);" id="etfLoadingTxt">載入 0050 K線資料…</div>
+      <div style="font-size:0.82rem;color:var(--text-muted);" id="etfLoadingTxt">載入中…</div>
     </div>
 
   </section>
@@ -3939,7 +3924,7 @@ input::placeholder { color: var(--text-muted); }
 
 
 <nav class="mobile-nav" id="mobileNav">
-  <div class="mobile-nav-item" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
+  <div class="mobile-nav-item active" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span><span>總覽</span>
   </div>
   <div class="mobile-nav-item" id="mn-ledger" onclick="goPage('ledger', null, 'mn-ledger')">
@@ -3948,7 +3933,7 @@ input::placeholder { color: var(--text-muted); }
   <div class="mobile-nav-item" id="mn-invest" onclick="goPage('invest', null, 'mn-invest')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span><span>投資</span>
   </div>
-  <div class="mobile-nav-item active" id="mn-stats" onclick="goPage('stats',      null, 'mn-stats')">
+  <div class="mobile-nav-item" id="mn-stats" onclick="goPage('stats',      null, 'mn-stats')">
     <span class="mobile-nav-icon">📡</span><span>雷達</span>
   </div>
 <div class="mobile-nav-item" id="mn-intel" onclick="goPage('intel',      null, 'mn-intel')">
@@ -10409,13 +10394,48 @@ function dbMarkDirty() {
 function dbLoad() {
   appStateLoad();
 
-  // ── 從 Supabase 把 recurring 同步進 AppState（以雲端為準）──
+  // ── 從 Supabase 拉取整包 AppState（跨裝置同步，雲端為準）──
   (async () => {
+    if (getToken()) {
+      try {
+        const uid = getUserId();
+        const r = await fetch(
+          `${SUPABASE_URL}/rest/v1/appstate?id=eq.${uid}&select=state_json,updated_at`,
+          { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${getToken()}` } }
+        );
+        if (r.ok) {
+          const rows = await r.json();
+          if (rows?.length && rows[0].state_json) {
+            const remote = JSON.parse(rows[0].state_json);
+            const remoteTs = new Date(rows[0].updated_at || 0).getTime();
+            const localTs  = new Date(AppState.meta?.last_updated || 0).getTime();
+            // 雲端比本機新才覆蓋（避免登入舊資料覆蓋新資料）
+            if (remoteTs >= localTs) {
+              if (remote.meta)      Object.assign(AppState.meta,   remote.meta);
+              if (remote.income)    Object.assign(AppState.income, remote.income);
+              if (remote.recurring) AppState.recurring = remote.recurring;
+              if (remote.loans)     AppState.loans     = remote.loans;
+              if (remote.trades)    AppState.trades    = remote.trades;
+              if (remote.assets) {
+                if (remote.assets.funds)   AppState.assets.funds   = remote.assets.funds;
+                if (remote.assets.bank)    AppState.assets.bank    = remote.assets.bank;
+                if (remote.assets.tickers) AppState.assets.tickers = remote.assets.tickers;
+                if (remote.assets.stocks)  AppState.assets.stocks  = remote.assets.stocks;
+              }
+              if (remote.investSnapshots) AppState.investSnapshots = remote.investSnapshots;
+              appStateSave();
+              console.log('[dbLoad] 從雲端還原 AppState', new Date(remoteTs).toLocaleString());
+            }
+          }
+        }
+      } catch(e) { console.warn('AppState cloud load failed:', e); }
+    }
+
+    // ── recurring 額外同步（確保格式相容）──
     try {
       const api  = await sb.from('recurring');
       const data = await api.select('*');
       if (Array.isArray(data) && data.length > 0) {
-        // 將雲端格式（cat）對應到 AppState 格式（category）
         AppState.recurring = data.map(r => ({
           id:       r.id,
           name:     r.name   || '',
@@ -10424,9 +10444,9 @@ function dbLoad() {
           category: r.cat    || r.category || 'other',
           note:     r.note   || '',
         }));
-        appStateSave();   // 同步寫回 localStorage
+        appStateSave();
       }
-    } catch(e) { /* 離線或訪客模式，沿用 localStorage */ }
+    } catch(e) { /* 離線或訪客模式，沿用快取 */ }
     dbRenderRecurring();
     dbUpdatePreviews();
   })();
@@ -10458,6 +10478,36 @@ async function dbSave() {
   const badge = document.getElementById('db_dirty_badge');
   if (badge) badge.style.display = 'none';
   const lastEl = document.getElementById('db_last_saved');
+
+  // ── 整包 AppState 上傳 Supabase（跨裝置同步）──
+  if (getToken()) {
+    try {
+      const uid = getUserId();
+      const payload = {
+        id: uid,
+        user_id: uid,
+        state_json: JSON.stringify(AppState),
+        updated_at: new Date().toISOString(),
+      };
+      const syncRes = await fetch(`${SUPABASE_URL}/rest/v1/appstate`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${getToken()}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'resolution=merge-duplicates',
+        },
+        body: JSON.stringify(payload),
+      });
+      if (!syncRes.ok) {
+        const errText = await syncRes.text();
+        if (errText.includes('does not exist') || syncRes.status === 404) {
+          console.warn('[AppState] appstate table 不存在，請在 Supabase SQL Editor 執行：\nCREATE TABLE appstate (id text PRIMARY KEY, user_id text, state_json text, updated_at timestamptz);\nALTER TABLE appstate ENABLE ROW LEVEL SECURITY;\nCREATE POLICY \'user_own\' ON appstate USING (auth.uid()::text = user_id);');
+          showToast('⚠️ 雲端同步需要建立 appstate table，詳見 console', 'warn');
+        }
+      }
+    } catch(e) { console.warn('AppState cloud sync failed:', e); }
+  }
 
   // ── 同步 AppState.recurring → Supabase recurring table ──
   try {
@@ -11212,16 +11262,16 @@ function dbRenderFunds() {
       <div onclick="dbToggleFund(${i})" style="display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;user-select:none;">
         <span style="width:7px;height:7px;border-radius:50%;background:var(--accent-amber);flex-shrink:0;"></span>
         <span style="flex:1;font-size:0.82rem;font-weight:500;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${displayName}</span>
-        <span style="font-family:var(--mono);font-size:0.75rem;color:var(--accent-green);flex-shrink:0;">${f.principal ? '$'+f.principal.toLocaleString('zh-TW') : '—'}</span>
-        <span style="font-size:0.62rem;color:var(--text-muted);flex-shrink:0;padding:2px 6px;background:rgba(255,255,255,0.04);border-radius:4px;">${f.annual_rate ? f.annual_rate+'%' : '—'}</span>
+        <span style="font-family:var(--mono);font-size:0.75rem;color:var(--accent-green);flex-shrink:0;" class="fund-principal-lbl">${f.principal ? '$'+f.principal.toLocaleString('zh-TW') : '—'}</span>
+        <span style="font-size:0.62rem;color:var(--text-muted);flex-shrink:0;padding:2px 6px;background:rgba(255,255,255,0.04);border-radius:4px;" class="fund-rate-lbl">${f.annual_rate ? f.annual_rate+'%' : '—'}</span>
         <span style="font-size:0.65rem;color:var(--text-muted);flex-shrink:0;" id="fund-arrow-${i}">${defaultOpen?'▲':'▼'}</span>
         <button onclick="event.stopPropagation();dbDeleteFund(${i})" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.7rem;padding:2px 4px;border-radius:4px;flex-shrink:0;" onmouseenter="this.style.color='var(--accent-red)'" onmouseleave="this.style.color='var(--text-muted)'">✕</button>
       </div>
       <div id="fund-detail-${i}" style="display:${defaultOpen?'block':'none'};padding:0 12px 12px;border-top:1px solid var(--border);">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
           <div class="db-field"><label>基金名稱</label><div class="db-input-wrap"><input type="text" placeholder="境外基金" value="${f.name||''}" oninput="AppState.assets.funds[${i}].name=this.value;dbMarkDirty();document.querySelector('#fund-row-${i} span:nth-child(2)').textContent=this.value||'（未命名）'"></div></div>
-          <div class="db-field"><label>本金</label><div class="db-input-wrap"><input type="number" placeholder="0" value="${f.principal||''}" step="10000" oninput="AppState.assets.funds[${i}].principal=parseFloat(this.value)||0;dbMarkDirty()"><span>元</span></div></div>
-          <div class="db-field"><label>年化報酬率</label><div class="db-input-wrap"><input type="number" placeholder="6" value="${f.annual_rate||''}" step="0.1" oninput="AppState.assets.funds[${i}].annual_rate=parseFloat(this.value)||0;dbMarkDirty()"><span>%</span></div></div>
+          <div class="db-field"><label>本金</label><div class="db-input-wrap"><input type="number" placeholder="0" value="${f.principal||''}" step="10000" oninput="AppState.assets.funds[${i}].principal=parseFloat(this.value)||0;dbMarkDirty();(()=>{const r=document.querySelector('#fund-row-${i} .fund-principal-lbl');if(r)r.textContent=this.value?'$'+Number(this.value).toLocaleString('zh-TW'):'—';})()" onblur="dbRenderFunds()"><span>元</span></div></div>
+          <div class="db-field"><label>年化報酬率</label><div class="db-input-wrap"><input type="number" placeholder="6" value="${f.annual_rate||''}" step="0.1" oninput="AppState.assets.funds[${i}].annual_rate=parseFloat(this.value)||0;dbMarkDirty();(()=>{const r=document.querySelector('#fund-row-${i} .fund-rate-lbl');if(r)r.textContent=this.value?this.value+'%':'—';})()" onblur="dbRenderFunds()"><span>%</span></div></div>
         </div>
       </div>
     </div>`;
@@ -13387,21 +13437,37 @@ async function etfFetchTWSE(path, params={}) {
   return d;
 }
 
-// ── 抓近 N 個月的 TWSE 日K ──
+// ── 抓近 N 個月的 TWSE 日K（並行請求，加 localStorage 快取）──
 async function etfFetchTWSEHistory(ticker, months=3) {
   const today = new Date();
-  let allRows = [];
-  for (let m=months-1; m>=0; m--) {
+
+  // ── localStorage 快取（2小時）──
+  const lsCacheKey = `twse_kline_${ticker}_${months}mo`;
+  const lsCacheTTL = 2 * 60 * 60 * 1000; // 2小時
+  try {
+    const cached = localStorage.getItem(lsCacheKey);
+    if (cached) {
+      const { ts, data } = JSON.parse(cached);
+      if (Date.now() - ts < lsCacheTTL && data?.length) {
+        console.log(`[TWSE] K線快取命中 ${ticker} (${data.length}筆)`);
+        return data;
+      }
+    }
+  } catch {}
+
+  // ── 並行請求所有月份（不再串行等待）──
+  const monthRequests = Array.from({ length: months }, (_, i) => {
+    const m = months - 1 - i;
     const d = new Date(today.getFullYear(), today.getMonth()-m, 1);
     const dateStr = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}01`;
-    try {
-      const data = await etfFetchTWSE('afterTrading/STOCK_DAY', {
-        stockNo: ticker, date: dateStr
-      });
-      if (data?.stat==='OK' && data.data?.length) allRows.push(...data.data);
-    } catch {}
-    await new Promise(r=>setTimeout(r,400));
-  }
+    return etfFetchTWSE('afterTrading/STOCK_DAY', { stockNo: ticker, date: dateStr })
+      .then(data => (data?.stat==='OK' && data.data?.length) ? data.data : [])
+      .catch(() => []);
+  });
+
+  const results = await Promise.all(monthRequests);
+  let allRows = results.flat();
+
   if (!allRows.length) return null;
 
   const parsed = allRows.map(row => {
@@ -13423,6 +13489,11 @@ async function etfFetchTWSEHistory(ticker, months=3) {
       };
     } catch { return null; }
   }).filter(r=>r && !isNaN(r.close) && r.close>0);
+
+  // 寫入 localStorage 快取
+  try {
+    localStorage.setItem(lsCacheKey, JSON.stringify({ ts: Date.now(), data: parsed }));
+  } catch {}
 
   return parsed;
 }
@@ -13473,6 +13544,21 @@ async function etfFetchChipMonth(ticker, yearMonth) {
 async function etfFetchChipHistory(ticker, tradingDays) {
   const cacheKey = `chip_${ticker}_${tradingDays.length}`;
   if (etfChipCache[cacheKey]) return etfChipCache[cacheKey];
+
+  // ── localStorage 快取（法人資料24小時有效）──
+  const lsChipKey = `twse_chip_${ticker}`;
+  const lsChipTTL = 24 * 60 * 60 * 1000; // 24小時
+  try {
+    const cached = localStorage.getItem(lsChipKey);
+    if (cached) {
+      const { ts, data } = JSON.parse(cached);
+      if (Date.now() - ts < lsChipTTL && data) {
+        console.log(`[TWSE] 法人快取命中 ${ticker}`);
+        etfChipCache[cacheKey] = data;
+        return data;
+      }
+    }
+  } catch {}
 
   // === 策略 A：TWSE 三大法人月報（適合ETF） ===
   // 用 fund/BFIAMU — 三大法人申購贖回（ETF 專屬）
