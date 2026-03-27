@@ -1955,7 +1955,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-28 07:05:17</div>
+    <div class="clock-display" id="clockDisplay">2026-03-28 07:09:05</div>
   </div>
 </aside>
 
@@ -6245,17 +6245,18 @@ async function renderHome() {
   // ══ 5. 銀行子彈 ══
   const bulletsEl = document.getElementById('homeBankBullets');
   const bankTotalEl = document.getElementById('homeBankTotal');
-  if (bankTotalEl) bankTotalEl.textContent = fmtMoney(bankTotal);
   if (bulletsEl) {
     const appBanks = AppState.assets.bank || [];
     if (appBanks.length) {
-      bulletsEl.innerHTML = appBanks.slice(0,4).map(b=>`
+      if (bankTotalEl) bankTotalEl.textContent = fmtMoney(appBankTotal);
+      bulletsEl.innerHTML = appBanks.map(b=>`
         <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 8px;background:var(--bg-card2);border-radius:7px;font-size:0.68rem;gap:6px;">
           <span style="color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;">${b.name||'銀行帳戶'}</span>
           <span style="font-family:var(--mono);color:var(--accent-green);flex-shrink:0;white-space:nowrap;">${fmtMoney(b.amount||0)}</span>
         </div>`).join('');
     } else {
-      bulletsEl.innerHTML = banks.slice(0,4).map(b=>`
+      if (bankTotalEl) bankTotalEl.textContent = fmtMoney(bankTotal);
+      bulletsEl.innerHTML = banks.map(b=>`
         <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 8px;background:var(--bg-card2);border-radius:7px;font-size:0.68rem;gap:6px;">
           <span style="color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;">${b.name||'帳戶'}</span>
           <span style="font-family:var(--mono);color:var(--accent-green);flex-shrink:0;white-space:nowrap;">${fmtMoney(b.balance||0)}</span>
