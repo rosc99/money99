@@ -1955,7 +1955,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-28 05:55:42</div>
+    <div class="clock-display" id="clockDisplay">2026-03-28 06:17:16</div>
   </div>
 </aside>
 
@@ -6166,37 +6166,51 @@ async function renderHome() {
   })();
 
   // ══ 4. 投資分布圓餅（依細項：0050、00662、基金名稱、銀行定存…）══
+  // 圓餅圖只用 investments 資料庫表（單一來源），避免 AppState 舊資料混入
   const PIE_PALETTE = ['#00e5a0','#3b82f6','#f59e0b','#a78bfa','#f97316','#06b6d4','#ec4899','#84cc16','#ff4d6d','#14b8a6'];
+  const TYPE_COLOR_MAP = {
+    '股票':'#3b82f6','ETF':'#00e5a0','基金':'#a78bfa',
+    '加密貨幣':'#f59e0b','債券':'#84cc16','房地產':'#f97316','其他':'#6b7280',
+  };
+  const usedColors = {};
   let palIdx = 0;
-  const nextColor = () => PIE_PALETTE[palIdx++ % PIE_PALETTE.length];
+  const getInvColor = (inv) => {
+    const key = inv.ticker || inv.name;
+    if (!usedColors[key]) {
+      usedColors[key] = TYPE_COLOR_MAP[inv.type] && !Object.values(usedColors).includes(TYPE_COLOR_MAP[inv.type])
+        ? TYPE_COLOR_MAP[inv.type]
+        : PIE_PALETTE[palIdx++ % PIE_PALETTE.length];
+    }
+    return usedColors[key];
+  };
 
-  const invItemSegs = investments.filter(i=>i.value>0).map(i=>({
-    label: i.ticker || i.name || i.type,
-    value: i.value,
-    color: nextColor(),
-  }));
-  const fundItemSegs = (AppState.assets.funds||[]).filter(f=>(f.principal||0)>0).map(f=>({
-    label: f.name || '基金',
-    value: f.principal||0,
-    color: nextColor(),
-  }));
-  const bankItemSegs = (AppState.assets.bank||[]).filter(b=>(b.amount||0)>0).map(b=>({
-    label: b.name || '銀行',
-    value: b.amount||0,
-    color: nextColor(),
-  }));
-
-  const invPieSegs = [...invItemSegs, ...fundItemSegs, ...bankItemSegs].sort((a,b)=>b.value-a.value);
+  const invPieSegs = investments
+    .filter(i => (i.value || 0) > 0)
+    .map(i => ({
+      label: i.name || i.ticker || i.type || '投資',
+      value: i.value,
+      color: getInvColor(i),
+    }))
+    .sort((a, b) => b.value - a.value);
   const invPieTotal = invPieSegs.reduce((s,i)=>s+i.value,0);
 
   const invPieCenter = document.getElementById('homeInvPieCenter');
   if (invPieCenter) invPieCenter.textContent = fmtMoney(invPieTotal);
   const invPieLgEl = document.getElementById('homeInvPieLegend');
-  if (invPieLgEl) invPieLgEl.innerHTML = invPieSegs.slice(0,6).map(s=>`
-    <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.68rem;">
-      <div style="display:flex;align-items:center;gap:5px;min-width:0;"><span style="width:7px;height:7px;border-radius:2px;background:${s.color};flex-shrink:0;display:inline-block;"></span><span style="color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.label}</span></div>
-      <span style="font-family:var(--mono);color:${s.color};flex-shrink:0;margin-left:6px;">${fmtMoney(s.value)}</span>
-    </div>`).join('');
+  if (invPieLgEl) invPieLgEl.innerHTML = invPieSegs.map(s => {
+    const pct = invPieTotal > 0 ? (s.value / invPieTotal * 100).toFixed(1) : 0;
+    return `
+    <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.68rem;padding:4px 6px;border-radius:6px;background:rgba(255,255,255,0.02);">
+      <div style="display:flex;align-items:center;gap:5px;min-width:0;">
+        <span style="width:8px;height:8px;border-radius:50%;background:${s.color};flex-shrink:0;display:inline-block;"></span>
+        <span style="color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.label}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;margin-left:6px;">
+        <span style="font-family:var(--mono);color:${s.color};">${fmtMoney(s.value)}</span>
+        <span style="font-size:0.6rem;color:var(--text-muted);">${pct}%</span>
+      </div>
+    </div>`;
+  }).join('');
   setTimeout(() => {
     drawPieChart('homeInvPie', invPieSegs.length ? invPieSegs : [{label:'—',value:1,color:'#252a3a'}]);
   }, 60);
