@@ -1955,7 +1955,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-28 06:27:36</div>
+    <div class="clock-display" id="clockDisplay">2026-03-28 06:39:57</div>
   </div>
 </aside>
 
@@ -6235,10 +6235,7 @@ async function renderHome() {
         <span style="width:8px;height:8px;border-radius:50%;background:${s.color};flex-shrink:0;display:inline-block;"></span>
         <span style="color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.label}</span>
       </div>
-      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;margin-left:6px;">
-        <span style="font-family:var(--mono);color:${s.color};">${fmtMoney(s.value)}</span>
-        <span style="font-size:0.6rem;color:var(--text-muted);">${pct}%</span>
-      </div>
+      <span style="font-family:var(--mono);font-size:0.6rem;color:var(--text-muted);flex-shrink:0;margin-left:6px;">${pct}%</span>
     </div>`;
   }).join('');
   setTimeout(() => {
@@ -6253,25 +6250,25 @@ async function renderHome() {
     const appBanks = AppState.assets.bank || [];
     if (appBanks.length) {
       bulletsEl.innerHTML = appBanks.slice(0,4).map(b=>`
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 8px;background:var(--bg-card2);border-radius:7px;font-size:0.7rem;">
-          <span style="color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:55%;">${b.name||'銀行帳戶'}</span>
-          <span style="font-family:var(--mono);color:var(--accent-green);flex-shrink:0;">${fmtMoney(b.amount||0)}</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 8px;background:var(--bg-card2);border-radius:7px;font-size:0.68rem;gap:6px;">
+          <span style="color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;">${b.name||'銀行帳戶'}</span>
+          <span style="font-family:var(--mono);color:var(--accent-green);flex-shrink:0;white-space:nowrap;">${fmtMoney(b.amount||0)}</span>
         </div>`).join('');
     } else {
       bulletsEl.innerHTML = banks.slice(0,4).map(b=>`
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 8px;background:var(--bg-card2);border-radius:7px;font-size:0.7rem;">
-          <span style="color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:55%;">${b.name||'帳戶'}</span>
-          <span style="font-family:var(--mono);color:var(--accent-green);flex-shrink:0;">${fmtMoney(b.balance||0)}</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 8px;background:var(--bg-card2);border-radius:7px;font-size:0.68rem;gap:6px;">
+          <span style="color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;">${b.name||'帳戶'}</span>
+          <span style="font-family:var(--mono);color:var(--accent-green);flex-shrink:0;white-space:nowrap;">${fmtMoney(b.balance||0)}</span>
         </div>`).join('') || '<div style="font-size:0.7rem;color:var(--text-muted);">前往資料庫設定銀行帳戶</div>';
     }
   }
 
   // ══ 6. 投資組合明細長條圖 ══
-  const totalCost  = investments.reduce((s,i)=>s+i.cost, 0);
-  const pnl  = invTotal - totalCost;
+  const totalCost  = investments.reduce((s,i)=>s+i.cost, 0) + (AppState.assets.funds||[]).reduce((s,f)=>s+(f.principal||0), 0);
+  const pnl  = (invTotal + fundTotal) - totalCost;
   const pct2 = totalCost>0 ? ((pnl/totalCost)*100) : 0;
   safe('h-invCost').textContent  = fmtMoney(totalCost);
-  safe('h-invValue').textContent = fmtMoney(invTotal);
+  safe('h-invValue').textContent = fmtMoney(invTotal + fundTotal);
   const fundsDivMo  = (AppState.assets.funds||[]).reduce((s,f)=>s+(f.principal||0)*((f.annual_rate||0)/100/12),0);
   const tickersDivMo = (AppState.assets.tickers||[]).reduce((s,t)=>{
     const holding = investments.find(i=>i.ticker===t.ticker);
@@ -6284,7 +6281,7 @@ async function renderHome() {
 
   const detailBarsEl = document.getElementById('homeInvDetailBars');
   if (detailBarsEl) {
-    const maxVal = Math.max(...investments.map(i=>i.value), 1);
+    const maxVal = Math.max(...investments.map(i=>i.value), ...(AppState.assets.funds||[]).map(f=>f.principal||0), 1);
     const fundItems = (AppState.assets.funds||[]).map(f=>({
       name: f.name||'基金',
       type: '基金',
