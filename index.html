@@ -2205,7 +2205,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-28 05:21:08</div>
+    <div class="clock-display" id="clockDisplay">2026-03-28 05:33:32</div>
   </div>
 </aside>
 
@@ -2237,14 +2237,13 @@ input::placeholder { color: var(--text-muted); }
       </div>
     </div>
 
-    <!-- ══ ROW 1: 資產總覽 + 當月現金流 ══ -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;" id="homeKpiRow">
+    <!-- ══ ROW 1: 資產總覽 ══ -->
+    <div style="margin-bottom:16px;" id="homeKpiRow">
 
       <!-- 左：資產/負債/淨資產 + 覆蓋率條 -->
       <div class="card" style="padding:18px 20px;cursor:pointer;" onclick="goPage('assets',navItemOf('assets'))">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
           <div class="card-title">資產總覽</div>
-          <div class="home-block-arrow" style="font-size:0.68rem;">資產負債表 →</div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:14px;" id="homeAssetKpiRow">
           <div style="text-align:center;padding:10px 4px;background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;">
@@ -2278,44 +2277,6 @@ input::placeholder { color: var(--text-muted); }
         </div>
       </div>
 
-      <!-- 右：當月現金流 -->
-      <div class="card" style="padding:18px 20px;cursor:pointer;" onclick="goPage('stats',navItemOf('stats'))">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-          <div class="card-title">當月現金流</div>
-          <div class="home-block-arrow" style="font-size:0.68rem;">現金流 →</div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:center;">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;">
-            <div style="font-family:var(--mono);font-size:0.72rem;font-weight:700;" id="h-cfPct">—%</div>
-            <div style="position:relative;width:46px;height:82px;border-radius:23px;border:2px solid rgba(0,229,160,0.4);overflow:hidden;background:rgba(0,229,160,0.05);">
-              <div id="h-wFill" style="position:absolute;bottom:0;left:0;right:0;height:0%;border-radius:0 0 21px 21px;transition:height 1.4s cubic-bezier(0.4,0,0.2,1);">
-                <div style="position:absolute;top:0;left:0;right:0;height:6px;background:rgba(255,255,255,0.22);border-radius:4px 4px 0 0;animation:wave 2s ease-in-out infinite;"></div>
-              </div>
-            </div>
-            <div style="font-size:0.5rem;color:var(--text-muted);">可用率</div>
-          </div>
-          <div style="flex:1;display:flex;flex-direction:column;gap:7px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--text-secondary);"><span style="width:7px;height:7px;border-radius:2px;background:var(--accent-green);display:inline-block;"></span>可用現金</div>
-              <div style="font-family:var(--mono);font-size:0.78rem;" id="h-cfFree">$0</div>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--text-secondary);"><span style="width:7px;height:7px;border-radius:2px;background:var(--accent-green);opacity:.5;display:inline-block;"></span>當月收入</div>
-              <div style="font-family:var(--mono);font-size:0.72rem;color:var(--accent-green);" id="h-totalIncome">$0</div>
-            </div>
-            <div style="height:1px;background:var(--border);"></div>
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--text-secondary);"><span style="width:7px;height:7px;border-radius:2px;background:var(--accent-purple);display:inline-block;"></span>固定支出</div>
-              <div style="font-family:var(--mono);font-size:0.72rem;color:var(--accent-purple);" id="h-cfFixed">$0</div>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--text-secondary);"><span style="width:7px;height:7px;border-radius:2px;background:var(--accent-red);display:inline-block;"></span>一般支出</div>
-              <div style="font-family:var(--mono);font-size:0.72rem;color:var(--accent-red);" id="h-totalExpense">$0</div>
-            </div>
-          </div>
-        </div>
-        <div style="margin-top:12px;padding-top:9px;border-top:1px solid var(--border);font-size:0.65rem;color:var(--text-muted);" id="h-cfFormula">—</div>
-      </div>
     </div>
 
     <!-- ══ ROW 2: 資產結構（雙圓餅） ══ -->
@@ -2352,6 +2313,45 @@ input::placeholder { color: var(--text-muted); }
       </div>
     </div>
 
+    <!-- ══ 當月現金流 ══ -->
+    <div class="card" style="padding:18px 20px;cursor:pointer;" onclick="goPage('stats',navItemOf('stats'))">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div class="card-title">當月現金流</div>
+          <div class="home-block-arrow" style="font-size:0.68rem;">現金流 →</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;">
+            <div style="font-family:var(--mono);font-size:0.72rem;font-weight:700;" id="h-cfPct">—%</div>
+            <div style="position:relative;width:46px;height:82px;border-radius:23px;border:2px solid rgba(0,229,160,0.4);overflow:hidden;background:rgba(0,229,160,0.05);">
+              <div id="h-wFill" style="position:absolute;bottom:0;left:0;right:0;height:0%;border-radius:0 0 21px 21px;transition:height 1.4s cubic-bezier(0.4,0,0.2,1);">
+                <div style="position:absolute;top:0;left:0;right:0;height:6px;background:rgba(255,255,255,0.22);border-radius:4px 4px 0 0;animation:wave 2s ease-in-out infinite;"></div>
+              </div>
+            </div>
+            <div style="font-size:0.5rem;color:var(--text-muted);">可用率</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:7px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--text-secondary);"><span style="width:7px;height:7px;border-radius:2px;background:var(--accent-green);display:inline-block;"></span>可用現金</div>
+              <div style="font-family:var(--mono);font-size:0.78rem;" id="h-cfFree">$0</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--text-secondary);"><span style="width:7px;height:7px;border-radius:2px;background:var(--accent-green);opacity:.5;display:inline-block;"></span>當月收入</div>
+              <div style="font-family:var(--mono);font-size:0.72rem;color:var(--accent-green);" id="h-totalIncome">$0</div>
+            </div>
+            <div style="height:1px;background:var(--border);"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--text-secondary);"><span style="width:7px;height:7px;border-radius:2px;background:var(--accent-purple);display:inline-block;"></span>固定支出</div>
+              <div style="font-family:var(--mono);font-size:0.72rem;color:var(--accent-purple);" id="h-cfFixed">$0</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--text-secondary);"><span style="width:7px;height:7px;border-radius:2px;background:var(--accent-red);display:inline-block;"></span>一般支出</div>
+              <div style="font-family:var(--mono);font-size:0.72rem;color:var(--accent-red);" id="h-totalExpense">$0</div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:12px;padding-top:9px;border-top:1px solid var(--border);font-size:0.65rem;color:var(--text-muted);" id="h-cfFormula">—</div>
+      </div>
+
     <!-- ══ ROW 3: 投資分布 + 銀行子彈 ══ -->
     <div class="card" style="padding:18px 20px;margin-bottom:16px;cursor:pointer;" onclick="goPage('invest',navItemOf('invest'))">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
@@ -2383,12 +2383,12 @@ input::placeholder { color: var(--text-muted); }
     </div>
 
     <!-- ══ ROW 4: 投資組合明細 ══ -->
-    <div class="card" style="padding:18px 20px;margin-bottom:16px;cursor:pointer;" onclick="goPage('invest',navItemOf('invest'))">
+    <div class="card" style="padding:18px 20px;margin-bottom:16px;cursor:pointer;" onclick="goToDbSection('db_ticker_list','0 0 0 2px rgba(59,130,246,0.6)')">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
         <div class="card-title">投資組合明細</div>
         <div style="display:flex;align-items:center;gap:10px;">
           <div style="font-family:var(--mono);font-size:0.7rem;" id="h-invReturn">—</div>
-          <span style="font-size:0.6rem;color:var(--accent-blue);font-family:var(--mono);padding:2px 6px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:4px;">→</span>
+          <span style="font-size:0.6rem;color:var(--accent-blue);font-family:var(--mono);padding:2px 6px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:4px;">資料庫 →</span>
         </div>
       </div>
       <!-- KPI 小列 -->
@@ -2410,41 +2410,38 @@ input::placeholder { color: var(--text-muted); }
       <div id="homeInvDetailBars" style="display:flex;flex-direction:column;gap:10px;"></div>
     </div>
 
-    <!-- ══ ROW 5: 負債進度 + 支出類別 ══ -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
-      <!-- 負債還款進度 -->
-      <div class="card" style="padding:18px 20px;cursor:pointer;" onclick="goToDbLoans()">
-        <div class="card-header" style="margin-bottom:12px;">
-          <div class="card-title">負債進度</div>
-          <span style="font-size:0.6rem;color:var(--accent-red);font-family:var(--mono);padding:2px 6px;background:rgba(255,77,109,0.08);border:1px solid rgba(255,77,109,0.2);border-radius:4px;">編輯 →</span>
+    <!-- ══ ROW 5: 負債進度（全寬） ══ -->
+    <div class="card" style="padding:18px 20px;margin-bottom:16px;cursor:pointer;" onclick="goToDbLoans()">
+      <div class="card-header" style="margin-bottom:12px;">
+        <div class="card-title">負債進度</div>
+        <span style="font-size:0.6rem;color:var(--accent-red);font-family:var(--mono);padding:2px 6px;background:rgba(255,77,109,0.08);border:1px solid rgba(255,77,109,0.2);border-radius:4px;">編輯 →</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;">
+        <div style="padding:7px 8px;background:var(--bg-card2);border-radius:8px;">
+          <div style="font-size:0.52rem;color:var(--text-muted);margin-bottom:2px;">負債總額</div>
+          <div style="font-family:var(--mono);font-size:0.82rem;font-weight:600;color:var(--accent-red);" id="h-liab-total">$0</div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
-          <div style="padding:7px 8px;background:var(--bg-card2);border-radius:8px;">
-            <div style="font-size:0.52rem;color:var(--text-muted);margin-bottom:2px;">負債總額</div>
-            <div style="font-family:var(--mono);font-size:0.78rem;font-weight:600;color:var(--accent-red);" id="h-liab-total">$0</div>
-          </div>
-          <div style="padding:7px 8px;background:var(--bg-card2);border-radius:8px;">
-            <div style="font-size:0.52rem;color:var(--text-muted);margin-bottom:2px;">月攤還</div>
-            <div style="font-family:var(--mono);font-size:0.78rem;font-weight:600;color:var(--accent-purple);" id="h-liab-monthly">$0</div>
-          </div>
-        </div>
-        <div id="homeLiabProgress" style="display:flex;flex-direction:column;gap:8px;">
-          <div class="empty-state" style="padding:12px 0;font-size:0.75rem;">尚無負債資料</div>
+        <div style="padding:7px 8px;background:var(--bg-card2);border-radius:8px;">
+          <div style="font-size:0.52rem;color:var(--text-muted);margin-bottom:2px;">月攤還</div>
+          <div style="font-family:var(--mono);font-size:0.82rem;font-weight:600;color:var(--accent-purple);" id="h-liab-monthly">$0</div>
         </div>
       </div>
+      <div id="homeLiabProgress" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="empty-state" style="padding:12px 0;font-size:0.75rem;">尚無負債資料</div>
+      </div>
+    </div>
 
-      <!-- 支出類別 -->
-      <div class="card" style="padding:18px 20px;cursor:pointer;" onclick="goPage('ledger',navItemOf('ledger'))">
-        <div class="card-header" style="margin-bottom:12px;">
-          <div class="card-title">支出類別</div>
-          <div style="font-family:var(--mono);font-size:0.62rem;color:var(--text-muted);" id="h-catTotal"></div>
+    <!-- ══ ROW 5b: 支出類別（全寬橫排） ══ -->
+    <div class="card" style="padding:18px 20px;margin-bottom:16px;cursor:pointer;" onclick="goPage('ledger',navItemOf('ledger'))">
+      <div class="card-header" style="margin-bottom:12px;">
+        <div class="card-title">支出類別</div>
+        <div style="font-family:var(--mono);font-size:0.62rem;color:var(--text-muted);" id="h-catTotal"></div>
+      </div>
+      <div style="display:flex;gap:20px;align-items:center;">
+        <div style="position:relative;width:110px;height:110px;flex-shrink:0;">
+          <canvas id="homeCatPie" width="110" height="110"></canvas>
         </div>
-        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
-          <div style="position:relative;width:100px;height:100px;flex-shrink:0;">
-            <canvas id="homeCatPie" width="100" height="100"></canvas>
-          </div>
-          <div id="homeCatLegend" style="width:100%;display:flex;flex-direction:column;gap:5px;"></div>
-        </div>
+        <div id="homeCatLegend" style="flex:1;display:flex;flex-direction:column;gap:6px;"></div>
       </div>
     </div>
 
@@ -6584,14 +6581,23 @@ async function renderHome() {
     }
   }
 
-  // ══ 2. 資產結構圓餅 ══
-  // 圖一：資產組成
+  // ══ 2. 資產結構圓餅（setTimeout 確保 canvas 已渲染）══
+  const LOAN_COLORS = {mortgage:'#3b82f6',personal:'#a78bfa',pledge:'#f59e0b',other:'#6b7280'};
+  const LOAN_LABELS = {mortgage:'房貸',personal:'信貸',pledge:'質押',other:'其他'};
+  // 資料準備
   const assetSegs = [
     {label:'銀行帳戶', value:bankTotal,  color:'#00e5a0'},
     {label:'投資組合', value:invTotal,   color:'#a78bfa'},
     {label:'其他資產', value:Math.max(0,otherAsset), color:'#3b82f6'},
   ].filter(s=>s.value>0);
-  drawPieChart('homeAssetPie', assetSegs.length ? assetSegs : [{label:'—',value:1,color:'#252a3a'}]);
+  const loansByType = {};
+  AppState.loans.forEach(l => {
+    const t = l.type||'other';
+    loansByType[t] = (loansByType[t]||0) + dbCalcLoanRemaining(l).balance;
+  });
+  const liabSegs = Object.entries(loansByType).map(([t,v])=>({label:LOAN_LABELS[t]||t, value:v, color:LOAN_COLORS[t]||'#6b7280'})).filter(s=>s.value>0);
+
+  // 先更新文字，圓餅圖用 setTimeout 延遲繪製
   const aCenter = document.getElementById('homeAssetPieCenter');
   if (aCenter) aCenter.textContent = fmtMoney(totalAsset);
   const aLgEl = document.getElementById('homeAssetLegend');
@@ -6600,25 +6606,18 @@ async function renderHome() {
       <div style="display:flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:2px;background:${s.color};display:inline-block;"></span><span style="color:var(--text-secondary);">${s.label}</span></div>
       <span style="font-family:var(--mono);color:${s.color};">${fmtMoney(s.value)}</span>
     </div>`).join('');
-
-  // 圖二：負債組成（從 AppState.loans 拆分）
-  const LOAN_COLORS = {mortgage:'#3b82f6',personal:'#a78bfa',pledge:'#f59e0b',other:'#6b7280'};
-  const LOAN_LABELS = {mortgage:'房貸',personal:'信貸',pledge:'質押',other:'其他'};
-  const loansByType = {};
-  AppState.loans.forEach(l => {
-    const t = l.type||'other';
-    loansByType[t] = (loansByType[t]||0) + dbCalcLoanRemaining(l).balance;
-  });
-  const liabSegs = Object.entries(loansByType).map(([t,v])=>({label:LOAN_LABELS[t]||t, value:v, color:LOAN_COLORS[t]||'#6b7280'})).filter(s=>s.value>0);
-  drawPieChart('homeLiabPie', liabSegs.length ? liabSegs : [{label:'—',value:1,color:'#252a3a'}]);
   const lCenter = document.getElementById('homeLiabPieCenter');
   if (lCenter) lCenter.textContent = fmtMoney(effectiveLiab);
   const lLgEl = document.getElementById('homeLiabLegend');
-  if (lLgEl) lLgEl.innerHTML = liabSegs.map(s=>`
+  if (lLgEl) lLgEl.innerHTML = (liabSegs.length ? liabSegs : [{label:'無負債資料',value:1,color:'#252a3a'}]).map(s=>`
     <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.68rem;">
       <div style="display:flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:2px;background:${s.color};display:inline-block;"></span><span style="color:var(--text-secondary);">${s.label}</span></div>
       <span style="font-family:var(--mono);color:${s.color};">${fmtMoney(s.value)}</span>
     </div>`).join('');
+  setTimeout(() => {
+    drawPieChart('homeAssetPie', assetSegs.length ? assetSegs : [{label:'—',value:1,color:'#252a3a'}]);
+    drawPieChart('homeLiabPie',  liabSegs.length  ? liabSegs  : [{label:'—',value:1,color:'#252a3a'}]);
+  }, 60);
 
   // ══ 3. 當月現金流 ══
   const recurMonthly = recurring.reduce((s,r)=>s+(r.freq==='monthly'?r.amount:r.freq==='quarterly'?Math.round(r.amount/3):Math.round(r.amount/12)),0);
@@ -6649,20 +6648,45 @@ async function renderHome() {
     if (wrap) wrap.style.borderColor = color+'66';
   })();
 
-  // ══ 4. 投資分布圓餅 ══
-  const typeMap={};
-  investments.forEach(i=>{ typeMap[i.type]=(typeMap[i.type]||0)+i.value; });
-  const invTypeArr = Object.entries(typeMap).sort((a,b)=>b[1]-a[1]);
-  const invPieSegs = invTypeArr.map(([t,v])=>({label:t,value:v,color:INV_TYPE_COLORS[t]||'#6b7280'}));
-  drawPieChart('homeInvPie', invPieSegs.length ? invPieSegs : [{label:'—',value:1,color:'#252a3a'}]);
+  // ══ 4. 投資分布圓餅（依細項：0050、00662、基金名稱、銀行定存…）══
+  // 產生細項色票（每個 ticker/基金 分配獨立顏色）
+  const PIE_PALETTE = ['#00e5a0','#3b82f6','#f59e0b','#a78bfa','#f97316','#06b6d4','#ec4899','#84cc16','#ff4d6d','#14b8a6'];
+  let palIdx = 0;
+  const nextColor = () => PIE_PALETTE[palIdx++ % PIE_PALETTE.length];
+
+  // investments（股票/ETF）逐筆
+  const invItemSegs = investments.filter(i=>i.value>0).map(i=>({
+    label: i.ticker || i.name || i.type,
+    value: i.value,
+    color: nextColor(),
+  }));
+  // funds（AppState.assets.funds）逐筆
+  const fundItemSegs = (AppState.assets.funds||[]).filter(f=>(f.principal||0)>0).map(f=>({
+    label: f.name || '基金',
+    value: f.principal||0,
+    color: nextColor(),
+  }));
+  // banks（AppState.assets.bank）- 定存/活存
+  const bankItemSegs = (AppState.assets.bank||[]).filter(b=>(b.amount||0)>0).map(b=>({
+    label: b.name || '銀行',
+    value: b.amount||0,
+    color: nextColor(),
+  }));
+
+  const invPieSegs = [...invItemSegs, ...fundItemSegs, ...bankItemSegs].sort((a,b)=>b.value-a.value);
+  const invPieTotal = invPieSegs.reduce((s,i)=>s+i.value,0);
+
   const invPieCenter = document.getElementById('homeInvPieCenter');
-  if (invPieCenter) invPieCenter.textContent = fmtMoney(invTotal);
+  if (invPieCenter) invPieCenter.textContent = fmtMoney(invPieTotal);
   const invPieLgEl = document.getElementById('homeInvPieLegend');
-  if (invPieLgEl) invPieLgEl.innerHTML = invPieSegs.map(s=>`
+  if (invPieLgEl) invPieLgEl.innerHTML = invPieSegs.slice(0,6).map(s=>`
     <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.68rem;">
-      <div style="display:flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:2px;background:${s.color};display:inline-block;"></span><span style="color:var(--text-secondary);">${s.label}</span></div>
-      <span style="font-family:var(--mono);color:${s.color};">${fmtMoney(s.value)}</span>
+      <div style="display:flex;align-items:center;gap:5px;min-width:0;"><span style="width:7px;height:7px;border-radius:2px;background:${s.color};flex-shrink:0;display:inline-block;"></span><span style="color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.label}</span></div>
+      <span style="font-family:var(--mono);color:${s.color};flex-shrink:0;margin-left:6px;">${fmtMoney(s.value)}</span>
     </div>`).join('');
+  setTimeout(() => {
+    drawPieChart('homeInvPie', invPieSegs.length ? invPieSegs : [{label:'—',value:1,color:'#252a3a'}]);
+  }, 60);
 
   // ══ 5. 銀行子彈 ══
   const bulletsEl = document.getElementById('homeBankBullets');
