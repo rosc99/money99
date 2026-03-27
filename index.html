@@ -1955,7 +1955,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-28 06:17:16</div>
+    <div class="clock-display" id="clockDisplay">2026-03-28 06:27:36</div>
   </div>
 </aside>
 
@@ -6066,18 +6066,20 @@ async function renderHome() {
   const thisMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
 
   // ══ 1. 資產總覽 ══
-  const bankTotal  = banks.reduce((s,b)=>s+b.balance, 0);
-  const invTotal   = investments.reduce((s,i)=>s+i.value, 0);
-  const otherAsset = parseFloat(document.getElementById('inputAsset')?.value)||0;
-  const totalAsset = otherAsset + bankTotal + invTotal;
-  const liabTotal  = liabilities.reduce((s,l)=>s+Math.max(0,l.total-l.paid), 0)
-                   || window._liabTotalForAsset || 0;
-  const loanTotal  = AppState.loans.reduce((s,l)=>s+dbCalcLoanRemaining(l).balance, 0);
+  const bankTotal    = banks.reduce((s,b)=>s+b.balance, 0);
+  const invTotal     = investments.reduce((s,i)=>s+i.value, 0);
+  const fundTotal    = (AppState.assets.funds||[]).reduce((s,f)=>s+(f.principal||0), 0);
+  const appBankTotal = (AppState.assets.bank||[]).reduce((s,b)=>s+(b.amount||0), 0);
+  const otherAsset   = parseFloat(document.getElementById('inputAsset')?.value)||0;
+  const totalAsset   = otherAsset + bankTotal + invTotal + fundTotal + appBankTotal;
+  const liabTotal    = liabilities.reduce((s,l)=>s+Math.max(0,l.total-l.paid), 0)
+                     || window._liabTotalForAsset || 0;
+  const loanTotal    = AppState.loans.reduce((s,l)=>s+dbCalcLoanRemaining(l).balance, 0);
   const effectiveLiab = Math.max(liabTotal, loanTotal);
-  const netAsset   = totalAsset - effectiveLiab;
+  const netAsset     = totalAsset - effectiveLiab;
 
-  window._bankTotalForAsset = bankTotal;
-  window._invTotalForAsset  = invTotal;
+  window._bankTotalForAsset = bankTotal + appBankTotal;
+  window._invTotalForAsset  = invTotal + fundTotal;
   window._liabTotalForAsset = effectiveLiab;
 
   safe('h-asset').textContent = fmtMoney(totalAsset);
@@ -6104,9 +6106,10 @@ async function renderHome() {
   const LOAN_COLORS = {mortgage:'#3b82f6',personal:'#a78bfa',pledge:'#f59e0b',other:'#6b7280'};
   const LOAN_LABELS = {mortgage:'房貸',personal:'信貸',pledge:'質押',other:'其他'};
   const assetSegs = [
-    {label:'銀行帳戶', value:bankTotal,  color:'#00e5a0'},
-    {label:'投資組合', value:invTotal,   color:'#a78bfa'},
-    {label:'其他資產', value:Math.max(0,otherAsset), color:'#3b82f6'},
+    {label:'銀行帳戶', value:bankTotal + appBankTotal, color:'#00e5a0'},
+    {label:'股票/ETF', value:invTotal,                 color:'#3b82f6'},
+    {label:'基金',     value:fundTotal,                color:'#a78bfa'},
+    {label:'其他資產', value:Math.max(0,otherAsset),   color:'#f59e0b'},
   ].filter(s=>s.value>0);
   const loansByType = {};
   AppState.loans.forEach(l => {
@@ -6118,19 +6121,35 @@ async function renderHome() {
   const aCenter = document.getElementById('homeAssetPieCenter');
   if (aCenter) aCenter.textContent = fmtMoney(totalAsset);
   const aLgEl = document.getElementById('homeAssetLegend');
-  if (aLgEl) aLgEl.innerHTML = assetSegs.map(s=>`
-    <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.68rem;">
-      <div style="display:flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:2px;background:${s.color};display:inline-block;"></span><span style="color:var(--text-secondary);">${s.label}</span></div>
-      <span style="font-family:var(--mono);color:${s.color};">${fmtMoney(s.value)}</span>
-    </div>`).join('');
+  if (aLgEl) aLgEl.innerHTML = assetSegs.map(s=>{
+    const pct = totalAsset>0 ? (s.value/totalAsset*100).toFixed(1) : 0;
+    return `
+    <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.68rem;padding:4px 6px;border-radius:6px;background:rgba(255,255,255,0.02);">
+      <div style="display:flex;align-items:center;gap:5px;">
+        <span style="width:8px;height:8px;border-radius:50%;background:${s.color};display:inline-block;flex-shrink:0;"></span>
+        <span style="color:var(--text-secondary);">${s.label}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;">
+        <span style="font-family:var(--mono);color:${s.color};">${fmtMoney(s.value)}</span>
+        <span style="font-size:0.58rem;color:var(--text-muted);">${pct}%</span>
+      </div>
+    </div>`;}).join('');
   const lCenter = document.getElementById('homeLiabPieCenter');
   if (lCenter) lCenter.textContent = fmtMoney(effectiveLiab);
   const lLgEl = document.getElementById('homeLiabLegend');
-  if (lLgEl) lLgEl.innerHTML = (liabSegs.length ? liabSegs : [{label:'無負債資料',value:1,color:'#252a3a'}]).map(s=>`
-    <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.68rem;">
-      <div style="display:flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:2px;background:${s.color};display:inline-block;"></span><span style="color:var(--text-secondary);">${s.label}</span></div>
-      <span style="font-family:var(--mono);color:${s.color};">${fmtMoney(s.value)}</span>
-    </div>`).join('');
+  if (lLgEl) lLgEl.innerHTML = (liabSegs.length ? liabSegs : [{label:'無負債資料',value:1,color:'#252a3a'}]).map(s=>{
+    const pct = effectiveLiab>0 ? (s.value/effectiveLiab*100).toFixed(1) : 0;
+    return `
+    <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.68rem;padding:4px 6px;border-radius:6px;background:rgba(255,255,255,0.02);">
+      <div style="display:flex;align-items:center;gap:5px;">
+        <span style="width:8px;height:8px;border-radius:50%;background:${s.color};display:inline-block;flex-shrink:0;"></span>
+        <span style="color:var(--text-secondary);">${s.label}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;">
+        <span style="font-family:var(--mono);color:${s.color};">${fmtMoney(s.value)}</span>
+        <span style="font-size:0.58rem;color:var(--text-muted);">${pct}%</span>
+      </div>
+    </div>`;}).join('');
   setTimeout(() => {
     drawPieChart('homeAssetPie', assetSegs.length ? assetSegs : [{label:'—',value:1,color:'#252a3a'}]);
     drawPieChart('homeLiabPie',  liabSegs.length  ? liabSegs  : [{label:'—',value:1,color:'#252a3a'}]);
@@ -6184,14 +6203,25 @@ async function renderHome() {
     return usedColors[key];
   };
 
-  const invPieSegs = investments
-    .filter(i => (i.value || 0) > 0)
-    .map(i => ({
-      label: i.name || i.ticker || i.type || '投資',
-      value: i.value,
-      color: getInvColor(i),
-    }))
-    .sort((a, b) => b.value - a.value);
+  // investments（Supabase）+ funds（AppState，localStorage）合併
+  const fundPieSegs = (AppState.assets.funds||[])
+    .filter(f => (f.principal||0) > 0)
+    .map(f => ({
+      label: f.name || '基金',
+      value: f.principal,
+      color: getInvColor({ name: f.name||'基金', type:'基金' }),
+    }));
+
+  const invPieSegs = [
+    ...investments
+      .filter(i => (i.value || 0) > 0)
+      .map(i => ({
+        label: i.name || i.ticker || i.type || '投資',
+        value: i.value,
+        color: getInvColor(i),
+      })),
+    ...fundPieSegs,
+  ].sort((a, b) => b.value - a.value);
   const invPieTotal = invPieSegs.reduce((s,i)=>s+i.value,0);
 
   const invPieCenter = document.getElementById('homeInvPieCenter');
