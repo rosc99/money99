@@ -2205,7 +2205,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-28 05:33:32</div>
+    <div class="clock-display" id="clockDisplay">2026-03-28 05:47:09</div>
   </div>
 </aside>
 
@@ -2279,36 +2279,36 @@ input::placeholder { color: var(--text-muted); }
 
     </div>
 
-    <!-- ══ ROW 2: 資產結構（雙圓餅） ══ -->
+    <!-- ══ ROW 2: 資產結構（SVG 大圓餅） ══ -->
     <div class="card" style="padding:18px 20px;margin-bottom:16px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
         <div class="card-title">資產結構</div>
         <span style="font-size:0.6rem;color:var(--text-muted);">資產面 ∕ 負債面</span>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-        <!-- 圖一：資產結構 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <!-- 圖一：資產組成 -->
         <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
           <div style="font-size:0.65rem;color:var(--text-muted);font-weight:600;letter-spacing:.06em;">📗 資產組成</div>
-          <div style="position:relative;width:120px;height:120px;">
-            <canvas id="homeAssetPie" width="120" height="120"></canvas>
+          <div style="position:relative;width:100%;max-width:160px;">
+            <svg id="homeAssetPie" viewBox="0 0 36 36" style="width:100%;transform:rotate(-90deg);filter:drop-shadow(0 4px 16px rgba(0,0,0,0.5));"></svg>
             <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
-              <div style="font-size:0.5rem;color:var(--text-muted);">總資產</div>
-              <div id="homeAssetPieCenter" style="font-family:var(--mono);font-size:0.75rem;font-weight:600;color:var(--accent-amber);">$0</div>
+              <div style="font-size:0.45rem;color:var(--text-muted);">總資產</div>
+              <div id="homeAssetPieCenter" style="font-family:var(--mono);font-size:0.72rem;font-weight:600;color:var(--accent-amber);">$0</div>
             </div>
           </div>
-          <div id="homeAssetLegend" style="width:100%;display:flex;flex-direction:column;gap:5px;"></div>
+          <div id="homeAssetLegend" style="width:100%;display:flex;flex-direction:column;gap:6px;"></div>
         </div>
-        <!-- 圖二：負債結構 -->
+        <!-- 圖二：負債組成 -->
         <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
           <div style="font-size:0.65rem;color:var(--text-muted);font-weight:600;letter-spacing:.06em;">📕 負債組成</div>
-          <div style="position:relative;width:120px;height:120px;">
-            <canvas id="homeLiabPie" width="120" height="120"></canvas>
+          <div style="position:relative;width:100%;max-width:160px;">
+            <svg id="homeLiabPie" viewBox="0 0 36 36" style="width:100%;transform:rotate(-90deg);filter:drop-shadow(0 4px 16px rgba(0,0,0,0.5));"></svg>
             <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
-              <div style="font-size:0.5rem;color:var(--text-muted);">總負債</div>
-              <div id="homeLiabPieCenter" style="font-family:var(--mono);font-size:0.75rem;font-weight:600;color:var(--accent-red);">$0</div>
+              <div style="font-size:0.45rem;color:var(--text-muted);">總負債</div>
+              <div id="homeLiabPieCenter" style="font-family:var(--mono);font-size:0.72rem;font-weight:600;color:var(--accent-red);">$0</div>
             </div>
           </div>
-          <div id="homeLiabLegend" style="width:100%;display:flex;flex-direction:column;gap:5px;"></div>
+          <div id="homeLiabLegend" style="width:100%;display:flex;flex-direction:column;gap:6px;"></div>
         </div>
       </div>
     </div>
@@ -2354,30 +2354,29 @@ input::placeholder { color: var(--text-muted); }
 
     <!-- ══ ROW 3: 投資分布 + 銀行子彈 ══ -->
     <div class="card" style="padding:18px 20px;margin-bottom:16px;cursor:pointer;" onclick="goPage('invest',navItemOf('invest'))">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
         <div class="card-title">投資分布</div>
         <span style="font-size:0.6rem;color:var(--accent-purple);font-family:var(--mono);padding:2px 6px;background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.2);border-radius:4px;">投資組合 →</span>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:center;">
-        <!-- 左：投資類型圓餅 -->
-        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
-          <div style="position:relative;width:120px;height:120px;">
-            <canvas id="homeInvPie" width="120" height="120"></canvas>
-            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
-              <div style="font-size:0.5rem;color:var(--text-muted);">市值</div>
-              <div id="homeInvPieCenter" style="font-family:var(--mono);font-size:0.75rem;font-weight:600;color:var(--accent-blue);">$0</div>
-            </div>
+      <!-- 大圓餅居中 -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:14px;">
+        <div style="position:relative;width:100%;max-width:200px;">
+          <svg id="homeInvPie" viewBox="0 0 36 36" style="width:100%;transform:rotate(-90deg);filter:drop-shadow(0 6px 20px rgba(0,0,0,0.6));"></svg>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
+            <div style="font-size:0.45rem;color:var(--text-muted);">市值</div>
+            <div id="homeInvPieCenter" style="font-family:var(--mono);font-size:0.82rem;font-weight:700;color:var(--accent-blue);">$0</div>
           </div>
-          <div id="homeInvPieLegend" style="width:100%;display:flex;flex-direction:column;gap:5px;"></div>
         </div>
-        <!-- 右：銀行子彈 -->
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          <div style="font-size:0.65rem;color:var(--text-muted);font-weight:600;margin-bottom:4px;">🏦 銀行存款（可用子彈）</div>
-          <div id="homeBankBullets" style="display:flex;flex-direction:column;gap:6px;"></div>
-          <div style="padding:8px 12px;background:rgba(0,229,160,0.07);border:1px solid rgba(0,229,160,0.2);border-radius:8px;margin-top:4px;">
-            <div style="font-size:0.58rem;color:var(--text-muted);margin-bottom:3px;">銀行合計</div>
-            <div style="font-family:var(--mono);font-size:0.92rem;font-weight:700;color:var(--accent-green);" id="homeBankTotal">$0</div>
-          </div>
+        <!-- 圖例 2 欄 -->
+        <div id="homeInvPieLegend" style="width:100%;display:grid;grid-template-columns:1fr 1fr;gap:6px;"></div>
+      </div>
+      <!-- 銀行子彈（摺疊在下方） -->
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+        <div style="font-size:0.65rem;color:var(--text-muted);font-weight:600;margin-bottom:8px;">🏦 銀行存款（可用子彈）</div>
+        <div id="homeBankBullets" style="display:flex;flex-direction:column;gap:6px;"></div>
+        <div style="padding:8px 12px;background:rgba(0,229,160,0.07);border:1px solid rgba(0,229,160,0.2);border-radius:8px;margin-top:8px;">
+          <div style="font-size:0.58rem;color:var(--text-muted);margin-bottom:3px;">銀行合計</div>
+          <div style="font-family:var(--mono);font-size:0.92rem;font-weight:700;color:var(--accent-green);" id="homeBankTotal">$0</div>
         </div>
       </div>
     </div>
@@ -6452,24 +6451,49 @@ function drawWealthChart() {
   });
 })();
 
-function drawPieChart(canvasId, segments) {
-  const canvas = document.getElementById(canvasId);
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width, cx = W/2, cy = W/2, r = W*0.46, inner = r*0.52;
-  ctx.clearRect(0,0,W,W);
+function drawPieChart(svgId, segments) {
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  // 若是 canvas（舊版相容）則走舊邏輯
+  if (svg.tagName === 'CANVAS') {
+    const ctx = svg.getContext('2d');
+    const W = svg.width, cx = W/2, cy = W/2, r = W*0.46, inner = r*0.52;
+    ctx.clearRect(0,0,W,W);
+    const total = segments.reduce((s,sg)=>s+sg.value,0)||1;
+    let angle = -Math.PI/2;
+    segments.forEach(sg => {
+      const slice = (sg.value/total)*Math.PI*2;
+      ctx.beginPath(); ctx.moveTo(cx,cy);
+      ctx.arc(cx,cy,r,angle,angle+slice); ctx.closePath();
+      ctx.fillStyle = sg.color; ctx.fill();
+      ctx.strokeStyle = '#141720'; ctx.lineWidth = 2; ctx.stroke();
+      angle += slice;
+    });
+    ctx.beginPath(); ctx.arc(cx,cy,inner,0,Math.PI*2);
+    ctx.fillStyle = '#141720'; ctx.fill();
+    return;
+  }
+  // SVG 甜甜圈版本
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
   const total = segments.reduce((s,sg)=>s+sg.value,0)||1;
-  let angle = -Math.PI/2;
+  const cx=18, cy=18, r=15.9, strokeW=5.8;
+  const circumference = 2*Math.PI*r;
+  let offset=0;
   segments.forEach(sg => {
-    const slice = (sg.value/total)*Math.PI*2;
-    ctx.beginPath(); ctx.moveTo(cx,cy);
-    ctx.arc(cx,cy,r,angle,angle+slice); ctx.closePath();
-    ctx.fillStyle = sg.color; ctx.fill();
-    ctx.strokeStyle = '#141720'; ctx.lineWidth = 2; ctx.stroke();
-    angle += slice;
+    const pct = sg.value/total;
+    const dash = pct*circumference;
+    const gap  = circumference-dash;
+    const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    circle.setAttribute('cx',cx); circle.setAttribute('cy',cy); circle.setAttribute('r',r);
+    circle.setAttribute('fill','none');
+    circle.setAttribute('stroke',sg.color);
+    circle.setAttribute('stroke-width',strokeW);
+    circle.setAttribute('stroke-dasharray',`${dash} ${gap}`);
+    circle.setAttribute('stroke-dashoffset', -offset*circumference);
+    circle.style.transition='stroke-dasharray 0.6s ease';
+    svg.appendChild(circle);
+    offset+=pct;
   });
-  ctx.beginPath(); ctx.arc(cx,cy,inner,0,Math.PI*2);
-  ctx.fillStyle = '#141720'; ctx.fill();
 }
 
 function drawAssetPie(segments) {
@@ -6601,19 +6625,35 @@ async function renderHome() {
   const aCenter = document.getElementById('homeAssetPieCenter');
   if (aCenter) aCenter.textContent = fmtMoney(totalAsset);
   const aLgEl = document.getElementById('homeAssetLegend');
-  if (aLgEl) aLgEl.innerHTML = assetSegs.map(s=>`
-    <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.68rem;">
-      <div style="display:flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:2px;background:${s.color};display:inline-block;"></span><span style="color:var(--text-secondary);">${s.label}</span></div>
-      <span style="font-family:var(--mono);color:${s.color};">${fmtMoney(s.value)}</span>
-    </div>`).join('');
+  if (aLgEl) aLgEl.innerHTML = assetSegs.map(s=>{
+    const pct = totalAsset>0 ? Math.round(s.value/totalAsset*100) : 0;
+    return `
+    <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.68rem;padding:4px 6px;border-radius:6px;background:rgba(255,255,255,0.02);">
+      <div style="display:flex;align-items:center;gap:5px;">
+        <span style="width:8px;height:8px;border-radius:50%;background:${s.color};display:inline-block;flex-shrink:0;"></span>
+        <span style="color:var(--text-secondary);">${s.label}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;">
+        <span style="font-family:var(--mono);color:${s.color};">${fmtMoney(s.value)}</span>
+        <span style="font-size:0.58rem;color:var(--text-muted);">${pct}%</span>
+      </div>
+    </div>`;}).join('');
   const lCenter = document.getElementById('homeLiabPieCenter');
   if (lCenter) lCenter.textContent = fmtMoney(effectiveLiab);
   const lLgEl = document.getElementById('homeLiabLegend');
-  if (lLgEl) lLgEl.innerHTML = (liabSegs.length ? liabSegs : [{label:'無負債資料',value:1,color:'#252a3a'}]).map(s=>`
-    <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.68rem;">
-      <div style="display:flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:2px;background:${s.color};display:inline-block;"></span><span style="color:var(--text-secondary);">${s.label}</span></div>
-      <span style="font-family:var(--mono);color:${s.color};">${fmtMoney(s.value)}</span>
-    </div>`).join('');
+  if (lLgEl) lLgEl.innerHTML = (liabSegs.length ? liabSegs : [{label:'無負債資料',value:1,color:'#252a3a'}]).map(s=>{
+    const pct = effectiveLiab>0 ? Math.round(s.value/effectiveLiab*100) : 0;
+    return `
+    <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.68rem;padding:4px 6px;border-radius:6px;background:rgba(255,255,255,0.02);">
+      <div style="display:flex;align-items:center;gap:5px;">
+        <span style="width:8px;height:8px;border-radius:50%;background:${s.color};display:inline-block;flex-shrink:0;"></span>
+        <span style="color:var(--text-secondary);">${s.label}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;">
+        <span style="font-family:var(--mono);color:${s.color};">${fmtMoney(s.value)}</span>
+        <span style="font-size:0.58rem;color:var(--text-muted);">${pct}%</span>
+      </div>
+    </div>`;}).join('');
   setTimeout(() => {
     drawPieChart('homeAssetPie', assetSegs.length ? assetSegs : [{label:'—',value:1,color:'#252a3a'}]);
     drawPieChart('homeLiabPie',  liabSegs.length  ? liabSegs  : [{label:'—',value:1,color:'#252a3a'}]);
@@ -6679,11 +6719,19 @@ async function renderHome() {
   const invPieCenter = document.getElementById('homeInvPieCenter');
   if (invPieCenter) invPieCenter.textContent = fmtMoney(invPieTotal);
   const invPieLgEl = document.getElementById('homeInvPieLegend');
-  if (invPieLgEl) invPieLgEl.innerHTML = invPieSegs.slice(0,6).map(s=>`
-    <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.68rem;">
-      <div style="display:flex;align-items:center;gap:5px;min-width:0;"><span style="width:7px;height:7px;border-radius:2px;background:${s.color};flex-shrink:0;display:inline-block;"></span><span style="color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.label}</span></div>
-      <span style="font-family:var(--mono);color:${s.color};flex-shrink:0;margin-left:6px;">${fmtMoney(s.value)}</span>
-    </div>`).join('');
+  if (invPieLgEl) invPieLgEl.innerHTML = invPieSegs.slice(0,8).map(s=>{
+    const pct = invPieTotal>0 ? (s.value/invPieTotal*100).toFixed(1) : 0;
+    return `
+    <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.67rem;padding:5px 7px;background:rgba(255,255,255,0.025);border-radius:7px;border:1px solid var(--border);">
+      <div style="display:flex;align-items:center;gap:5px;min-width:0;">
+        <span style="width:8px;height:8px;border-radius:50%;background:${s.color};flex-shrink:0;display:inline-block;"></span>
+        <span style="color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.label}</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0;margin-left:4px;">
+        <span style="font-family:var(--mono);color:${s.color};font-size:0.72rem;">${fmtMoney(s.value)}</span>
+        <span style="font-size:0.55rem;color:var(--text-muted);">${pct}%</span>
+      </div>
+    </div>`;}).join('');
   setTimeout(() => {
     drawPieChart('homeInvPie', invPieSegs.length ? invPieSegs : [{label:'—',value:1,color:'#252a3a'}]);
   }, 60);
