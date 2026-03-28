@@ -1955,7 +1955,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-28 09:12:07</div>
+    <div class="clock-display" id="clockDisplay">2026-03-28 12:06:02</div>
   </div>
 </aside>
 
@@ -2179,6 +2179,27 @@ input::placeholder { color: var(--text-muted); }
       <div id="homeLiabProgress" style="display:flex;flex-direction:column;gap:10px;">
         <div class="empty-state" style="padding:12px 0;font-size:0.75rem;">尚無負債資料</div>
       </div>
+      <!-- 質押借款額度列 -->
+      <div id="h-pledgeLoanRow" onclick="openPledgeLoanModal()" style="display:none;margin-top:10px;padding:10px 12px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:10px;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(245,158,11,0.5)'" onmouseout="this.style.borderColor='rgba(245,158,11,0.2)'">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:0.75rem;">🔗</span>
+            <span style="font-size:0.72rem;color:var(--text-secondary);">質押借款額度</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-family:var(--mono);font-size:0.75rem;color:var(--accent-amber);" id="h-pledge-balance">$0</span>
+            <span style="font-size:0.62rem;color:var(--text-muted);">/</span>
+            <span style="font-family:var(--mono);font-size:0.72rem;color:var(--text-muted);" id="h-pledge-limit">$700,000</span>
+          </div>
+        </div>
+        <div style="height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;margin-bottom:5px;">
+          <div id="h-pledge-bar" style="height:100%;width:0%;background:var(--accent-amber);border-radius:3px;transition:width 0.5s;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:var(--text-muted);">
+          <span>可用 <span id="h-pledge-avail" style="color:var(--accent-green);">$700,000</span></span>
+          <span>月利息 <span id="h-pledge-interest" style="color:var(--accent-amber);">$0</span></span>
+        </div>
+      </div>
     </div>
 
     <!-- ══ ROW 5b: 支出類別（全寬橫排） ══ -->
@@ -2293,6 +2314,15 @@ input::placeholder { color: var(--text-muted); }
           </div>
           <div style="font-family:var(--mono);font-size:0.95rem;font-weight:600;color:var(--accent-red);" id="ledger-kpi-loan">$0</div>
           <div style="font-size:0.58rem;color:var(--text-muted);margin-top:2px;" id="ledger-kpi-loan-sub">月攤還</div>
+        </div>
+        <!-- 質押借款利息 -->
+        <div id="ledger-pledge-card" onclick="openPledgeLoanModal()" style="display:none;padding:11px 14px;background:var(--bg-card);border:1px solid rgba(245,158,11,0.2);border-radius:12px;flex:1;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(245,158,11,0.6)'" onmouseout="this.style.borderColor='rgba(245,158,11,0.2)'">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;gap:4px;min-width:0;">
+            <div style="font-size:0.58rem;color:var(--text-muted);white-space:nowrap;">🔗 質押利息</div>
+            <div style="font-size:0.55rem;color:var(--accent-amber);font-family:var(--mono);white-space:nowrap;flex-shrink:0;">管理 →</div>
+          </div>
+          <div style="font-family:var(--mono);font-size:0.95rem;font-weight:600;color:var(--accent-amber);" id="ledger-kpi-pledge-int">$0</div>
+          <div style="font-size:0.58rem;color:var(--text-muted);margin-top:2px;" id="ledger-kpi-pledge-bal">餘額 $0</div>
         </div>
         <div style="padding:11px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;flex:1;">
           <div style="font-size:0.58rem;color:var(--text-muted);margin-bottom:6px;">儲蓄率</div>
@@ -5186,11 +5216,12 @@ async function renderAll() {
   const netEl = safe('ledger-stat-net');
   if (netEl) { netEl.textContent=(mNet>=0?'+':'-')+fmtMoney(Math.abs(mNet)); netEl.style.color=mNet>=0?'var(--accent-green)':'var(--accent-red)'; }
 
-  const mFixed2   = Math.round(monthFiltered.filter(t=>t._isRecur).reduce((s,t)=>s+t.amount,0));
-  const mPureEx2  = Math.round(monthFiltered.filter(t=>t.category!=='收入'&&!t._isRecur).reduce((s,t)=>s+t.amount,0));
-  const mLoanPmt  = Math.round(AppState.loans.reduce((s,l) => s + dbCalcLoanRemaining(l).pmt, 0));
-  const mTotalExp = mFixed2 + mPureEx2 + mLoanPmt;
-  const mNet2     = mIncome - mTotalExp;
+  const mFixed2      = Math.round(monthFiltered.filter(t=>t._isRecur).reduce((s,t)=>s+t.amount,0));
+  const mPureEx2     = Math.round(monthFiltered.filter(t=>t.category!=='收入'&&!t._isRecur).reduce((s,t)=>s+t.amount,0));
+  const mLoanPmt     = Math.round(AppState.loans.reduce((s,l) => s + dbCalcLoanRemaining(l).pmt, 0));
+  const mPledgeInt   = Math.round((AppState.pledgeLoan.balance||0) * (AppState.pledgeLoan.rate||0) / 100 / 12);
+  const mTotalExp    = mFixed2 + mPureEx2 + mLoanPmt + mPledgeInt;
+  const mNet2        = mIncome - mTotalExp;
   const savePct   = mIncome > 0 ? Math.max(0, Math.round((mNet2 / mIncome) * 100)) : 0;
 
   if (safe('ledger-kpi-income'))    safe('ledger-kpi-income').textContent    = '$' + Math.round(mIncome).toLocaleString('zh-TW');
@@ -5203,6 +5234,7 @@ async function renderAll() {
     if (mPureEx2 > 0) subParts.push(`支出 $${Math.round(mPureEx2).toLocaleString('zh-TW')}`);
     if (mFixed2  > 0) subParts.push(`固定 $${Math.round(mFixed2).toLocaleString('zh-TW')}`);
     if (mLoanPmt > 0) subParts.push(`負債 $${Math.round(mLoanPmt).toLocaleString('zh-TW')}`);
+    if (mPledgeInt > 0) subParts.push(`質押利息 $${Math.round(mPledgeInt).toLocaleString('zh-TW')}`);
     const subEl = document.getElementById('ledger-kpi-total-exp-sub');
     if (subEl) subEl.textContent = subParts.join(' ＋ ') || '尚無支出';
   }
@@ -5228,6 +5260,7 @@ async function renderAll() {
   if (wvCv) { wvCv.dataset.income = mIncome; wvCv.dataset.expense = mTotalExp; }
   drawLedgerWave(mIncome, mTotalExp);
   startWaveAnim();
+  renderPledgeLoanLedger();
 
   const catMap = {};
   monthFiltered.filter(t=>t.category!=='收入').forEach(t=>{ catMap[t.category]=(catMap[t.category]||0)+t.amount; });
@@ -6354,6 +6387,9 @@ async function renderHome() {
     if (hLiabTotal)   hLiabTotal.textContent='$'+Math.round(totalBal).toLocaleString('zh-TW');
     if (hLiabMonthly) hLiabMonthly.textContent='$'+Math.round(totalPmt).toLocaleString('zh-TW');
   }
+
+  // ══ 7b. 質押借款首頁列 ══
+  renderPledgeLoanHome();
 
   // ══ 8. 支出類別圓餅 ══
   const yearTxs  = allTxs.filter(t=>t.year===currentYear);
@@ -9587,6 +9623,13 @@ const AppState = {
     bank:   [],  // { id, name, amount, rate, currency }
     tickers: [], // { id, ticker, name, div_yield }
   },
+
+  pledgeLoan: {
+    limit:   700000,
+    balance: 0,
+    rate:    0,
+    history: [],
+  },
 };
 
 const PageState = {};
@@ -9613,6 +9656,12 @@ function appStateLoad() {
       if (saved.debts.mortgage) AppState.debts.mortgage = saved.debts.mortgage;
       if (saved.debts.personal) AppState.debts.personal = saved.debts.personal;
       if (saved.debts.pledge)   AppState.debts.pledge   = saved.debts.pledge;
+    }
+    if (saved.pledgeLoan) {
+      AppState.pledgeLoan.limit   = saved.pledgeLoan.limit   ?? 700000;
+      AppState.pledgeLoan.balance = saved.pledgeLoan.balance ?? 0;
+      AppState.pledgeLoan.rate    = saved.pledgeLoan.rate    ?? 0;
+      AppState.pledgeLoan.history = saved.pledgeLoan.history ?? [];
     }
     return true;
   } catch(e) { return false; }
@@ -14098,6 +14147,202 @@ function chipAttachListeners() {
   _chipListenersAttached = true;
 }
 
+
+// ══════════════════════════════════════
+// 質押借款管理
+// ══════════════════════════════════════
+let _plmTab = 'borrow';
+
+function openPledgeLoanModal() {
+  const pl = AppState.pledgeLoan;
+  document.getElementById('plm-limit-input').value = pl.limit || 700000;
+  document.getElementById('plm-rate-input').value  = pl.rate  || '';
+  document.getElementById('plm-amount-input').value = '';
+  document.getElementById('plm-note-input').value   = '';
+  plmSetTab('borrow');
+  plmUpdatePreview();
+  plmRenderHistory();
+  document.getElementById('pledgeLoanModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closePledgeLoanModal() {
+  document.getElementById('pledgeLoanModal').style.display = 'none';
+  document.body.style.overflow = '';
+  appStateSave();
+  renderHome();
+  renderLedger();
+}
+
+function plmSetTab(tab) {
+  _plmTab = tab;
+  const bBtn = document.getElementById('plm-tab-borrow');
+  const rBtn = document.getElementById('plm-tab-repay');
+  const label = document.getElementById('plm-amount-label');
+  const actBtn = document.getElementById('plm-action-btn');
+  if (tab === 'borrow') {
+    bBtn.style.background = 'var(--accent-amber)'; bBtn.style.color = '#000';
+    rBtn.style.background = 'transparent';         rBtn.style.color = 'var(--text-muted)';
+    label.textContent = '借款金額（元）';
+    actBtn.textContent = '確認借款';
+    actBtn.style.background = 'var(--accent-amber)';
+  } else {
+    rBtn.style.background = 'var(--accent-green)'; rBtn.style.color = '#000';
+    bBtn.style.background = 'transparent';         bBtn.style.color = 'var(--text-muted)';
+    label.textContent = '還款金額（元）';
+    actBtn.textContent = '確認還款';
+    actBtn.style.background = 'var(--accent-green)';
+  }
+}
+
+function plmUpdatePreview() {
+  const pl = AppState.pledgeLoan;
+  const limit    = parseFloat(document.getElementById('plm-limit-input').value) || pl.limit || 700000;
+  const rate     = parseFloat(document.getElementById('plm-rate-input').value)  || 0;
+  const balance  = pl.balance || 0;
+  const avail    = Math.max(0, limit - balance);
+  const interest = Math.round(balance * rate / 100 / 12);
+  const barPct   = limit > 0 ? Math.min(100, Math.round((balance / limit) * 100)) : 0;
+
+  const fmt = n => '$' + Math.round(n).toLocaleString('zh-TW');
+  const safe = id => document.getElementById(id);
+  if (safe('plm-balance'))     safe('plm-balance').textContent     = fmt(balance);
+  if (safe('plm-avail'))       safe('plm-avail').textContent       = fmt(avail);
+  if (safe('plm-limit-text'))  safe('plm-limit-text').textContent  = fmt(limit);
+  if (safe('plm-interest'))    safe('plm-interest').textContent    = fmt(interest);
+  if (safe('plm-bar'))         safe('plm-bar').style.width         = barPct + '%';
+  const barEl = safe('plm-bar');
+  if (barEl) barEl.style.background = barPct >= 80 ? 'var(--accent-red)' : barPct >= 50 ? '#f97316' : 'linear-gradient(90deg,var(--accent-amber),#f97316)';
+}
+
+function plmRenderHistory() {
+  const hist = (AppState.pledgeLoan.history || []).slice().reverse();
+  const el = document.getElementById('plm-history');
+  if (!el) return;
+  if (!hist.length) { el.innerHTML = '<div style="font-size:0.72rem;color:var(--text-muted);text-align:center;padding:12px 0;">尚無操作紀錄</div>'; return; }
+  el.innerHTML = hist.map(h => {
+    const isBorrow = h.type === 'borrow';
+    const color = isBorrow ? 'var(--accent-amber)' : 'var(--accent-green)';
+    const sign  = isBorrow ? '+' : '-';
+    const icon  = isBorrow ? '↑借' : '↓還';
+    return `<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg-card2);border-radius:8px;">
+      <span style="font-size:0.65rem;padding:2px 6px;border-radius:5px;background:${color}22;color:${color};flex-shrink:0;font-weight:600;">${icon}</span>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:0.72rem;color:var(--text-secondary);">${h.note || (isBorrow ? '借款' : '還款')}</div>
+        <div style="font-size:0.6rem;color:var(--text-muted);">${h.date}</div>
+      </div>
+      <span style="font-family:var(--mono);font-size:0.82rem;color:${color};flex-shrink:0;">${sign}$${Math.round(h.amount).toLocaleString('zh-TW')}</span>
+      <button onclick="plmDeleteHistory('${h.id}')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.7rem;padding:2px 5px;border-radius:4px;flex-shrink:0;" onmouseover="this.style.color='var(--accent-red)'" onmouseout="this.style.color='var(--text-muted)'">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function plmDeleteHistory(id) {
+  const pl = AppState.pledgeLoan;
+  const rec = pl.history.find(h => h.id === id);
+  if (!rec) return;
+  // Reverse the effect on balance
+  if (rec.type === 'borrow') pl.balance = Math.max(0, (pl.balance || 0) - rec.amount);
+  else                       pl.balance = Math.min(pl.limit || 700000, (pl.balance || 0) + rec.amount);
+  pl.history = pl.history.filter(h => h.id !== id);
+  appStateSave();
+  plmUpdatePreview();
+  plmRenderHistory();
+}
+
+function plmExecute() {
+  const pl      = AppState.pledgeLoan;
+  const amount  = parseFloat(document.getElementById('plm-amount-input').value) || 0;
+  const note    = document.getElementById('plm-note-input').value.trim();
+  const limit   = parseFloat(document.getElementById('plm-limit-input').value) || pl.limit || 700000;
+  const rate    = parseFloat(document.getElementById('plm-rate-input').value)  || 0;
+
+  if (amount <= 0) { showToast('請輸入金額', 'warn'); return; }
+
+  // Save settings
+  pl.limit = limit;
+  pl.rate  = rate;
+
+  const now = new Date();
+  const dateStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+
+  if (_plmTab === 'borrow') {
+    const avail = limit - (pl.balance || 0);
+    if (amount > avail) { showToast('超過可用額度 $' + Math.round(avail).toLocaleString('zh-TW'), 'warn'); return; }
+    pl.balance = (pl.balance || 0) + amount;
+    pl.history.push({ id: 'pl' + Date.now(), date: dateStr, type: 'borrow', amount, note: note || '質押借款' });
+
+    // 自動插入帳務收入
+    const tx = {
+      id: 'pltx' + Date.now(),
+      date: dateStr,
+      name: note || '質押借款',
+      amount: amount,
+      category: '質押借款',
+      note: '質押借款收入',
+      year: now.getFullYear().toString(),
+    };
+    addTransactionLocal(tx);
+    showToast('已借款 $' + Math.round(amount).toLocaleString('zh-TW') + '，帳務已記入收入');
+  } else {
+    if (amount > (pl.balance || 0)) { showToast('還款金額超過借款餘額', 'warn'); return; }
+    pl.balance = (pl.balance || 0) - amount;
+    pl.history.push({ id: 'pl' + Date.now(), date: dateStr, type: 'repay', amount, note: note || '質押還款' });
+    showToast('已還款 $' + Math.round(amount).toLocaleString('zh-TW'));
+  }
+
+  document.getElementById('plm-amount-input').value = '';
+  document.getElementById('plm-note-input').value   = '';
+  appStateSave();
+  plmUpdatePreview();
+  plmRenderHistory();
+}
+
+function addTransactionLocal(tx) {
+  // Add to Supabase if available, else queue
+  if (typeof addTransaction === 'function') {
+    addTransaction(tx).catch(() => {});
+  }
+}
+
+function renderPledgeLoanHome() {
+  const pl = AppState.pledgeLoan;
+  const balance  = pl.balance  || 0;
+  const limit    = pl.limit    || 700000;
+  const rate     = pl.rate     || 0;
+  const avail    = Math.max(0, limit - balance);
+  const interest = Math.round(balance * rate / 100 / 12);
+  const barPct   = limit > 0 ? Math.min(100, Math.round((balance / limit) * 100)) : 0;
+  const fmt = n => '$' + Math.round(n).toLocaleString('zh-TW');
+  const safe = id => document.getElementById(id);
+
+  const row = safe('h-pledgeLoanRow');
+  if (row) row.style.display = 'block';
+
+  if (safe('h-pledge-balance'))  safe('h-pledge-balance').textContent  = fmt(balance);
+  if (safe('h-pledge-limit'))    safe('h-pledge-limit').textContent    = fmt(limit);
+  if (safe('h-pledge-avail'))    safe('h-pledge-avail').textContent    = fmt(avail);
+  if (safe('h-pledge-interest')) safe('h-pledge-interest').textContent = fmt(interest);
+  const bar = safe('h-pledge-bar');
+  if (bar) {
+    bar.style.width = barPct + '%';
+    bar.style.background = barPct >= 80 ? 'var(--accent-red)' : 'var(--accent-amber)';
+  }
+}
+
+function renderPledgeLoanLedger() {
+  const pl = AppState.pledgeLoan;
+  const balance  = pl.balance || 0;
+  const rate     = pl.rate    || 0;
+  const interest = Math.round(balance * rate / 100 / 12);
+  const fmt = n => '$' + Math.round(n).toLocaleString('zh-TW');
+  const safe = id => document.getElementById(id);
+  const card = safe('ledger-pledge-card');
+  if (card) card.style.display = (balance > 0 || rate > 0) ? '' : 'none';
+  if (safe('ledger-kpi-pledge-int')) safe('ledger-kpi-pledge-int').textContent = fmt(interest) + '/月';
+  if (safe('ledger-kpi-pledge-bal')) safe('ledger-kpi-pledge-bal').textContent = '餘額 ' + fmt(balance);
+}
+
 </script>
 
 <!-- ══ 籌碼雷達 Modals（body 層級，避免 overflow 裁切）══ -->
@@ -14477,5 +14722,103 @@ function prsAnalyze() {
   }).join('');
 }
 </script>
+
+<!-- ══ 質押借款管理 Modal ══ -->
+<div id="pledgeLoanModal" style="display:none;position:fixed;inset:0;z-index:6500;background:rgba(0,0,0,0.8);backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;" onclick="if(event.target===this)closePledgeLoanModal()">
+  <div style="width:min(520px,100vw);background:var(--bg-card);border-radius:20px 20px 0 0;max-height:90vh;overflow-y:auto;animation:slideUp 0.28s cubic-bezier(0.4,0,0.2,1);">
+    <!-- 頂部 -->
+    <div style="padding:16px 20px 0;position:sticky;top:0;background:var(--bg-card);z-index:1;">
+      <div style="width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,0.12);margin:0 auto 14px;"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:1.1rem;">🔗</span>
+          <span style="font-size:1rem;font-weight:600;">質押借款管理</span>
+        </div>
+        <button onclick="closePledgeLoanModal()" style="background:rgba(255,255,255,0.07);border:none;color:var(--text-muted);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">✕</button>
+      </div>
+    </div>
+
+    <div style="padding:0 20px 28px;">
+      <!-- 額度概覽 -->
+      <div style="padding:14px 16px;background:var(--bg-card2);border-radius:12px;margin-bottom:16px;border:1px solid rgba(245,158,11,0.2);">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+          <div>
+            <div style="font-size:0.58rem;color:var(--text-muted);margin-bottom:3px;">已借款餘額</div>
+            <div style="font-family:var(--mono);font-size:1.4rem;font-weight:700;color:var(--accent-amber);" id="plm-balance">$0</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:0.58rem;color:var(--text-muted);margin-bottom:3px;">可用額度</div>
+            <div style="font-family:var(--mono);font-size:1.4rem;font-weight:700;color:var(--accent-green);" id="plm-avail">$700,000</div>
+          </div>
+        </div>
+        <!-- 進度條 -->
+        <div style="height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;margin-bottom:8px;">
+          <div id="plm-bar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--accent-amber),#f97316);border-radius:4px;transition:width 0.5s;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.62rem;color:var(--text-muted);">
+          <span>額度上限 <span id="plm-limit-text" style="font-family:var(--mono);color:var(--text-secondary);">$700,000</span></span>
+          <span>月利息 <span id="plm-interest" style="font-family:var(--mono);color:var(--accent-amber);">$0</span></span>
+        </div>
+      </div>
+
+      <!-- 設定列：上限 + 利率 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+        <div>
+          <div style="font-size:0.62rem;color:var(--text-muted);margin-bottom:5px;">額度上限（元）</div>
+          <div style="display:flex;align-items:center;gap:0;background:var(--bg-input);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+            <input type="number" id="plm-limit-input" placeholder="700000" step="50000" style="flex:1;background:transparent;border:none;padding:8px 10px;font-family:var(--mono);font-size:0.88rem;color:var(--text-primary);outline:none;" oninput="plmUpdatePreview()">
+            <span style="font-size:0.65rem;color:var(--text-muted);padding:0 8px;border-left:1px solid var(--border);">元</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:0.62rem;color:var(--text-muted);margin-bottom:5px;">年利率 (%)</div>
+          <div style="display:flex;align-items:center;gap:0;background:var(--bg-input);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+            <input type="number" id="plm-rate-input" placeholder="2.0" step="0.1" min="0" max="20" style="flex:1;background:transparent;border:none;padding:8px 10px;font-family:var(--mono);font-size:0.88rem;color:var(--text-primary);outline:none;" oninput="plmUpdatePreview()">
+            <span style="font-size:0.65rem;color:var(--text-muted);padding:0 8px;border-left:1px solid var(--border);">%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 操作：借款 / 還款 切換 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--bg-card2);border-radius:10px;padding:4px;margin-bottom:14px;">
+        <button id="plm-tab-borrow" onclick="plmSetTab('borrow')" style="padding:8px;border:none;border-radius:7px;font-size:0.8rem;font-weight:600;cursor:pointer;background:var(--accent-amber);color:#000;transition:all 0.18s;">
+          ＋ 借款
+        </button>
+        <button id="plm-tab-repay" onclick="plmSetTab('repay')" style="padding:8px;border:none;border-radius:7px;font-size:0.8rem;font-weight:600;cursor:pointer;background:transparent;color:var(--text-muted);transition:all 0.18s;">
+          ↩ 還款
+        </button>
+      </div>
+
+      <!-- 金額輸入 -->
+      <div style="margin-bottom:10px;">
+        <div style="font-size:0.62rem;color:var(--text-muted);margin-bottom:5px;" id="plm-amount-label">借款金額（元）</div>
+        <div style="display:flex;align-items:center;gap:0;background:var(--bg-input);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+          <input type="number" id="plm-amount-input" placeholder="0" step="10000" min="0" style="flex:1;background:transparent;border:none;padding:10px 12px;font-family:var(--mono);font-size:1rem;color:var(--text-primary);outline:none;">
+          <span style="font-size:0.65rem;color:var(--text-muted);padding:0 10px;border-left:1px solid var(--border);">元</span>
+        </div>
+      </div>
+      <!-- 備註 -->
+      <div style="margin-bottom:14px;">
+        <div style="font-size:0.62rem;color:var(--text-muted);margin-bottom:5px;">備註（選填）</div>
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+          <input type="text" id="plm-note-input" placeholder="例：買入0050" style="width:100%;background:transparent;border:none;padding:8px 12px;font-size:0.88rem;color:var(--text-primary);outline:none;">
+        </div>
+      </div>
+
+      <!-- 執行按鈕 -->
+      <button id="plm-action-btn" onclick="plmExecute()" style="width:100%;padding:13px;border:none;border-radius:12px;background:var(--accent-amber);color:#000;font-size:0.95rem;font-weight:700;cursor:pointer;transition:all 0.18s;margin-bottom:20px;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+        確認借款
+      </button>
+
+      <!-- 歷史紀錄 -->
+      <div style="border-top:1px solid var(--border);padding-top:16px;">
+        <div style="font-size:0.72rem;font-weight:600;color:var(--text-muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;">操作紀錄</div>
+        <div id="plm-history" style="display:flex;flex-direction:column;gap:7px;">
+          <div style="font-size:0.72rem;color:var(--text-muted);text-align:center;padding:12px 0;">尚無操作紀錄</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 </body></html>
