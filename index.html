@@ -1289,7 +1289,7 @@ input::placeholder { color: var(--text-muted); }
   color: var(--accent-amber);
   line-height: 1.7;
   z-index: 900;
-  pointer-events: none;
+  pointer-events: auto;
   min-width: 200px;
   backdrop-filter: blur(4px);
 }
@@ -1301,7 +1301,49 @@ input::placeholder { color: var(--text-muted); }
   margin-bottom: 4px;
 }
 .dev-badge .dev-badge-line { color: var(--text-secondary); }
-.dev-badge .dev-badge-line span { color: var(--accent-amber); }
+.dev-badge .dev-badge-line span {
+  color: var(--accent-amber);
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 0 2px;
+  transition: background 0.15s;
+  position: relative;
+}
+.dev-badge .dev-badge-line span:hover {
+  background: rgba(245,158,11,0.18);
+  text-decoration: underline;
+}
+.dev-badge .dev-badge-line span::after {
+  content: '📋';
+  font-size: 0.55rem;
+  margin-left: 3px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.dev-badge .dev-badge-line span:hover::after { opacity: 0.7; }
+/* 複製成功 tooltip */
+.dev-copy-toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  background: rgba(0,229,160,0.15);
+  border: 1px solid var(--accent-green);
+  color: var(--accent-green);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  padding: 5px 14px;
+  border-radius: 20px;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  white-space: nowrap;
+}
+.dev-copy-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
 body.dev-mode .dev-badge { display: block; }
 body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
 
@@ -2016,7 +2058,7 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-28 16:02:18</div>
+    <div class="clock-display" id="clockDisplay">2026-03-28 17:26:56</div>
   </div>
 </aside>
 
@@ -14847,6 +14889,39 @@ function toggleDevMode() {
   if (lm) lm.style.display = 'none';
 }
 
+function devCopyText(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() { devShowCopyToast(text); });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;opacity:0;';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    devShowCopyToast(text);
+  }
+}
+
+function devShowCopyToast(text) {
+  var t = document.getElementById('dev-copy-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'dev-copy-toast';
+    t.className = 'dev-copy-toast';
+    document.body.appendChild(t);
+  }
+  t.textContent = '✓ 已複製：' + text;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function() { t.classList.remove('show'); }, 1600);
+}
+
+function makeCopySpan(text) {
+  return '<span onclick="event.stopPropagation();devCopyText(\'' + text.replace(/'/g, "\\'") + '\')" title="點擊複製">' + text + '</span>';
+}
+
 function updateDevBadge(pageId) {
   var page = document.getElementById(pageId);
   if (!page) return;
@@ -14862,10 +14937,12 @@ function updateDevBadge(pageId) {
   badge.className = 'dev-badge';
   badge.innerHTML =
     '<div class="dev-badge-title">⚙ DEV · ' + info.name + '</div>' +
-    '<div class="dev-badge-line">HTML <span>' + info.html + '</span> 行</div>' +
-    '<div class="dev-badge-line">JS   <span>' + info.js + '</span> 行</div>' +
+    '<div class="dev-badge-line">HTML ' + makeCopySpan(info.html) + ' 行</div>' +
+    '<div class="dev-badge-line">JS   ' + makeCopySpan(info.js) + ' 行</div>' +
     '<div class="dev-badge-line" style="margin-top:4px;color:var(--text-muted);font-size:0.58rem;">' +
-    info.fns.join(' · ') + '</div>';
+    info.fns.map(function(fn) {
+      return '<span onclick="event.stopPropagation();devCopyText(\'' + fn + '\')" title="點擊複製函數名稱" style="cursor:pointer;" onmouseenter="this.style.color=\'var(--accent-amber)\'" onmouseleave="this.style.color=\'\'">' + fn + '</span>';
+    }).join(' · ') + '</div>';
   page.appendChild(badge);
 }
 
