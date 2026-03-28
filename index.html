@@ -1939,6 +1939,10 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
   <div style="height:1px;background:rgba(255,255,255,0.08);margin:4px 0;"></div>
   <div class="logout-item" onclick="confirmDeploy()" id="deploy_btn" style="color:#06b6d4;">☁️ 推送到 GitHub</div>
   <div style="height:1px;background:rgba(255,255,255,0.08);margin:4px 0;"></div>
+    <div style="height:1px;background:rgba(255,255,255,0.08);margin:4px 0;"></div>
+  <div class="logout-item" onclick="toggleDevMode()" id="dev-mode-menu-item" style="font-family:var(--mono);font-size:0.72rem;color:var(--text-muted);">
+    <span id="dev-mode-dot" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--text-muted);margin-right:7px;transition:background 0.2s;"></span>DEV MODE
+  </div>
   <div class="logout-item danger" onclick="logout()">🚪 登出</div>
 </div>
 
@@ -2012,12 +2016,8 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-28 15:25:14</div>
+    <div class="clock-display" id="clockDisplay">2026-03-28 16:02:18</div>
   </div>
-  <button id="dev-mode-btn" onclick="toggleDevMode()" title="開發者模式">
-    <div class="dev-dot"></div>
-    DEV MODE
-  </button>
 </aside>
 
 <!-- mobile overlay -->
@@ -14831,12 +14831,20 @@ var DEV_PAGE_MAP = {
 
 function toggleDevMode() {
   var isOn = document.body.classList.toggle('dev-mode');
-  var btn = document.getElementById('dev-mode-btn');
-  if (btn) btn.classList.toggle('active', isOn);
+  // 更新 menu item 樣式
+  var menuItem = document.getElementById('dev-mode-menu-item');
+  var dot = document.getElementById('dev-mode-dot');
+  if (menuItem) menuItem.style.color = isOn ? 'var(--accent-amber)' : 'var(--text-muted)';
+  if (dot) dot.style.background = isOn ? 'var(--accent-amber)' : 'var(--text-muted)';
+  if (dot && isOn) dot.style.boxShadow = '0 0 6px var(--accent-amber)';
+  if (dot && !isOn) dot.style.boxShadow = 'none';
   // 更新所有分頁的 badge
   Object.keys(DEV_PAGE_MAP).forEach(function(pid) {
     updateDevBadge(pid);
   });
+  // 關閉 logout menu
+  var lm = document.getElementById('logoutMenu');
+  if (lm) lm.style.display = 'none';
 }
 
 function updateDevBadge(pageId) {
@@ -14860,6 +14868,37 @@ function updateDevBadge(pageId) {
     info.fns.join(' · ') + '</div>';
   page.appendChild(badge);
 }
+
+
+// ══ 手機側邊欄滑動手勢 ══
+(function() {
+  var touchStartX = 0;
+  var touchStartY = 0;
+  var EDGE_WIDTH = 30; // 左邊緣感應區域(px)
+  var MIN_SWIPE = 60;  // 最小滑動距離
+
+  document.addEventListener('touchstart', function(e) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    var dx = e.changedTouches[0].clientX - touchStartX;
+    var dy = e.changedTouches[0].clientY - touchStartY;
+    var sidebar = document.getElementById('sidebar');
+    if (!sidebar) return;
+    var isOpen = sidebar.classList.contains('open');
+
+    // 從左邊緣往右滑 → 開啟
+    if (!isOpen && touchStartX <= EDGE_WIDTH && dx > MIN_SWIPE && Math.abs(dy) < 80) {
+      toggleSidebar();
+    }
+    // 往左滑 → 關閉
+    if (isOpen && dx < -MIN_SWIPE && Math.abs(dy) < 80) {
+      closeSidebar();
+    }
+  }, { passive: true });
+})();
 
 </script>
 
