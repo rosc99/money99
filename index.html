@@ -1248,6 +1248,63 @@ input::placeholder { color: var(--text-muted); }
 }
 .s-toggle-btn:hover { border-color:var(--border-hover);color:var(--text-primary); }
 
+
+/* ══ 開發者模式 ══ */
+#dev-mode-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: calc(100% - 24px);
+  margin: 8px 12px 4px;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-family: var(--mono);
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.05em;
+}
+#dev-mode-btn:hover { border-color: var(--accent-amber); color: var(--accent-amber); }
+#dev-mode-btn.active { border-color: var(--accent-amber); color: var(--accent-amber); background: rgba(245,158,11,0.08); }
+#dev-mode-btn .dev-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--text-muted); flex-shrink: 0; transition: background 0.2s;
+}
+#dev-mode-btn.active .dev-dot { background: var(--accent-amber); box-shadow: 0 0 6px var(--accent-amber); }
+
+.dev-badge {
+  display: none;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(13,15,20,0.92);
+  border: 1px solid var(--accent-amber);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--accent-amber);
+  line-height: 1.7;
+  z-index: 900;
+  pointer-events: none;
+  min-width: 200px;
+  backdrop-filter: blur(4px);
+}
+.dev-badge .dev-badge-title {
+  font-size: 0.58rem;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.dev-badge .dev-badge-line { color: var(--text-secondary); }
+.dev-badge .dev-badge-line span { color: var(--accent-amber); }
+body.dev-mode .dev-badge { display: block; }
+body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
+
 </style>
 <style>
 /* ── TECH ICON SYSTEM ── */
@@ -1955,8 +2012,12 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-28 12:16:16</div>
+    <div class="clock-display" id="clockDisplay">2026-03-28 14:10:08</div>
   </div>
+  <button id="dev-mode-btn" onclick="toggleDevMode()" title="開發者模式">
+    <div class="dev-dot"></div>
+    DEV MODE
+  </button>
 </aside>
 
 <!-- mobile overlay -->
@@ -14721,6 +14782,85 @@ function prsAnalyze() {
     </div>`;
   }).join('');
 }
+
+// ══ 開發者模式 ══
+var DEV_PAGE_MAP = {
+  'page-home': {
+    name: '總覽主頁',
+    html: '1972 – 2230',
+    js: '4893, 5013, 5015, 6619, 6732, 6876, 14308',
+    fns: ['renderHomePage', 'updateNetAsset', 'syncBankTotalToAssets', 'renderPledgeLoanHome']
+  },
+  'page-ledger': {
+    name: '收支流水帳',
+    html: '2233 – 2424',
+    js: '4503 – 5090, 5374',
+    fns: ['openTxModal', 'closeTxModal', 'setTxType', 'drawLedgerPie', 'selectModalChip']
+  },
+  'page-invest': {
+    name: '投資組合',
+    html: '2612 – 2701',
+    js: '4646 – 4893',
+    fns: ['renderInvestPage', 'saveInvestSnapshot', 'invAssetCard', 'goToDbInvest']
+  },
+  'page-stats': {
+    name: '現金流／籌碼',
+    html: '2704 – 3026',
+    js: '10648 – 14346',
+    fns: ['etfFmtNum', 'chipProxy', 'chipSma', 'riskRunAnalysis']
+  },
+  'page-intel': {
+    name: '情報雷達',
+    html: '3033 – 3333',
+    js: '8302 – 9386',
+    fns: ['renderIntelCard', 'openIntelAddModal', 'loadMarketNews', 'switchIntelRange']
+  },
+  'page-strategy': {
+    name: '200萬策略',
+    html: '3335 – 3539',
+    js: '9387 – 10646',
+    fns: ['onTsunamiToggle', 'updateStDashboard', 'renderStTable', 'runPhase3', 'stToggleSettings']
+  },
+  'page-database': {
+    name: '資料庫',
+    html: '3544 – 3691',
+    js: '4022 – 4067, 10554 – 10640',
+    fns: ['saveSession', 'loadSession', 'dbMarkDirty', 'dbDeleteFund', 'dbDeleteBank']
+  }
+};
+
+function toggleDevMode() {
+  var isOn = document.body.classList.toggle('dev-mode');
+  var btn = document.getElementById('dev-mode-btn');
+  if (btn) btn.classList.toggle('active', isOn);
+  // 更新所有分頁的 badge
+  Object.keys(DEV_PAGE_MAP).forEach(function(pid) {
+    updateDevBadge(pid);
+  });
+}
+
+function updateDevBadge(pageId) {
+  var page = document.getElementById(pageId);
+  if (!page) return;
+  page.style.position = page.style.position || 'relative';
+
+  var existing = page.querySelector('.dev-badge');
+  if (existing) existing.remove();
+
+  var info = DEV_PAGE_MAP[pageId];
+  if (!info) return;
+
+  var badge = document.createElement('div');
+  badge.className = 'dev-badge';
+  badge.innerHTML =
+    '<div class="dev-badge-title">⚙ DEV · ' + info.name + '</div>' +
+    '<div class="dev-badge-line">HTML <span>' + info.html + '</span> 行</div>' +
+    '<div class="dev-badge-line">JS   <span>' + info.js + '</span> 行</div>' +
+    '<div class="dev-badge-line" style="margin-top:4px;color:var(--text-muted);font-size:0.58rem;">' +
+    info.fns.join(' · ') + '</div>';
+  page.appendChild(badge);
+}
+
 </script>
 
 <!-- ══ 質押借款管理 Modal ══ -->
