@@ -1955,7 +1955,7 @@ input::placeholder { color: var(--text-muted); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-03-28 08:49:50</div>
+    <div class="clock-display" id="clockDisplay">2026-03-28 09:12:07</div>
   </div>
 </aside>
 
@@ -4669,7 +4669,7 @@ function renderInvestPage() {
         return invAssetCard({
           icon:'📈',
           title: `${h.ticker}${h.name && h.name !== h.ticker ? ' · '+h.name : ''}`,
-          sub: `${h.shares} 張・均成本 $${h.avgCost.toLocaleString('zh-TW')}`,
+          sub: `${h.shares} 張・均成本 $${Math.round(h.avgCost).toLocaleString('zh-TW')}`,
           cost: h.totalCost||0, moDiv, color: INV_COLORS.stocks,
           onclick: `goToDbSection('db_ticker_list', '0 0 0 2px rgba(59,130,246,0.6)')`
         });
@@ -4736,7 +4736,7 @@ async function fetchInvestQuotes(holdings) {
         pnlEl.innerHTML = `
           <div style="padding:5px 8px;background:var(--bg-card2);border-radius:6px;">
             <div style="font-size:0.5rem;color:var(--text-muted);margin-bottom:1px;">現價</div>
-            <div style="font-family:var(--mono);font-size:0.72rem;font-weight:600;color:var(--text-primary);">$${q.price.toLocaleString('zh-TW')}</div>
+            <div style="font-family:var(--mono);font-size:0.72rem;font-weight:600;color:var(--text-primary);">$${Math.round(q.price).toLocaleString('zh-TW')}</div>
           </div>
           <div style="padding:5px 8px;background:var(--bg-card2);border-radius:6px;">
             <div style="font-size:0.5rem;color:var(--text-muted);margin-bottom:1px;">現值</div>
@@ -5126,7 +5126,7 @@ async function deleteTransaction(id) {
   showToast('已刪除記錄');
 }
 
-function fmtMoney(n) { return '$' + Math.abs(n).toLocaleString('zh-TW'); }
+function fmtMoney(n) { return '$' + Math.round(Math.abs(n)).toLocaleString('zh-TW'); }
 
 async function renderAll() {
   const allTxs  = await getTransactions();
@@ -5193,15 +5193,15 @@ async function renderAll() {
   const mNet2     = mIncome - mTotalExp;
   const savePct   = mIncome > 0 ? Math.max(0, Math.round((mNet2 / mIncome) * 100)) : 0;
 
-  if (safe('ledger-kpi-income'))    safe('ledger-kpi-income').textContent    = '$' + mIncome.toLocaleString('zh-TW');
-  if (safe('ledger-kpi-expense'))   safe('ledger-kpi-expense').textContent   = '$' + mPureEx2.toLocaleString('zh-TW');
-  if (safe('ledger-kpi-fixed'))     safe('ledger-kpi-fixed').textContent     = '$' + mFixed2.toLocaleString('zh-TW');
+  if (safe('ledger-kpi-income'))    safe('ledger-kpi-income').textContent    = '$' + Math.round(mIncome).toLocaleString('zh-TW');
+  if (safe('ledger-kpi-expense'))   safe('ledger-kpi-expense').textContent   = '$' + Math.round(mPureEx2).toLocaleString('zh-TW');
+  if (safe('ledger-kpi-fixed'))     safe('ledger-kpi-fixed').textContent     = '$' + Math.round(mFixed2).toLocaleString('zh-TW');
   if (safe('ledger-kpi-fixed-sub')) safe('ledger-kpi-fixed-sub').textContent = mFixed2 > 0 ? AppState.recurring.length + ' 項固定' : '尚未設定';
   if (safe('ledger-kpi-total-exp')) {
-    safe('ledger-kpi-total-exp').textContent = '$' + mTotalExp.toLocaleString('zh-TW');
+    safe('ledger-kpi-total-exp').textContent = '$' + Math.round(mTotalExp).toLocaleString('zh-TW');
     const subParts = [];
-    if (mPureEx2 > 0) subParts.push(`支出 $${mPureEx2.toLocaleString('zh-TW')}`);
-    if (mFixed2  > 0) subParts.push(`固定 $${mFixed2.toLocaleString('zh-TW')}`);
+    if (mPureEx2 > 0) subParts.push(`支出 $${Math.round(mPureEx2).toLocaleString('zh-TW')}`);
+    if (mFixed2  > 0) subParts.push(`固定 $${Math.round(mFixed2).toLocaleString('zh-TW')}`);
     if (mLoanPmt > 0) subParts.push(`負債 $${Math.round(mLoanPmt).toLocaleString('zh-TW')}`);
     const subEl = document.getElementById('ledger-kpi-total-exp-sub');
     if (subEl) subEl.textContent = subParts.join(' ＋ ') || '尚無支出';
@@ -5212,13 +5212,13 @@ async function renderAll() {
     if (safe('ledger-kpi-loan-sub')) safe('ledger-kpi-loan-sub').textContent = loanCount > 0 ? loanCount + ' 筆貸款月攤還' : '尚未設定';
   }
   if (safe('ledger-kpi-net')) {
-    safe('ledger-kpi-net').textContent = (mNet2>=0?'+$':'-$') + Math.abs(mNet2).toLocaleString('zh-TW');
+    safe('ledger-kpi-net').textContent = (mNet2>=0?'+$':'-$') + Math.round(Math.abs(mNet2)).toLocaleString('zh-TW');
     safe('ledger-kpi-net').style.color = mNet2>=0 ? 'var(--accent-green)' : 'var(--accent-red)';
   }
-  if (safe('ledger-btn-income'))  safe('ledger-btn-income').textContent  = 'NT$' + mIncome.toLocaleString('zh-TW');
-  if (safe('ledger-btn-expense')) safe('ledger-btn-expense').textContent = 'NT$' + mPureEx2.toLocaleString('zh-TW');
+  if (safe('ledger-btn-income'))  safe('ledger-btn-income').textContent  = 'NT$' + Math.round(mIncome).toLocaleString('zh-TW');
+  if (safe('ledger-btn-expense')) safe('ledger-btn-expense').textContent = 'NT$' + Math.round(mPureEx2).toLocaleString('zh-TW');
   if (safe('ledger-btn-net')) {
-    safe('ledger-btn-net').textContent = '結餘：' + (mNet2>=0?'+NT$':'-NT$') + Math.abs(mNet2).toLocaleString('zh-TW');
+    safe('ledger-btn-net').textContent = '結餘：' + (mNet2>=0?'+NT$':'-NT$') + Math.round(Math.abs(mNet2)).toLocaleString('zh-TW');
     safe('ledger-btn-net').style.color = mNet2>=0 ? 'var(--accent-green)' : 'var(--accent-red)';
   }
   if (safe('ledger-save-pct'))  safe('ledger-save-pct').textContent  = savePct + '%';
@@ -5289,7 +5289,7 @@ async function renderAll() {
       `<div style="display:flex;align-items:center;gap:5px;font-size:0.68rem;">
         <span style="width:7px;height:7px;border-radius:2px;background:${color};display:inline-block;flex-shrink:0;"></span>
         <span style="flex:1;color:var(--text-secondary);">${label}</span>
-        <span style="font-family:var(--mono);color:${color};font-weight:500;">${'$'+amt.toLocaleString('zh-TW')}</span>
+        <span style="font-family:var(--mono);color:${color};font-weight:500;">${'$'+Math.round(amt).toLocaleString('zh-TW')}</span>
       </div>`
     ).join('');
   } else {
@@ -5794,7 +5794,7 @@ function drawMonthLineChart(yearTxs, recurVirtual, mode) {
     const yearTotal = s.data.reduce((a,b)=>a+b,0);
     const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
     const monthRows = s.data.map((v, i) =>
-      v > 0 ? `<span style="color:var(--text-muted);font-size:0.62rem;">${monthNames[i]}<span style="font-family:var(--mono);color:#a78bfa;margin-left:3px;">$${v.toLocaleString('zh-TW')}</span></span>` : ''
+      v > 0 ? `<span style="color:var(--text-muted);font-size:0.62rem;">${monthNames[i]}<span style="font-family:var(--mono);color:#a78bfa;margin-left:3px;">$${Math.round(v).toLocaleString('zh-TW')}</span></span>` : ''
     ).filter(Boolean).join('');
     legendEl.innerHTML = `
       <div style="width:100%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
@@ -5802,7 +5802,7 @@ function drawMonthLineChart(yearTxs, recurVirtual, mode) {
         <div style="display:flex;align-items:center;gap:6px;white-space:nowrap;">
           <span style="display:inline-block;width:18px;border-bottom:2px dashed #a78bfa;background:none;height:0;border-radius:2px;"></span>
           <span style="color:var(--text-secondary);">固定支出</span>
-          <span style="font-family:var(--mono);color:#a78bfa;font-weight:600;">年總 $${yearTotal.toLocaleString('zh-TW')}</span>
+          <span style="font-family:var(--mono);color:#a78bfa;font-weight:600;">年總 $${Math.round(yearTotal).toLocaleString('zh-TW')}</span>
         </div>
       </div>`;
     return;
@@ -5819,7 +5819,7 @@ function drawMonthLineChart(yearTxs, recurVirtual, mode) {
     return `<div style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);">
       <span style="display:inline-block;width:18px;${lineStyle}border-radius:2px;"></span>
       <span>${s.label}</span>
-      <span style="font-family:var(--mono);color:${color};font-weight:500;">${sign}$${Math.abs(total).toLocaleString('zh-TW')}</span>
+      <span style="font-family:var(--mono);color:${color};font-weight:500;">${sign}$${Math.round(Math.abs(total)).toLocaleString('zh-TW')}</span>
     </div>`;
   }).join('');
 }
@@ -6342,12 +6342,12 @@ async function renderHome() {
       return `<div>
         <div style="display:flex;justify-content:space-between;font-size:0.68rem;margin-bottom:3px;">
           <div style="display:flex;align-items:center;gap:4px;"><span style="width:6px;height:6px;border-radius:50%;background:${color};display:inline-block;"></span><span style="color:var(--text-secondary);">${l.name||l.type}</span></div>
-          <span style="font-family:var(--mono);color:${color};">$${rem.balance.toLocaleString('zh-TW')}</span>
+          <span style="font-family:var(--mono);color:${color};">$${Math.round(rem.balance).toLocaleString('zh-TW')}</span>
         </div>
         <div style="height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;margin-bottom:2px;">
           <div style="height:100%;width:${pct}%;background:${color};border-radius:3px;opacity:.85;transition:width .6s;"></div>
         </div>
-        <div style="font-size:0.58rem;color:var(--text-muted);">已還 ${pct}% · 月付 $${rem.pmt.toLocaleString('zh-TW')}</div>
+        <div style="font-size:0.58rem;color:var(--text-muted);">已還 ${pct}% · 月付 $${Math.round(rem.pmt).toLocaleString('zh-TW')}</div>
       </div>`;
     });
     if (liabEl)       liabEl.innerHTML=rows.join('');
@@ -6764,14 +6764,14 @@ async function renderBankListPage() {
 
   const safe = id => document.getElementById(id);
   if (safe('bankStatCount'))   safe('bankStatCount').textContent   = banks.length;
-  if (safe('bankStatTotal'))   safe('bankStatTotal').textContent   = '$'+total.toLocaleString('zh-TW');
-  if (safe('bankHeaderTotal')) safe('bankHeaderTotal').textContent = '$'+total.toLocaleString('zh-TW');
-  if (safe('pieTotal'))        safe('pieTotal').textContent        = '合計 $'+total.toLocaleString('zh-TW');
+  if (safe('bankStatTotal'))   safe('bankStatTotal').textContent   = '$'+Math.round(total).toLocaleString('zh-TW');
+  if (safe('bankHeaderTotal')) safe('bankHeaderTotal').textContent = '$'+Math.round(total).toLocaleString('zh-TW');
+  if (safe('pieTotal'))        safe('pieTotal').textContent        = '合計 $'+Math.round(total).toLocaleString('zh-TW');
   if (safe('pieCenterCount'))  safe('pieCenterCount').textContent  = banks.length;
 
   if (banks.length) {
     const top = [...banks].sort((a,b)=>b.balance-a.balance)[0];
-    if (safe('bankStatTop'))     safe('bankStatTop').textContent     = '$'+top.balance.toLocaleString('zh-TW');
+    if (safe('bankStatTop'))     safe('bankStatTop').textContent     = '$'+Math.round(top.balance).toLocaleString('zh-TW');
     if (safe('bankStatTopName')) safe('bankStatTopName').textContent = top.name;
   } else {
     if (safe('bankStatTop'))     safe('bankStatTop').textContent     = '—';
@@ -6802,7 +6802,7 @@ async function renderBankListPage() {
             <div style="flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;">
               <div style="height:100%;width:${barW}%;background:${color};border-radius:2px;transition:width 0.6s ease;"></div>
             </div>
-            <span style="font-family:var(--mono);font-size:0.7rem;color:var(--text-muted);width:80px;text-align:right;">$${b.balance.toLocaleString('zh-TW')}</span>
+            <span style="font-family:var(--mono);font-size:0.7rem;color:var(--text-muted);width:80px;text-align:right;">$${Math.round(b.balance).toLocaleString('zh-TW')}</span>
           </div>
         </div>`;
       }).join('');
@@ -6824,14 +6824,14 @@ async function renderBankListPage() {
           ${b.acct?`<div class="bank-acct">**** **** **** ${b.acct}</div>`:''}
         </div>
         <div style="text-align:right;flex-shrink:0;">
-          <div class="bank-balance">$${b.balance.toLocaleString('zh-TW')}</div>
+          <div class="bank-balance">$${Math.round(b.balance).toLocaleString('zh-TW')}</div>
           <div style="font-size:0.65rem;color:var(--text-muted);margin-top:1px;">${pct}%</div>
         </div>
         <button class="btn btn-danger-ghost" onclick="deleteBankAccount('${b.id}')">✕</button>
       </div>`;
     }).join('');
     totalRow.style.display='flex';
-    document.getElementById('bankTotalValPage').textContent='$'+total.toLocaleString('zh-TW');
+    document.getElementById('bankTotalValPage').textContent='$'+Math.round(total).toLocaleString('zh-TW');
   }
 
   syncBankTotalToAssets(banks);
@@ -6840,11 +6840,11 @@ async function renderBankListPage() {
 function syncBankTotalToAssets(banks) {
   const total = (banks||[]).reduce((s,b)=>s+b.balance,0);
   const safe = id => document.getElementById(id);
-  if (safe('assetBankTotal'))     safe('assetBankTotal').textContent     = '$'+total.toLocaleString('zh-TW');
+  if (safe('assetBankTotal'))     safe('assetBankTotal').textContent     = '$'+Math.round(total).toLocaleString('zh-TW');
   if (safe('assetBankCountHint')) safe('assetBankCountHint').textContent = `來自 ${banks.length} 個銀行帳戶`;
   const otherAsset = parseFloat(safe('inputAsset')?.value)||0;
   const combined   = otherAsset + total;
-  if (safe('assetCombinedTotal')) safe('assetCombinedTotal').textContent = '$'+combined.toLocaleString('zh-TW');
+  if (safe('assetCombinedTotal')) safe('assetCombinedTotal').textContent = '$'+Math.round(combined).toLocaleString('zh-TW');
   window._bankTotalForAsset = total;
   updateNetAsset();
 }
@@ -6929,7 +6929,7 @@ async function previewTickerQuote(ticker) {
   }
 
   if (nameEl)  { nameEl.textContent = q.name; nameEl.style.color = ''; }
-  if (priceEl) priceEl.textContent = '$' + q.price.toLocaleString('zh-TW');
+  if (priceEl) priceEl.textContent = '$' + Math.round(q.price).toLocaleString('zh-TW');
   if (chEl) {
     const sign = q.change >= 0 ? '▲ +' : '▼ ';
     chEl.textContent = `${sign}${q.change.toFixed(2)} ｜ 即時報價`;
@@ -7074,11 +7074,11 @@ async function renderInvList() {
   const pos = pnl>=0;
   const safe = id => document.getElementById(id);
 
-  if (safe('invPageCost'))  safe('invPageCost').textContent  = '$'+totalCost.toLocaleString('zh-TW');
-  if (safe('invPageValue')) safe('invPageValue').textContent = '$'+totalValue.toLocaleString('zh-TW');
+  if (safe('invPageCost'))  safe('invPageCost').textContent  = '$'+Math.round(totalCost).toLocaleString('zh-TW');
+  if (safe('invPageValue')) safe('invPageValue').textContent = '$'+Math.round(totalValue).toLocaleString('zh-TW');
   if (safe('invPageCount')) safe('invPageCount').textContent = invs.length+' 筆';
   const retEl = safe('invPageReturn');
-  if (retEl) { retEl.textContent=(pos?'+':'')+pnl.toLocaleString('zh-TW'); retEl.style.color=pos?'var(--accent-red)':'var(--accent-green)'; }
+  if (retEl) { retEl.textContent=(pos?'+':'')+Math.round(pnl).toLocaleString('zh-TW'); retEl.style.color=pos?'var(--accent-red)':'var(--accent-green)'; }
   const pctEl = safe('invPagePct');
   if (pctEl) { pctEl.textContent=(pos?'▲ +':'▼ ')+pct.toFixed(2)+'%'; pctEl.style.color=pos?'var(--accent-red)':'var(--accent-green)'; }
   if (safe('invListCount')) safe('invListCount').textContent = invs.length+' 筆';
@@ -7140,7 +7140,7 @@ async function renderInvList() {
       : '';
     const lastPriceRow = i.lastPrice
       ? `<div style="font-size:0.7rem;color:var(--text-muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-          <span style="font-family:var(--mono);color:var(--accent-amber);">$${i.lastPrice.toLocaleString('zh-TW')}</span>
+          <span style="font-family:var(--mono);color:var(--accent-amber);">$${Math.round(i.lastPrice).toLocaleString('zh-TW')}</span>
           ${i.lastQuoteTime ? `<span style="opacity:0.6;">${new Date(i.lastQuoteTime).toLocaleString('zh-TW',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})}</span>` : ''}
           <button onclick="updateSingleQuote('${i.id}','${i.ticker||''}')" style="background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.25);color:var(--accent-purple);border-radius:5px;padding:1px 7px;font-size:0.62rem;cursor:pointer;font-family:var(--sans);">刷新</button>
          </div>`
@@ -7163,8 +7163,8 @@ async function renderInvList() {
           ${isSubItem?'':lastPriceRow}
         </div>
         <div style="text-align:right;flex-shrink:0;">
-          <div style="font-family:var(--mono);font-size:0.78rem;color:var(--text-secondary);">成本 $${i.cost.toLocaleString('zh-TW')}</div>
-          <div style="font-family:var(--mono);font-size:${isSubItem?'0.82':'0.88'}rem;font-weight:500;color:var(--accent-amber);">$${i.value.toLocaleString('zh-TW')}</div>
+          <div style="font-family:var(--mono);font-size:0.78rem;color:var(--text-secondary);">成本 $${Math.round(i.cost).toLocaleString('zh-TW')}</div>
+          <div style="font-family:var(--mono);font-size:${isSubItem?'0.82':'0.88'}rem;font-weight:500;color:var(--accent-amber);">$${Math.round(i.value).toLocaleString('zh-TW')}</div>
           <div style="font-family:var(--mono);font-size:0.75rem;font-weight:500;color:${pnlColor};">${ipos?'▲ +':'▼ '}${ipct.toFixed(2)}%</div>
         </div>
         <svg width="11" height="11" id="invChevron_${i.id}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--text-muted);transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>
@@ -7173,12 +7173,12 @@ async function renderInvList() {
         <div style="display:flex;align-items:center;gap:8px;">
           <span style="font-size:0.6rem;color:var(--text-muted);width:28px;">成本</span>
           <div style="flex:1;height:4px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${costW}%;background:#3b82f6;border-radius:3px;"></div></div>
-          <span style="font-size:0.6rem;font-family:var(--mono);color:var(--text-muted);width:70px;text-align:right;">$${i.cost.toLocaleString('zh-TW')}</span>
+          <span style="font-size:0.6rem;font-family:var(--mono);color:var(--text-muted);width:70px;text-align:right;">$${Math.round(i.cost).toLocaleString('zh-TW')}</span>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
           <span style="font-size:0.6rem;color:var(--text-muted);width:28px;">市值</span>
           <div style="flex:1;height:4px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${barW}%;background:${ipos?'#ff4d6d':'#00e5a0'};border-radius:3px;"></div></div>
-          <span style="font-size:0.6rem;font-family:var(--mono);color:${pnlColor};width:70px;text-align:right;">${ipos?'+':''}$${ipnl.toLocaleString('zh-TW')}</span>
+          <span style="font-size:0.6rem;font-family:var(--mono);color:${pnlColor};width:70px;text-align:right;">${ipos?'+':''}$${Math.round(ipnl).toLocaleString('zh-TW')}</span>
         </div>
       </div>
       <div id="invEdit_${i.id}" style="display:none;border-top:1px solid var(--border);padding:14px 16px;background:rgba(255,255,255,0.015);">
@@ -7239,12 +7239,12 @@ async function renderInvList() {
           </div>
           <div style="font-size:0.7rem;color:var(--text-muted);margin-top:2px;display:flex;align-items:center;gap:8px;">
             ${g.items.map(i=>i.name).filter((v,idx,a)=>a.indexOf(v)===idx).join(' · ')}
-            ${lastPrice ? `<span style="font-family:var(--mono);color:var(--accent-amber);">@$${lastPrice.toLocaleString('zh-TW')}</span>` : ''}
+            ${lastPrice ? `<span style="font-family:var(--mono);color:var(--accent-amber);">@$${Math.round(lastPrice).toLocaleString('zh-TW')}</span>` : ''}
           </div>
         </div>
         <div style="text-align:right;flex-shrink:0;">
-          <div style="font-family:var(--mono);font-size:0.78rem;color:var(--text-secondary);">成本 $${gCost.toLocaleString('zh-TW')}</div>
-          <div style="font-family:var(--mono);font-size:0.95rem;font-weight:600;color:var(--accent-amber);">$${gValue.toLocaleString('zh-TW')}</div>
+          <div style="font-family:var(--mono);font-size:0.78rem;color:var(--text-secondary);">成本 $${Math.round(gCost).toLocaleString('zh-TW')}</div>
+          <div style="font-family:var(--mono);font-size:0.95rem;font-weight:600;color:var(--accent-amber);">$${Math.round(gValue).toLocaleString('zh-TW')}</div>
           <div style="font-family:var(--mono);font-size:0.78rem;font-weight:500;color:${gPnlColor};">${gPos?'▲ +':'▼ '}${gPct.toFixed(2)}%</div>
         </div>
         <svg id="invGroupChevron_${gDomKey}" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--accent-purple);transition:transform 0.25s;"><polyline points="6 9 12 15 18 9"/></svg>
@@ -7254,12 +7254,12 @@ async function renderInvList() {
         <div style="display:flex;align-items:center;gap:8px;">
           <span style="font-size:0.6rem;color:var(--text-muted);width:28px;">成本</span>
           <div style="flex:1;height:4px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${gCostW}%;background:#3b82f6;border-radius:3px;"></div></div>
-          <span style="font-size:0.6rem;font-family:var(--mono);color:var(--text-muted);width:70px;text-align:right;">$${gCost.toLocaleString('zh-TW')}</span>
+          <span style="font-size:0.6rem;font-family:var(--mono);color:var(--text-muted);width:70px;text-align:right;">$${Math.round(gCost).toLocaleString('zh-TW')}</span>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
           <span style="font-size:0.6rem;color:var(--text-muted);width:28px;">市值</span>
           <div style="flex:1;height:4px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${gBarW}%;background:${gPos?'#ff4d6d':'#00e5a0'};border-radius:3px;"></div></div>
-          <span style="font-size:0.6rem;font-family:var(--mono);color:${gPnlColor};width:70px;text-align:right;">${gPos?'+':''}$${gPnl.toLocaleString('zh-TW')}</span>
+          <span style="font-size:0.6rem;font-family:var(--mono);color:${gPnlColor};width:70px;text-align:right;">${gPos?'+':''}$${Math.round(gPnl).toLocaleString('zh-TW')}</span>
         </div>
       </div>
       <!-- 子項列表（預設收合） -->
@@ -7324,7 +7324,7 @@ async function updateSingleQuote(id, ticker) {
   _invCache = null;
   await renderInvList();
   await renderAssetCenter();
-  showToast(`✓ ${inv.name} 報價已更新：$${q.price.toLocaleString('zh-TW')}`);
+  showToast(`✓ ${inv.name} 報價已更新：$${Math.round(q.price).toLocaleString('zh-TW')}`);
 }
 
 async function onYearChange() {
@@ -7572,7 +7572,7 @@ function updatePledgeSimulator(dropPct) {
   const cutEl     = document.getElementById('simCutGap');
   const msgEl     = document.getElementById('simStatusMsg');
 
-  if (simValEl) simValEl.textContent = '$' + simValue.toLocaleString('zh-TW');
+  if (simValEl) simValEl.textContent = '$' + Math.round(simValue).toLocaleString('zh-TW');
 
   if (simRateEl) {
     simRateEl.textContent = simRate + '%';
@@ -7580,12 +7580,12 @@ function updatePledgeSimulator(dropPct) {
   }
 
   if (warnEl) {
-    warnEl.textContent = (warnGap >= 0 ? '+$' : '-$') + Math.abs(warnGap).toLocaleString('zh-TW');
+    warnEl.textContent = (warnGap >= 0 ? '+$' : '-$') + Math.round(Math.abs(warnGap)).toLocaleString('zh-TW');
     warnEl.style.color = warnGap >= 0 ? '#f59e0b' : '#ff4d6d';
   }
 
   if (cutEl) {
-    cutEl.textContent = (cutGap >= 0 ? '+$' : '-$') + Math.abs(cutGap).toLocaleString('zh-TW');
+    cutEl.textContent = (cutGap >= 0 ? '+$' : '-$') + Math.round(Math.abs(cutGap)).toLocaleString('zh-TW');
     cutEl.style.color = cutGap >= 0 ? '#00e5a0' : '#ff4d6d';
   }
 
@@ -7660,7 +7660,7 @@ function calcPledgeSim(id, basePrice, lots, loan, warnRate, cutRate) {
       resultEl.style.border = `1px solid ${border}`;
       resultEl.innerHTML = `
         <div><span style="font-size:0.6rem;color:var(--text-muted);">模擬股價</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-amber);">$${simPrice.toFixed(2)}</span></div>
-        <div><span style="font-size:0.6rem;color:var(--text-muted);">模擬市值</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-blue);">$${simValue.toLocaleString('zh-TW')}</span></div>
+        <div><span style="font-size:0.6rem;color:var(--text-muted);">模擬市值</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-blue);">$${Math.round(simValue).toLocaleString('zh-TW')}</span></div>
         <div><span style="font-size:0.6rem;color:var(--text-muted);">維持率</span><br><span style="font-family:var(--mono);font-size:0.88rem;font-weight:600;color:${color};">${simRate}%</span></div>
         <div><span style="font-size:0.6rem;color:var(--text-muted);">狀態</span><br><span style="font-size:0.78rem;font-weight:500;color:${color};">${status}</span></div>
       `;
@@ -7744,7 +7744,7 @@ function renderDistBars(containerId, items, totalId, colorMap) {
     return;
   }
   const total = items.reduce((s,i) => s + i.value, 0);
-  if (totalEl) totalEl.textContent = '$' + total.toLocaleString('zh-TW') + (containerId !== 'loanDistBars' ? '/月' : '');
+  if (totalEl) totalEl.textContent = '$' + Math.round(total).toLocaleString('zh-TW') + (containerId !== 'loanDistBars' ? '/月' : '');
   const maxVal = Math.max(...items.map(i=>i.value), 1);
   el.innerHTML = items.sort((a,b)=>b.value-a.value).map(item => {
     const color = colorMap[item.label] || '#6b7280';
@@ -7753,7 +7753,7 @@ function renderDistBars(containerId, items, totalId, colorMap) {
     return `<div>
       <div style="display:flex;justify-content:space-between;font-size:0.72rem;margin-bottom:3px;">
         <span style="color:var(--text-secondary);">${item.label}</span>
-        <span style="font-family:var(--mono);color:${color};">$${item.value.toLocaleString('zh-TW')} <span style="color:var(--text-muted);font-size:0.65rem;">${pct}%</span></span>
+        <span style="font-family:var(--mono);color:${color};">$${Math.round(item.value).toLocaleString('zh-TW')} <span style="color:var(--text-muted);font-size:0.65rem;">${pct}%</span></span>
       </div>
       <div style="height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
         <div style="height:100%;width:${w}%;background:${color};border-radius:3px;transition:width 0.5s;"></div>
@@ -7783,7 +7783,7 @@ function calcLiabPeriods() {
   const endDate = new Date();
   endDate.setMonth(endDate.getMonth() + periods);
   const endStr  = endDate.getFullYear() + '年' + (endDate.getMonth()+1) + '月';
-  document.getElementById('liabPreviewRemain').textContent  = '$'+remain.toLocaleString('zh-TW');
+  document.getElementById('liabPreviewRemain').textContent  = '$'+Math.round(remain).toLocaleString('zh-TW');
   document.getElementById('liabPreviewPeriods').textContent = periods + ' 期';
   document.getElementById('liabPreviewEnd').textContent     = periods > 0 ? endStr : '已還清';
 }
@@ -7849,9 +7849,9 @@ function renderLiabListUI(all) {
             ${l.note?`<span style="font-size:0.7rem;color:var(--text-muted);">${l.note}</span>`:''}
           </div>
           <div style="display:flex;gap:16px;margin-top:5px;flex-wrap:wrap;">
-            <div><span style="font-size:0.62rem;color:var(--text-muted);">貸款總額</span><br><span style="font-family:var(--mono);font-size:0.85rem;color:var(--accent-red);">$${l.total.toLocaleString('zh-TW')}</span></div>
-            <div><span style="font-size:0.62rem;color:var(--text-muted);">月還款</span><br><span style="font-family:var(--mono);font-size:0.85rem;color:var(--accent-amber);">$${l.monthly.toLocaleString('zh-TW')}</span></div>
-            <div><span style="font-size:0.62rem;color:var(--text-muted);">剩餘</span><br><span style="font-family:var(--mono);font-size:0.85rem;color:var(--text-secondary);">$${remain.toLocaleString('zh-TW')}</span></div>
+            <div><span style="font-size:0.62rem;color:var(--text-muted);">貸款總額</span><br><span style="font-family:var(--mono);font-size:0.85rem;color:var(--accent-red);">$${Math.round(l.total).toLocaleString('zh-TW')}</span></div>
+            <div><span style="font-size:0.62rem;color:var(--text-muted);">月還款</span><br><span style="font-family:var(--mono);font-size:0.85rem;color:var(--accent-amber);">$${Math.round(l.monthly).toLocaleString('zh-TW')}</span></div>
+            <div><span style="font-size:0.62rem;color:var(--text-muted);">剩餘</span><br><span style="font-family:var(--mono);font-size:0.85rem;color:var(--text-secondary);">$${Math.round(remain).toLocaleString('zh-TW')}</span></div>
             <div><span style="font-size:0.62rem;color:var(--text-muted);">剩餘期數</span><br><span style="font-family:var(--mono);font-size:0.85rem;color:var(--accent-purple);">${periods} 期</span></div>
             <div><span style="font-size:0.62rem;color:var(--text-muted);">預計還清</span><br><span style="font-family:var(--mono);font-size:0.85rem;color:var(--accent-green);">${endStr}</span></div>
           </div>
@@ -7876,11 +7876,11 @@ async function renderLiabList() {
   const totalDebt    = all.reduce((s,l)=>s+Math.max(0,l.total-l.paid),0);
   const totalMonthly = all.reduce((s,l)=>s+l.monthly,0);
   const safe = id => document.getElementById(id);
-  if (safe('liabStatTotal'))    safe('liabStatTotal').textContent    = '$'+totalDebt.toLocaleString('zh-TW');
+  if (safe('liabStatTotal'))    safe('liabStatTotal').textContent    = '$'+Math.round(totalDebt).toLocaleString('zh-TW');
   if (safe('liabStatCount'))    safe('liabStatCount').textContent    = all.length+' 筆';
-  if (safe('liabStatMonthly'))  safe('liabStatMonthly').textContent  = '$'+totalMonthly.toLocaleString('zh-TW');
-  if (safe('liabHeaderTotal'))  safe('liabHeaderTotal').textContent  = '$'+totalDebt.toLocaleString('zh-TW');
-  if (safe('liabHeaderMonthly'))safe('liabHeaderMonthly').textContent= '$'+totalMonthly.toLocaleString('zh-TW');
+  if (safe('liabStatMonthly'))  safe('liabStatMonthly').textContent  = '$'+Math.round(totalMonthly).toLocaleString('zh-TW');
+  if (safe('liabHeaderTotal'))  safe('liabHeaderTotal').textContent  = '$'+Math.round(totalDebt).toLocaleString('zh-TW');
+  if (safe('liabHeaderMonthly'))safe('liabHeaderMonthly').textContent= '$'+Math.round(totalMonthly).toLocaleString('zh-TW');
   const withPeriods = all.filter(l=>l.monthly>0);
   if (withPeriods.length && safe('liabStatPeriods')) {
     const avgPeriods = Math.round(withPeriods.reduce((s,l)=>s+Math.ceil(Math.max(0,l.total-l.paid)/l.monthly),0)/withPeriods.length);
@@ -7919,7 +7919,7 @@ async function renderLiabList() {
         const statusColor = rate >= 150 ? 'var(--accent-green)' : rate >= p.warnRate ? 'var(--accent-amber)' : 'var(--accent-red)';
         const statusText  = rate >= 150 ? '安全' : rate >= p.warnRate ? '警戒' : rate >= p.cutRate ? '危險' : '斷頭風險';
         const lotsDisplay  = p.shares ? `${p.shares.toLocaleString()} 張` : '';
-        const priceDisplay = p.price  ? `@$${p.price.toLocaleString('zh-TW')}` : '';
+        const priceDisplay = p.price  ? `@$${Math.round(p.price).toLocaleString('zh-TW')}` : '';
 
         const basePrice = p.price || (p.shares > 0 ? Math.round(p.value / (p.shares * 1000)) : 0);
         const warnPrice = (p.shares > 0 && p.loan > 0) ? (p.warnRate / 100 * p.loan) / (p.shares * 1000) : 0;
@@ -7944,9 +7944,9 @@ async function renderLiabList() {
           </div>
           <!-- 數據列 -->
           <div style="display:flex;gap:14px;flex-wrap:wrap;">
-            <div><span style="font-size:0.6rem;color:var(--text-muted);">質押市值</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-blue);">$${p.value.toLocaleString('zh-TW')}</span></div>
-            <div><span style="font-size:0.6rem;color:var(--text-muted);">借款金額</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-red);">$${p.loan.toLocaleString('zh-TW')}</span></div>
-            <div><span style="font-size:0.6rem;color:var(--text-muted);">安全墊</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:${p.value-p.loan>=0?'var(--accent-green)':'var(--accent-red)'};">${p.value-p.loan>=0?'+':''}$${(p.value-p.loan).toLocaleString('zh-TW')}</span></div>
+            <div><span style="font-size:0.6rem;color:var(--text-muted);">質押市值</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-blue);">$${Math.round(p.value).toLocaleString('zh-TW')}</span></div>
+            <div><span style="font-size:0.6rem;color:var(--text-muted);">借款金額</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-red);">$${Math.round(p.loan).toLocaleString('zh-TW')}</span></div>
+            <div><span style="font-size:0.6rem;color:var(--text-muted);">安全墊</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:${p.value-p.loan>=0?'var(--accent-green)':'var(--accent-red)'};">${p.value-p.loan>=0?'+':''}$${Math.round(p.value-p.loan).toLocaleString('zh-TW')}</span></div>
             <div><span style="font-size:0.6rem;color:var(--text-muted);">警戒線</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-amber);">${p.warnRate}%</span></div>
             <div><span style="font-size:0.6rem;color:var(--text-muted);">斷頭線</span><br><span style="font-family:var(--mono);font-size:0.82rem;color:var(--accent-red);">${p.cutRate}%</span></div>
           </div>
@@ -7997,11 +7997,11 @@ async function renderLiabList() {
   const totalPledgeValue = pledges.reduce((s,p)=>s+p.value, 0);
   const totalPledgeLoan  = pledges.reduce((s,p)=>s+p.loan, 0);
   const overallRate = totalPledgeLoan > 0 ? Math.round((totalPledgeValue/totalPledgeLoan)*100) : 0;
-  if (safe('pledgeTotalValue')) safe('pledgeTotalValue').textContent = '$'+totalPledgeValue.toLocaleString('zh-TW');
-  if (safe('pledgeTotalLoan'))  safe('pledgeTotalLoan').textContent  = '$'+totalPledgeLoan.toLocaleString('zh-TW');
+  if (safe('pledgeTotalValue')) safe('pledgeTotalValue').textContent = '$'+Math.round(totalPledgeValue).toLocaleString('zh-TW');
+  if (safe('pledgeTotalLoan'))  safe('pledgeTotalLoan').textContent  = '$'+Math.round(totalPledgeLoan).toLocaleString('zh-TW');
   if (safe('pledgeSafetyBuffer')) {
     const buf = totalPledgeValue - totalPledgeLoan;
-    safe('pledgeSafetyBuffer').textContent = (buf>=0?'+':'') + '$'+buf.toLocaleString('zh-TW');
+    safe('pledgeSafetyBuffer').textContent = (buf>=0?'+':'') + '$'+Math.round(buf).toLocaleString('zh-TW');
     safe('pledgeSafetyBuffer').style.color = buf>=0 ? 'var(--accent-green)' : 'var(--accent-red)';
   }
   if (safe('maintRateDisplay')) {
@@ -8164,12 +8164,12 @@ function renderRecurListUI(all) {
         <div class="tx-name">${r.name}</div>
         <div class="tx-meta">
           <span class="tx-cat-badge" style="background:${color}22;color:${color}">${r.cat}</span>
-          <span>${freqTag} $${r.amount.toLocaleString('zh-TW')}</span>
-          ${r.freq!=='monthly'?`<span style="color:var(--text-muted);">月均 $${monthly.toLocaleString('zh-TW')}</span>`:''}
+          <span>${freqTag} $${Math.round(r.amount).toLocaleString('zh-TW')}</span>
+          ${r.freq!=='monthly'?`<span style="color:var(--text-muted);">月均 $${Math.round(monthly).toLocaleString('zh-TW')}</span>`:''}
           ${r.note?`<span>${r.note}</span>`:''}
         </div>
       </div>
-      <div class="tx-amount down">$${r.amount.toLocaleString('zh-TW')}</div>
+      <div class="tx-amount down">$${Math.round(r.amount).toLocaleString('zh-TW')}</div>
       <button class="btn btn-danger-ghost" onclick="deleteRecurring('${r.id}')">✕</button>
     </div>`;
   }).join('');
@@ -8196,21 +8196,21 @@ function renderInstListUI(all) {
           <div class="tx-name">${i.name} ${isDone?'<span style="font-size:0.68rem;color:var(--accent-green);margin-left:6px;">✓ 已完成</span>':''}</div>
           <div class="tx-meta">
             <span class="tx-cat-badge" style="background:${color}22;color:${color}">${i.cat}</span>
-            <span>$${i.amount.toLocaleString('zh-TW')}/期</span>
+            <span>$${Math.round(i.amount).toLocaleString('zh-TW')}/期</span>
             <span>${i.paid}/${i.total} 期 · 剩 ${remain} 期</span>
             <span style="color:var(--accent-green);">結束 ${endStr}</span>
             ${i.note?`<span>${i.note}</span>`:''}
           </div>
         </div>
         <div style="text-align:right;flex-shrink:0;">
-          <div class="tx-amount down">$${(remain*i.amount).toLocaleString('zh-TW')}</div>
+          <div class="tx-amount down">$${Math.round(remain*i.amount).toLocaleString('zh-TW')}</div>
           <div style="font-size:0.65rem;color:var(--text-muted);">剩餘金額</div>
         </div>
         <button class="btn btn-danger-ghost" onclick="deleteInstallment('${i.id}')">✕</button>
       </div>
       <div>
         <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:var(--text-muted);margin-bottom:3px;">
-          <span>進度 ${pct}%</span><span>每月 $${i.amount.toLocaleString('zh-TW')}</span>
+          <span>進度 ${pct}%</span><span>每月 $${Math.round(i.amount).toLocaleString('zh-TW')}</span>
         </div>
         <div style="height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
           <div style="height:100%;width:${pct}%;background:${isDone?'#00e5a0':color};border-radius:3px;transition:width 0.5s;"></div>
@@ -9040,14 +9040,14 @@ async function renderRecurAll() {
   window._recurMonthlyForAsset = recurMonthly;
   window._instMonthlyForAsset  = instMonthly;
 
-  if (safe('recurStatMonthly'))       safe('recurStatMonthly').textContent       = '$'+recurMonthly.toLocaleString('zh-TW');
-  if (safe('recurStatYearly'))        safe('recurStatYearly').textContent        = '$'+recurYearly.toLocaleString('zh-TW');
+  if (safe('recurStatMonthly'))       safe('recurStatMonthly').textContent       = '$'+Math.round(recurMonthly).toLocaleString('zh-TW');
+  if (safe('recurStatYearly'))        safe('recurStatYearly').textContent        = '$'+Math.round(recurYearly).toLocaleString('zh-TW');
   if (safe('recurStatCount'))         safe('recurStatCount').textContent         = recurring.length+' 項';
-  if (safe('recurStatInstallMonthly'))safe('recurStatInstallMonthly').textContent= '$'+instMonthly.toLocaleString('zh-TW');
+  if (safe('recurStatInstallMonthly'))safe('recurStatInstallMonthly').textContent= '$'+Math.round(instMonthly).toLocaleString('zh-TW');
   if (safe('recurStatInstallCount'))  safe('recurStatInstallCount').textContent  = activeInst.length+' 項進行中';
-  if (safe('recurStatThisMonth'))     safe('recurStatThisMonth').textContent     = '$'+thisMonth.toLocaleString('zh-TW');
-  if (safe('recurHeaderMonthly'))     safe('recurHeaderMonthly').textContent     = '$'+recurMonthly.toLocaleString('zh-TW');
-  if (safe('recurHeaderYearly'))      safe('recurHeaderYearly').textContent      = '$'+recurYearly.toLocaleString('zh-TW');
+  if (safe('recurStatThisMonth'))     safe('recurStatThisMonth').textContent     = '$'+Math.round(thisMonth).toLocaleString('zh-TW');
+  if (safe('recurHeaderMonthly'))     safe('recurHeaderMonthly').textContent     = '$'+Math.round(recurMonthly).toLocaleString('zh-TW');
+  if (safe('recurHeaderYearly'))      safe('recurHeaderYearly').textContent      = '$'+Math.round(recurYearly).toLocaleString('zh-TW');
   if (safe('recurListCount'))         safe('recurListCount').textContent         = recurring.length+' 項';
   if (safe('instListCount'))          safe('instListCount').textContent          = installments.length+' 項';
 
@@ -9922,7 +9922,7 @@ function dbRenderLoanTimeline() {
           <div style="height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;">
             <div style="height:100%;width:${Math.round((x.remMonths/maxM)*100)}%;background:linear-gradient(90deg,var(--accent-purple),#a78bfa88);border-radius:3px;transition:width 0.6s;"></div>
           </div>
-          <div style="font-size:0.58rem;color:var(--text-muted);margin-top:2px;">剩餘本金 $${x.balance.toLocaleString('zh-TW')}</div>
+          <div style="font-size:0.58rem;color:var(--text-muted);margin-top:2px;">剩餘本金 $${Math.round(x.balance).toLocaleString('zh-TW')}</div>
         </div>
       `).join('')}
     </div>`;
@@ -9952,7 +9952,7 @@ function dbRenderRecurring() {
     const freqOpts = Object.entries(FREQ_LABELS).map(([v,l]) => `<option value="${v}" ${r.freq===v?'selected':''}>${l}</option>`).join('');
     const mo = r.freq==='monthly' ? r.amount : r.freq==='quarterly' ? (r.amount/3) : (r.amount/12);
     const displayName = r.name || '（未命名）';
-    const displayAmt  = r.amount ? '$' + r.amount.toLocaleString('zh-TW') : '—';
+    const displayAmt  = r.amount ? '$' + Math.round(r.amount).toLocaleString('zh-TW') : '—';
     const freqLabel   = FREQ_LABELS[r.freq] || '每月';
     const defaultOpen = !r.name;
     return `
@@ -10019,7 +10019,7 @@ function dbRefreshRecurSummary(i) {
   const summaryName = row.querySelector('span:nth-child(2)');
   const summaryAmt  = row.querySelector('span:nth-child(3)');
   if (summaryName) summaryName.textContent = r.name || '（未命名）';
-  if (summaryAmt)  summaryAmt.textContent  = r.amount ? '$' + r.amount.toLocaleString('zh-TW') : '—';
+  if (summaryAmt)  summaryAmt.textContent  = r.amount ? '$' + Math.round(r.amount).toLocaleString('zh-TW') : '—';
 }
 function dbAddRecurring() {
   AppState.recurring.push({ id:'rc'+Date.now(), name:'', amount:0, freq:'monthly', category:'other' });
@@ -10059,8 +10059,8 @@ function dbRenderLoans() {
       <div onclick="dbToggleLoan(${i})" style="display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;user-select:none;">
         <span style="font-size:0.85rem;flex-shrink:0;">${icon}</span>
         <span style="flex:1;font-size:0.82rem;font-weight:500;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${displayName}</span>
-        <span style="font-family:var(--mono);font-size:0.72rem;color:var(--accent-purple);flex-shrink:0;">餘 $${rem.balance.toLocaleString('zh-TW')}</span>
-        <span style="font-family:var(--mono);font-size:0.7rem;color:var(--accent-red);flex-shrink:0;">$${rem.pmt.toLocaleString('zh-TW')}/月</span>
+        <span style="font-family:var(--mono);font-size:0.72rem;color:var(--accent-purple);flex-shrink:0;">餘 $${Math.round(rem.balance).toLocaleString('zh-TW')}</span>
+        <span style="font-family:var(--mono);font-size:0.7rem;color:var(--accent-red);flex-shrink:0;">$${Math.round(rem.pmt).toLocaleString('zh-TW')}/月</span>
         <span style="font-size:0.65rem;color:var(--text-muted);flex-shrink:0;transition:transform 0.2s;" id="loan-arrow-${i}">${defaultOpen?'▲':'▼'}</span>
         <button onclick="event.stopPropagation();dbDeleteLoan(${i})" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.7rem;padding:2px 4px;border-radius:4px;flex-shrink:0;transition:color 0.15s;" onmouseenter="this.style.color='var(--accent-red)'" onmouseleave="this.style.color='var(--text-muted)'">✕</button>
       </div>
@@ -10088,8 +10088,8 @@ function dbRenderLoans() {
         </div>
         <!-- 自動計算結果 -->
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:8px 10px;background:rgba(167,139,250,0.05);border-radius:8px;border:1px solid rgba(167,139,250,0.15);margin-bottom:8px;">
-          <div><div style="font-size:0.55rem;color:var(--text-muted);">剩餘本金</div><div style="font-family:var(--mono);font-size:0.78rem;font-weight:600;color:var(--accent-purple);">$${rem.balance.toLocaleString('zh-TW')}</div></div>
-          <div><div style="font-size:0.55rem;color:var(--text-muted);">每月攤還</div><div style="font-family:var(--mono);font-size:0.78rem;font-weight:600;color:var(--accent-red);">$${rem.pmt.toLocaleString('zh-TW')}</div></div>
+          <div><div style="font-size:0.55rem;color:var(--text-muted);">剩餘本金</div><div style="font-family:var(--mono);font-size:0.78rem;font-weight:600;color:var(--accent-purple);">$${Math.round(rem.balance).toLocaleString('zh-TW')}</div></div>
+          <div><div style="font-size:0.55rem;color:var(--text-muted);">每月攤還</div><div style="font-family:var(--mono);font-size:0.78rem;font-weight:600;color:var(--accent-red);">$${Math.round(rem.pmt).toLocaleString('zh-TW')}</div></div>
           <div><div style="font-size:0.55rem;color:var(--text-muted);">剩餘期數</div><div style="font-family:var(--mono);font-size:0.78rem;font-weight:600;color:var(--text-primary);">${rem.remMonths}月</div></div>
           <div><div style="font-size:0.55rem;color:var(--text-muted);">還清</div><div style="font-family:var(--mono);font-size:0.78rem;font-weight:600;color:var(--accent-green);">${rem.clearDate ? rem.clearDate.getFullYear()+'/'+(rem.clearDate.getMonth()+1) : '—'}</div></div>
         </div>
@@ -10255,7 +10255,7 @@ function dbRenderTrades() {
       <span style="font-size:0.6rem;padding:2px 7px;border-radius:6px;background:${isBuy?'rgba(59,130,246,0.15)':'rgba(0,229,160,0.12)'};color:${color};font-weight:600;white-space:nowrap;">${label}</span>
       <span style="font-family:var(--mono);font-size:0.82rem;font-weight:700;color:var(--accent-amber);">${t.ticker}</span>
       <div style="font-size:0.7rem;color:var(--text-muted);">
-        ${t.date} ・ ${t.shares}張 × $${(t.price||0).toLocaleString('zh-TW')}
+        ${t.date} ・ ${t.shares}張 × $${Math.round(t.price||0).toLocaleString('zh-TW')}
         ${t.note ? `<span style="color:var(--text-muted);"> ・ ${t.note}</span>` : ''}
       </div>
       <span style="font-family:var(--mono);font-size:0.72rem;color:${color};white-space:nowrap;">$${Math.round(total).toLocaleString('zh-TW')}</span>
@@ -10344,7 +10344,7 @@ async function autoFillTradePrice() {
   }
 
   _teCurrentQuote = q;
-  if (qPriceEl) { qPriceEl.textContent = '$' + q.price.toLocaleString('zh-TW'); qPriceEl.style.color = 'var(--accent-blue)'; }
+  if (qPriceEl) { qPriceEl.textContent = '$' + Math.round(q.price).toLocaleString('zh-TW'); qPriceEl.style.color = 'var(--accent-blue)'; }
   if (qChangeEl) {
     const sign = q.change >= 0 ? '▲ +' : '▼ ';
     qChangeEl.textContent = sign + q.change.toFixed(2);
@@ -10475,7 +10475,7 @@ function dbRenderFunds() {
       <div onclick="dbToggleFund(${i})" style="display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;user-select:none;">
         <span style="width:7px;height:7px;border-radius:50%;background:var(--accent-amber);flex-shrink:0;"></span>
         <span style="flex:1;font-size:0.82rem;font-weight:500;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${displayName}</span>
-        <span style="font-family:var(--mono);font-size:0.75rem;color:var(--accent-green);flex-shrink:0;" class="fund-principal-lbl">${f.principal ? '$'+f.principal.toLocaleString('zh-TW') : '—'}</span>
+        <span style="font-family:var(--mono);font-size:0.75rem;color:var(--accent-green);flex-shrink:0;" class="fund-principal-lbl">${f.principal ? '$'+Math.round(f.principal).toLocaleString('zh-TW') : '—'}</span>
         <span style="font-size:0.62rem;color:var(--text-muted);flex-shrink:0;padding:2px 6px;background:rgba(255,255,255,0.04);border-radius:4px;" class="fund-rate-lbl">${f.annual_rate ? f.annual_rate+'%' : '—'}</span>
         <span style="font-size:0.65rem;color:var(--text-muted);flex-shrink:0;" id="fund-arrow-${i}">${defaultOpen?'▲':'▼'}</span>
         <button onclick="event.stopPropagation();dbDeleteFund(${i})" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.7rem;padding:2px 4px;border-radius:4px;flex-shrink:0;" onmouseenter="this.style.color='var(--accent-red)'" onmouseleave="this.style.color='var(--text-muted)'">✕</button>
@@ -10483,7 +10483,7 @@ function dbRenderFunds() {
       <div id="fund-detail-${i}" style="display:${defaultOpen?'block':'none'};padding:0 12px 12px;border-top:1px solid var(--border);">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
           <div class="db-field"><label>基金名稱</label><div class="db-input-wrap"><input type="text" placeholder="境外基金" value="${f.name||''}" oninput="AppState.assets.funds[${i}].name=this.value;dbMarkDirty();document.querySelector('#fund-row-${i} span:nth-child(2)').textContent=this.value||'（未命名）'"></div></div>
-          <div class="db-field"><label>本金</label><div class="db-input-wrap"><input type="number" placeholder="0" value="${f.principal||''}" step="10000" oninput="AppState.assets.funds[${i}].principal=parseFloat(this.value)||0;dbMarkDirty();(()=>{const r=document.querySelector('#fund-row-${i} .fund-principal-lbl');if(r)r.textContent=this.value?'$'+Number(this.value).toLocaleString('zh-TW'):'—';})()" onblur="dbRenderFunds()"><span>元</span></div></div>
+          <div class="db-field"><label>本金</label><div class="db-input-wrap"><input type="number" placeholder="0" value="${f.principal||''}" step="10000" oninput="AppState.assets.funds[${i}].principal=parseFloat(this.value)||0;dbMarkDirty();(()=>{const r=document.querySelector('#fund-row-${i} .fund-principal-lbl');if(r)r.textContent=this.value?'$'+NumberMath.round(this.value).toLocaleString('zh-TW'):'—';})()" onblur="dbRenderFunds()"><span>元</span></div></div>
           <div class="db-field"><label>年化報酬率</label><div class="db-input-wrap"><input type="number" placeholder="6" value="${f.annual_rate||''}" step="0.1" oninput="AppState.assets.funds[${i}].annual_rate=parseFloat(this.value)||0;dbMarkDirty();(()=>{const r=document.querySelector('#fund-row-${i} .fund-rate-lbl');if(r)r.textContent=this.value?this.value+'%':'—';})()" onblur="dbRenderFunds()"><span>%</span></div></div>
         </div>
       </div>
@@ -10518,7 +10518,7 @@ function dbRenderBanks() {
       <div onclick="dbToggleBank(${i})" style="display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;user-select:none;">
         <span style="width:7px;height:7px;border-radius:50%;background:${curColor};flex-shrink:0;"></span>
         <span style="flex:1;font-size:0.82rem;font-weight:500;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${displayName}</span>
-        <span style="font-family:var(--mono);font-size:0.75rem;color:var(--accent-green);flex-shrink:0;">${b.amount ? '$'+b.amount.toLocaleString('zh-TW') : '—'}</span>
+        <span style="font-family:var(--mono);font-size:0.75rem;color:var(--accent-green);flex-shrink:0;">${b.amount ? '$'+Math.round(b.amount).toLocaleString('zh-TW') : '—'}</span>
         <span style="font-size:0.62rem;color:${curColor};flex-shrink:0;padding:2px 6px;background:${curColor}18;border-radius:4px;">${b.currency||'TWD'}</span>
         <span style="font-size:0.65rem;color:var(--text-muted);flex-shrink:0;" id="bank-arrow-${i}">${defaultOpen?'▲':'▼'}</span>
         <button onclick="event.stopPropagation();dbDeleteBank(${i})" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.7rem;padding:2px 4px;border-radius:4px;flex-shrink:0;" onmouseenter="this.style.color='var(--accent-red)'" onmouseleave="this.style.color='var(--text-muted)'">✕</button>
@@ -12358,7 +12358,7 @@ function chipRenderBotStatus(container, data) {
   }
   const isToday = chipIsBotToday(data);
   const meta = data.meta || {};
-  const updTime = data.updated_at ? new Date(data.updated_at).toLocaleString('zh-TW') : '—';
+  const updTime = data.updated_at ? new DateMath.round(data.updated_at).toLocaleString('zh-TW') : '—';
 
   container.innerHTML = `
     <div style="padding:10px 14px;background:${isToday?'rgba(0,229,160,.05)':'rgba(240,180,41,.05)'};border:1px solid ${isToday?'rgba(0,229,160,.2)':'rgba(240,180,41,.2)'};border-radius:10px;">
@@ -13946,7 +13946,7 @@ function riskRenderResult(result) {
 function riskSaveHistory(score, badge, color) {
   try {
     const h = JSON.parse(localStorage.getItem(RISK_HISTORY_KEY) || '[]');
-    h.unshift({ score, badge, color, time: new Date().toLocaleString('zh-TW') });
+    h.unshiftMath.round({ score, badge, color, time: new Date().toLocaleString('zh-TW') });
     localStorage.setItem(RISK_HISTORY_KEY, JSON.stringify(h.slice(0, 10)));
   } catch {}
 }
