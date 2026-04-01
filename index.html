@@ -2023,7 +2023,7 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
   </div>
 
   <div class="nav-section-label">主頁</div>
-  <div class="nav-item" onclick="goPage('home',this)">
+  <div class="nav-item active" onclick="goPage('home',this)">
     <span class="nav-icon ico"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="1.8"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span> 總覽主頁
   </div>
 
@@ -2055,10 +2055,10 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
 
   <div class="sidebar-bottom">
     <div class="sync-status">
-      <div class="sync-dot ok" id="syncDot"></div>
-      <span id="syncStatusText" style="color: var(--accent-green);">已同步</span>
+      <div class="sync-dot" id="syncDot"></div>
+      <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-04-01 08:25:54</div>
+    <div class="clock-display" id="clockDisplay">2026-04-01 08:31:55</div>
   </div>
 </aside>
 
@@ -2069,10 +2069,10 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
 <!-- ══════════════════════════════════
      MAIN
 ══════════════════════════════════ -->
-<main class="main-content" style="overflow-y: auto;">
+<main class="main-content">
 
   <!-- ── 主頁 ── -->
-  <section class="page" id="page-home">
+  <section class="page active" id="page-home">
     <div class="page-header">
       <div class="page-title-block">
         <div class="page-label">Dashboard</div>
@@ -2333,7 +2333,7 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
   </section>
 
   <!-- ── 收支流水帳 ── -->
-  <section class="page active" id="page-ledger">
+  <section class="page" id="page-ledger">
 
     <!-- ══ 頂部：月份切換 + 當月摘要 ══ -->
     <div style="position:sticky;top:0;z-index:50;background:var(--bg-base);padding-bottom:12px;margin-bottom:4px;">
@@ -2345,7 +2345,7 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
             <option value="2026" selected="">2026</option>
             <option value="2027">2027</option>
           </select>
-          <div style="font-family:var(--mono);font-size:1.1rem;font-weight:500;color:var(--text-primary);" id="ledger-month-title">4月</div>
+          <div style="font-family:var(--mono);font-size:1.1rem;font-weight:500;color:var(--text-primary);" id="ledger-month-title">—</div>
         </div>
         <button class="btn btn-ghost" onclick="exportCSV()" style="font-size:0.75rem;padding:6px 12px;">↓ CSV</button>
       </div>
@@ -2355,7 +2355,7 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
         <button onclick="setLedgerMonth('01',this)" class="lm-btn" id="lm-01">1</button>
         <button onclick="setLedgerMonth('02',this)" class="lm-btn" id="lm-02">2</button>
         <button onclick="setLedgerMonth('03',this)" class="lm-btn" id="lm-03">3</button>
-        <button onclick="setLedgerMonth('04',this)" class="lm-btn active" id="lm-04">4</button>
+        <button onclick="setLedgerMonth('04',this)" class="lm-btn" id="lm-04">4</button>
         <button onclick="setLedgerMonth('05',this)" class="lm-btn" id="lm-05">5</button>
         <button onclick="setLedgerMonth('06',this)" class="lm-btn" id="lm-06">6</button>
         <button onclick="setLedgerMonth('07',this)" class="lm-btn" id="lm-07">7</button>
@@ -2378,18 +2378,18 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
         </div>
         <div style="padding:10px 12px;background:var(--bg-card);border:1px solid rgba(59,130,246,0.2);border-radius:10px;">
           <div style="font-size:0.55rem;color:var(--text-muted);margin-bottom:3px;">結餘</div>
-          <div style="font-family: var(--mono); font-size: 0.88rem; font-weight: 600; color: var(--accent-green);" id="ledger-kpi-net">+$0</div>
+          <div style="font-family:var(--mono);font-size:0.88rem;font-weight:600;" id="ledger-kpi-net">+$0</div>
         </div>
       </div>
     </div>
 
-    <!-- 收支視覺圖 + 右側小卡（sticky 外） -->
-    <div style="display:flex;gap:14px;align-items:stretch;margin-bottom:16px;margin-top:4px;">
+    <!-- ══ 收支視覺區（全寬堆疊版） ══ -->
+    <div style="margin-bottom:16px;margin-top:4px;">
 
-      <!-- 左：圓形波浪 -->
-      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;">
+      <!-- 圓形波浪（置中） -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:14px;">
         <div style="position:relative;width:160px;height:160px;">
-          <canvas id="ledgerWaveCanvas" width="160" height="160" style="width:160px;height:160px;display:block;border-radius:50%;" data-income="0" data-expense="0"></canvas>
+          <canvas id="ledgerWaveCanvas" width="160" height="160" style="width:160px;height:160px;display:block;border-radius:50%;"></canvas>
           <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
             <div style="font-size:0.55rem;color:var(--text-muted);letter-spacing:0.08em;margin-bottom:2px;">月支出合計</div>
             <div style="font-family:var(--mono);font-size:0.95rem;font-weight:700;color:var(--accent-amber);" id="ledger-kpi-total-exp">$0</div>
@@ -2399,35 +2399,51 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
         <div style="font-size:0.6rem;color:var(--text-muted);font-family:var(--mono);text-align:center;" id="ledger-kpi-total-exp-sub">尚無支出</div>
       </div>
 
-      <!-- 右：固定支出 + 儲蓄率 -->
-      <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
-        <div onclick="goToDbRecurring()" style="padding:11px 14px;background:var(--bg-card);border:1px solid rgba(167,139,250,0.2);border-radius:12px;flex:1;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(167,139,250,0.6)'" onmouseout="this.style.borderColor='rgba(167,139,250,0.2)'">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;gap:4px;min-width:0;">
-            <div style="font-size:0.58rem;color:var(--text-muted);white-space:nowrap;">固定支出</div>
-            <div style="font-size:0.55rem;color:var(--accent-purple);font-family:var(--mono);white-space:nowrap;flex-shrink:0;">編輯 →</div>
+      <!-- 支出 / 收入 大按鈕 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px;">
+        <button onclick="openTxModal('支出')" style="border-radius:14px;border:none;background:linear-gradient(135deg,#e53e3e,#ff4d6d);color:#fff;font-family:var(--sans);cursor:pointer;padding:16px 18px;text-align:left;transition:all 0.18s;box-shadow:0 4px 16px rgba(255,77,109,0.3);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(255,77,109,0.45)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(255,77,109,0.3)'">
+          <div style="font-size:0.78rem;font-weight:600;letter-spacing:0.04em;margin-bottom:6px;">支出</div>
+          <div style="font-family:var(--mono);font-size:1rem;font-weight:700;" id="ledger-btn-expense">NT$0</div>
+        </button>
+        <button onclick="openTxModal('收入')" style="border-radius:14px;border:none;background:linear-gradient(135deg,#059669,#00e5a0);color:#001a0f;font-family:var(--sans);cursor:pointer;padding:16px 18px;text-align:left;transition:all 0.18s;box-shadow:0 4px 16px rgba(0,229,160,0.25);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,229,160,0.4)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(0,229,160,0.25)'">
+          <div style="font-size:0.78rem;font-weight:600;letter-spacing:0.04em;margin-bottom:6px;">收入</div>
+          <div style="font-family:var(--mono);font-size:1rem;font-weight:700;" id="ledger-btn-income">NT$0</div>
+        </button>
+      </div>
+      <!-- 結餘小字 -->
+      <div style="text-align:center;font-size:0.72rem;color:var(--text-muted);font-family:var(--mono);margin-bottom:12px;" id="ledger-btn-net">結餘：$0</div>
+
+      <!-- 細項小卡（橫排 2×2） -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+        <!-- 固定支出 -->
+        <div onclick="goToDbRecurring()" style="padding:11px 14px;background:var(--bg-card);border:1px solid rgba(167,139,250,0.2);border-radius:12px;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(167,139,250,0.6)'" onmouseout="this.style.borderColor='rgba(167,139,250,0.2)'">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+            <div style="font-size:0.58rem;color:var(--text-muted);">固定支出</div>
+            <div style="font-size:0.52rem;color:var(--accent-purple);font-family:var(--mono);">編輯 →</div>
           </div>
-          <div style="font-family:var(--mono);font-size:0.95rem;font-weight:600;color:var(--accent-purple);" id="ledger-kpi-fixed">$0</div>
-          <div style="font-size:0.58rem;color:var(--text-muted);margin-top:2px;" id="ledger-kpi-fixed-sub">尚未設定</div>
+          <div style="font-family:var(--mono);font-size:0.92rem;font-weight:600;color:var(--accent-purple);" id="ledger-kpi-fixed">$0</div>
+          <div style="font-size:0.55rem;color:var(--text-muted);margin-top:2px;" id="ledger-kpi-fixed-sub">尚未設定</div>
         </div>
         <!-- 有期限負債 -->
-        <div onclick="goToDbLoans()" style="padding:11px 14px;background:var(--bg-card);border:1px solid rgba(255,77,109,0.2);border-radius:12px;flex:1;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,77,109,0.6)'" onmouseout="this.style.borderColor='rgba(255,77,109,0.2)'">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;gap:4px;min-width:0;">
-            <div style="font-size:0.58rem;color:var(--text-muted);white-space:nowrap;">有期限負債</div>
-            <div style="font-size:0.55rem;color:var(--accent-red);font-family:var(--mono);white-space:nowrap;flex-shrink:0;">編輯 →</div>
+        <div onclick="goToDbLoans()" style="padding:11px 14px;background:var(--bg-card);border:1px solid rgba(255,77,109,0.2);border-radius:12px;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,77,109,0.6)'" onmouseout="this.style.borderColor='rgba(255,77,109,0.2)'">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+            <div style="font-size:0.58rem;color:var(--text-muted);">有期限負債</div>
+            <div style="font-size:0.52rem;color:var(--accent-red);font-family:var(--mono);">編輯 →</div>
           </div>
-          <div style="font-family:var(--mono);font-size:0.95rem;font-weight:600;color:var(--accent-red);" id="ledger-kpi-loan">$0</div>
-          <div style="font-size:0.58rem;color:var(--text-muted);margin-top:2px;" id="ledger-kpi-loan-sub">尚未設定</div>
+          <div style="font-family:var(--mono);font-size:0.92rem;font-weight:600;color:var(--accent-red);" id="ledger-kpi-loan">$0</div>
+          <div style="font-size:0.55rem;color:var(--text-muted);margin-top:2px;" id="ledger-kpi-loan-sub">月攤還</div>
         </div>
-        <!-- 質押借款利息 -->
-        <div id="ledger-pledge-card" onclick="openPledgeLoanModal()" style="display:none;padding:11px 14px;background:var(--bg-card);border:1px solid rgba(245,158,11,0.2);border-radius:12px;flex:1;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(245,158,11,0.6)'" onmouseout="this.style.borderColor='rgba(245,158,11,0.2)'">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;gap:4px;min-width:0;">
-            <div style="font-size:0.58rem;color:var(--text-muted);white-space:nowrap;">🔗 質押利息</div>
-            <div style="font-size:0.55rem;color:var(--accent-amber);font-family:var(--mono);white-space:nowrap;flex-shrink:0;">管理 →</div>
+        <!-- 質押利息 -->
+        <div id="ledger-pledge-card" onclick="openPledgeLoanModal()" style="display:none;padding:11px 14px;background:var(--bg-card);border:1px solid rgba(245,158,11,0.2);border-radius:12px;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(245,158,11,0.6)'" onmouseout="this.style.borderColor='rgba(245,158,11,0.2)'">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+            <div style="font-size:0.58rem;color:var(--text-muted);">🔗 質押利息</div>
+            <div style="font-size:0.52rem;color:var(--accent-amber);font-family:var(--mono);">管理 →</div>
           </div>
-          <div style="font-family:var(--mono);font-size:0.95rem;font-weight:600;color:var(--accent-amber);" id="ledger-kpi-pledge-int">$0/月</div>
-          <div style="font-size:0.58rem;color:var(--text-muted);margin-top:2px;" id="ledger-kpi-pledge-bal">餘額 $0</div>
+          <div style="font-family:var(--mono);font-size:0.92rem;font-weight:600;color:var(--accent-amber);" id="ledger-kpi-pledge-int">$0</div>
+          <div style="font-size:0.55rem;color:var(--text-muted);margin-top:2px;" id="ledger-kpi-pledge-bal">餘額 $0</div>
         </div>
-        <div style="padding:11px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;flex:1;">
+        <!-- 儲蓄率 -->
+        <div style="padding:11px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;">
           <div style="font-size:0.58rem;color:var(--text-muted);margin-bottom:6px;">儲蓄率</div>
           <div style="height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;margin-bottom:5px;">
             <div id="ledger-save-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#059669,#00e5a0);border-radius:3px;transition:width 0.6s;"></div>
@@ -2435,51 +2451,27 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
           <div style="font-family:var(--mono);font-size:0.88rem;font-weight:600;color:var(--accent-green);" id="ledger-save-pct">0%</div>
         </div>
       </div>
+
+      <!-- 提示 -->
+      <div style="padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;font-size:0.68rem;color:var(--text-muted);margin-bottom:14px;" id="ledger-form-month-hint">點擊按鈕新增帳務</div>
     </div>
 
-    <!-- ══ 主體：兩大按鈕 + 流水帳列表 ══ -->
-    <div class="two-col">
-
-      <!-- 左：收入/支出 橫排精緻按鈕 -->
-      <div style="display:flex;flex-direction:column;gap:12px;">
-        <!-- 橫排兩按鈕 -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <!-- 支出 -->
-          <button onclick="openTxModal('支出')" style="border-radius:14px;border:none;background:linear-gradient(135deg,#e53e3e,#ff4d6d);color:#fff;font-family:var(--sans);cursor:pointer;padding:16px 18px;text-align:left;transition:all 0.18s;box-shadow:0 4px 16px rgba(255,77,109,0.3);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(255,77,109,0.45)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(255,77,109,0.3)'">
-            <div style="font-size:0.78rem;font-weight:600;letter-spacing:0.04em;margin-bottom:6px;">支出</div>
-            <div style="font-family:var(--mono);font-size:1rem;font-weight:700;" id="ledger-btn-expense">NT$0</div>
-          </button>
-          <!-- 收入 -->
-          <button onclick="openTxModal('收入')" style="border-radius:14px;border:none;background:linear-gradient(135deg,#059669,#00e5a0);color:#001a0f;font-family:var(--sans);cursor:pointer;padding:16px 18px;text-align:left;transition:all 0.18s;box-shadow:0 4px 16px rgba(0,229,160,0.25);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,229,160,0.4)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(0,229,160,0.25)'">
-            <div style="font-size:0.78rem;font-weight:600;letter-spacing:0.04em;margin-bottom:6px;">收入</div>
-            <div style="font-family:var(--mono);font-size:1rem;font-weight:700;" id="ledger-btn-income">NT$0</div>
-          </button>
-        </div>
-        <!-- 結餘小字 -->
-        <div style="text-align: center; font-size: 0.72rem; color: var(--accent-green); font-family: var(--mono);" id="ledger-btn-net">結餘：+NT$0</div>
-        <!-- 提示 -->
-        <div style="padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;font-size:0.68rem;color:var(--text-muted);" id="ledger-form-month-hint">記錄 4月 的帳務</div>
-      </div>
-
-      <!-- 右：流水帳列表 -->
-      <div>
-        <div class="card" style="height:100%;">
-          <div class="card-header" style="flex-wrap:wrap;gap:8px;">
-            <div class="card-title">帳務記錄</div>
-            <div style="display:flex;align-items:center;gap:8px;">
-              <div class="filter-bar" style="margin:0;">
-                <button class="filter-btn active" onclick="setFilter('all',this)">全部</button>
-                <button class="filter-btn" onclick="setFilter('收入',this)">收入</button>
-                <button class="filter-btn" onclick="setFilter('支出',this)">支出</button>
-                <button class="filter-btn" onclick="setFilter('固定支出',this)" style="color:var(--accent-purple);">📌 固定</button>
-                <button class="filter-btn" onclick="setFilter('有期限負債',this)" style="color:var(--accent-red);">🔴 負債</button>
-              </div>
-              <div style="font-family:var(--mono);font-size:0.72rem;color:var(--text-muted);" id="txCount">0 筆</div>
-            </div>
+    <!-- ══ 帳務列表（全寬） ══ -->
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-header" style="flex-wrap:wrap;gap:8px;">
+        <div class="card-title">帳務記錄</div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="filter-bar" style="margin:0;">
+            <button class="filter-btn active" onclick="setFilter('all',this)">全部</button>
+            <button class="filter-btn" onclick="setFilter('收入',this)">收入</button>
+            <button class="filter-btn" onclick="setFilter('支出',this)">支出</button>
+            <button class="filter-btn" onclick="setFilter('固定支出',this)" style="color:var(--accent-purple);">📌 固定</button>
+            <button class="filter-btn" onclick="setFilter('有期限負債',this)" style="color:var(--accent-red);">🔴 負債</button>
           </div>
-          <div class="tx-list" id="txList"><div class="empty-state"><div class="empty-ico-svg"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></div>2026 年 4 月 尚無記錄<br>請使用左側表單新增</div></div>
+          <div style="font-family:var(--mono);font-size:0.72rem;color:var(--text-muted);" id="txCount">0 筆</div>
         </div>
       </div>
+      <div class="tx-list" id="txList"></div>
     </div>
 
     <!-- hidden 舊表單欄位供 addTransaction 相容 -->
@@ -2500,7 +2492,7 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
       <div class="card-header">
         <div class="card-title">月份收支趨勢</div>
         <div style="display:flex;align-items:center;gap:10px;">
-          <span style="font-family:var(--mono);font-size:0.7rem;color:var(--text-muted);" id="chartYear">2026</span>
+          <span style="font-family:var(--mono);font-size:0.7rem;color:var(--text-muted);" id="chartYear"></span>
           <div style="display:flex;gap:4px;">
             <button class="chart-tab active" id="lineTab-combined" onclick="switchLineChart('combined',this)">複合</button>
             <button class="chart-tab" id="lineTab-income" onclick="switchLineChart('income',this)">收入</button>
@@ -2511,45 +2503,17 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
         </div>
       </div>
       <div style="position:relative;height:220px;margin-top:4px;">
-        <canvas id="monthLineChart" style="width: 358px; height: 220px; display: block;" width="939" height="577"></canvas>
+        <canvas id="monthLineChart" style="width:100%;height:220px;display:block;"></canvas>
       </div>
-      <div id="monthLineChartLegend" style="display:flex;gap:20px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:0.68rem;"><div style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);">
-      <span style="display:inline-block;width:18px;background:#00e5a0;height:2px;border-radius:2px;"></span>
-      <span>收入</span>
-      <span style="font-family:var(--mono);color:#00e5a0;font-weight:500;">$0</span>
-    </div><div style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);">
-      <span style="display:inline-block;width:18px;background:#ff4d6d;height:2px;border-radius:2px;"></span>
-      <span>支出</span>
-      <span style="font-family:var(--mono);color:#ff4d6d;font-weight:500;">$0</span>
-    </div><div style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);">
-      <span style="display:inline-block;width:18px;border-bottom:2px dashed #a78bfa;background:none;height:0;border-radius:2px;"></span>
-      <span>固定支出</span>
-      <span style="font-family:var(--mono);color:#a78bfa;font-weight:500;">$0</span>
-    </div><div style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);">
-      <span style="display:inline-block;width:18px;border-bottom:2px dashed #ff4d6d;background:none;height:0;border-radius:2px;"></span>
-      <span>負債攤還</span>
-      <span style="font-family:var(--mono);color:#ff4d6d;font-weight:500;">$0</span>
-    </div><div style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);">
-      <span style="display:inline-block;width:18px;border-bottom:2px dashed #f59e0b;background:none;height:0;border-radius:2px;"></span>
-      <span>淨結餘</span>
-      <span style="font-family:var(--mono);color:#f59e0b;font-weight:500;">+$0</span>
-    </div></div>
+      <div id="monthLineChartLegend" style="display:flex;gap:20px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:0.68rem;"></div>
     </div>
 
     <!-- hidden 舊元素相容 -->
     <div style="display:none;">
       <canvas id="ledgerPieCanvas" width="100" height="100"></canvas>
-      <span id="ledgerPieCenter" style="color: var(--text-muted);">$0</span><span id="ledgerPieLabel">收支</span>
-      <span id="ledger-stat-income">$0</span><span id="ledger-stat-expense">$0</span><span id="ledger-stat-net" style="color: var(--accent-green);">+$0</span>
-      <div id="ledgerPieLegend"><div style="display:flex;align-items:center;gap:5px;font-size:0.68rem;">
-        <span style="width:7px;height:7px;border-radius:2px;background:#00e5a0;display:inline-block;flex-shrink:0;"></span>
-        <span style="flex:1;color:var(--text-secondary);">收入</span>
-        <span style="font-family:var(--mono);color:#00e5a0;font-weight:500;">$0</span>
-      </div><div style="display:flex;align-items:center;gap:5px;font-size:0.68rem;">
-        <span style="width:7px;height:7px;border-radius:2px;background:#ff4d6d;display:inline-block;flex-shrink:0;"></span>
-        <span style="flex:1;color:var(--text-secondary);">支出</span>
-        <span style="font-family:var(--mono);color:#ff4d6d;font-weight:500;">$0</span>
-      </div></div><div id="ledgerPieSection"></div>
+      <span id="ledgerPieCenter"></span><span id="ledgerPieLabel"></span>
+      <span id="ledger-stat-income"></span><span id="ledger-stat-expense"></span><span id="ledger-stat-net"></span>
+      <div id="ledgerPieLegend"></div><div id="ledgerPieSection"></div>
       <button id="ledger-month-all"></button><button id="ledger-month-sel"></button>
       <button id="toggleFixed"></button>
     </div>
@@ -2785,12 +2749,12 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
       </div>
 
       <!-- 各資產小卡列表 -->
-      <div style="display:flex;flex-direction:column;gap:8px;" id="inv-asset-cards"><div style="color:var(--text-muted);font-size:0.72rem;padding:12px 0;">尚無持股，請至資料庫新增交易記錄</div></div>
+      <div style="display:flex;flex-direction:column;gap:8px;" id="inv-asset-cards"></div>
     </div>
 
     <!-- 報價狀態列 -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-      <div style="font-size:0.62rem;color:var(--text-muted);" id="inv-quote-status">尚無持股</div>
+      <div style="font-size:0.62rem;color:var(--text-muted);" id="inv-quote-status">載入中…</div>
       <button onclick="refreshInvestQuotes()" style="font-size:0.65rem;padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:5px;">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg> 更新報價
       </button>
@@ -2802,7 +2766,7 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
         <div style="font-size:0.68rem;font-weight:600;color:var(--text-primary);">月配息估計（12個月）</div>
         <div style="font-size:0.6rem;color:var(--text-muted);font-family:var(--mono);">以成本計算</div>
       </div>
-      <canvas id="invBarChart" style="width: 386px; display: block;" height="315" width="1013"></canvas>
+      <canvas id="invBarChart" style="width:100%;display:block;" height="120"></canvas>
     </div>
 
     <!-- 績效快照折線圖 -->
@@ -2817,7 +2781,7 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
         </div>
       </div>
       <div style="font-size:0.58rem;color:var(--text-muted);margin-bottom:10px;">每次開啟投資分頁自動記錄一筆快照</div>
-      <canvas id="invSnapshotChart" style="width: 386px; display: block;" height="367" width="1013"></canvas>
+      <canvas id="invSnapshotChart" style="width:100%;display:block;" height="140"></canvas>
       <div style="display:flex;gap:16px;margin-top:8px;font-size:0.62rem;">
         <span style="display:flex;align-items:center;gap:4px;color:var(--text-muted);"><span style="width:8px;height:3px;border-radius:1px;background:var(--accent-amber);display:inline-block;"></span>投入成本</span>
         <span style="display:flex;align-items:center;gap:4px;color:var(--text-muted);"><span style="width:8px;height:3px;border-radius:1px;background:var(--accent-green);display:inline-block;"></span>月配息（右軸）</span>
@@ -2829,7 +2793,7 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
       <div style="width:3px;height:14px;border-radius:2px;background:var(--accent-green);"></div>
       <span style="font-size:0.68rem;font-weight:600;color:var(--accent-green);letter-spacing:0.1em;text-transform:uppercase;">銀行 / 定存</span>
     </div>
-    <div id="inv-bank-cards" style="display:flex;flex-direction:column;gap:8px;margin-bottom:80px;"><div style="color:var(--text-muted);font-size:0.72rem;padding:12px 0;">尚未設定銀行帳戶</div></div>
+    <div id="inv-bank-cards" style="display:flex;flex-direction:column;gap:8px;margin-bottom:80px;"></div>
 
   </section>
 
@@ -3826,10 +3790,10 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
 </main>
 
 <nav class="mobile-nav" id="mobileNav">
-  <div class="mobile-nav-item" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
+  <div class="mobile-nav-item active" id="mn-home" onclick="goPage('home',       null, 'mn-home')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"></path><path d="M9 21V12h6v9"></path><path d="M5 10v11h14V10"></path></svg></span><span>總覽</span>
   </div>
-  <div class="mobile-nav-item active" id="mn-ledger" onclick="goPage('ledger', null, 'mn-ledger')">
+  <div class="mobile-nav-item" id="mn-ledger" onclick="goPage('ledger', null, 'mn-ledger')">
     <span class="mobile-nav-icon ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg></span><span>帳務</span>
   </div>
   <div class="mobile-nav-item" id="mn-invest" onclick="goPage('invest', null, 'mn-invest')">
