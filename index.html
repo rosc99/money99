@@ -2058,7 +2058,7 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-04-01 09:00:18</div>
+    <div class="clock-display" id="clockDisplay">2026-04-01 15:53:31</div>
   </div>
 </aside>
 
@@ -2391,10 +2391,15 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
         <div style="position:relative;width:160px;height:160px;">
           <canvas id="ledgerWaveCanvas" width="160" height="160" style="width:160px;height:160px;display:block;border-radius:50%;"></canvas>
           <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
-            <div style="font-size:0.55rem;color:var(--text-muted);letter-spacing:0.08em;margin-bottom:2px;">月支出合計</div>
-            <div style="font-family:var(--mono);font-size:0.95rem;font-weight:700;color:var(--accent-amber);" id="ledger-kpi-total-exp">$0</div>
-            <div style="font-size:0.52rem;color:var(--text-muted);margin-top:2px;" id="ledger-kpi-net-sub">收入 − 支出</div>
+            <div style="font-size:0.55rem;color:var(--text-muted);letter-spacing:0.08em;margin-bottom:2px;">月結餘</div>
+            <div style="font-family:var(--mono);font-size:0.95rem;font-weight:700;" id="ledger-kpi-net-circle">+$0</div>
+            <div style="font-size:0.52rem;color:var(--text-muted);margin-top:2px;">儲蓄率 <span id="ledger-kpi-savepct-circle">0%</span></div>
           </div>
+        </div>
+        <!-- 月支出合計列（圓形下方） -->
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:20px;">
+          <span style="font-size:0.6rem;color:var(--text-muted);">月支出合計</span>
+          <span style="font-family:var(--mono);font-size:0.78rem;font-weight:600;color:var(--accent-amber);" id="ledger-kpi-total-exp">$0</span>
         </div>
         <div style="font-size:0.6rem;color:var(--text-muted);font-family:var(--mono);text-align:center;" id="ledger-kpi-total-exp-sub">尚無支出</div>
       </div>
@@ -5363,6 +5368,15 @@ async function renderAll() {
   if (safe('ledger-kpi-expense'))   safe('ledger-kpi-expense').textContent   = '$' + Math.round(mPureEx2).toLocaleString('zh-TW');
   if (safe('ledger-kpi-fixed'))     safe('ledger-kpi-fixed').textContent     = '$' + Math.round(mFixed2).toLocaleString('zh-TW');
   if (safe('ledger-kpi-fixed-sub')) safe('ledger-kpi-fixed-sub').textContent = mFixed2 > 0 ? AppState.recurring.length + ' 項固定' : '尚未設定';
+  // 圓形內結餘
+  if (safe('ledger-kpi-net-circle')) {
+    safe('ledger-kpi-net-circle').textContent = (mNet2>=0?'+$':'-$') + Math.round(Math.abs(mNet2)).toLocaleString('zh-TW');
+    safe('ledger-kpi-net-circle').style.color = mNet2>=0 ? 'var(--accent-green)' : 'var(--accent-red)';
+  }
+  if (safe('ledger-kpi-savepct-circle')) {
+    safe('ledger-kpi-savepct-circle').textContent = savePct + '%';
+    safe('ledger-kpi-savepct-circle').style.color = savePct>=20?'var(--accent-green)':savePct>0?'var(--accent-amber)':'var(--accent-red)';
+  }
   if (safe('ledger-kpi-total-exp')) {
     safe('ledger-kpi-total-exp').textContent = '$' + Math.round(mTotalExp).toLocaleString('zh-TW');
     const subParts = [];
