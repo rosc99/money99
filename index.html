@@ -2058,7 +2058,7 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-04-01 15:53:31</div>
+    <div class="clock-display" id="clockDisplay">2026-04-04 07:35:05</div>
   </div>
 </aside>
 
@@ -2167,10 +2167,10 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
     </div>
 
     <!-- ══ 當月現金流 ══ -->
-    <div class="card" style="padding:18px 20px;cursor:pointer;" onclick="goPage('stats',navItemOf('stats'))">
+    <div class="card" style="padding:18px 20px;cursor:pointer;" onclick="goPage('ledger',navItemOf('ledger'))">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
           <div class="card-title">當月現金流</div>
-          <div class="home-block-arrow" style="font-size:0.68rem;">現金流 →</div>
+          <div class="home-block-arrow" style="font-size:0.68rem;">帳務 →</div>
         </div>
         <div style="display:flex;gap:12px;align-items:center;">
           <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;">
@@ -6384,7 +6384,9 @@ async function renderHome() {
   const recurMonthly = recurring.reduce((s,r)=>s+(r.freq==='monthly'?r.amount:r.freq==='quarterly'?Math.round(r.amount/3):Math.round(r.amount/12)),0);
   const activeInst   = installments.filter(i=>i.paid<i.total);
   const instMonthly  = activeInst.reduce((s,i)=>s+i.amount,0);
-  const fixedTotal   = recurMonthly + instMonthly;
+  const mLoanPmt     = Math.round(AppState.loans.reduce((s,l) => s + dbCalcLoanRemaining(l).pmt, 0));
+  const mPledgeInt   = Math.round((AppState.pledgeLoan.balance||0) * (AppState.pledgeLoan.rate||0) / 100 / 12);
+  const fixedTotal   = recurMonthly + instMonthly + mLoanPmt + mPledgeInt;
   const monthTxs     = allTxs.filter(t=>t.date&&t.date.startsWith(thisMonth));
   const mIncome      = monthTxs.filter(t=>t.category==='收入').reduce((s,t)=>s+t.amount,0);
   const mExpense     = monthTxs.filter(t=>t.category!=='收入').reduce((s,t)=>s+t.amount,0);
@@ -6397,7 +6399,7 @@ async function renderHome() {
   const cfFreeEl = safe('h-cfFree');
   cfFreeEl.textContent = (freeCash>=0?'+':'')+fmtMoney(freeCash);
   cfFreeEl.style.color = freeCash>=0?'var(--accent-green)':'var(--accent-red)';
-  safe('h-cfFormula').textContent = `${mnName} 收入 ${fmtMoney(mIncome)} − 固定 ${fmtMoney(fixedTotal)} − 支出 ${fmtMoney(mExpense)}`;
+  safe('h-cfFormula').textContent = `${mnName} 收入 ${fmtMoney(mIncome)} − 固定 ${fmtMoney(recurMonthly+instMonthly)} − 負債 ${fmtMoney(mLoanPmt+mPledgeInt)} − 支出 ${fmtMoney(mExpense)}`;
   (function drawHomeWater() {
     const pct   = Math.min(100, Math.max(0, Math.round((Math.max(0,freeCash) / (mIncome||1)) * 100)));
     const color = pct>=50?'#00e5a0':pct>=25?'#f59e0b':'#ff4d6d';
@@ -6644,7 +6646,9 @@ async function renderStats() {
   const recurMonthly = recurring.reduce((s,r)=>
     s+(r.freq==='monthly'?r.amount:r.freq==='quarterly'?Math.round(r.amount/3):Math.round(r.amount/12)),0);
   const instMonthly  = installments.reduce((s,i)=>s+i.amount,0);
-  const fixedTotal   = recurMonthly + instMonthly;
+  const sLoanPmt     = Math.round(AppState.loans.reduce((s,l) => s + dbCalcLoanRemaining(l).pmt, 0));
+  const sPledgeInt   = Math.round((AppState.pledgeLoan.balance||0) * (AppState.pledgeLoan.rate||0) / 100 / 12);
+  const fixedTotal   = recurMonthly + instMonthly + sLoanPmt + sPledgeInt;
 
   const freeCash = totalIn - fixedTotal - totalEx;
   const allOut   = fixedTotal + totalEx;
@@ -6655,7 +6659,7 @@ async function renderStats() {
     freeCashEl.style.color = freeCash >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
   }
   const fmEl = document.getElementById('cf-formula');
-  if (fmEl) fmEl.textContent = `收入 ${fmtMoney(totalIn)} − 固定支出 ${fmtMoney(fixedTotal)} − 一般支出 ${fmtMoney(totalEx)}`;
+  if (fmEl) fmEl.textContent = `收入 ${fmtMoney(totalIn)} − 固定支出 ${fmtMoney(recurMonthly+instMonthly)} − 負債 ${fmtMoney(sLoanPmt+sPledgeInt)} − 一般支出 ${fmtMoney(totalEx)}`;
 
   const saveRate = totalIn > 0 ? Math.round((freeCash / totalIn)*100) : 0;
   const srEl = document.getElementById('cf-saveRate');
