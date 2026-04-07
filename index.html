@@ -2058,7 +2058,7 @@ body.dev-mode .page { outline: 1px dashed rgba(245,158,11,0.2); }
       <div class="sync-dot" id="syncDot"></div>
       <span id="syncStatusText">連線中…</span>
     </div>
-    <div class="clock-display" id="clockDisplay">2026-04-04 07:36:24</div>
+    <div class="clock-display" id="clockDisplay">2026-04-07 20:42:32</div>
   </div>
 </aside>
 
@@ -10129,6 +10129,18 @@ function dbCalcLoanRemaining(l) {
     startDate    = l.start_date ? new Date(l.start_date) : null;
   }
 
+  // 質押：只付利息，本金不遞減
+  if (l.type === 'pledge') {
+    const interestOnly = Math.round(startBalance * r);
+    const now = new Date();
+    const elapsed = startDate && !isNaN(startDate)
+      ? Math.max(0, (now.getFullYear() - startDate.getFullYear()) * 12 + (now.getMonth() - startDate.getMonth()))
+      : 0;
+    const remMonths = Math.max(0, totalMonths - elapsed);
+    const clearDate = remMonths > 0 ? new Date(now.getFullYear(), now.getMonth() + remMonths, 1) : null;
+    return { balance: Math.round(startBalance), pmt: interestOnly, remMonths, clearDate, interestOnly: true };
+  }
+
   if (!startDate || isNaN(startDate)) return { balance: startBalance, pmt: appCalcPMT(startBalance, annualRate, totalMonths), remMonths: totalMonths, clearDate: null };
 
   const now = new Date();
@@ -10305,7 +10317,7 @@ function dbRenderLoans() {
         <span style="font-size:0.85rem;flex-shrink:0;">${icon}</span>
         <span style="flex:1;font-size:0.82rem;font-weight:500;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${displayName}</span>
         <span style="font-family:var(--mono);font-size:0.72rem;color:var(--accent-purple);flex-shrink:0;">餘 $${Math.round(rem.balance).toLocaleString('zh-TW')}</span>
-        <span style="font-family:var(--mono);font-size:0.7rem;color:var(--accent-red);flex-shrink:0;">$${Math.round(rem.pmt).toLocaleString('zh-TW')}/月</span>
+        <span style="font-family:var(--mono);font-size:0.7rem;color:var(--accent-red);flex-shrink:0;">$${Math.round(rem.pmt).toLocaleString('zh-TW')}/${l.type==='pledge'?'月利息':'月'}</span>
         <span style="font-size:0.65rem;color:var(--text-muted);flex-shrink:0;transition:transform 0.2s;" id="loan-arrow-${i}">${defaultOpen?'▲':'▼'}</span>
         <button onclick="event.stopPropagation();dbDeleteLoan(${i})" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.7rem;padding:2px 4px;border-radius:4px;flex-shrink:0;transition:color 0.15s;" onmouseenter="this.style.color='var(--accent-red)'" onmouseleave="this.style.color='var(--text-muted)'">✕</button>
       </div>
@@ -10334,7 +10346,7 @@ function dbRenderLoans() {
         <!-- 自動計算結果 -->
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:8px 10px;background:rgba(167,139,250,0.05);border-radius:8px;border:1px solid rgba(167,139,250,0.15);margin-bottom:8px;">
           <div><div style="font-size:0.55rem;color:var(--text-muted);">剩餘本金</div><div style="font-family:var(--mono);font-size:0.78rem;font-weight:600;color:var(--accent-purple);">$${Math.round(rem.balance).toLocaleString('zh-TW')}</div></div>
-          <div><div style="font-size:0.55rem;color:var(--text-muted);">每月攤還</div><div style="font-family:var(--mono);font-size:0.78rem;font-weight:600;color:var(--accent-red);">$${Math.round(rem.pmt).toLocaleString('zh-TW')}</div></div>
+          <div><div style="font-size:0.55rem;color:var(--text-muted);">${l.type==='pledge'?'每月利息':'每月攤還'}</div><div style="font-family:var(--mono);font-size:0.78rem;font-weight:600;color:var(--accent-red);">$${Math.round(rem.pmt).toLocaleString('zh-TW')}</div></div>
           <div><div style="font-size:0.55rem;color:var(--text-muted);">剩餘期數</div><div style="font-family:var(--mono);font-size:0.78rem;font-weight:600;color:var(--text-primary);">${rem.remMonths}月</div></div>
           <div><div style="font-size:0.55rem;color:var(--text-muted);">還清</div><div style="font-family:var(--mono);font-size:0.78rem;font-weight:600;color:var(--accent-green);">${rem.clearDate ? rem.clearDate.getFullYear()+'/'+(rem.clearDate.getMonth()+1) : '—'}</div></div>
         </div>
