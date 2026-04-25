@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>資產管理中心</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ocean-deep: #0a2a3d;
+    --ocean-mid: #0d4f6e;
+    --ocean-teal: #1a8fa0;
+    --ocean-light: #4dc4d4;
+    --ocean-foam: #a8e6ef;
+    --accent-gold: #f0c040;
+    --accent-green: #3ecf8e;
+    --accent-red: #f0504a;
+    --bg-glass: rgba(255,255,255,0.06);
+    --bg-glass-hover: rgba(255,255,255,0.1);
+    --border-glass: rgba(255,255,255,0.12);
+    --text-primary: #eef6f8;
+    --text-secondary: rgba(200,230,240,0.7);
+    --text-muted: rgba(150,200,220,0.45);
+    --card-radius: 20px;
+    --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans TC', sans-serif; background: var(--ocean-deep); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 20% 10%, rgba(26,143,160,0.25) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 80% 80%, rgba(13,79,110,0.4) 0%, transparent 60%),
+      linear-gradient(180deg, #061824 0%, #0a2a3d 50%, #061220 100%);
+    z-index: 0; pointer-events: none;
+  }
+  .particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .particle { position: absolute; border-radius: 50%; background: var(--ocean-light); opacity: 0; animation: float-up linear infinite; }
+  @keyframes float-up {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 0.15; } 90% { opacity: 0.08; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+  }
+
+  /* ===== LAYOUT ===== */
+  #app { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* ===== TOP NAV ===== */
+  .top-nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 8px; position: sticky; top: 0; z-index: 100; background: linear-gradient(180deg, rgba(6,24,36,0.95) 0%, transparent 100%); backdrop-filter: blur(8px); }
+  .nav-title { font-size: 18px; font-weight: 700; letter-spacing: 0.02em; }
+  .nav-month { display: flex; align-items: center; gap: 6px; background: var(--bg-glass); border: 1px solid var(--border-glass); border-radius: 20px; padding: 6px 14px; font-size: 14px; cursor: pointer; transition: var(--transition); }
+  .nav-month:hover { background: var(--bg-glass-hover); }
+  .nav-icon { font-size: 15px; }
+
+  /* ===== BOTTOM NAV ===== */
+  .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; display: flex; background: rgba(6,24,36,0.92); backdrop-filter: blur(16px); border-top: 1px solid var(--border-glass); z-index: 200; padding-bottom: env(safe-area-inset-bottom, 0); }
+  .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px 0 12px; cursor: pointer; transition: var(--transition); border: none; background: none; color: var(--text-muted); gap: 3px; font-family: 'Noto Sans TC', sans-serif; }
+  .nav-btn.active { color: var(--ocean-light); }
+  .nav-btn:hover { color: var(--ocean-foam); }
+  .nav-btn .icon { font-size: 20px; }
+  .nav-btn .label { font-size: 10px; letter-spacing: 0.03em; }
+
+  /* ===== PAGES ===== */
+  .page { display: none; padding: 0 16px 100px; animation: fadeIn 0.4s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ===== CARDS ===== */
+  .card { background: var(--bg-glass); border: 1px solid var(--border-glass); border-radius: var(--card-radius); padding: 20px; margin-bottom: 14px; backdrop-filter: blur(10px); transition: var(--transition); }
+  .card:hover { background: var(--bg-glass-hover); }
+  .card-title { font-size: 12px; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* ===== TOTAL ASSETS ===== */
+  .asset-total-card { background: linear-gradient(135deg, rgba(26,143,160,0.2) 0%, rgba(13,79,110,0.15) 100%); border: 1px solid rgba(77,196,212,0.25); }
+  .total-amount { font-size: 32px; font-weight: 900; font-family: 'DM Mono', monospace; letter-spacing: -0.02em; line-height: 1.1; display: flex; align-items: baseline; gap: 10px; }
+  .total-badge { font-size: 14px; font-weight: 600; padding: 2px 8px; border-radius: 20px; background: rgba(62,207,142,0.15); color: var(--accent-green); font-family: 'DM Mono', monospace; }
+  .total-badge.neg { background: rgba(240,80,74,0.15); color: var(--accent-red); }
+  .debt-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-glass); }
+  .debt-label { color: var(--text-secondary); font-size: 13px; }
+  .debt-amount { font-family: 'DM Mono', monospace; font-size: 15px; color: var(--accent-red); }
+
+  /* ===== WATER BALL ===== */
+  .cashflow-section { display: flex; align-items: center; gap: 20px; padding: 4px 0; }
+  .cashflow-title { font-size: 40px; font-weight: 900; line-height: 1.15; color: var(--ocean-foam); flex-shrink: 0; }
+  .water-ball-wrap { flex: 1; display: flex; justify-content: center; }
+  .water-ball { width: 140px; height: 140px; border-radius: 50%; border: 2px solid rgba(77,196,212,0.4); overflow: hidden; position: relative; background: rgba(6,24,36,0.8); box-shadow: 0 0 30px rgba(26,143,160,0.3), inset 0 0 20px rgba(0,0,0,0.4); }
+  .water-fill { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(180deg, rgba(77,196,212,0.7) 0%, rgba(13,79,110,0.9) 100%); transition: height 1s cubic-bezier(0.4,0,0.2,1); animation: wave 3s ease-in-out infinite; }
+  @keyframes wave {
+    0%, 100% { clip-path: polygon(0% 8%, 15% 4%, 30% 8%, 45% 4%, 60% 8%, 75% 4%, 90% 8%, 100% 4%, 100% 100%, 0% 100%); }
+    50% { clip-path: polygon(0% 4%, 15% 8%, 30% 4%, 45% 8%, 60% 4%, 75% 8%, 90% 4%, 100% 8%, 100% 100%, 0% 100%); }
+  }
+  .water-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.6); z-index: 2; }
+  .water-pct { font-size: 26px; font-weight: 900; font-family: 'DM Mono', monospace; }
+  .water-sub { font-size: 12px; opacity: 0.85; margin-top: 2px; }
+  .water-shine { position: absolute; top: 12px; left: 22px; width: 30px; height: 18px; background: radial-gradient(ellipse, rgba(255,255,255,0.35) 0%, transparent 70%); border-radius: 50%; transform: rotate(-25deg); z-index: 3; }
+
+  /* ===== BALANCE CHART ===== */
+  .balance-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .balance-label { font-size: 12px; color: var(--text-muted); }
+  .balance-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .balance-col-title { font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 10px; letter-spacing: 0.05em; }
+  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .bar-label { font-size: 11px; color: var(--text-secondary); width: 32px; text-align: right; flex-shrink: 0; }
+  .bar-track { flex: 1; height: 18px; border-radius: 4px; background: rgba(255,255,255,0.05); overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; transition: width 1s cubic-bezier(0.4,0,0.2,1); display: flex; align-items: center; padding-left: 6px; font-size: 10px; font-family: 'DM Mono', monospace; color: rgba(255,255,255,0.9); font-weight: 500; white-space: nowrap; }
+  .bar-expense { background: linear-gradient(90deg, #1a6fa0, #1a8fa0); }
+  .bar-income { background: linear-gradient(90deg, #1a8060, #3ecf8e); }
+  .bar-income-2 { background: linear-gradient(90deg, #2a9060, #3ecf8e); }
+  .bar-income-3 { background: linear-gradient(90deg, #1a7050, #2eaf6e); }
+
+  /* ===== MINI CARDS GRID ===== */
+  .mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+
+  /* ===== BANK BARS ===== */
+  .bank-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .bank-name { font-size: 12px; color: var(--text-secondary); width: 30px; flex-shrink: 0; }
+  .bank-track { flex: 1; height: 22px; border-radius: 6px; background: rgba(255,255,255,0.04); overflow: hidden; position: relative; }
+  .bank-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; padding-left: 10px; font-size: 11px; font-family: 'DM Mono', monospace; font-weight: 500; white-space: nowrap; transition: width 1s ease; }
+
+  /* ===== DONUT CHART ===== */
+  .donut-wrap { display: flex; align-items: center; gap: 16px; }
+  .donut-svg { flex-shrink: 0; }
+  .donut-legend { flex: 1; }
+  .legend-item { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 11px; color: var(--text-secondary); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+  /* ===== SETTINGS / FORMS ===== */
+  .settings-section { margin-bottom: 22px; }
+  .settings-section-title { font-size: 13px; font-weight: 700; color: var(--ocean-light); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .form-row { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
+  .form-label { font-size: 12px; color: var(--text-secondary); width: 60px; flex-shrink: 0; }
+  .form-input { flex: 1; background: rgba(255,255,255,0.06); border: 1px solid var(--border-glass); border-radius: 10px; padding: 8px 12px; color: var(--text-primary); font-family: 'DM Mono', monospace; font-size: 13px; outline: none; transition: var(--transition); }
+  .form-input:focus { border-color: var(--ocean-light); background: rgba(77,196,212,0.08); }
+  .form-input::placeholder { color: var(--text-muted); }
+  select.form-input option { background: #0a2a3d; }
+  .btn { border: none; border-radius: 12px; padding: 10px 20px; font-family: 'Noto Sans TC', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: var(--transition); letter-spacing: 0.03em; }
+  .btn-primary { background: linear-gradient(135deg, var(--ocean-teal), var(--ocean-light)); color: #fff; }
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn-danger { background: rgba(240,80,74,0.15); color: var(--accent-red); border: 1px solid rgba(240,80,74,0.3); }
+  .btn-sm { padding: 6px 12px; font-size: 11px; border-radius: 8px; }
+
+  /* ===== TRANSACTION LIST ===== */
+  .tx-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border-glass); }
+  .tx-item:last-child { border-bottom: none; }
+  .tx-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--bg-glass); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .tx-info { flex: 1; }
+  .tx-name { font-size: 13px; font-weight: 500; }
+  .tx-date { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .tx-amount { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 600; }
+  .tx-amount.neg { color: var(--accent-red); }
+  .tx-amount.pos { color: var(--accent-green); }
+
+  /* ===== GIST STATUS ===== */
+  .sync-status { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); margin-top: 8px; }
+  .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-green); animation: pulse 2s ease-in-out infinite; }
+  .sync-dot.offline { background: var(--accent-red); animation: none; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  /* ===== GIST CONFIG ===== */
+  .gist-config { background: linear-gradient(135deg, rgba(240,192,64,0.08), rgba(26,143,160,0.05)); border: 1px solid rgba(240,192,64,0.2); border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+  .gist-config-title { font-size: 12px; font-weight: 700; color: var(--accent-gold); letter-spacing: 0.05em; margin-bottom: 10px; }
+
+  /* ===== STOCK ITEMS ===== */
+  .stock-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border-glass); }
+  .stock-item:last-child { border-bottom: none; }
+  .stock-ticker { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 700; color: var(--ocean-light); width: 60px; }
+  .stock-name { flex: 1; font-size: 12px; color: var(--text-secondary); }
+  .stock-val { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600; }
+  .stock-chg { font-family: 'DM Mono', monospace; font-size: 11px; padding: 2px 7px; border-radius: 6px; }
+  .stock-chg.pos { color: var(--accent-green); background: rgba(62,207,142,0.1); }
+  .stock-chg.neg { color: var(--accent-red); background: rgba(240,80,74,0.1); }
+
+  /* ===== TOAST ===== */
+  #toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); background: rgba(26,143,160,0.95); color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 13px; z-index: 9999; opacity: 0; transition: all 0.3s ease; white-space: nowrap; max-width: 90vw; }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ===== SECTION DIVIDERS ===== */
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; margin-top: 4px; }
+  .section-title { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+  .section-more { font-size: 12px; color: var(--ocean-light); cursor: pointer; }
+  .mono { font-family: 'DM Mono', monospace; }
+
+  /* ===== TABS ===== */
+  .tab-row { display: flex; gap: 6px; margin-bottom: 14px; }
+  .tab { flex: 1; text-align: center; padding: 8px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; transition: var(--transition); background: var(--bg-glass); color: var(--text-secondary); border: 1px solid var(--border-glass); }
+  .tab.active { background: rgba(26,143,160,0.2); color: var(--ocean-light); border-color: rgba(26,143,160,0.4); }
+
+  /* ===== EMPTY STATE ===== */
+  .empty { text-align: center; padding: 30px 16px; color: var(--text-muted); font-size: 13px; }
+  .empty .icon { font-size: 32px; margin-bottom: 8px; display: block; }
+
+  /* ===== [M-04] INSPECTOR MODE ===== */
+  #inspectorBtn {
+    position: fixed; top: 12px; right: 16px;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: transparent; border: none; cursor: pointer;
+    z-index: 9999; opacity: 0; transition: opacity 0.3s;
+    font-size: 14px; display: flex; align-items: center; justify-content: center;
+  }
+  #inspectorBtn:hover { opacity: 1; }
+  body.inspector-mode #inspectorBtn { opacity: 1; background: rgba(240,192,64,0.15); outline: 1px solid rgba(240,192,64,0.5); }
+  body.inspector-mode [data-m] {
+    outline: 1.5px dashed rgba(240,192,64,0.6) !important;
+    position: relative;
+  }
+  body.inspector-mode [data-m]::before {
+    content: attr(data-m);
+    position: absolute; top: 2px; left: 4px;
+    font-size: 9px; font-family: 'DM Mono', monospace;
+    background: rgba(240,192,64,0.9); color: #000;
+    padding: 1px 5px; border-radius: 4px; z-index: 9000;
+    pointer-events: none; letter-spacing: 0.04em; line-height: 1.8;
+  }
+
+  /* ===== [N-01] QUICK ADD BUTTONS ===== */
+  .quick-add-row { display: flex; gap: 10px; margin-bottom: 14px; }
+  .quick-add-btn {
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 13px 0; border-radius: 14px; border: none; cursor: pointer;
+    font-family: 'Noto Sans TC', sans-serif; font-size: 15px; font-weight: 700;
+    letter-spacing: 0.04em; transition: var(--transition);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  }
+  .quick-add-btn .q-icon { font-size: 18px; }
+  .quick-add-btn.income {
+    background: linear-gradient(135deg, #1fa86a 0%, #3ecf8e 100%);
+    color: #fff;
+  }
+  .quick-add-btn.income:hover { filter: brightness(1.12); transform: translateY(-1px); box-shadow: 0 6px 22px rgba(62,207,142,0.35); }
+  .quick-add-btn.expense {
+    background: linear-gradient(135deg, #c0362e 0%, #f0504a 100%);
+    color: #fff;
+  }
+  .quick-add-btn.expense:hover { filter: brightness(1.12); transform: translateY(-1px); box-shadow: 0 6px 22px rgba(240,80,74,0.35); }
+  .quick-add-btn:active { transform: scale(0.97) translateY(0); }
+
+  /* ===== [M-01] PLEDGE PAGE ===== */
+  .pledge-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border-glass); }
+  .pledge-item:last-child { border-bottom: none; }
+  .pledge-icon { width: 36px; height: 36px; border-radius: 10px; background: rgba(240,192,64,0.1); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .pledge-info { flex: 1; }
+  .pledge-name { font-size: 13px; font-weight: 500; }
+  .pledge-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .pledge-amount { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 600; color: var(--accent-gold); text-align: right; }
+  .pledge-status { font-size: 10px; margin-top: 2px; text-align: right; }
+  .pledge-status.active { color: var(--accent-green); }
+  .pledge-status.closed { color: var(--text-muted); }
+  .pledge-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+  .pledge-summary-item { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 12px; }
+  .pledge-summary-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+  .pledge-summary-val { font-family: 'DM Mono', monospace; font-size: 16px; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- Particles -->
+<div class="particles" id="particles"></div>
+
+<!-- [M-04] Inspector Toggle (hidden corner button) -->
+<button id="inspectorBtn" title="Inspector Mode" onclick="toggleInspector()">🔬</button>
+
+<div id="app">
+
+  <!-- Top Nav -->
+  <div class="top-nav" data-m="[M-04] TopNav">
+    <div class="nav-title">🌊 資產概覽</div>
+    <div class="nav-month" onclick="toggleMonthPicker()">
+      <span class="nav-icon">📅</span>
+      <span id="currentMonthLabel">12月</span>
+      <span>∨</span>
+    </div>
+  </div>
+
+  <!-- ===== DASHBOARD PAGE ===== -->
+  <div class="page active" id="page-dashboard" data-m="[M-01] DashboardPage">
+
+    <div class="card asset-total-card" data-m="[M-01] TotalAssets">
+      <div class="card-title">總資產</div>
+      <div class="total-amount">
+        <span id="totalAssets" class="mono">--</span>
+        <span id="totalAssetsBadge" class="total-badge">+0%</span>
+      </div>
+      <div class="debt-row">
+        <span class="debt-label">總負債</span>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span id="totalDebt" class="debt-amount mono">--</span>
+          <span id="debtBadge" class="total-badge neg" style="font-size:12px;">+0%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-m="[M-01] CashFlow">
+      <div class="cashflow-section">
+        <div class="cashflow-title">現<br>金<br>流</div>
+        <div class="water-ball-wrap">
+          <div class="water-ball">
+            <div class="water-fill" id="waterFill" style="height:50%"></div>
+            <div class="water-text">
+              <div class="water-pct" id="waterPct">50%</div>
+              <div class="water-sub" id="waterSub">$0</div>
+            </div>
+            <div class="water-shine"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-m="[M-01] Balance">
+      <div class="balance-header">
+        <div class="section-title">收支平衡</div>
+        <div class="balance-label">固定月預算 vs. 實際</div>
+      </div>
+      <div class="balance-cols">
+        <div>
+          <div class="balance-col-title">支出項目</div>
+          <div id="expenseList"></div>
+        </div>
+        <div>
+          <div class="balance-col-title">收入來源</div>
+          <div id="incomeList"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mini-grid" data-m="[M-01] MiniGrid">
+      <div class="card" style="margin:0">
+        <div class="card-title">銀行帳戶</div>
+        <div id="bankList" style="margin-top:8px;"></div>
+      </div>
+      <div class="card" style="margin:0">
+        <div class="card-title">股票資產</div>
+        <div class="donut-wrap" style="margin-top:8px;">
+          <svg class="donut-svg" width="80" height="80" viewBox="0 0 80 80" id="donutSvg">
+            <circle cx="40" cy="40" r="28" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="12"/>
+          </svg>
+          <div class="donut-legend" id="donutLegend"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sync-status">
+      <div class="sync-dot" id="syncDot"></div>
+      <span id="syncText">正在同步...</span>
+    </div>
+
+  </div><!-- end dashboard -->
+
+  <!-- ===== TRANSACTIONS PAGE ===== -->
+  <div class="page" id="page-tx" data-m="[M-01] TxPage">
+    <div style="height:12px"></div>
+    <div class="section-header">
+      <div class="section-title">交易記錄</div>
+    </div>
+    <!-- [N-01] Quick Add Buttons -->
+    <div class="quick-add-row" data-m="[N-01] QuickAdd">
+      <button class="quick-add-btn income" onclick="showAddTxType('income')">
+        <span class="q-icon">＋</span>收入
+      </button>
+      <button class="quick-add-btn expense" onclick="showAddTxType('expense')">
+        <span class="q-icon">－</span>支出
+      </button>
+    </div>
+    <div class="tab-row">
+      <div class="tab active" onclick="filterTx('all',this)">全部</div>
+      <div class="tab" onclick="filterTx('income',this)">收入</div>
+      <div class="tab" onclick="filterTx('expense',this)">支出</div>
+    </div>
+    <div class="card" style="padding:12px 16px;">
+      <div id="txList"></div>
+    </div>
+  </div>
+
+  <!-- ===== STOCKS PAGE ===== -->
+  <div class="page" id="page-stocks" data-m="[M-01] StocksPage">
+    <div style="height:12px"></div>
+    <div class="section-header">
+      <div class="section-title">股票 & ETF</div>
+      <div class="section-more" onclick="showAddStock()">＋ 新增</div>
+    </div>
+    <div class="card" style="padding:12px 16px;">
+      <div id="stockList"></div>
+    </div>
+    <div class="section-header" style="margin-top:4px;">
+      <div class="section-title">銀行帳戶</div>
+      <div class="section-more" onclick="showAddBank()">＋ 新增</div>
+    </div>
+    <div class="card" style="padding:12px 16px;">
+      <div id="bankFullList"></div>
+    </div>
+  </div>
+
+  <!-- ===== [M-01] PLEDGE PAGE ===== -->
+  <div class="page" id="page-pledge" data-m="[M-01] PledgePage">
+    <div style="height:12px"></div>
+    <div class="section-header">
+      <div class="section-title">🔒 質押管理</div>
+      <div class="section-more" onclick="showAddPledge()">＋ 新增</div>
+    </div>
+
+    <div class="card" data-m="[M-01] PledgeSummary">
+      <div class="card-title">質押總覽</div>
+      <div class="pledge-summary-grid">
+        <div class="pledge-summary-item">
+          <div class="pledge-summary-label">質押總額</div>
+          <div class="pledge-summary-val" id="pledgeTotalAmt" style="color:var(--accent-gold)">$0</div>
+        </div>
+        <div class="pledge-summary-item">
+          <div class="pledge-summary-label">預估年利息</div>
+          <div class="pledge-summary-val" id="pledgeTotalInterest" style="color:var(--accent-red)">$0</div>
+        </div>
+        <div class="pledge-summary-item">
+          <div class="pledge-summary-label">進行中筆數</div>
+          <div class="pledge-summary-val" id="pledgeActiveCount" style="color:var(--ocean-light)">0</div>
+        </div>
+        <div class="pledge-summary-item">
+          <div class="pledge-summary-label">已結清筆數</div>
+          <div class="pledge-summary-val" id="pledgeClosedCount" style="color:var(--text-muted)">0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-m="[M-01] PledgeList" style="padding:12px 16px;">
+      <div id="pledgeList"><div class="empty"><span class="icon">🔒</span>尚無質押記錄</div></div>
+    </div>
+  </div>
+
+  <!-- ===== SETTINGS PAGE ===== -->
+  <div class="page" id="page-settings" data-m="[M-01] SettingsPage">
+    <div style="height:12px"></div>
+    <div class="section-title" style="margin-bottom:14px;">⚙️ 設定與資料管理</div>
+
+    <div class="gist-config">
+      <div class="gist-config-title">🐙 GitHub Gist 雲端儲存</div>
+      <div class="form-row">
+        <div class="form-label">Token</div>
+        <input class="form-input" type="password" id="gistToken" placeholder="ghp_xxxxxxxxxx" />
+      </div>
+      <div class="form-row">
+        <div class="form-label">Gist ID</div>
+        <input class="form-input" type="text" id="gistId" placeholder="留空自動建立" />
+      </div>
+      <div style="display:flex;gap:8px;margin-top:6px;">
+        <button class="btn btn-primary btn-sm" onclick="saveGistConfig()">儲存設定</button>
+        <button class="btn btn-primary btn-sm" onclick="syncFromGist()">🔄 從雲端載入</button>
+        <button class="btn btn-primary btn-sm" onclick="syncToGist()">☁️ 上傳雲端</button>
+      </div>
+      <div class="sync-status" style="margin-top:8px;">
+        <div class="sync-dot" id="settingsSyncDot"></div>
+        <span id="settingsSyncText">未連線</span>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">📊 每月預算設定</div>
+      <div class="card" style="padding:14px 16px;">
+        <div class="form-row">
+          <div class="form-label">目標月收</div>
+          <input class="form-input" type="number" id="budgetIncome" placeholder="64350" />
+        </div>
+        <div class="form-row">
+          <div class="form-label">目標月支</div>
+          <input class="form-input" type="number" id="budgetExpense" placeholder="38550" />
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="saveBudget()">更新預算</button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">🏷️ 支出類別</div>
+      <div class="card" style="padding:14px 16px;">
+        <div id="categoryList" style="margin-bottom:10px;"></div>
+        <div class="form-row">
+          <input class="form-input" type="text" id="newCategory" placeholder="新類別名稱" />
+          <input class="form-input" type="text" id="newCategoryIcon" placeholder="🛒" style="width:50px;flex:none;" />
+          <button class="btn btn-primary btn-sm" onclick="addCategory()">＋</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">💾 資料管理</div>
+      <div class="card" style="padding:14px 16px;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-primary btn-sm" onclick="exportData()">📤 匯出 JSON</button>
+          <button class="btn btn-primary btn-sm" onclick="triggerImport()">📥 匯入 JSON</button>
+          <button class="btn btn-danger btn-sm" onclick="clearAllData()">🗑️ 清除全部</button>
+        </div>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)"/>
+      </div>
+    </div>
+  </div><!-- end settings -->
+
+</div><!-- end app -->
+
+<!-- Bottom Nav [M-04] -->
+<div class="bottom-nav" data-m="[M-04] BottomNav">
+  <button class="nav-btn active" data-page="dashboard" onclick="switchPage('dashboard',this)">
+    <span class="icon">🏠</span><span class="label">首頁</span>
+  </button>
+  <button class="nav-btn" data-page="tx" onclick="switchPage('tx',this)">
+    <span class="icon">📋</span><span class="label">明細</span>
+  </button>
+  <button class="nav-btn" data-page="stocks" onclick="switchPage('stocks',this)">
+    <span class="icon">📈</span><span class="label">資產</span>
+  </button>
+  <button class="nav-btn" data-page="pledge" onclick="switchPage('pledge',this)">
+    <span class="icon">🔒</span><span class="label">質押</span>
+  </button>
+  <button class="nav-btn" data-page="settings" onclick="switchPage('settings',this)">
+    <span class="icon">⚙️</span><span class="label">設定</span>
+  </button>
+</div>
+
+<div id="toast"></div>
+
+<!-- Add TX Modal -->
+<div id="txModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:flex-end;">
+  <div style="background:#0d2535;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:2px solid rgba(77,196,212,0.2);transition:border-top 0.2s;">
+    <div id="txModalTitle" style="font-size:16px;font-weight:700;margin-bottom:16px;">新增交易</div>
+    <div class="form-row"><div class="form-label">類型</div><select class="form-input" id="txType"><option value="expense">支出</option><option value="income">收入</option></select></div>
+    <div class="form-row"><div class="form-label">名稱</div><input class="form-input" id="txName" placeholder="房貸、薪資…" /></div>
+    <div class="form-row"><div class="form-label">金額</div><input class="form-input" type="number" id="txAmount" placeholder="0" /></div>
+    <div class="form-row"><div class="form-label">類別</div><select class="form-input" id="txCategory"></select></div>
+    <div class="form-row"><div class="form-label">日期</div><input class="form-input" type="date" id="txDate" /></div>
+    <div style="display:flex;gap:10px;margin-top:8px;">
+      <button id="txConfirmBtn" class="btn btn-primary" style="flex:1;" onclick="addTransaction()">確認新增</button>
+      <button class="btn" style="background:rgba(255,255,255,0.07);flex:1;" onclick="closeModal('txModal')">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Stock Modal -->
+<div id="stockModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:flex-end;">
+  <div style="background:#0d2535;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:1px solid rgba(77,196,212,0.2);">
+    <div style="font-size:16px;font-weight:700;margin-bottom:16px;">新增股票/ETF</div>
+    <div class="form-row"><div class="form-label">代號</div><input class="form-input" id="stockTicker" placeholder="2330、0050…" /></div>
+    <div class="form-row"><div class="form-label">名稱</div><input class="form-input" id="stockName" placeholder="台積電" /></div>
+    <div class="form-row"><div class="form-label">持股市值</div><input class="form-input" type="number" id="stockValue" placeholder="0" /></div>
+    <div class="form-row"><div class="form-label">漲跌幅%</div><input class="form-input" type="number" id="stockChange" placeholder="0.0" /></div>
+    <div style="display:flex;gap:10px;margin-top:8px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="addStock()">確認新增</button>
+      <button class="btn" style="background:rgba(255,255,255,0.07);flex:1;" onclick="closeModal('stockModal')">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Bank Modal -->
+<div id="bankModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:flex-end;">
+  <div style="background:#0d2535;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:1px solid rgba(77,196,212,0.2);">
+    <div style="font-size:16px;font-weight:700;margin-bottom:16px;">新增銀行帳戶</div>
+    <div class="form-row"><div class="form-label">銀行名</div><input class="form-input" id="bankName" placeholder="國泰、玉山…" /></div>
+    <div class="form-row"><div class="form-label">餘額</div><input class="form-input" type="number" id="bankBalance" placeholder="0" /></div>
+    <div style="display:flex;gap:10px;margin-top:8px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="addBank()">確認新增</button>
+      <button class="btn" style="background:rgba(255,255,255,0.07);flex:1;" onclick="closeModal('bankModal')">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- [M-01] Add Pledge Modal -->
+<div id="pledgeModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:flex-end;">
+  <div style="background:#0d2535;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:1px solid rgba(240,192,64,0.2);">
+    <div style="font-size:16px;font-weight:700;margin-bottom:16px;">🔒 新增質押</div>
+    <div class="form-row"><div class="form-label">名稱</div><input class="form-input" id="pledgeName" placeholder="00662 質押借款" /></div>
+    <div class="form-row"><div class="form-label">質押標的</div><input class="form-input" id="pledgeAsset" placeholder="00662、0050…" /></div>
+    <div class="form-row"><div class="form-label">借款金額</div><input class="form-input" type="number" id="pledgeAmount" placeholder="0" /></div>
+    <div class="form-row"><div class="form-label">年利率 %</div><input class="form-input" type="number" id="pledgeRate" placeholder="2.5" step="0.1" /></div>
+    <div class="form-row"><div class="form-label">開始日期</div><input class="form-input" type="date" id="pledgeStartDate" /></div>
+    <div style="display:flex;gap:10px;margin-top:8px;">
+      <button class="btn btn-primary" style="flex:1;background:linear-gradient(135deg,#a07010,#d4a020);" onclick="addPledge()">確認新增</button>
+      <button class="btn" style="background:rgba(255,255,255,0.07);flex:1;" onclick="closeModal('pledgeModal')">取消</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================================================================
+//  [M-01] CENTRAL STORE — DATA STRUCTURE
+// ===================================================================
+let db = {
+  meta: { version: 1, lastSync: null },
+  config: {
+    budgetIncome: 64350,
+    budgetExpense: 38550,
+    currentMonth: new Date().getMonth() + 1,
+    currentYear: new Date().getFullYear(),
+    gistToken: '', gistId: '',
+    categories: [
+      { name:'房貸', icon:'🏠' }, { name:'生活費', icon:'🛒' },
+      { name:'交通', icon:'🚌' }, { name:'醫療', icon:'💊' },
+      { name:'娛樂', icon:'🎮' }, { name:'其他', icon:'📦' },
+    ]
+  },
+  transactions: [],
+  banks: [
+    { id:'b1', name:'國泰', balance:1250000 },
+    { id:'b2', name:'玉山', balance:700000 },
+    { id:'b3', name:'金粉', balance:120000 },
+  ],
+  stocks: [
+    { id:'s1', ticker:'2330', name:'台積電', value:500000, change:1.2 },
+    { id:'s2', ticker:'0050', name:'元大台灣50', value:375000, change:0.8 },
+    { id:'s3', ticker:'00662', name:'富邦NASDAQ', value:250000, change:-0.5 },
+    { id:'s4', ticker:'其他', name:'其他持股', value:125000, change:0.2 },
+  ],
+  loans: [{ id:'l1', name:'房屋貸款', total:500000, remaining:420000 }],
+  pledges: [] // [M-01] Pledge Store
+};
+
+db.transactions = [
+  { id:'t1', type:'income', name:'薪資', amount:45000, category:'薪資', date:'2024-12-05' },
+  { id:'t2', type:'income', name:'獎金', amount:8200, category:'獎金', date:'2024-12-10' },
+  { id:'t3', type:'income', name:'投資收益', amount:11150, category:'投資', date:'2024-12-15' },
+  { id:'t4', type:'expense', name:'房貸', amount:8500, category:'房貸', date:'2024-12-01' },
+  { id:'t5', type:'expense', name:'生活費', amount:12350, category:'生活費', date:'2024-12-03' },
+  { id:'t6', type:'expense', name:'交通', amount:5600, category:'交通', date:'2024-12-07' },
+  { id:'t7', type:'expense', name:'保險', amount:3210, category:'其他', date:'2024-12-08' },
+  { id:'t8', type:'expense', name:'醫療', amount:2870, category:'醫療', date:'2024-12-12' },
+  { id:'t9', type:'expense', name:'娛樂', amount:4980, category:'娛樂', date:'2024-12-18' },
+  { id:'t10', type:'expense', name:'雜費', amount:1440, category:'其他', date:'2024-12-22' },
+];
+
+// [M-01] Central Store bridge
+window._store = {
+  get: () => db,
+  set: patch => { Object.assign(db, patch); saveLocal(); },
+};
+
+// ===================================================================
+//  UTILS
+// ===================================================================
+function fmt(n) {
+  if (n === undefined || n === null) return '--';
+  const abs = Math.abs(n);
+  if (abs >= 1000000) return '$' + (n/1000000).toFixed(2) + 'M';
+  if (abs >= 1000) return '$' + n.toLocaleString('zh-TW');
+  return '$' + n;
+}
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function toast(msg, dur=2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+// ===================================================================
+//  PARTICLES
+// ===================================================================
+function initParticles() {
+  const c = document.getElementById('particles');
+  for (let i = 0; i < 12; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const s = Math.random()*4+2;
+    p.style.cssText = `width:${s}px;height:${s}px;left:${Math.random()*100}%;animation-duration:${Math.random()*12+8}s;animation-delay:${Math.random()*8}s;`;
+    c.appendChild(p);
+  }
+}
+
+// ===================================================================
+//  PAGE SWITCHING
+// ===================================================================
+function switchPage(page, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (page === 'settings') renderSettings();
+  if (page === 'tx') renderTxList();
+  if (page === 'stocks') renderStocksPage();
+  if (page === 'pledge') renderPledgePage(); // [M-01]
+}
+
+// ===================================================================
+//  [M-04] INSPECTOR MODE
+// ===================================================================
+function toggleInspector() {
+  document.body.classList.toggle('inspector-mode');
+  toast(document.body.classList.contains('inspector-mode') ? '🔬 Inspector ON' : '🔬 Inspector OFF', 1500);
+}
+
+// ===================================================================
+//  DASHBOARD RENDER
+// ===================================================================
+function renderDashboard() {
+  const m = db.config.currentMonth, y = db.config.currentYear;
+  const monthTx = db.transactions.filter(t => {
+    const d = new Date(t.date);
+    return d.getMonth()+1 === m && d.getFullYear() === y;
+  });
+  const totalIncome = monthTx.filter(t=>t.type==='income').reduce((a,t)=>a+t.amount,0);
+  const totalExpense = monthTx.filter(t=>t.type==='expense').reduce((a,t)=>a+t.amount,0);
+  const cashflow = totalIncome - totalExpense;
+  const bankTotal = db.banks.reduce((a,b)=>a+b.balance,0);
+  const stockTotal = db.stocks.reduce((a,s)=>a+s.value,0);
+  const totalAssets = bankTotal + stockTotal;
+  const totalDebt = db.loans.reduce((a,l)=>a+l.remaining,0);
+
+  document.getElementById('totalAssets').textContent = fmt(totalAssets);
+  document.getElementById('totalDebt').textContent = fmt(totalDebt);
+
+  const pct = totalIncome > 0 ? Math.min(100, Math.round((cashflow / totalIncome)*100)) : 50;
+  const safePct = Math.max(5, Math.min(95, pct));
+  document.getElementById('waterFill').style.height = safePct + '%';
+  document.getElementById('waterPct').textContent = pct + '%';
+  document.getElementById('waterSub').textContent = fmt(cashflow);
+
+  const expGroups = {};
+  monthTx.filter(t=>t.type==='expense').forEach(t => { expGroups[t.category]=(expGroups[t.category]||0)+t.amount; });
+  const maxExp = Math.max(...Object.values(expGroups), 1);
+  document.getElementById('expenseList').innerHTML = Object.entries(expGroups).sort((a,b)=>b[1]-a[1]).map(([cat,val],i) => `
+    <div class="bar-row"><div class="bar-label">${i+1}.</div><div class="bar-track"><div class="bar-fill bar-expense" style="width:${Math.round(val/maxExp*100)}%">${cat}</div></div></div>
+    <div style="font-size:10px;font-family:'DM Mono',monospace;color:rgba(200,230,240,0.6);margin:-4px 0 6px 24px;">${fmt(val)}</div>
+  `).join('');
+
+  const incGroups = {};
+  monthTx.filter(t=>t.type==='income').forEach(t => { incGroups[t.category]=(incGroups[t.category]||0)+t.amount; });
+  const maxInc = Math.max(...Object.values(incGroups), 1);
+  const incColors = ['bar-income','bar-income-2','bar-income-3'];
+  document.getElementById('incomeList').innerHTML = Object.entries(incGroups).sort((a,b)=>b[1]-a[1]).map(([cat,val],i) => `
+    <div class="bar-row"><div class="bar-track"><div class="bar-fill ${incColors[i%3]}" style="width:${Math.round(val/maxInc*100)}%">${cat}</div></div></div>
+    <div style="font-size:10px;font-family:'DM Mono',monospace;color:rgba(200,230,240,0.6);margin:-4px 0 6px 4px;">${fmt(val)}</div>
+  `).join('');
+
+  const maxBank = Math.max(...db.banks.map(b=>b.balance), 1);
+  const bankColors = ['#1a8fa0','#1a7060','#2a5f80','#1a6050'];
+  document.getElementById('bankList').innerHTML = db.banks.map((b,i) => `
+    <div class="bank-bar-row">
+      <div class="bank-name">${b.name}</div>
+      <div class="bank-track"><div class="bank-fill" style="width:${Math.round(b.balance/maxBank*85)+10}%;background:${bankColors[i%4]};">${fmt(b.balance)}</div></div>
+    </div>
+  `).join('');
+
+  renderDonut();
+}
+
+function renderDonut() {
+  const stocks = db.stocks, total = stocks.reduce((a,s)=>a+s.value,0);
+  if (!total) return;
+  const colors = ['#1a8fa0','#3ecf8e','#f0c040','#4dc4d4','#f0504a','#a78bfa'];
+  const svg = document.getElementById('donutSvg');
+  const r = 28, cx = 40, cy = 40, stroke = 12, circ = 2*Math.PI*r;
+  svg.innerHTML = `<circle cx="40" cy="40" r="${r}" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="${stroke}"/>`;
+  let cumPct = 0;
+  stocks.forEach((s, i) => {
+    const pct = s.value/total, dashArr = circ*pct;
+    const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    circle.setAttribute('cx',cx); circle.setAttribute('cy',cy); circle.setAttribute('r',r);
+    circle.setAttribute('fill','none'); circle.setAttribute('stroke',colors[i%colors.length]);
+    circle.setAttribute('stroke-width',stroke);
+    circle.setAttribute('stroke-dasharray',`${dashArr} ${circ-dashArr}`);
+    circle.setAttribute('stroke-dashoffset',circ*0.25-circ*cumPct);
+    circle.setAttribute('transform',`rotate(-90 ${cx} ${cy})`);
+    svg.appendChild(circle);
+    cumPct += pct;
+  });
+  document.getElementById('donutLegend').innerHTML = stocks.map((s,i) => `
+    <div class="legend-item"><div class="legend-dot" style="background:${colors[i%colors.length]};"></div><span>${s.ticker} ${Math.round(s.value/total*100)}%</span></div>
+  `).join('');
+}
+
+// ===================================================================
+//  TRANSACTIONS PAGE
+// ===================================================================
+let txFilter = 'all';
+function filterTx(f, el) {
+  txFilter = f;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderTxList();
+}
+function renderTxList() {
+  const m = db.config.currentMonth, y = db.config.currentYear;
+  let list = db.transactions.filter(t => { const d = new Date(t.date); return d.getMonth()+1===m && d.getFullYear()===y; });
+  if (txFilter !== 'all') list = list.filter(t=>t.type===txFilter);
+  list.sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const icons = {'房貸':'🏠','生活費':'🛒','交通':'🚌','醫療':'💊','娛樂':'🎮','薪資':'💰','獎金':'🎁','投資':'📈','其他':'📦'};
+  const container = document.getElementById('txList');
+  if (!list.length) { container.innerHTML = `<div class="empty"><span class="icon">📭</span>本月無記錄</div>`; return; }
+  container.innerHTML = list.map(t => `
+    <div class="tx-item">
+      <div class="tx-icon">${icons[t.category]||'💳'}</div>
+      <div class="tx-info"><div class="tx-name">${t.name}</div><div class="tx-date">${t.category} · ${t.date}</div></div>
+      <div class="tx-amount ${t.type==='income'?'pos':'neg'}">${t.type==='income'?'+':'-'}${fmt(t.amount)}</div>
+      <div style="padding-left:8px;cursor:pointer;color:rgba(200,230,240,0.3);font-size:14px;" onclick="deleteTx('${t.id}')">✕</div>
+    </div>
+  `).join('');
+}
+/* [N-01] Quick add with pre-set type */
+function showAddTxType(type) {
+  document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('txType').value = type;
+  // populate categories and filter by type if income
+  const incomeCategories = ['薪資','獎金','投資','其他收入'];
+  const cats = type === 'income'
+    ? incomeCategories.map(n => `<option>${n}</option>`).join('')
+    : db.config.categories.map(c=>`<option>${c.name}</option>`).join('');
+  document.getElementById('txCategory').innerHTML = cats;
+  // style modal accent by type
+  const modal = document.getElementById('txModal').querySelector('div');
+  modal.style.borderTop = type==='income'
+    ? '2px solid rgba(62,207,142,0.5)'
+    : '2px solid rgba(240,80,74,0.5)';
+  document.getElementById('txModalTitle').textContent = type==='income' ? '＋ 新增收入' : '－ 新增支出';
+  document.getElementById('txModalTitle').style.color = type==='income' ? 'var(--accent-green)' : 'var(--accent-red)';
+  document.getElementById('txConfirmBtn').style.background = type==='income'
+    ? 'linear-gradient(135deg,#1fa86a,#3ecf8e)'
+    : 'linear-gradient(135deg,#c0362e,#f0504a)';
+  document.getElementById('txName').value = '';
+  document.getElementById('txAmount').value = '';
+  document.getElementById('txModal').style.display = 'flex';
+}
+function showAddTx() { showAddTxType('expense'); }
+function addTransaction() {
+  const type=document.getElementById('txType').value, name=document.getElementById('txName').value.trim(),
+    amount=parseFloat(document.getElementById('txAmount').value), category=document.getElementById('txCategory').value,
+    date=document.getElementById('txDate').value;
+  if (!name||!amount||!date) { toast('請填寫完整！'); return; }
+  db.transactions.push({ id:uid(), type, name, amount, category, date });
+  closeModal('txModal'); toast('✅ 交易已新增'); saveLocal(); renderTxList(); renderDashboard(); autoSync();
+}
+function deleteTx(id) { db.transactions=db.transactions.filter(t=>t.id!==id); renderTxList(); renderDashboard(); saveLocal(); autoSync(); }
+
+// ===================================================================
+//  STOCKS & BANKS PAGE
+// ===================================================================
+function renderStocksPage() {
+  const colors = ['#1a8fa0','#3ecf8e','#f0c040','#4dc4d4','#f0504a','#a78bfa'];
+  const stockList = document.getElementById('stockList');
+  stockList.innerHTML = !db.stocks.length ? `<div class="empty"><span class="icon">📊</span>尚未加入任何股票</div>` :
+    db.stocks.map((s,i) => `
+      <div class="stock-item">
+        <div class="stock-ticker" style="color:${colors[i%colors.length]}">${s.ticker}</div>
+        <div class="stock-name">${s.name}</div>
+        <div style="text-align:right;"><div class="stock-val">${fmt(s.value)}</div><div class="stock-chg ${s.change>=0?'pos':'neg'}">${s.change>=0?'+':''}${s.change}%</div></div>
+        <div style="padding-left:8px;cursor:pointer;color:rgba(200,230,240,0.3);font-size:14px;" onclick="deleteStock('${s.id}')">✕</div>
+      </div>`).join('');
+  const bankMax = Math.max(...db.banks.map(b=>b.balance), 1);
+  const bColors = ['#1a8fa0','#1a7060','#2a5f80'];
+  document.getElementById('bankFullList').innerHTML = !db.banks.length ? `<div class="empty"><span class="icon">🏦</span>尚未加入任何帳戶</div>` :
+    db.banks.map((b,i) => `
+      <div class="bank-bar-row">
+        <div class="bank-name">${b.name}</div>
+        <div class="bank-track"><div class="bank-fill" style="width:${Math.round(b.balance/bankMax*80)+15}%;background:${bColors[i%bColors.length]};">${fmt(b.balance)}</div></div>
+        <div style="padding-left:8px;cursor:pointer;color:rgba(200,230,240,0.3);font-size:14px;" onclick="deleteBank('${b.id}')">✕</div>
+      </div>`).join('');
+}
+function showAddStock() { document.getElementById('stockModal').style.display = 'flex'; }
+function addStock() {
+  const ticker=document.getElementById('stockTicker').value.trim(), name=document.getElementById('stockName').value.trim(),
+    value=parseFloat(document.getElementById('stockValue').value), change=parseFloat(document.getElementById('stockChange').value)||0;
+  if (!ticker||!name||!value) { toast('請填寫完整！'); return; }
+  db.stocks.push({ id:uid(), ticker, name, value, change });
+  closeModal('stockModal'); toast('✅ 股票已新增'); saveLocal(); renderStocksPage(); renderDashboard(); autoSync();
+}
+function deleteStock(id) { db.stocks=db.stocks.filter(s=>s.id!==id); renderStocksPage(); renderDashboard(); saveLocal(); autoSync(); }
+function showAddBank() { document.getElementById('bankModal').style.display = 'flex'; }
+function addBank() {
+  const name=document.getElementById('bankName').value.trim(), balance=parseFloat(document.getElementById('bankBalance').value);
+  if (!name||!balance) { toast('請填寫完整！'); return; }
+  db.banks.push({ id:uid(), name, balance });
+  closeModal('bankModal'); toast('✅ 帳戶已新增'); saveLocal(); renderStocksPage(); renderDashboard(); autoSync();
+}
+function deleteBank(id) { db.banks=db.banks.filter(b=>b.id!==id); renderStocksPage(); renderDashboard(); saveLocal(); autoSync(); }
+
+// ===================================================================
+//  [M-01] PLEDGE PAGE
+// ===================================================================
+function showAddPledge() {
+  document.getElementById('pledgeStartDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('pledgeModal').style.display = 'flex';
+}
+function addPledge() {
+  const name=document.getElementById('pledgeName').value.trim(), asset=document.getElementById('pledgeAsset').value.trim(),
+    amount=parseFloat(document.getElementById('pledgeAmount').value)||0, rate=parseFloat(document.getElementById('pledgeRate').value)||2.5,
+    startDate=document.getElementById('pledgeStartDate').value;
+  if (!name||!amount) { toast('請填寫名稱與金額！'); return; }
+  db.pledges.push({ id:uid(), name, asset, amount, rate, startDate, status:'active' });
+  closeModal('pledgeModal'); toast('✅ 質押已新增'); saveLocal(); renderPledgePage(); autoSync();
+}
+function deletePledge(id) { db.pledges=db.pledges.filter(p=>p.id!==id); renderPledgePage(); saveLocal(); autoSync(); }
+function togglePledgeStatus(id) {
+  const p = db.pledges.find(p=>p.id===id);
+  if (p) { p.status = p.status==='active'?'closed':'active'; saveLocal(); renderPledgePage(); }
+}
+function renderPledgePage() {
+  const pledges = db.pledges || [];
+  const active = pledges.filter(p=>p.status==='active');
+  const closed = pledges.filter(p=>p.status==='closed');
+  const totalAmt = active.reduce((s,p)=>s+p.amount,0);
+  const totalInterest = active.reduce((s,p)=>s+(p.amount*p.rate/100),0);
+  document.getElementById('pledgeTotalAmt').textContent = fmt(totalAmt);
+  document.getElementById('pledgeTotalInterest').textContent = fmt(Math.round(totalInterest));
+  document.getElementById('pledgeActiveCount').textContent = active.length + ' 筆';
+  document.getElementById('pledgeClosedCount').textContent = closed.length + ' 筆';
+  const list = document.getElementById('pledgeList');
+  if (!pledges.length) { list.innerHTML = '<div class="empty"><span class="icon">🔒</span>尚無質押記錄，點右上角新增</div>'; return; }
+  list.innerHTML = pledges.map(p => `
+    <div class="pledge-item">
+      <div class="pledge-icon">${p.status==='active'?'🔒':'🔓'}</div>
+      <div class="pledge-info">
+        <div class="pledge-name">${p.name}</div>
+        <div class="pledge-meta">${p.asset ? p.asset+' · ' : ''}${p.startDate} · 年利 ${p.rate}%</div>
+      </div>
+      <div>
+        <div class="pledge-amount">${fmt(p.amount)}</div>
+        <div class="pledge-status ${p.status}" onclick="togglePledgeStatus('${p.id}')" style="cursor:pointer;">${p.status==='active'?'✅ 進行中':'⬜ 已結清'}</div>
+      </div>
+      <div style="padding-left:6px;cursor:pointer;color:rgba(200,230,240,0.3);font-size:14px;" onclick="deletePledge('${p.id}')">✕</div>
+    </div>
+  `).join('');
+}
+
+// ===================================================================
+//  SETTINGS
+// ===================================================================
+function renderSettings() {
+  document.getElementById('gistToken').value = db.config.gistToken||'';
+  document.getElementById('gistId').value = db.config.gistId||'';
+  document.getElementById('budgetIncome').value = db.config.budgetIncome||'';
+  document.getElementById('budgetExpense').value = db.config.budgetExpense||'';
+  renderCategoryList(); updateSyncUI();
+}
+function renderCategoryList() {
+  document.getElementById('categoryList').innerHTML = db.config.categories.map((c,i) => `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+      <span>${c.icon}</span><span style="flex:1;font-size:13px;">${c.name}</span>
+      <button class="btn btn-danger btn-sm" onclick="deleteCategory(${i})">✕</button>
+    </div>`).join('');
+}
+function addCategory() {
+  const name=document.getElementById('newCategory').value.trim(), icon=document.getElementById('newCategoryIcon').value.trim()||'📌';
+  if (!name) return;
+  db.config.categories.push({ name, icon });
+  document.getElementById('newCategory').value=''; document.getElementById('newCategoryIcon').value='';
+  renderCategoryList(); saveLocal();
+}
+function deleteCategory(i) { db.config.categories.splice(i,1); renderCategoryList(); saveLocal(); }
+function saveBudget() {
+  db.config.budgetIncome=parseFloat(document.getElementById('budgetIncome').value)||0;
+  db.config.budgetExpense=parseFloat(document.getElementById('budgetExpense').value)||0;
+  saveLocal(); toast('✅ 預算已更新');
+}
+function saveGistConfig() {
+  db.config.gistToken=document.getElementById('gistToken').value.trim();
+  db.config.gistId=document.getElementById('gistId').value.trim();
+  saveLocal(); toast('✅ Gist 設定已儲存'); updateSyncUI();
+}
+
+// ===================================================================
+//  GITHUB GIST SYNC
+// ===================================================================
+const GIST_FILENAME = 'asset_db.json';
+async function syncToGist() {
+  const token = db.config.gistToken;
+  if (!token) { toast('⚠️ 請先設定 GitHub Token'); return; }
+  setSyncStatus('syncing');
+  try {
+    const payload = { ...db }; payload.meta.lastSync = new Date().toISOString();
+    const body = { files: { [GIST_FILENAME]: { content: JSON.stringify(payload, null, 2) } } };
+    let url = 'https://api.github.com/gists', method = 'POST';
+    if (db.config.gistId) { url += '/' + db.config.gistId; method = 'PATCH'; }
+    else { body.description = '資產管理 Dashboard 資料庫'; body.public = false; }
+    const res = await fetch(url, { method, headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+    if (!db.config.gistId) { db.config.gistId=data.id; document.getElementById('gistId').value=data.id; saveLocal(); toast('✅ Gist 已建立：'+data.id); }
+    else { toast('✅ 已同步至 GitHub Gist'); }
+    setSyncStatus('ok');
+  } catch(e) { setSyncStatus('error'); toast('❌ 同步失敗：'+e.message); }
+}
+async function syncFromGist() {
+  const token=db.config.gistToken, gistId=db.config.gistId;
+  if (!token||!gistId) { toast('⚠️ 請先設定 Token 和 Gist ID'); return; }
+  setSyncStatus('syncing');
+  try {
+    const res = await fetch(`https://api.github.com/gists/${gistId}`, { headers: { Authorization: `token ${token}` } });
+    if (!res.ok) throw new Error(await res.text());
+    const gist = await res.json(); const raw = gist.files[GIST_FILENAME]?.content;
+    if (!raw) throw new Error('找不到資料檔案');
+    const loaded = JSON.parse(raw); const gistToken=db.config.gistToken, gistIdVal=db.config.gistId;
+    db=loaded; db.config.gistToken=gistToken; db.config.gistId=gistIdVal;
+    if (!db.pledges) db.pledges = []; // [M-01] ensure pledge array exists
+    saveLocal(); toast('✅ 雲端資料已載入'); setSyncStatus('ok'); renderDashboard(); renderSettings();
+  } catch(e) { setSyncStatus('error'); toast('❌ 載入失敗：'+e.message); }
+}
+let autoSyncTimer;
+function autoSync() {
+  clearTimeout(autoSyncTimer);
+  if (db.config.gistToken && db.config.gistId) autoSyncTimer = setTimeout(syncToGist, 3000);
+}
+function setSyncStatus(s) {
+  const dot=document.getElementById('syncDot'), txt=document.getElementById('syncText');
+  const dot2=document.getElementById('settingsSyncDot'), txt2=document.getElementById('settingsSyncText');
+  if (s==='ok') { const ts=new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'}); [dot,dot2].forEach(d=>d&&(d.className='sync-dot')); [txt,txt2].forEach(t=>t&&(t.textContent='已同步 '+ts)); }
+  else if (s==='syncing') { [dot,dot2].forEach(d=>d&&(d.className='sync-dot')); [txt,txt2].forEach(t=>t&&(t.textContent='同步中…')); }
+  else { [dot,dot2].forEach(d=>d&&(d.className='sync-dot offline')); [txt,txt2].forEach(t=>t&&(t.textContent='同步失敗')); }
+}
+function updateSyncUI() {
+  if (db.config.gistToken) { setSyncStatus(db.config.gistId?'ok':'syncing'); document.getElementById('settingsSyncText').textContent=db.config.gistId?'已設定 Gist':'Token 已設定，未建立 Gist'; }
+  else { setSyncStatus('error'); document.getElementById('settingsSyncText').textContent='未設定 Token'; }
+}
+
+// ===================================================================
+//  STORAGE
+// ===================================================================
+function saveLocal() { try { localStorage.setItem('assetDB', JSON.stringify(db)); } catch(e) {} }
+function loadLocal() {
+  try {
+    const raw = localStorage.getItem('assetDB');
+    if (raw) { const loaded = JSON.parse(raw); db = loaded; if (!db.pledges) db.pledges = []; } // [M-01] migrate
+  } catch(e) {}
+}
+function exportData() {
+  const blob = new Blob([JSON.stringify(db, null, 2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `asset_db_${new Date().toISOString().slice(0,10)}.json`; a.click();
+}
+function triggerImport() { document.getElementById('importFile').click(); }
+function importData(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const loaded = JSON.parse(ev.target.result); const token=db.config.gistToken, gistId=db.config.gistId;
+      db=loaded; if (!db.config.gistToken) { db.config.gistToken=token; db.config.gistId=gistId; }
+      if (!db.pledges) db.pledges=[]; // [M-01] migrate
+      saveLocal(); toast('✅ 資料已匯入'); renderDashboard(); renderSettings();
+    } catch { toast('❌ 格式錯誤'); }
+  };
+  reader.readAsText(file);
+}
+function clearAllData() {
+  if (!confirm('確定要清除所有資料？')) return;
+  const token=db.config.gistToken, gistId=db.config.gistId;
+  db = { meta:{version:1,lastSync:null}, config:{budgetIncome:0,budgetExpense:0,currentMonth:new Date().getMonth()+1,currentYear:new Date().getFullYear(),gistToken:token,gistId:gistId,categories:[]}, transactions:[], banks:[], stocks:[], loans:[], pledges:[] };
+  saveLocal(); renderDashboard(); renderSettings(); toast('🗑️ 資料已清除');
+}
+
+// ===================================================================
+//  MONTH PICKER
+// ===================================================================
+function toggleMonthPicker() {
+  const months=['一','二','三','四','五','六','七','八','九','十','十一','十二'], cur=db.config.currentMonth;
+  const modal = document.createElement('div');
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;display:flex;align-items:center;justify-content:center;';
+  modal.innerHTML=`<div style="background:#0d2535;border-radius:20px;padding:20px;width:280px;border:1px solid rgba(77,196,212,0.2);">
+    <div style="font-size:15px;font-weight:700;margin-bottom:14px;text-align:center;">選擇月份</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+      ${months.map((m,i)=>`<button onclick="selectMonth(${i+1},this.closest('[style]'))" style="padding:10px 0;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:${cur===i+1?'rgba(26,143,160,0.3)':'rgba(255,255,255,0.05)'};color:${cur===i+1?'var(--ocean-light)':'var(--text-secondary)'};font-family:Noto Sans TC,sans-serif;cursor:pointer;font-size:13px;">${m}月</button>`).join('')}
+    </div>
+    <button onclick="this.closest('[style]').remove()" style="margin-top:14px;width:100%;padding:10px;border-radius:10px;border:none;background:rgba(255,255,255,0.07);color:var(--text-secondary);font-family:Noto Sans TC,sans-serif;cursor:pointer;">取消</button>
+  </div>`;
+  document.body.appendChild(modal);
+}
+function selectMonth(m, overlay) {
+  db.config.currentMonth=m; document.getElementById('currentMonthLabel').textContent=m+'月';
+  overlay.remove(); renderDashboard(); renderTxList();
+}
+
+// ===================================================================
+//  INIT
+// ===================================================================
+window.addEventListener('load', () => {
+  initParticles(); loadLocal(); renderDashboard();
+  document.getElementById('currentMonthLabel').textContent = db.config.currentMonth + '月';
+  if (db.config.gistToken) { setSyncStatus(db.config.gistId?'ok':'error'); }
+  else { document.getElementById('syncDot').className='sync-dot offline'; document.getElementById('syncText').textContent='未設定雲端同步'; }
+  document.querySelectorAll('[id$="Modal"]').forEach(m => { m.addEventListener('click', e => { if (e.target===m) m.style.display='none'; }); });
+});
+</script>
+</body>
+</html>
