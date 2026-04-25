@@ -68,6 +68,7 @@
   /* ===== CARDS ===== */
   .card { background: var(--bg-glass); border: 1px solid var(--border-glass); border-radius: var(--card-radius); padding: 20px; margin-bottom: 14px; backdrop-filter: blur(10px); transition: var(--transition); }
   .card:hover { background: var(--bg-glass-hover); }
+  .card[onclick]:hover { border-color: rgba(77,196,212,0.3); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
   .card-title { font-size: 12px; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
  
   /* ===== TOTAL ASSETS ===== */
@@ -80,29 +81,34 @@
   .debt-amount { font-family: 'DM Mono', monospace; font-size: 15px; color: var(--accent-red); }
  
   /* ===== WATER BALL ===== */
-  .cashflow-section { display: flex; align-items: center; gap: 20px; padding: 4px 0; }
-  .cashflow-title { font-size: 40px; font-weight: 900; line-height: 1.15; color: var(--ocean-foam); flex-shrink: 0; }
-  .water-ball-wrap { flex: 1; display: flex; justify-content: center; }
-  .water-ball { width: 140px; height: 140px; border-radius: 50%; border: 2px solid rgba(77,196,212,0.4); overflow: hidden; position: relative; background: rgba(6,24,36,0.8); box-shadow: 0 0 30px rgba(26,143,160,0.3), inset 0 0 20px rgba(0,0,0,0.4); }
+  .cashflow-section { display: flex; align-items: center; gap: 16px; padding: 4px 0; }
+  .cashflow-title { font-size: 22px; font-weight: 900; line-height: 1.3; color: var(--ocean-foam); flex-shrink: 0; writing-mode: vertical-rl; letter-spacing: 0.1em; }
+  .water-ball-wrap { flex: 1; display: flex; justify-content: center; position: relative; }
+  .cashflow-stats { flex: 1; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; }
+  .cashflow-stat-top { text-align: right; }
+  .cashflow-stat-bot { text-align: left; }
+  .cashflow-stat-label { font-size: 10px; color: var(--text-muted); letter-spacing: 0.06em; margin-bottom: 2px; }
+  .cashflow-stat-val { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 700; }
+  .water-ball { width: 110px; height: 110px; border-radius: 50%; border: 2px solid rgba(77,196,212,0.4); overflow: hidden; position: relative; background: rgba(6,24,36,0.8); box-shadow: 0 0 30px rgba(26,143,160,0.3), inset 0 0 20px rgba(0,0,0,0.4); }
   .water-fill { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(180deg, rgba(77,196,212,0.7) 0%, rgba(13,79,110,0.9) 100%); transition: height 1s cubic-bezier(0.4,0,0.2,1); animation: wave 3s ease-in-out infinite; }
   @keyframes wave {
     0%, 100% { clip-path: polygon(0% 8%, 15% 4%, 30% 8%, 45% 4%, 60% 8%, 75% 4%, 90% 8%, 100% 4%, 100% 100%, 0% 100%); }
     50% { clip-path: polygon(0% 4%, 15% 8%, 30% 4%, 45% 8%, 60% 4%, 75% 8%, 90% 4%, 100% 8%, 100% 100%, 0% 100%); }
   }
   .water-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.6); z-index: 2; }
-  .water-pct { font-size: 26px; font-weight: 900; font-family: 'DM Mono', monospace; }
-  .water-sub { font-size: 12px; opacity: 0.85; margin-top: 2px; }
-  .water-shine { position: absolute; top: 12px; left: 22px; width: 30px; height: 18px; background: radial-gradient(ellipse, rgba(255,255,255,0.35) 0%, transparent 70%); border-radius: 50%; transform: rotate(-25deg); z-index: 3; }
+  .water-pct { font-size: 22px; font-weight: 900; font-family: 'DM Mono', monospace; }
+  .water-sub { font-size: 10px; opacity: 0.85; margin-top: 2px; }
+  .water-shine { position: absolute; top: 10px; left: 18px; width: 24px; height: 14px; background: radial-gradient(ellipse, rgba(255,255,255,0.35) 0%, transparent 70%); border-radius: 50%; transform: rotate(-25deg); z-index: 3; }
  
   /* ===== BALANCE CHART ===== */
   .balance-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
   .balance-label { font-size: 12px; color: var(--text-muted); }
   .balance-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .balance-col-title { font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 10px; letter-spacing: 0.05em; }
-  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 2px; }
   .bar-label { font-size: 11px; color: var(--text-secondary); width: 32px; text-align: right; flex-shrink: 0; }
-  .bar-track { flex: 1; height: 18px; border-radius: 4px; background: rgba(255,255,255,0.05); overflow: hidden; }
-  .bar-fill { height: 100%; border-radius: 4px; transition: width 1s cubic-bezier(0.4,0,0.2,1); display: flex; align-items: center; padding-left: 6px; font-size: 10px; font-family: 'DM Mono', monospace; color: rgba(255,255,255,0.9); font-weight: 500; white-space: nowrap; }
+  .bar-track { flex: 1; height: 14px; border-radius: 4px; background: rgba(255,255,255,0.05); overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; transition: width 1s cubic-bezier(0.4,0,0.2,1); }
   .bar-expense { background: linear-gradient(90deg, #1a6fa0, #1a8fa0); }
   .bar-income { background: linear-gradient(90deg, #1a8060, #3ecf8e); }
   .bar-income-2 { background: linear-gradient(90deg, #2a9060, #3ecf8e); }
@@ -308,6 +314,14 @@
   .debt-summary-lbl { font-size: 10px; color: var(--text-muted); margin-bottom: 3px; }
   .debt-summary-val { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 700; }
  
+  /* ===== ICON PICKER ===== */
+  .icon-picker-overlay { position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:700;display:flex;align-items:center;justify-content:center; }
+  .icon-picker-box { background:#0d2535;border-radius:20px;padding:18px;width:300px;max-height:60vh;overflow-y:auto;border:1px solid rgba(77,196,212,0.25);box-shadow:0 20px 60px rgba(0,0,0,0.5); }
+  .icon-picker-title { font-size:13px;font-weight:700;color:var(--ocean-foam);margin-bottom:12px;text-align:center; }
+  .icon-picker-grid { display:grid;grid-template-columns:repeat(7,1fr);gap:6px; }
+  .icon-picker-item { width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;background:rgba(255,255,255,0.04);border:1px solid transparent;transition:all 0.15s; }
+  .icon-picker-item:hover { background:rgba(77,196,212,0.2);border-color:rgba(77,196,212,0.4); }
+
   /* ===== [M-05] TX MONTH COLLAPSE ===== */
   .tx-month-group { margin-bottom: 10px; }
   .tx-month-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: rgba(255,255,255,0.04); border-radius: 12px; cursor: pointer; transition: var(--transition); user-select: none; margin-bottom: 4px; }
@@ -349,7 +363,7 @@
   <!-- ===== DASHBOARD PAGE ===== -->
   <div class="page active" id="page-dashboard" data-m="[M-01] DashboardPage">
  
-    <div class="card asset-total-card" data-m="[M-01] TotalAssets">
+    <div class="card asset-total-card" data-m="[M-01] TotalAssets" onclick="switchPage('stocks', document.querySelector('[data-page=stocks]'))" style="cursor:pointer;">
       <div class="card-title">總資產</div>
       <div class="total-amount">
         <span id="totalAssets" class="mono">--</span>
@@ -364,7 +378,7 @@
       </div>
     </div>
  
-    <div class="card" data-m="[M-01] CashFlow">
+    <div class="card" data-m="[M-01] CashFlow" onclick="switchPage('tx', document.querySelector('[data-page=tx]'))" style="cursor:pointer;">
       <div class="cashflow-section">
         <div class="cashflow-title">現<br>金<br>流</div>
         <div class="water-ball-wrap">
@@ -377,10 +391,20 @@
             <div class="water-shine"></div>
           </div>
         </div>
+        <div class="cashflow-stats">
+          <div class="cashflow-stat-top">
+            <div class="cashflow-stat-label">▲ 收入</div>
+            <div class="cashflow-stat-val" id="cfIncome" style="color:var(--accent-green)">--</div>
+          </div>
+          <div class="cashflow-stat-bot">
+            <div class="cashflow-stat-label">▼ 支出</div>
+            <div class="cashflow-stat-val" id="cfExpense" style="color:var(--accent-red)">--</div>
+          </div>
+        </div>
       </div>
     </div>
  
-    <div class="card" data-m="[M-01] Balance">
+    <div class="card" data-m="[M-01] Balance" onclick="switchPage('tx', document.querySelector('[data-page=tx]'))" style="cursor:pointer;">
       <div class="balance-header">
         <div class="section-title">收支平衡</div>
         <div class="balance-label">固定月預算 vs. 實際</div>
@@ -398,11 +422,11 @@
     </div>
  
     <div class="mini-grid" data-m="[M-01] MiniGrid">
-      <div class="card" style="margin:0">
+      <div class="card" style="margin:0;cursor:pointer;" onclick="switchPage('stocks', document.querySelector('[data-page=stocks]'))">
         <div class="card-title">銀行帳戶</div>
         <div id="bankList" style="margin-top:8px;"></div>
       </div>
-      <div class="card" style="margin:0">
+      <div class="card" style="margin:0;cursor:pointer;" onclick="switchPage('stocks', document.querySelector('[data-page=stocks]'))">
         <div class="card-title">股票資產</div>
         <div class="donut-wrap" style="margin-top:8px;">
           <svg class="donut-svg" width="80" height="80" viewBox="0 0 80 80" id="donutSvg">
@@ -571,8 +595,22 @@
         <div id="categoryList" style="margin-bottom:10px;"></div>
         <div class="form-row">
           <input class="form-input" type="text" id="newCategory" placeholder="新類別名稱" />
-          <input class="form-input" type="text" id="newCategoryIcon" placeholder="🛒" style="width:50px;flex:none;" />
+          <div id="catIconPickerBtn" onclick="toggleIconPicker('catIconPickerBtn','newCategoryIcon')" style="width:40px;height:38px;border-radius:10px;border:1px solid var(--border-glass);background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;flex-shrink:0;" title="選擇圖標">🛒</div>
+          <input type="hidden" id="newCategoryIcon" value="🛒" />
           <button class="btn btn-primary btn-sm" onclick="addCategory()">＋</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">💹 收入類別</div>
+      <div class="card" style="padding:14px 16px;">
+        <div id="incomeCategoryList" style="margin-bottom:10px;"></div>
+        <div class="form-row">
+          <input class="form-input" type="text" id="newIncomeCategory" placeholder="新收入類別名稱" />
+          <div id="incCatIconPickerBtn" onclick="toggleIconPicker('incCatIconPickerBtn','newIncomeCategoryIcon')" style="width:40px;height:38px;border-radius:10px;border:1px solid var(--border-glass);background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;flex-shrink:0;" title="選擇圖標">💰</div>
+          <input type="hidden" id="newIncomeCategoryIcon" value="💰" />
+          <button class="btn btn-primary btn-sm" onclick="addIncomeCategory()">＋</button>
         </div>
       </div>
     </div>
@@ -797,10 +835,20 @@ window._store = {
 // ===================================================================
 function fmt(n) {
   if (n === undefined || n === null) return '--';
+  const sign = n < 0 ? '-' : '';
   const abs = Math.abs(n);
-  if (abs >= 1000000) return '$' + (n/1000000).toFixed(2) + 'M';
-  if (abs >= 1000) return '$' + n.toLocaleString('zh-TW');
-  return '$' + n;
+  if (abs >= 100000000) return sign + '$' + (abs/100000000).toFixed(2) + '億';
+  if (abs >= 10000) {
+    const wan = abs / 10000;
+    const str = wan % 1 === 0 ? wan.toFixed(0) : wan.toFixed(2).replace(/\.?0+$/, '');
+    return sign + '$' + str + '萬';
+  }
+  if (abs >= 1) return sign + '$' + parseFloat(abs.toFixed(2)).toLocaleString('zh-TW');
+  return sign + '$' + parseFloat(n.toFixed(2));
+}
+function fmtPct(n) {
+  if (n === undefined || n === null) return '--';
+  return parseFloat(n.toFixed(2)) + '%';
 }
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 function toast(msg, dur=2500) {
@@ -861,37 +909,70 @@ function renderDashboard() {
     return d.getMonth()+1 === m && d.getFullYear() === y;
   });
   const totalIncome = monthTx.filter(t=>t.type==='income').reduce((a,t)=>a+t.amount,0);
-  const totalExpense = monthTx.filter(t=>t.type==='expense').reduce((a,t)=>a+t.amount,0);
+  // Include recurring fixed expenses in cashflow (active, non-settled templates)
+  const recurringMonthlyTotal = (db.recurringTemplates||[]).filter(t=>t.status!=='settled').reduce((s,t)=>s+t.amount,0);
+  const txExpense = monthTx.filter(t=>t.type==='expense').reduce((a,t)=>a+t.amount,0);
+  // Avoid double-counting: only add recurring if not already generated as transactions this month
+  const autoGeneratedThisMonth = monthTx.filter(t=>t.auto && t.recurringId).reduce((s,t)=>s+t.amount,0);
+  const recurringExtra = Math.max(0, recurringMonthlyTotal - autoGeneratedThisMonth);
+  const totalExpense = txExpense + recurringExtra;
   const cashflow = totalIncome - totalExpense;
   const bankTotal = db.banks.reduce((a,b)=>a+b.balance,0);
   const stockTotal = db.stocks.reduce((a,s)=>a+s.value,0);
   const totalAssets = bankTotal + stockTotal;
   const totalDebt = db.loans.reduce((a,l)=>a+l.remaining,0);
- 
+
   document.getElementById('totalAssets').textContent = fmt(totalAssets);
   document.getElementById('totalDebt').textContent = fmt(totalDebt);
- 
+
   const pct = totalIncome > 0 ? Math.min(100, Math.round((cashflow / totalIncome)*100)) : 50;
   const safePct = Math.max(5, Math.min(95, pct));
   document.getElementById('waterFill').style.height = safePct + '%';
   document.getElementById('waterPct').textContent = pct + '%';
   document.getElementById('waterSub').textContent = fmt(cashflow);
- 
+  const cfIncEl = document.getElementById('cfIncome');
+  const cfExpEl = document.getElementById('cfExpense');
+  if (cfIncEl) cfIncEl.textContent = fmt(totalIncome);
+  if (cfExpEl) cfExpEl.textContent = fmt(totalExpense);
+
+  // Expense categories: each category gets its own bar (no stacking)
   const expGroups = {};
   monthTx.filter(t=>t.type==='expense').forEach(t => { expGroups[t.category]=(expGroups[t.category]||0)+t.amount; });
+  // Add recurring fixed expenses as separate category entries
+  if (recurringExtra > 0) {
+    (db.recurringTemplates||[]).filter(t=>t.status!=='settled').forEach(tpl => {
+      const alreadyInTx = monthTx.some(t=>t.recurringId===tpl.id);
+      if (!alreadyInTx) {
+        expGroups[tpl.category] = (expGroups[tpl.category]||0) + tpl.amount;
+      }
+    });
+  }
   const maxExp = Math.max(...Object.values(expGroups), 1);
-  document.getElementById('expenseList').innerHTML = Object.entries(expGroups).sort((a,b)=>b[1]-a[1]).map(([cat,val],i) => `
-    <div class="bar-row"><div class="bar-label">${i+1}.</div><div class="bar-track"><div class="bar-fill bar-expense" style="width:${Math.round(val/maxExp*100)}%">${cat}</div></div></div>
-    <div style="font-size:10px;font-family:'DM Mono',monospace;color:rgba(200,230,240,0.6);margin:-4px 0 6px 24px;">${fmt(val)}</div>
+  document.getElementById('expenseList').innerHTML = Object.entries(expGroups).sort((a,b)=>b[1]-a[1]).map(([cat,val]) => `
+    <div class="bar-row" style="margin-bottom:10px;">
+      <div class="bar-track" style="flex:1;">
+        <div class="bar-fill bar-expense" style="width:${Math.round(val/maxExp*100)}%;min-width:2px;"></div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;font-family:'DM Mono',monospace;color:rgba(200,230,240,0.7);margin:-6px 0 8px 0;">
+      <span>${cat}</span><span>${fmt(val)}</span>
+    </div>
   `).join('');
- 
+
+  // Income categories: each category gets its own bar (no stacking)
   const incGroups = {};
   monthTx.filter(t=>t.type==='income').forEach(t => { incGroups[t.category]=(incGroups[t.category]||0)+t.amount; });
   const maxInc = Math.max(...Object.values(incGroups), 1);
   const incColors = ['bar-income','bar-income-2','bar-income-3'];
   document.getElementById('incomeList').innerHTML = Object.entries(incGroups).sort((a,b)=>b[1]-a[1]).map(([cat,val],i) => `
-    <div class="bar-row"><div class="bar-track"><div class="bar-fill ${incColors[i%3]}" style="width:${Math.round(val/maxInc*100)}%">${cat}</div></div></div>
-    <div style="font-size:10px;font-family:'DM Mono',monospace;color:rgba(200,230,240,0.6);margin:-4px 0 6px 4px;">${fmt(val)}</div>
+    <div class="bar-row" style="margin-bottom:10px;">
+      <div class="bar-track" style="flex:1;">
+        <div class="bar-fill ${incColors[i%3]}" style="width:${Math.round(val/maxInc*100)}%;min-width:2px;"></div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;font-family:'DM Mono',monospace;color:rgba(200,230,240,0.7);margin:-6px 0 8px 0;">
+      <span>${cat}</span><span>${fmt(val)}</span>
+    </div>
   `).join('');
  
   const maxBank = Math.max(...db.banks.map(b=>b.balance), 1);
@@ -1154,7 +1235,11 @@ function renderTxList() {
   });
   list.sort((a,b) => new Date(b.date) - new Date(a.date));
  
-  const icons = {'房貸':'🏠','生活費':'🛒','交通':'🚌','醫療':'💊','娛樂':'🎮','薪資':'💰','獎金':'🎁','投資':'📈','其他':'📦','其他收入':'💹'};
+  const icons = {};
+  (db.config.categories||[]).forEach(c=>icons[c.name]=c.icon);
+  (db.config.incomeCategories||[]).forEach(c=>icons[c.name]=c.icon);
+  // fallbacks
+  Object.assign(icons, {'房貸':'🏠','生活費':'🛒','交通':'🚌','醫療':'💊','娛樂':'🎮','薪資':'💰','獎金':'🎁','投資':'📈','其他':'📦','其他收入':'💹'});
   const container = document.getElementById('txList');
  
   if (!list.length) {
@@ -1215,9 +1300,11 @@ function showAddTxType(type) {
   document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
   document.getElementById('txType').value = type;
   // populate categories and filter by type if income
-  const incomeCategories = ['薪資','獎金','投資','其他收入'];
+  const incomeCats = (db.config.incomeCategories && db.config.incomeCategories.length)
+    ? db.config.incomeCategories.map(c=>c.name)
+    : ['薪資','獎金','投資','其他收入'];
   const cats = type === 'income'
-    ? incomeCategories.map(n => `<option>${n}</option>`).join('')
+    ? incomeCats.map(n => `<option>${n}</option>`).join('')
     : db.config.categories.map(c=>`<option>${c.name}</option>`).join('');
   document.getElementById('txCategory').innerHTML = cats;
   // style modal accent by type
@@ -1496,12 +1583,12 @@ function renderSettings() {
   document.getElementById('gistId').value = db.config.gistId||'';
   document.getElementById('budgetIncome').value = db.config.budgetIncome||'';
   document.getElementById('budgetExpense').value = db.config.budgetExpense||'';
-  renderCategoryList(); updateSyncUI();
+  renderCategoryList(); renderIncomeCategoryList(); updateSyncUI();
 }
 function renderCategoryList() {
   document.getElementById('categoryList').innerHTML = db.config.categories.map((c,i) => `
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-      <span>${c.icon}</span><span style="flex:1;font-size:13px;">${c.name}</span>
+      <span style="font-size:18px;">${c.icon}</span><span style="flex:1;font-size:13px;">${c.name}</span>
       <button class="btn btn-danger btn-sm" onclick="deleteCategory(${i})">✕</button>
     </div>`).join('');
 }
@@ -1509,10 +1596,58 @@ function addCategory() {
   const name=document.getElementById('newCategory').value.trim(), icon=document.getElementById('newCategoryIcon').value.trim()||'📌';
   if (!name) return;
   db.config.categories.push({ name, icon });
-  document.getElementById('newCategory').value=''; document.getElementById('newCategoryIcon').value='';
+  document.getElementById('newCategory').value='';
+  document.getElementById('newCategoryIcon').value='🛒';
+  document.getElementById('catIconPickerBtn').textContent='🛒';
   renderCategoryList(); saveLocal();
 }
 function deleteCategory(i) { db.config.categories.splice(i,1); renderCategoryList(); saveLocal(); }
+
+// ===== Income Categories =====
+function renderIncomeCategoryList() {
+  if (!db.config.incomeCategories) db.config.incomeCategories = [{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資',icon:'📈'},{name:'其他收入',icon:'💹'}];
+  document.getElementById('incomeCategoryList').innerHTML = db.config.incomeCategories.map((c,i) => `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+      <span style="font-size:18px;">${c.icon}</span><span style="flex:1;font-size:13px;">${c.name}</span>
+      <button class="btn btn-danger btn-sm" onclick="deleteIncomeCategory(${i})">✕</button>
+    </div>`).join('');
+}
+function addIncomeCategory() {
+  if (!db.config.incomeCategories) db.config.incomeCategories = [];
+  const name=document.getElementById('newIncomeCategory').value.trim(), icon=document.getElementById('newIncomeCategoryIcon').value.trim()||'💹';
+  if (!name) return;
+  db.config.incomeCategories.push({ name, icon });
+  document.getElementById('newIncomeCategory').value='';
+  document.getElementById('newIncomeCategoryIcon').value='💰';
+  document.getElementById('incCatIconPickerBtn').textContent='💰';
+  renderIncomeCategoryList(); saveLocal();
+}
+function deleteIncomeCategory(i) { db.config.incomeCategories.splice(i,1); renderIncomeCategoryList(); saveLocal(); }
+
+// ===== Icon Picker =====
+const ICONS_LIST = ['🏠','🛒','🚌','💊','🎮','📦','💰','🎁','📈','💹','🍔','☕','🎵','📱','💻','✈️','🏖️','🎓','💼','🏥','🚗','⚡','🌐','🔑','🎯','💡','📅','🔒','🏋️','🎨','🍕','🛡️','💎','🔧','📊','🌿','🎪','🐶','🌸','🎂','🏆','🎲','📰','🛍️','🎬','🔔','🌙','⭐','🦋','🍀'];
+function toggleIconPicker(btnId, hiddenId) {
+  const existing = document.getElementById('iconPickerOverlay');
+  if (existing) { existing.remove(); return; }
+  const overlay = document.createElement('div');
+  overlay.id = 'iconPickerOverlay';
+  overlay.className = 'icon-picker-overlay';
+  overlay.innerHTML = `
+    <div class="icon-picker-box">
+      <div class="icon-picker-title">選擇圖標</div>
+      <div class="icon-picker-grid">
+        ${ICONS_LIST.map(ic=>`<div class="icon-picker-item" onclick="selectIcon('${ic}','${btnId}','${hiddenId}')">${ic}</div>`).join('')}
+      </div>
+      <button onclick="document.getElementById('iconPickerOverlay').remove()" style="margin-top:12px;width:100%;padding:8px;border-radius:10px;border:none;background:rgba(255,255,255,0.07);color:var(--text-secondary);font-family:'Noto Sans TC',sans-serif;cursor:pointer;font-size:13px;">取消</button>
+    </div>`;
+  overlay.addEventListener('click', e=>{ if(e.target===overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+}
+function selectIcon(icon, btnId, hiddenId) {
+  document.getElementById(hiddenId).value = icon;
+  document.getElementById(btnId).textContent = icon;
+  document.getElementById('iconPickerOverlay').remove();
+}
 function saveBudget() {
   db.config.budgetIncome=parseFloat(document.getElementById('budgetIncome').value)||0;
   db.config.budgetExpense=parseFloat(document.getElementById('budgetExpense').value)||0;
@@ -1560,6 +1695,7 @@ async function syncFromGist() {
     if (!db.pledges) db.pledges = []; // [M-01] ensure pledge array exists
     if (!db.recurringTemplates) db.recurringTemplates = []; // [M-02] migrate
     if (!db.meta.lastSyncDate) db.meta.lastSyncDate = null;
+    if (!db.config.incomeCategories) db.config.incomeCategories = [{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資',icon:'📈'},{name:'其他收入',icon:'💹'}];
     saveLocal(); toast('✅ 雲端資料已載入'); setSyncStatus('ok'); renderDashboard(); renderSettings();
   } catch(e) { setSyncStatus('error'); toast('❌ 載入失敗：'+e.message); }
 }
@@ -1592,6 +1728,7 @@ function loadLocal() {
       if (!db.pledges) db.pledges = []; // [M-01] migrate
       if (!db.recurringTemplates) db.recurringTemplates = []; // [M-02] migrate
       if (!db.meta.lastSyncDate) db.meta.lastSyncDate = null; // [M-02] migrate
+      if (!db.config.incomeCategories) db.config.incomeCategories = [{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資',icon:'📈'},{name:'其他收入',icon:'💹'}];
     }
   } catch(e) {}
 }
@@ -1611,6 +1748,7 @@ function importData(e) {
       if (!db.pledges) db.pledges=[]; // [M-01] migrate
       if (!db.recurringTemplates) db.recurringTemplates=[]; // [M-02] migrate
       if (!db.meta.lastSyncDate) db.meta.lastSyncDate=null;
+      if (!db.config.incomeCategories) db.config.incomeCategories=[{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資',icon:'📈'},{name:'其他收入',icon:'💹'}];
       saveLocal(); toast('✅ 資料已匯入'); renderDashboard(); renderSettings();
     } catch { toast('❌ 格式錯誤'); }
   };
@@ -1619,7 +1757,7 @@ function importData(e) {
 function clearAllData() {
   if (!confirm('確定要清除所有資料？')) return;
   const token=db.config.gistToken, gistId=db.config.gistId;
-  db = { meta:{version:2,lastSync:null,lastSyncDate:null}, config:{budgetIncome:0,budgetExpense:0,currentMonth:new Date().getMonth()+1,currentYear:new Date().getFullYear(),gistToken:token,gistId:gistId,categories:[]}, transactions:[], banks:[], stocks:[], loans:[], pledges:[], recurringTemplates:[] };
+  db = { meta:{version:2,lastSync:null,lastSyncDate:null}, config:{budgetIncome:0,budgetExpense:0,currentMonth:new Date().getMonth()+1,currentYear:new Date().getFullYear(),gistToken:token,gistId:gistId,categories:[],incomeCategories:[{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資',icon:'📈'},{name:'其他收入',icon:'💹'}]}, transactions:[], banks:[], stocks:[], loans:[], pledges:[], recurringTemplates:[] };
   saveLocal(); renderDashboard(); renderSettings(); toast('🗑️ 資料已清除');
 }
  
