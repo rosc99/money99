@@ -234,17 +234,51 @@
   .quick-add-btn.expense:hover { filter: brightness(1.12); transform: translateY(-1px); box-shadow: 0 6px 22px rgba(240,80,74,0.35); }
   .quick-add-btn:active { transform: scale(0.97) translateY(0); }
 
-  /* ===== [M-01] PLEDGE PAGE ===== */
-  .pledge-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border-glass); }
-  .pledge-item:last-child { border-bottom: none; }
-  .pledge-icon { width: 36px; height: 36px; border-radius: 10px; background: rgba(240,192,64,0.1); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-  .pledge-info { flex: 1; }
-  .pledge-name { font-size: 13px; font-weight: 500; }
-  .pledge-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-  .pledge-amount { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 600; color: var(--accent-gold); text-align: right; }
-  .pledge-status { font-size: 10px; margin-top: 2px; text-align: right; }
-  .pledge-status.active { color: var(--accent-green); }
-  .pledge-status.closed { color: var(--text-muted); }
+  /* ===== [M-03] PLEDGE PAGE ===== */
+  .pledge-card { border-radius: 16px; padding: 16px; margin-bottom: 12px; border: 1px solid var(--border-glass); background: var(--bg-glass); backdrop-filter: blur(10px); transition: var(--transition); }
+  .pledge-card:hover { background: var(--bg-glass-hover); }
+  .pledge-card.safe  { border-left: 3px solid var(--accent-green); }
+  .pledge-card.warn  { border-left: 3px solid var(--accent-gold); }
+  .pledge-card.danger{ border-left: 3px solid var(--accent-red); }
+  .pledge-card.closed-card { opacity: 0.5; border-left: 3px solid var(--text-muted); }
+
+  .pledge-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .pledge-card-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+  .pledge-card-icon.safe   { background: rgba(62,207,142,0.12); }
+  .pledge-card-icon.warn   { background: rgba(240,192,64,0.12); }
+  .pledge-card-icon.danger { background: rgba(240,80,74,0.12); }
+  .pledge-card-icon.closed-card { background: rgba(255,255,255,0.05); }
+  .pledge-card-title { flex: 1; }
+  .pledge-card-name { font-size: 14px; font-weight: 700; }
+  .pledge-card-sub  { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+  .pledge-card-actions { display: flex; gap: 6px; align-items: center; }
+
+  /* Maintenance ratio badge */
+  .maint-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 700; }
+  .maint-badge.safe   { background: rgba(62,207,142,0.15);  color: var(--accent-green); }
+  .maint-badge.warn   { background: rgba(240,192,64,0.15);  color: var(--accent-gold); }
+  .maint-badge.danger { background: rgba(240,80,74,0.15);   color: var(--accent-red); }
+  .maint-badge.na     { background: rgba(255,255,255,0.05); color: var(--text-muted); }
+
+  /* Stat grid inside pledge card */
+  .pledge-stat-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .pledge-stat { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 8px 10px; }
+  .pledge-stat-label { font-size: 10px; color: var(--text-muted); margin-bottom: 3px; }
+  .pledge-stat-val   { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600; }
+
+  /* Stress test row */
+  .stress-row { display: flex; align-items: center; justify-content: space-between; background: rgba(240,80,74,0.06); border: 1px solid rgba(240,80,74,0.15); border-radius: 10px; padding: 8px 12px; margin-top: 4px; }
+  .stress-label { font-size: 11px; color: var(--text-secondary); display: flex; align-items: center; gap: 5px; }
+  .stress-result { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+
+  /* Maintenance ratio bar */
+  .maint-bar-wrap { margin: 10px 0 6px; }
+  .maint-bar-track { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.06); overflow: visible; position: relative; }
+  .maint-bar-fill  { height: 100%; border-radius: 3px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
+  .maint-bar-markers { position: relative; height: 14px; margin-top: 2px; }
+  .maint-marker { position: absolute; font-size: 9px; color: var(--text-muted); transform: translateX(-50%); }
+
+  /* Summary grid */
   .pledge-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
   .pledge-summary-item { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 12px; }
   .pledge-summary-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
@@ -557,17 +591,36 @@
   </div>
 </div>
 
-<!-- [M-01] Add Pledge Modal -->
-<div id="pledgeModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:flex-end;">
-  <div style="background:#0d2535;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:1px solid rgba(240,192,64,0.2);">
-    <div style="font-size:16px;font-weight:700;margin-bottom:16px;">🔒 新增質押</div>
+<!-- [M-03] Add Pledge Modal -->
+<div id="pledgeModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:flex-end;overflow-y:auto;">
+  <div style="background:#0d2535;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:2px solid rgba(240,192,64,0.35);">
+    <div style="font-size:16px;font-weight:700;margin-bottom:4px;color:var(--accent-gold);">🔒 新增質押倉位</div>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:16px;">填入後自動計算維持率與防守價</div>
+
+    <div style="font-size:11px;color:var(--ocean-light);font-weight:700;letter-spacing:0.06em;margin-bottom:8px;">▸ 基本資訊</div>
     <div class="form-row"><div class="form-label">名稱</div><input class="form-input" id="pledgeName" placeholder="00662 質押借款" /></div>
-    <div class="form-row"><div class="form-label">質押標的</div><input class="form-input" id="pledgeAsset" placeholder="00662、0050…" /></div>
-    <div class="form-row"><div class="form-label">借款金額</div><input class="form-input" type="number" id="pledgeAmount" placeholder="0" /></div>
+    <div class="form-row"><div class="form-label">股票代號</div><input class="form-input" id="pledgeAsset" placeholder="00662" oninput="pledgeAutoCalc()" /></div>
+    <div class="form-row"><div class="form-label">股票名稱</div><input class="form-input" id="pledgeStockName" placeholder="富邦NASDAQ" /></div>
+
+    <div style="font-size:11px;color:var(--ocean-light);font-weight:700;letter-spacing:0.06em;margin:12px 0 8px;">▸ 倉位數據</div>
+    <div class="form-row"><div class="form-label">質押張數</div><input class="form-input" type="number" id="pledgeShares" placeholder="10" oninput="pledgeAutoCalc()" /></div>
+    <div class="form-row"><div class="form-label">目前股價</div><input class="form-input" type="number" id="pledgePrice" placeholder="100.5" step="0.01" oninput="pledgeAutoCalc()" /></div>
+    <div class="form-row"><div class="form-label">借款金額</div><input class="form-input" type="number" id="pledgeAmount" placeholder="0" oninput="pledgeAutoCalc()" /></div>
     <div class="form-row"><div class="form-label">年利率 %</div><input class="form-input" type="number" id="pledgeRate" placeholder="2.5" step="0.1" /></div>
     <div class="form-row"><div class="form-label">開始日期</div><input class="form-input" type="date" id="pledgeStartDate" /></div>
-    <div style="display:flex;gap:10px;margin-top:8px;">
-      <button class="btn btn-primary" style="flex:1;background:linear-gradient(135deg,#a07010,#d4a020);" onclick="addPledge()">確認新增</button>
+
+    <!-- Live preview -->
+    <div id="pledgeCalcPreview" style="display:none;background:rgba(255,255,255,0.04);border-radius:12px;padding:12px;margin:12px 0;border:1px solid var(--border-glass);">
+      <div style="font-size:10px;color:var(--text-muted);margin-bottom:8px;letter-spacing:0.06em;">即時預算</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+        <div><div style="font-size:10px;color:var(--text-muted)">市值</div><div id="previewMktVal" style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--ocean-light)">--</div></div>
+        <div><div style="font-size:10px;color:var(--text-muted)">維持率</div><div id="previewMaint" style="font-family:'DM Mono',monospace;font-size:13px;font-weight:700">--</div></div>
+        <div><div style="font-size:10px;color:var(--text-muted)">防守價</div><div id="previewDefense" style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--accent-gold)">--</div></div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:4px;">
+      <button class="btn" style="flex:1;background:linear-gradient(135deg,#a07010,#d4a020);color:#fff;font-weight:700;" onclick="addPledge()">確認新增</button>
       <button class="btn" style="background:rgba(255,255,255,0.07);flex:1;" onclick="closeModal('pledgeModal')">取消</button>
     </div>
   </div>
@@ -865,51 +918,172 @@ function addBank() {
 function deleteBank(id) { db.banks=db.banks.filter(b=>b.id!==id); renderStocksPage(); renderDashboard(); saveLocal(); autoSync(); }
 
 // ===================================================================
-//  [M-01] PLEDGE PAGE
+//  [M-03] PLEDGE PAGE — STRESS TEST & AUTO CALC
 // ===================================================================
+
+/* helpers */
+function pledgeMaintLevel(r) { return r > 160 ? 'safe' : r > 140 ? 'warn' : 'danger'; }
+function pledgeMaintColor(r) { return r > 160 ? 'var(--accent-green)' : r > 140 ? 'var(--accent-gold)' : 'var(--accent-red)'; }
+function pledgeMaintIcon(r)  { return r > 160 ? '🟢' : r > 140 ? '🟡' : '🔴'; }
+
+/* live preview in modal */
+function pledgeAutoCalc() {
+  const shares = parseFloat(document.getElementById('pledgeShares').value) || 0;
+  const price  = parseFloat(document.getElementById('pledgePrice').value)  || 0;
+  const amount = parseFloat(document.getElementById('pledgeAmount').value) || 0;
+  const preview = document.getElementById('pledgeCalcPreview');
+  if (!shares || !price || !amount) { preview.style.display = 'none'; return; }
+  preview.style.display = 'block';
+  const mktVal  = shares * 1000 * price;
+  const maint   = (mktVal / amount) * 100;
+  const defense = (amount * 1.3) / (shares * 1000);
+  const lvl = pledgeMaintLevel(maint);
+  const col = pledgeMaintColor(maint);
+  document.getElementById('previewMktVal').textContent   = fmt(Math.round(mktVal));
+  document.getElementById('previewMaint').textContent    = maint.toFixed(1) + '%';
+  document.getElementById('previewMaint').style.color    = col;
+  document.getElementById('previewDefense').textContent  = '$' + defense.toFixed(2);
+}
+
 function showAddPledge() {
   document.getElementById('pledgeStartDate').value = new Date().toISOString().split('T')[0];
+  ['pledgeName','pledgeAsset','pledgeStockName','pledgeShares','pledgePrice','pledgeAmount'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('pledgeRate').value = '2.5';
+  document.getElementById('pledgeCalcPreview').style.display = 'none';
   document.getElementById('pledgeModal').style.display = 'flex';
 }
+
 function addPledge() {
-  const name=document.getElementById('pledgeName').value.trim(), asset=document.getElementById('pledgeAsset').value.trim(),
-    amount=parseFloat(document.getElementById('pledgeAmount').value)||0, rate=parseFloat(document.getElementById('pledgeRate').value)||2.5,
-    startDate=document.getElementById('pledgeStartDate').value;
-  if (!name||!amount) { toast('請填寫名稱與金額！'); return; }
-  db.pledges.push({ id:uid(), name, asset, amount, rate, startDate, status:'active' });
-  closeModal('pledgeModal'); toast('✅ 質押已新增'); saveLocal(); renderPledgePage(); autoSync();
+  const name      = document.getElementById('pledgeName').value.trim();
+  const asset     = document.getElementById('pledgeAsset').value.trim();
+  const stockName = document.getElementById('pledgeStockName').value.trim();
+  const shares    = parseFloat(document.getElementById('pledgeShares').value) || 0;
+  const price     = parseFloat(document.getElementById('pledgePrice').value)  || 0;
+  const amount    = parseFloat(document.getElementById('pledgeAmount').value) || 0;
+  const rate      = parseFloat(document.getElementById('pledgeRate').value)   || 2.5;
+  const startDate = document.getElementById('pledgeStartDate').value;
+  if (!name || !amount) { toast('請填寫名稱與借款金額！'); return; }
+  db.pledges.push({ id:uid(), name, asset, stockName, shares, price, amount, rate, startDate, status:'active' });
+  closeModal('pledgeModal'); toast('✅ 質押倉位已新增'); saveLocal(); renderPledgePage(); autoSync();
 }
-function deletePledge(id) { db.pledges=db.pledges.filter(p=>p.id!==id); renderPledgePage(); saveLocal(); autoSync(); }
+
+function deletePledge(id) { db.pledges = db.pledges.filter(p=>p.id!==id); renderPledgePage(); saveLocal(); autoSync(); }
+
 function togglePledgeStatus(id) {
   const p = db.pledges.find(p=>p.id===id);
-  if (p) { p.status = p.status==='active'?'closed':'active'; saveLocal(); renderPledgePage(); }
+  if (p) { p.status = p.status==='active' ? 'closed' : 'active'; saveLocal(); renderPledgePage(); }
 }
+
 function renderPledgePage() {
   const pledges = db.pledges || [];
-  const active = pledges.filter(p=>p.status==='active');
-  const closed = pledges.filter(p=>p.status==='closed');
-  const totalAmt = active.reduce((s,p)=>s+p.amount,0);
-  const totalInterest = active.reduce((s,p)=>s+(p.amount*p.rate/100),0);
-  document.getElementById('pledgeTotalAmt').textContent = fmt(totalAmt);
+  const active  = pledges.filter(p=>p.status==='active');
+  const closed  = pledges.filter(p=>p.status==='closed');
+  const totalAmt      = active.reduce((s,p)=>s+p.amount, 0);
+  const totalInterest = active.reduce((s,p)=>s+(p.amount*p.rate/100), 0);
+  const totalMktVal   = active.reduce((s,p)=>s+(p.shares && p.price ? p.shares*1000*p.price : 0), 0);
+
+  document.getElementById('pledgeTotalAmt').textContent      = fmt(totalAmt);
   document.getElementById('pledgeTotalInterest').textContent = fmt(Math.round(totalInterest));
-  document.getElementById('pledgeActiveCount').textContent = active.length + ' 筆';
-  document.getElementById('pledgeClosedCount').textContent = closed.length + ' 筆';
+  document.getElementById('pledgeActiveCount').textContent   = active.length + ' 筆';
+  document.getElementById('pledgeClosedCount').textContent   = closed.length + ' 筆';
+
   const list = document.getElementById('pledgeList');
-  if (!pledges.length) { list.innerHTML = '<div class="empty"><span class="icon">🔒</span>尚無質押記錄，點右上角新增</div>'; return; }
-  list.innerHTML = pledges.map(p => `
-    <div class="pledge-item">
-      <div class="pledge-icon">${p.status==='active'?'🔒':'🔓'}</div>
-      <div class="pledge-info">
-        <div class="pledge-name">${p.name}</div>
-        <div class="pledge-meta">${p.asset ? p.asset+' · ' : ''}${p.startDate} · 年利 ${p.rate}%</div>
+  if (!pledges.length) {
+    list.innerHTML = '<div class="empty"><span class="icon">🔒</span>尚無質押倉位，點右上角新增</div>';
+    return;
+  }
+
+  list.innerHTML = pledges.map(p => {
+    const isClosed = p.status === 'closed';
+    const mktVal   = p.shares && p.price ? p.shares * 1000 * p.price : 0;
+    const maint    = mktVal && p.amount ? (mktVal / p.amount) * 100 : null;
+    const defense  = p.shares && p.amount ? (p.amount * 1.3) / (p.shares * 1000) : null;
+    // stress: price drops 50%
+    const stressMktVal  = mktVal * 0.5;
+    const stressMaint   = stressMktVal && p.amount ? (stressMktVal / p.amount) * 100 : null;
+    const lvl = isClosed ? 'closed-card' : maint ? pledgeMaintLevel(maint) : 'na';
+
+    // maintenance bar: cap display at 250% = 100% width
+    const barPct    = maint ? Math.min(100, (maint / 250) * 100) : 0;
+    const barColor  = maint ? pledgeMaintColor(maint) : 'var(--text-muted)';
+    // marker positions (140%→56%, 160%→64%)
+    const m140pos = (140/250*100).toFixed(1);
+    const m160pos = (160/250*100).toFixed(1);
+
+    const stressTag = stressMaint
+      ? `<span class="maint-badge ${stressMaint>160?'safe':stressMaint>140?'warn':'danger'}">${pledgeMaintIcon(stressMaint)} ${stressMaint.toFixed(1)}%</span>`
+      : '<span class="maint-badge na">N/A</span>';
+    const stressTrigger = stressMaint && stressMaint < 130
+      ? '<span style="color:var(--accent-red);font-size:10px;font-weight:700;">⚠️ 觸發追繳</span>'
+      : stressMaint
+        ? '<span style="color:var(--accent-green);font-size:10px;">✓ 尚安全</span>'
+        : '';
+
+    return `
+    <div class="pledge-card ${lvl}">
+      <div class="pledge-card-header">
+        <div class="pledge-card-icon ${lvl}">${isClosed ? '🔓' : maint ? pledgeMaintIcon(maint) : '🔒'}</div>
+        <div class="pledge-card-title">
+          <div class="pledge-card-name">${p.name}</div>
+          <div class="pledge-card-sub">${p.asset||''}${p.stockName?' · '+p.stockName:''} · 年利 ${p.rate}% · ${p.startDate||''}</div>
+        </div>
+        <div class="pledge-card-actions">
+          ${!isClosed ? `<span class="maint-badge ${maint?pledgeMaintLevel(maint):'na'}">${maint ? maint.toFixed(1)+'%' : 'N/A'}</span>` : '<span class="maint-badge na">已結清</span>'}
+        </div>
       </div>
-      <div>
-        <div class="pledge-amount">${fmt(p.amount)}</div>
-        <div class="pledge-status ${p.status}" onclick="togglePledgeStatus('${p.id}')" style="cursor:pointer;">${p.status==='active'?'✅ 進行中':'⬜ 已結清'}</div>
+
+      ${maint && !isClosed ? `
+      <div class="maint-bar-wrap">
+        <div class="maint-bar-track">
+          <div class="maint-bar-fill" style="width:${barPct}%;background:${barColor};"></div>
+        </div>
+        <div class="maint-bar-markers">
+          <span class="maint-marker" style="left:${m140pos}%">140%</span>
+          <span class="maint-marker" style="left:${m160pos}%">160%</span>
+        </div>
+      </div>` : ''}
+
+      <div class="pledge-stat-grid">
+        <div class="pledge-stat">
+          <div class="pledge-stat-label">借款金額</div>
+          <div class="pledge-stat-val" style="color:var(--accent-gold)">${fmt(p.amount)}</div>
+        </div>
+        <div class="pledge-stat">
+          <div class="pledge-stat-label">持股市值</div>
+          <div class="pledge-stat-val" style="color:var(--ocean-light)">${mktVal ? fmt(Math.round(mktVal)) : '--'}</div>
+        </div>
+        <div class="pledge-stat">
+          <div class="pledge-stat-label">防守價</div>
+          <div class="pledge-stat-val" style="color:var(--accent-red)">${defense ? '$'+defense.toFixed(2) : '--'}</div>
+        </div>
+        <div class="pledge-stat">
+          <div class="pledge-stat-label">質押張數</div>
+          <div class="pledge-stat-val">${p.shares ? p.shares+' 張' : '--'}</div>
+        </div>
+        <div class="pledge-stat">
+          <div class="pledge-stat-label">目前股價</div>
+          <div class="pledge-stat-val">${p.price ? '$'+p.price : '--'}</div>
+        </div>
+        <div class="pledge-stat">
+          <div class="pledge-stat-label">年利息</div>
+          <div class="pledge-stat-val" style="color:var(--accent-red)">${fmt(Math.round(p.amount*p.rate/100))}</div>
+        </div>
       </div>
-      <div style="padding-left:6px;cursor:pointer;color:rgba(200,230,240,0.3);font-size:14px;" onclick="deletePledge('${p.id}')">✕</div>
-    </div>
-  `).join('');
+
+      ${!isClosed && stressMaint !== null ? `
+      <div class="stress-row">
+        <div class="stress-label">📉 壓力測試 · 跌50%後維持率</div>
+        <div class="stress-result">${stressTag}${stressTrigger}</div>
+      </div>` : ''}
+
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px;">
+        <button class="btn btn-sm" style="background:rgba(255,255,255,0.06);color:var(--text-secondary);" onclick="togglePledgeStatus('${p.id}')">
+          ${isClosed ? '↩ 恢復進行中' : '✓ 標記結清'}
+        </button>
+        <button class="btn btn-sm btn-danger" onclick="deletePledge('${p.id}')">刪除</button>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 // ===================================================================
