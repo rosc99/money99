@@ -283,6 +283,47 @@
   .pledge-summary-item { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 12px; }
   .pledge-summary-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
   .pledge-summary-val { font-family: 'DM Mono', monospace; font-size: 16px; font-weight: 700; }
+
+  /* ===== [M-02] RECURRING TEMPLATES ===== */
+  .recurring-card { border-radius: 14px; padding: 14px; margin-bottom: 10px; border: 1px solid var(--border-glass); background: var(--bg-glass); backdrop-filter: blur(10px); transition: var(--transition); }
+  .recurring-card:hover { background: var(--bg-glass-hover); }
+  .recurring-card.installment { border-left: 3px solid var(--accent-gold); }
+  .recurring-card.fixed { border-left: 3px solid var(--ocean-light); }
+  .recurring-card.settled { opacity: 0.5; border-left: 3px solid var(--text-muted); }
+  .recurring-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .recurring-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; background: var(--bg-glass); }
+  .recurring-name { flex: 1; }
+  .recurring-title { font-size: 13px; font-weight: 700; }
+  .recurring-sub { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
+  .recurring-amount { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 700; color: var(--accent-red); }
+  /* Installment progress bar */
+  .install-bar-wrap { margin: 8px 0 4px; }
+  .install-bar-track { height: 5px; border-radius: 3px; background: rgba(255,255,255,0.06); overflow: hidden; }
+  .install-bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--ocean-teal), var(--accent-gold)); transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
+  .install-bar-label { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); margin-top: 3px; font-family: 'DM Mono', monospace; }
+  /* Debt summary */
+  .debt-summary-card { background: linear-gradient(135deg, rgba(240,80,74,0.08) 0%, rgba(240,192,64,0.05) 100%); border: 1px solid rgba(240,80,74,0.2); }
+  .debt-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+  .debt-summary-item { background: rgba(255,255,255,0.03); border-radius: 10px; padding: 10px; }
+  .debt-summary-lbl { font-size: 10px; color: var(--text-muted); margin-bottom: 3px; }
+  .debt-summary-val { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 700; }
+
+  /* ===== [M-05] TX MONTH COLLAPSE ===== */
+  .tx-month-group { margin-bottom: 10px; }
+  .tx-month-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: rgba(255,255,255,0.04); border-radius: 12px; cursor: pointer; transition: var(--transition); user-select: none; margin-bottom: 4px; }
+  .tx-month-header:hover { background: rgba(255,255,255,0.07); }
+  .tx-month-title { font-size: 13px; font-weight: 700; color: var(--ocean-light); }
+  .tx-month-meta { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+  .tx-month-chevron { font-size: 12px; color: var(--text-muted); transition: transform 0.3s; }
+  .tx-month-chevron.open { transform: rotate(180deg); }
+  .tx-month-body { display: none; background: var(--bg-glass); border-radius: 12px; padding: 4px 14px; border: 1px solid var(--border-glass); }
+  .tx-month-body.open { display: block; }
+  /* Multi-select mode */
+  .tx-multiselect-bar { display: none; position: sticky; top: 54px; z-index: 99; background: rgba(13,37,53,0.97); border: 1px solid rgba(77,196,212,0.25); border-radius: 14px; padding: 10px 14px; margin-bottom: 10px; backdrop-filter: blur(12px); align-items: center; gap: 8px; }
+  .tx-multiselect-bar.active { display: flex; }
+  .tx-check { width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--border-glass); background: var(--bg-glass); cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: var(--transition); }
+  .tx-check.checked { background: var(--ocean-light); border-color: var(--ocean-light); color: #fff; font-size: 11px; }
+  .tx-item.selectable { padding-left: 4px; }
 </style>
 </head>
 <body>
@@ -380,10 +421,13 @@
   </div><!-- end dashboard -->
 
   <!-- ===== TRANSACTIONS PAGE ===== -->
-  <div class="page" id="page-tx" data-m="[M-01] TxPage">
+  <div class="page" id="page-tx" data-m="[M-05] TxPage">
     <div style="height:12px"></div>
     <div class="section-header">
       <div class="section-title">交易記錄</div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div id="multiselectToggleBtn" class="section-more" style="font-size:11px;" onclick="toggleTxMultiselect()">☑ 多選</div>
+      </div>
     </div>
     <!-- [N-01] Quick Add Buttons -->
     <div class="quick-add-row" data-m="[N-01] QuickAdd">
@@ -394,14 +438,18 @@
         <span class="q-icon">－</span>支出
       </button>
     </div>
-    <div class="tab-row">
+    <!-- [M-05] Multi-select action bar -->
+    <div class="tx-multiselect-bar" id="multiselectBar" data-m="[M-05] MultiselectBar">
+      <span id="selectedCount" style="flex:1;font-size:12px;color:var(--ocean-light);font-weight:700;">0 筆已選</span>
+      <button class="btn btn-sm btn-primary" onclick="batchEditCategory()">改分類</button>
+      <button class="btn btn-sm" style="background:rgba(255,255,255,0.06);color:var(--text-secondary);" onclick="toggleTxMultiselect()">取消</button>
+    </div>
+    <div class="tab-row" data-m="[M-05] TxTabs">
       <div class="tab active" onclick="filterTx('all',this)">全部</div>
       <div class="tab" onclick="filterTx('income',this)">收入</div>
       <div class="tab" onclick="filterTx('expense',this)">支出</div>
     </div>
-    <div class="card" style="padding:12px 16px;">
-      <div id="txList"></div>
-    </div>
+    <div id="txList"></div>
   </div>
 
   <!-- ===== STOCKS PAGE ===== -->
@@ -453,7 +501,25 @@
       </div>
     </div>
 
+    <!-- [M-02] Installment Debt Summary -->
+    <div class="card debt-summary-card" id="debtSummaryCard" data-m="[M-02] DebtSummary" style="display:none;">
+      <div class="card-title">📆 分期貸款剩餘待還</div>
+      <div class="debt-summary-grid" id="debtSummaryGrid"></div>
+    </div>
+
+    <!-- [M-02] Recurring Templates Section -->
+    <div class="section-header" style="margin-top:4px;" data-m="[M-02] RecurringHeader">
+      <div class="section-title">🔁 固定支出模板</div>
+      <div class="section-more" onclick="showAddRecurring()">＋ 新增</div>
+    </div>
+    <div class="card" style="padding:12px 16px;" data-m="[M-02] RecurringList">
+      <div id="recurringList"><div class="empty"><span class="icon">📅</span>尚無固定支出模板</div></div>
+    </div>
+
     <div class="card" data-m="[M-01] PledgeList" style="padding:12px 16px;">
+      <div class="section-header" style="margin-bottom:10px;">
+        <div class="section-title" style="font-size:13px;">🔒 質押倉位</div>
+      </div>
       <div id="pledgeList"><div class="empty"><span class="icon">🔒</span>尚無質押記錄</div></div>
     </div>
   </div>
@@ -626,12 +692,58 @@
   </div>
 </div>
 
+<!-- [M-02] Add Recurring Template Modal -->
+<div id="recurringModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:flex-end;overflow-y:auto;">
+  <div style="background:#0d2535;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:2px solid rgba(77,196,212,0.3);">
+    <div style="font-size:16px;font-weight:700;margin-bottom:4px;color:var(--ocean-light);">🔁 新增固定支出模板</div>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:16px;">設定後每月自動產生一筆支出記錄</div>
+
+    <div class="form-row">
+      <div class="form-label">名稱</div>
+      <input class="form-input" id="rName" placeholder="手機費、信貸…" />
+    </div>
+    <div class="form-row">
+      <div class="form-label">每月金額</div>
+      <input class="form-input" type="number" id="rAmount" placeholder="0" />
+    </div>
+    <div class="form-row">
+      <div class="form-label">類別</div>
+      <select class="form-input" id="rCategory"></select>
+    </div>
+    <div class="form-row">
+      <div class="form-label">類型</div>
+      <select class="form-input" id="rType" onchange="toggleRecurringType()">
+        <option value="fixed">無期限（固定支出）</option>
+        <option value="installment">有期限（分期付款）</option>
+      </select>
+    </div>
+
+    <div id="rInstallDiv" style="display:none;background:rgba(240,192,64,0.06);border:1px solid rgba(240,192,64,0.2);border-radius:12px;padding:12px;margin-top:4px;">
+      <div style="font-size:11px;color:var(--accent-gold);font-weight:700;margin-bottom:10px;letter-spacing:0.05em;">▸ 分期設定</div>
+      <div class="form-row">
+        <div class="form-label">總期數</div>
+        <input class="form-input" type="number" id="rTotal" placeholder="36（共幾期）" />
+      </div>
+      <div class="form-row">
+        <div class="form-label">剩餘期數</div>
+        <input class="form-input" type="number" id="rRemaining" placeholder="留空則等於總期數" />
+      </div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">💡 每產生一筆扣款，剩餘期數自動 -1，歸零後自動結清</div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:16px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="addRecurringTemplate()">確認新增</button>
+      <button class="btn" style="background:rgba(255,255,255,0.07);flex:1;" onclick="closeModal('recurringModal')">取消</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ===================================================================
 //  [M-01] CENTRAL STORE — DATA STRUCTURE
 // ===================================================================
 let db = {
-  meta: { version: 1, lastSync: null },
+  meta: { version: 2, lastSync: null, lastSyncDate: null },
   config: {
     budgetIncome: 64350,
     budgetExpense: 38550,
@@ -657,7 +769,8 @@ let db = {
     { id:'s4', ticker:'其他', name:'其他持股', value:125000, change:0.2 },
   ],
   loans: [{ id:'l1', name:'房屋貸款', total:500000, remaining:420000 }],
-  pledges: [] // [M-01] Pledge Store
+  pledges: [], // [M-01] Pledge Store
+  recurringTemplates: [] // [M-02] Recurring Fixed Expenses
 };
 
 db.transactions = [
@@ -814,31 +927,283 @@ function renderDonut() {
 }
 
 // ===================================================================
-//  TRANSACTIONS PAGE
+//  [M-02] RECURRING TEMPLATES ENGINE
+// ===================================================================
+function runRecurringEngine() {
+  if (!db.recurringTemplates || !db.recurringTemplates.length) return;
+  const today = new Date();
+  const todayYM = today.getFullYear() * 12 + today.getMonth(); // numeric month index
+
+  // determine last synced month
+  let lastYM;
+  if (db.meta.lastSyncDate) {
+    const d = new Date(db.meta.lastSyncDate);
+    lastYM = d.getFullYear() * 12 + d.getMonth();
+  } else {
+    // first run: only process current month
+    lastYM = todayYM - 1;
+  }
+
+  if (lastYM >= todayYM) return; // already up-to-date
+
+  let generated = 0;
+  // iterate over each missed month
+  for (let ym = lastYM + 1; ym <= todayYM; ym++) {
+    const yr = Math.floor(ym / 12);
+    const mo = ym % 12; // 0-based
+    const dateStr = `${yr}-${String(mo + 1).padStart(2,'0')}-01`;
+
+    db.recurringTemplates.forEach(tpl => {
+      if (tpl.status === 'settled') return; // skip settled
+      // check if already generated for this month (idempotent)
+      const alreadyExists = db.transactions.some(t =>
+        t.recurringId === tpl.id && t.date.startsWith(`${yr}-${String(mo+1).padStart(2,'0')}`)
+      );
+      if (alreadyExists) return;
+
+      // generate transaction
+      db.transactions.push({
+        id: uid(), type: 'expense', name: tpl.name, amount: tpl.amount,
+        category: tpl.category, date: dateStr, recurringId: tpl.id, auto: true
+      });
+      generated++;
+
+      // handle installments
+      if (tpl.type === 'installment' && tpl.remainingInstallments > 0) {
+        tpl.remainingInstallments -= 1;
+        if (tpl.remainingInstallments <= 0) {
+          tpl.status = 'settled';
+          toast(`✅ 「${tpl.name}」分期已結清！`);
+        }
+      }
+    });
+  }
+
+  db.meta.lastSyncDate = today.toISOString();
+  saveLocal();
+  if (generated > 0) toast(`🔄 已自動產生 ${generated} 筆固定支出`);
+}
+
+// Recurring template CRUD
+function showAddRecurring() {
+  document.getElementById('recurringModal').style.display = 'flex';
+  document.getElementById('rName').value = '';
+  document.getElementById('rAmount').value = '';
+  document.getElementById('rType').value = 'fixed';
+  document.getElementById('rInstallDiv').style.display = 'none';
+  document.getElementById('rTotal').value = '';
+  document.getElementById('rRemaining').value = '';
+  const cats = db.config.categories.map(c=>`<option>${c.name}</option>`).join('');
+  document.getElementById('rCategory').innerHTML = cats;
+  toggleRecurringType();
+}
+function toggleRecurringType() {
+  const t = document.getElementById('rType').value;
+  document.getElementById('rInstallDiv').style.display = t === 'installment' ? 'block' : 'none';
+}
+function addRecurringTemplate() {
+  const name = document.getElementById('rName').value.trim();
+  const amount = parseFloat(document.getElementById('rAmount').value) || 0;
+  const type = document.getElementById('rType').value;
+  const category = document.getElementById('rCategory').value;
+  if (!name || !amount) { toast('請填寫名稱與金額！'); return; }
+  const tpl = { id: uid(), name, amount, type, category, status: 'active' };
+  if (type === 'installment') {
+    tpl.totalInstallments = parseInt(document.getElementById('rTotal').value) || 0;
+    tpl.remainingInstallments = parseInt(document.getElementById('rRemaining').value) || tpl.totalInstallments;
+  }
+  if (!db.recurringTemplates) db.recurringTemplates = [];
+  db.recurringTemplates.push(tpl);
+  closeModal('recurringModal');
+  toast('✅ 固定支出已新增');
+  saveLocal(); renderRecurringList(); renderPledgePage(); autoSync();
+}
+function deleteRecurring(id) {
+  db.recurringTemplates = db.recurringTemplates.filter(t=>t.id!==id);
+  saveLocal(); renderRecurringList(); renderPledgePage(); autoSync();
+}
+function renderRecurringList() {
+  const tpls = db.recurringTemplates || [];
+  const container = document.getElementById('recurringList');
+  if (!tpls.length) {
+    container.innerHTML = `<div class="empty"><span class="icon">📅</span>尚無固定支出模板</div>`;
+    return;
+  }
+  container.innerHTML = tpls.map(tpl => {
+    const isInstall = tpl.type === 'installment';
+    const isSettled = tpl.status === 'settled';
+    const done = isInstall ? (tpl.totalInstallments - tpl.remainingInstallments) : 0;
+    const pct = isInstall && tpl.totalInstallments ? Math.round(done / tpl.totalInstallments * 100) : 0;
+    const cardCls = isSettled ? 'settled' : isInstall ? 'installment' : 'fixed';
+    const tagColor = isSettled ? 'var(--text-muted)' : isInstall ? 'var(--accent-gold)' : 'var(--ocean-light)';
+    const tagLabel = isSettled ? '已結清' : isInstall ? '分期' : '固定';
+    const icon = isSettled ? '✅' : isInstall ? '📆' : '🔁';
+    return `
+    <div class="recurring-card ${cardCls}" data-m="[M-02] RecurringItem">
+      <div class="recurring-header">
+        <div class="recurring-icon">${icon}</div>
+        <div class="recurring-name">
+          <div class="recurring-title">${tpl.name}</div>
+          <div class="recurring-sub">${tpl.category} · <span style="color:${tagColor};font-weight:700;">${tagLabel}</span></div>
+        </div>
+        <div style="text-align:right;">
+          <div class="recurring-amount">-${fmt(tpl.amount)}</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">每月</div>
+        </div>
+        <div style="padding-left:8px;cursor:pointer;color:rgba(200,230,240,0.3);font-size:14px;" onclick="deleteRecurring('${tpl.id}')">✕</div>
+      </div>
+      ${isInstall && !isSettled ? `
+      <div class="install-bar-wrap">
+        <div class="install-bar-track"><div class="install-bar-fill" style="width:${pct}%"></div></div>
+        <div class="install-bar-label">
+          <span>已還 ${done}/${tpl.totalInstallments} 期</span>
+          <span>剩餘 ${tpl.remainingInstallments} 期 · ${fmt(tpl.amount * tpl.remainingInstallments)}</span>
+        </div>
+      </div>` : ''}
+      ${isSettled ? `<div style="font-size:11px;color:var(--accent-green);text-align:center;padding:4px 0;">🎉 分期已全數結清</div>` : ''}
+    </div>`;
+  }).join('');
+}
+function getInstallmentDebtSummary() {
+  const tpls = (db.recurringTemplates || []).filter(t => t.type === 'installment' && t.status !== 'settled');
+  const total = tpls.reduce((s, t) => s + t.amount * (t.remainingInstallments || 0), 0);
+  const count = tpls.length;
+  return { total, count, tpls };
+}
+
+// ===================================================================
+//  TRANSACTIONS PAGE [M-05]
 // ===================================================================
 let txFilter = 'all';
+let txMultiselect = false;
+let txSelected = new Set();
+
 function filterTx(f, el) {
   txFilter = f;
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('#page-tx .tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
   renderTxList();
 }
+
+function toggleTxMultiselect() {
+  txMultiselect = !txMultiselect;
+  txSelected.clear();
+  const bar = document.getElementById('multiselectBar');
+  const btn = document.getElementById('multiselectToggleBtn');
+  if (txMultiselect) {
+    bar.classList.add('active');
+    btn.textContent = '✕ 取消多選';
+    btn.style.color = 'var(--accent-red)';
+  } else {
+    bar.classList.remove('active');
+    btn.textContent = '☑ 多選';
+    btn.style.color = '';
+  }
+  renderTxList();
+}
+
+function toggleTxSelect(id) {
+  if (txSelected.has(id)) txSelected.delete(id);
+  else txSelected.add(id);
+  document.getElementById('selectedCount').textContent = txSelected.size + ' 筆已選';
+  // update checkbox visual
+  document.querySelectorAll(`[data-txid="${id}"] .tx-check`).forEach(el => {
+    el.classList.toggle('checked', txSelected.has(id));
+    el.textContent = txSelected.has(id) ? '✓' : '';
+  });
+}
+
+function batchEditCategory() {
+  if (!txSelected.size) { toast('請先選取項目'); return; }
+  const cats = db.config.categories.map(c => c.name);
+  const opts = cats.map(c => `<option>${c}</option>`).join('');
+  const modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:600;display:flex;align-items:center;justify-content:center;';
+  modal.innerHTML = `<div style="background:#0d2535;border-radius:20px;padding:20px;width:280px;border:1px solid rgba(77,196,212,0.2);">
+    <div style="font-size:15px;font-weight:700;margin-bottom:14px;">批次修改分類</div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">將 ${txSelected.size} 筆交易改為：</div>
+    <select id="batchCat" class="form-input" style="margin-bottom:12px;">${opts}</select>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="applyBatchCategory(this.closest('[style]'))">套用</button>
+      <button class="btn" style="background:rgba(255,255,255,0.07);flex:1;" onclick="this.closest('[style]').remove()">取消</button>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+}
+
+function applyBatchCategory(overlay) {
+  const cat = document.getElementById('batchCat').value;
+  db.transactions.forEach(t => { if (txSelected.has(t.id)) t.category = cat; });
+  overlay.remove();
+  txSelected.clear();
+  if (txMultiselect) toggleTxMultiselect();
+  toast(`✅ 已更新 ${txSelected.size || '所選'} 筆分類`);
+  saveLocal(); renderTxList(); renderDashboard(); autoSync();
+}
+
 function renderTxList() {
   const m = db.config.currentMonth, y = db.config.currentYear;
-  let list = db.transactions.filter(t => { const d = new Date(t.date); return d.getMonth()+1===m && d.getFullYear()===y; });
-  if (txFilter !== 'all') list = list.filter(t=>t.type===txFilter);
-  list.sort((a,b)=>new Date(b.date)-new Date(a.date));
-  const icons = {'房貸':'🏠','生活費':'🛒','交通':'🚌','醫療':'💊','娛樂':'🎮','薪資':'💰','獎金':'🎁','投資':'📈','其他':'📦'};
+  let list = db.transactions.filter(t => {
+    if (txFilter !== 'all' && t.type !== txFilter) return false;
+    return true;
+  });
+  list.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+  const icons = {'房貸':'🏠','生活費':'🛒','交通':'🚌','醫療':'💊','娛樂':'🎮','薪資':'💰','獎金':'🎁','投資':'📈','其他':'📦','其他收入':'💹'};
   const container = document.getElementById('txList');
-  if (!list.length) { container.innerHTML = `<div class="empty"><span class="icon">📭</span>本月無記錄</div>`; return; }
-  container.innerHTML = list.map(t => `
-    <div class="tx-item">
-      <div class="tx-icon">${icons[t.category]||'💳'}</div>
-      <div class="tx-info"><div class="tx-name">${t.name}</div><div class="tx-date">${t.category} · ${t.date}</div></div>
-      <div class="tx-amount ${t.type==='income'?'pos':'neg'}">${t.type==='income'?'+':'-'}${fmt(t.amount)}</div>
-      <div style="padding-left:8px;cursor:pointer;color:rgba(200,230,240,0.3);font-size:14px;" onclick="deleteTx('${t.id}')">✕</div>
-    </div>
-  `).join('');
+
+  if (!list.length) {
+    container.innerHTML = `<div class="empty"><span class="icon">📭</span>暫無記錄</div>`;
+    return;
+  }
+
+  // group by year-month
+  const groups = {};
+  list.forEach(t => {
+    const d = new Date(t.date);
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(t);
+  });
+
+  const monthNames = ['一','二','三','四','五','六','七','八','九','十','十一','十二'];
+  const currentKey = `${y}-${String(m).padStart(2,'0')}`;
+
+  container.innerHTML = Object.entries(groups).map(([key, txs]) => {
+    const [gY, gM] = key.split('-');
+    const mLabel = monthNames[parseInt(gM)-1] + '月';
+    const isCurrentMonth = key === currentKey;
+    const totalInc = txs.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
+    const totalExp = txs.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
+    const metaStr = totalInc > 0 ? `+${fmt(totalInc)} / -${fmt(totalExp)}` : `-${fmt(totalExp)}`;
+
+    const txRows = txs.map(t => `
+      <div class="tx-item selectable" data-txid="${t.id}" onclick="${txMultiselect ? `toggleTxSelect('${t.id}')` : ''}">
+        ${txMultiselect ? `<div class="tx-check ${txSelected.has(t.id)?'checked':''}">${txSelected.has(t.id)?'✓':''}</div>` : ''}
+        <div class="tx-icon">${icons[t.category]||'💳'}${t.auto?'<span style="font-size:8px;position:absolute;right:-2px;bottom:-2px;background:var(--ocean-teal);border-radius:3px;padding:1px 2px;color:#fff;">🔁</span>':''}</div>
+        <div class="tx-info"><div class="tx-name">${t.name}</div><div class="tx-date">${t.category} · ${t.date}</div></div>
+        <div class="tx-amount ${t.type==='income'?'pos':'neg'}">${t.type==='income'?'+':'-'}${fmt(t.amount)}</div>
+        ${!txMultiselect ? `<div style="padding-left:8px;cursor:pointer;color:rgba(200,230,240,0.3);font-size:14px;" onclick="event.stopPropagation();deleteTx('${t.id}')">✕</div>` : ''}
+      </div>`).join('');
+
+    return `
+    <div class="tx-month-group">
+      <div class="tx-month-header" onclick="toggleMonthGroup('${key}')">
+        <span class="tx-month-title">${gY}年 ${mLabel}</span>
+        <span class="tx-month-meta">${metaStr}</span>
+        <span class="tx-month-chevron ${isCurrentMonth?'open':''}" id="chev-${key}">▼</span>
+      </div>
+      <div class="tx-month-body ${isCurrentMonth?'open':''}" id="grp-${key}">${txRows}</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleMonthGroup(key) {
+  const body = document.getElementById('grp-' + key);
+  const chev = document.getElementById('chev-' + key);
+  if (!body) return;
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
 }
 /* [N-01] Quick add with pre-set type */
 function showAddTxType(type) {
@@ -987,6 +1352,38 @@ function renderPledgePage() {
   document.getElementById('pledgeActiveCount').textContent   = active.length + ' 筆';
   document.getElementById('pledgeClosedCount').textContent   = closed.length + ' 筆';
 
+  // [M-02] Debt summary
+  const { total: debtTotal, count: debtCount, tpls: debtTpls } = getInstallmentDebtSummary();
+  const debtCard = document.getElementById('debtSummaryCard');
+  const debtGrid = document.getElementById('debtSummaryGrid');
+  if (debtCount > 0) {
+    debtCard.style.display = 'block';
+    const monthlyTotal = debtTpls.reduce((s,t)=>s+t.amount,0);
+    debtGrid.innerHTML = `
+      <div class="debt-summary-item">
+        <div class="debt-summary-lbl">剩餘總額</div>
+        <div class="debt-summary-val" style="color:var(--accent-red)">${fmt(debtTotal)}</div>
+      </div>
+      <div class="debt-summary-item">
+        <div class="debt-summary-lbl">每月應付</div>
+        <div class="debt-summary-val" style="color:var(--accent-gold)">${fmt(monthlyTotal)}</div>
+      </div>
+      <div class="debt-summary-item">
+        <div class="debt-summary-lbl">進行中項目</div>
+        <div class="debt-summary-val" style="color:var(--ocean-light)">${debtCount} 筆</div>
+      </div>
+      <div class="debt-summary-item">
+        <div class="debt-summary-lbl">最長剩餘期數</div>
+        <div class="debt-summary-val">${Math.max(...debtTpls.map(t=>t.remainingInstallments||0))} 期</div>
+      </div>`;
+  } else {
+    debtCard.style.display = 'none';
+  }
+
+  // [M-02] Recurring list
+  renderRecurringList();
+
+  // Pledge list
   const list = document.getElementById('pledgeList');
   if (!pledges.length) {
     list.innerHTML = '<div class="empty"><span class="icon">🔒</span>尚無質押倉位，點右上角新增</div>';
@@ -1156,6 +1553,8 @@ async function syncFromGist() {
     const loaded = JSON.parse(raw); const gistToken=db.config.gistToken, gistIdVal=db.config.gistId;
     db=loaded; db.config.gistToken=gistToken; db.config.gistId=gistIdVal;
     if (!db.pledges) db.pledges = []; // [M-01] ensure pledge array exists
+    if (!db.recurringTemplates) db.recurringTemplates = []; // [M-02] migrate
+    if (!db.meta.lastSyncDate) db.meta.lastSyncDate = null;
     saveLocal(); toast('✅ 雲端資料已載入'); setSyncStatus('ok'); renderDashboard(); renderSettings();
   } catch(e) { setSyncStatus('error'); toast('❌ 載入失敗：'+e.message); }
 }
@@ -1183,7 +1582,12 @@ function saveLocal() { try { localStorage.setItem('assetDB', JSON.stringify(db))
 function loadLocal() {
   try {
     const raw = localStorage.getItem('assetDB');
-    if (raw) { const loaded = JSON.parse(raw); db = loaded; if (!db.pledges) db.pledges = []; } // [M-01] migrate
+    if (raw) {
+      const loaded = JSON.parse(raw); db = loaded;
+      if (!db.pledges) db.pledges = []; // [M-01] migrate
+      if (!db.recurringTemplates) db.recurringTemplates = []; // [M-02] migrate
+      if (!db.meta.lastSyncDate) db.meta.lastSyncDate = null; // [M-02] migrate
+    }
   } catch(e) {}
 }
 function exportData() {
@@ -1200,6 +1604,8 @@ function importData(e) {
       const loaded = JSON.parse(ev.target.result); const token=db.config.gistToken, gistId=db.config.gistId;
       db=loaded; if (!db.config.gistToken) { db.config.gistToken=token; db.config.gistId=gistId; }
       if (!db.pledges) db.pledges=[]; // [M-01] migrate
+      if (!db.recurringTemplates) db.recurringTemplates=[]; // [M-02] migrate
+      if (!db.meta.lastSyncDate) db.meta.lastSyncDate=null;
       saveLocal(); toast('✅ 資料已匯入'); renderDashboard(); renderSettings();
     } catch { toast('❌ 格式錯誤'); }
   };
@@ -1208,7 +1614,7 @@ function importData(e) {
 function clearAllData() {
   if (!confirm('確定要清除所有資料？')) return;
   const token=db.config.gistToken, gistId=db.config.gistId;
-  db = { meta:{version:1,lastSync:null}, config:{budgetIncome:0,budgetExpense:0,currentMonth:new Date().getMonth()+1,currentYear:new Date().getFullYear(),gistToken:token,gistId:gistId,categories:[]}, transactions:[], banks:[], stocks:[], loans:[], pledges:[] };
+  db = { meta:{version:2,lastSync:null,lastSyncDate:null}, config:{budgetIncome:0,budgetExpense:0,currentMonth:new Date().getMonth()+1,currentYear:new Date().getFullYear(),gistToken:token,gistId:gistId,categories:[]}, transactions:[], banks:[], stocks:[], loans:[], pledges:[], recurringTemplates:[] };
   saveLocal(); renderDashboard(); renderSettings(); toast('🗑️ 資料已清除');
 }
 
@@ -1237,7 +1643,9 @@ function selectMonth(m, overlay) {
 //  INIT
 // ===================================================================
 window.addEventListener('load', () => {
-  initParticles(); loadLocal(); renderDashboard();
+  initParticles(); loadLocal();
+  runRecurringEngine(); // [M-02] auto-generate recurring transactions
+  renderDashboard();
   document.getElementById('currentMonthLabel').textContent = db.config.currentMonth + '月';
   if (db.config.gistToken) { setSyncStatus(db.config.gistId?'ok':'error'); }
   else { document.getElementById('syncDot').className='sync-dot offline'; document.getElementById('syncText').textContent='未設定雲端同步'; }
