@@ -237,28 +237,100 @@
   .empty { text-align: center; padding: 30px 16px; color: var(--text-muted); font-size: 13px; }
   .empty .icon { font-size: 32px; margin-bottom: 8px; display: block; }
  
-  /* ===== [M-04] INSPECTOR MODE ===== */
+  /* ===== [M-04] 中文開發者模式 ===== */
   #inspectorBtn {
     position: fixed; top: 12px; right: 16px;
-    width: 28px; height: 28px; border-radius: 50%;
+    width: 32px; height: 32px; border-radius: 8px;
     background: transparent; border: none; cursor: pointer;
-    z-index: 9999; opacity: 0; transition: opacity 0.3s;
-    font-size: 14px; display: flex; align-items: center; justify-content: center;
+    z-index: 9999; opacity: 0; transition: opacity 0.3s, background 0.2s;
+    font-size: 15px; display: flex; align-items: center; justify-content: center;
   }
   #inspectorBtn:hover { opacity: 1; }
-  body.inspector-mode #inspectorBtn { opacity: 1; background: rgba(240,192,64,0.15); outline: 1px solid rgba(240,192,64,0.5); }
-  body.inspector-mode [data-m] {
-    outline: 1.5px dashed rgba(240,192,64,0.6) !important;
-    position: relative;
+  body.inspector-mode #inspectorBtn {
+    opacity: 1; background: rgba(240,192,64,0.2);
+    outline: 1.5px solid rgba(240,192,64,0.7);
+    box-shadow: 0 0 8px rgba(240,192,64,0.3);
   }
+  /* 元素外框 */
+  body.inspector-mode [data-m] {
+    outline: 1.5px dashed rgba(240,192,64,0.55) !important;
+    position: relative; cursor: crosshair !important;
+  }
+  body.inspector-mode [data-m]:hover {
+    outline: 2px solid rgba(240,192,64,0.9) !important;
+    background: rgba(240,192,64,0.04) !important;
+  }
+  /* 元素名稱標籤 */
   body.inspector-mode [data-m]::before {
     content: attr(data-m);
     position: absolute; top: 2px; left: 4px;
     font-size: 9px; font-family: 'DM Mono', monospace;
-    background: rgba(240,192,64,0.9); color: #000;
+    background: rgba(240,192,64,0.92); color: #000;
     padding: 1px 5px; border-radius: 4px; z-index: 9000;
     pointer-events: none; letter-spacing: 0.04em; line-height: 1.8;
+    white-space: nowrap;
   }
+  /* 開發者模式提示列 */
+  #devModeBar {
+    display: none; position: fixed; bottom: 70px; left: 50%;
+    transform: translateX(-50%); z-index: 9998;
+    background: rgba(10,20,28,0.96); border: 1px solid rgba(240,192,64,0.4);
+    border-radius: 12px; padding: 6px 14px; font-size: 11px;
+    color: rgba(240,192,64,0.8); font-family: 'DM Mono', monospace;
+    letter-spacing: 0.04em; pointer-events: none;
+    backdrop-filter: blur(10px);
+  }
+  body.inspector-mode #devModeBar { display: block; }
+  /* 行號浮動面板 */
+  #devInfoPanel {
+    display: none; position: fixed; z-index: 10000;
+    background: rgba(6,18,26,0.97); border: 1px solid rgba(240,192,64,0.5);
+    border-radius: 14px; padding: 14px 16px; min-width: 260px; max-width: 320px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6); backdrop-filter: blur(16px);
+    font-family: 'DM Mono', monospace; font-size: 12px;
+  }
+  #devInfoPanel.visible { display: block; }
+  .dev-panel-title {
+    font-size: 11px; font-weight: 700; color: rgba(240,192,64,0.9);
+    letter-spacing: 0.08em; margin-bottom: 10px; display: flex;
+    align-items: center; justify-content: space-between;
+  }
+  .dev-panel-close {
+    cursor: pointer; color: rgba(255,255,255,0.3); font-size: 14px;
+    line-height: 1; padding: 2px 4px; border-radius: 4px;
+    transition: color 0.15s;
+  }
+  .dev-panel-close:hover { color: rgba(255,255,255,0.7); }
+  .dev-section { margin-bottom: 10px; }
+  .dev-section-label {
+    font-size: 9px; letter-spacing: 0.1em; color: rgba(150,200,220,0.5);
+    text-transform: uppercase; margin-bottom: 5px;
+  }
+  .dev-row {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.04); border-radius: 8px;
+    padding: 6px 10px; margin-bottom: 4px; cursor: pointer;
+    transition: background 0.15s; border: 1px solid transparent;
+  }
+  .dev-row:hover { background: rgba(240,192,64,0.08); border-color: rgba(240,192,64,0.2); }
+  .dev-row-tag {
+    font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .dev-tag-html { background: rgba(255,120,50,0.2); color: #ff8844; }
+  .dev-tag-css  { background: rgba(100,150,255,0.2); color: #88aaff; }
+  .dev-tag-js   { background: rgba(240,210,50,0.2);  color: #f0d040; }
+  .dev-row-info { flex: 1; color: var(--text-secondary); font-size: 11px; }
+  .dev-row-line {
+    font-size: 11px; color: rgba(240,192,64,0.8); font-weight: 700;
+    background: rgba(240,192,64,0.1); padding: 1px 7px; border-radius: 5px;
+    flex-shrink: 0;
+  }
+  .dev-copy-hint {
+    font-size: 9px; color: rgba(150,200,220,0.4); text-align: center;
+    margin-top: 8px; letter-spacing: 0.05em;
+  }
+  .dev-copied { color: rgba(62,207,142,0.7) !important; }
  
   /* ===== [N-01] QUICK ADD BUTTONS ===== */
   .quick-add-row { display: flex; gap: 10px; margin-bottom: 14px; }
@@ -387,8 +459,21 @@
 <!-- Particles --><!-- 這裡放你的導覽列、卡片等所有看得到的東西 -->
 <div class="particles" id="particles"></div>
  
-<!-- [M-04] Inspector Toggle (hidden corner button) -->
-<button id="inspectorBtn" title="Inspector Mode" onclick="toggleInspector()">🔬</button>
+<!-- [M-04] 中文開發者模式 切換按鈕 -->
+<button id="inspectorBtn" title="中文開發者模式" onclick="toggleInspector()">🛠</button>
+
+<!-- 底部提示列 -->
+<div id="devModeBar">🛠 中文開發者模式 · 點擊任意區塊查看行號位置</div>
+
+<!-- 行號資訊浮動面板 -->
+<div id="devInfoPanel">
+  <div class="dev-panel-title">
+    <span>🛠 開發者資訊</span>
+    <span class="dev-panel-close" onclick="closeDevPanel()">✕</span>
+  </div>
+  <div id="devPanelContent"></div>
+  <div class="dev-copy-hint" id="devCopyHint">點擊任一列可複製行號</div>
+</div>
  
 <div id="app">
  
@@ -628,8 +713,12 @@
     <div style="height:12px"></div>
     <div class="section-title" style="margin-bottom:14px;">⚙️ 設定與資料管理</div>
  
-    <div class="gist-config">
+    <!-- ══ GitHub Gist 雲端儲存 ══ -->
+    <div class="gist-config" data-m="[CFG] GistSync">
       <div class="gist-config-title">🐙 GitHub Gist 雲端儲存</div>
+      <div style="font-size:10px;color:rgba(200,180,100,0.6);margin-bottom:10px;line-height:1.6;">
+        資料以 JSON 存入私人 Gist，跨裝置同步。Token 需有 <code style="background:rgba(255,255,255,0.08);padding:1px 4px;border-radius:3px;">gist</code> 權限。
+      </div>
       <div class="form-row">
         <div class="form-label">Token</div>
         <input class="form-input" type="password" id="gistToken" placeholder="ghp_xxxxxxxxxx" />
@@ -638,7 +727,7 @@
         <div class="form-label">Gist ID</div>
         <input class="form-input" type="text" id="gistId" placeholder="留空自動建立" />
       </div>
-      <div style="display:flex;gap:8px;margin-top:6px;">
+      <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;">
         <button class="btn btn-primary btn-sm" onclick="saveGistConfig()">儲存設定</button>
         <button class="btn btn-primary btn-sm" onclick="syncFromGist()">🔄 從雲端載入</button>
         <button class="btn btn-primary btn-sm" onclick="syncToGist()">☁️ 上傳雲端</button>
@@ -646,6 +735,60 @@
       <div class="sync-status" style="margin-top:8px;">
         <div class="sync-dot" id="settingsSyncDot"></div>
         <span id="settingsSyncText">未連線</span>
+      </div>
+    </div>
+
+    <!-- ══ GitHub Pages 一鍵部署 ══ -->
+    <div class="settings-section">
+      <div class="settings-section-title">🚀 GitHub Pages 一鍵部署</div>
+      <div class="gist-config" style="border-color:rgba(62,207,142,0.25);background:linear-gradient(135deg,rgba(62,207,142,0.06),rgba(26,143,160,0.04));" data-m="[CFG] GhPages">
+        <div style="font-size:10px;color:rgba(150,220,180,0.6);margin-bottom:10px;line-height:1.6;">
+          使用與 Gist 相同的 Token（需有 <code style="background:rgba(255,255,255,0.08);padding:1px 4px;border-radius:3px;">repo</code> 權限），直接把目前這份 HTML push 到 repo，Pages 自動重建。
+        </div>
+        <div class="form-row">
+          <div class="form-label">Repo</div>
+          <input class="form-input" id="ghRepo" placeholder="username/repo-name" />
+        </div>
+        <div class="form-row">
+          <div class="form-label">檔案路徑</div>
+          <input class="form-input" id="ghFile" placeholder="index.html" />
+        </div>
+        <div class="form-row">
+          <div class="form-label">分支</div>
+          <input class="form-input" id="ghBranch" placeholder="main" />
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+          <button class="btn btn-sm" style="background:rgba(255,255,255,0.06);color:var(--text-secondary);" onclick="saveGhPagesConfig()">儲存設定</button>
+          <button class="btn btn-primary btn-sm" id="deployBtn" onclick="pushToGitHub()" style="background:linear-gradient(135deg,#1a7050,#3ecf8e);flex:1;">
+            🚀 一鍵部署到 GitHub Pages
+          </button>
+        </div>
+        <div class="sync-status" style="margin-top:8px;">
+          <div class="sync-dot offline" id="deployDot"></div>
+          <span id="deployStatus">尚未部署</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ Supabase 儲存位置說明 ══ -->
+    <div class="settings-section">
+      <div class="settings-section-title">🗄️ Supabase 資料儲存</div>
+      <div class="card" style="padding:14px 16px;" data-m="[CFG] Supabase">
+        <div style="font-size:11px;color:var(--text-secondary);line-height:1.8;margin-bottom:10px;">
+          後端使用 <strong style="color:var(--ocean-light);">Supabase</strong> 作為雲端資料庫，資料表與用途如下：
+        </div>
+        <div id="supabaseTableList" style="margin-bottom:10px;">
+          <!-- 動態生成 -->
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;">
+          <div style="font-size:10px;color:var(--text-muted);background:rgba(255,255,255,0.03);border-radius:8px;padding:8px 10px;flex:1;line-height:1.7;">
+            <div style="color:var(--accent-green);font-weight:700;margin-bottom:4px;">📍 資料流向</div>
+            本地操作 → <code style="font-size:9px;background:rgba(255,255,255,0.08);padding:0 3px;border-radius:2px;">localStorage</code> 即時儲存<br>
+            → 自動 sync → <strong>Gist</strong>（跨裝置備份）<br>
+            → 外部行情 API → <strong>Edge Function</strong> proxy<br>
+            → 籌碼雷達 bot → <strong>Supabase DB</strong>
+          </div>
+        </div>
       </div>
     </div>
  
@@ -882,6 +1025,8 @@ let db = {
     currentMonth: new Date().getMonth() + 1,
     currentYear: new Date().getFullYear(),
     gistToken: '', gistId: '',
+    ghRepo: '', ghFile: 'index.html', ghBranch: 'main',
+    ghRepo: '', ghFile: 'index.html', ghBranch: 'main',
     categories: [
       { name:'房貸', icon:'🏠' }, { name:'生活費', icon:'🛒' },
       { name:'交通', icon:'🚌' }, { name:'醫療', icon:'💊' },
@@ -992,11 +1137,186 @@ function switchPage(page, btn) {
 }
  
 // ===================================================================
-//  [M-04] INSPECTOR MODE
+//  [M-04] 中文開發者模式
 // ===================================================================
+
+// 區塊命名對照表（data-m 標籤 → 中文區塊名稱）
+const DEV_LABELS = {
+  '[M-01] DashboardPage'  : '儀錶板主頁面',
+  '[M-01] TotalAssets'    : '總資產卡片',
+  '[M-01] CashFlow'       : '現金流水球',
+  '[M-01] Balance'        : '收支平衡圖',
+  '[M-01] MiniGrid'       : '小卡片雙欄區',
+  '[M-01] StocksPage'     : '股票資產頁面',
+  '[M-01] PledgePage'     : '質押管理頁面',
+  '[M-01] PledgeSummary'  : '質押總覽卡片',
+  '[M-01] PledgeList'     : '質押倉位列表',
+  '[M-02] DebtSummary'    : '分期貸款待還摘要',
+  '[M-02] RecurringItem'  : '固定支出項目列',
+  '[M-04] TopNav'         : '頂部導覽列',
+  '[M-04] BottomNav'      : '底部導覽列',
+  '[M-05] TxPage'         : '交易記錄頁面',
+  '[M-05] TxTabs'         : '交易分類標籤列',
+  '[M-05] MultiselectBar' : '多選操作列',
+  '[N-01] QuickAdd'       : '快速新增按鈕列',
+  '[FX] FixedPage'        : '固定支出頁面',
+  '[M-01] SettingsPage'   : '設定頁面',
+  '[CFG] GistSync'        : 'GitHub Gist 雲端同步設定',
+  '[CFG] GhPages'         : 'GitHub Pages 部署說明',
+  '[CFG] Supabase'        : 'Supabase 資料表說明',
+};
+
+// 各區塊對應的原始碼行號資訊
+// 格式：{ html: [起始行, 結束行], css: [起始行, 結束行], js: [起始行, 結束行] }
+const DEV_LINES = {
+  //  key                      html 行範圍        css 行範圍        js 行範圍           各層用途說明
+  '[M-01] DashboardPage'  : { html:[408,467],  css:[175,180],  js:[1008,1060],  htmlDesc:'儀錶板外層 page div，包含所有首頁卡片',                     cssDesc:'page.active 顯示控制、fadeIn 動畫',                  jsDesc:'renderDashboard() 計算月份收支、更新所有卡片數字' },
+  '[M-01] TotalAssets'    : { html:[410,418],  css:[165,173],  js:[1018,1030],  htmlDesc:'總資產卡片，顯示資產總額與負債列',                          cssDesc:'.asset-total-card 漸層背景、.total-amount 字級',      jsDesc:'bankTotal+stockTotal 加總，fmt() 格式化顯示' },
+  '[M-01] CashFlow'       : { html:[420,436],  css:[130,160],  js:[1032,1042],  htmlDesc:'現金流水球卡片，含水波動畫與收支數字',                      cssDesc:'.water-ball 圓形容器、@keyframes wave 波浪動畫',     jsDesc:'cashflow 計算、waterFill 高度百分比控制' },
+  '[M-01] Balance'        : { html:[438,450],  css:[175,200],  js:[1044,1060],  htmlDesc:'收支平衡雙欄長條圖，左支出右收入',                          cssDesc:'.bar-row .bar-fill 長條樣式、income/expense 顏色',    jsDesc:'expGroups/incGroups 分組、max 值計算長條寬度%' },
+  '[M-01] MiniGrid'       : { html:[452,466],  css:[215,218],  js:[1062,1080],  htmlDesc:'2欄小卡區，左銀行帳戶列表、右股票甜甜圈',                  cssDesc:'.mini-grid grid 2欄佈局',                             jsDesc:'bankList innerHTML 生成、renderDonut() 繪製SVG' },
+  '[M-01] StocksPage'     : { html:[536,551],  css:[300,316],  js:[1375,1400],  htmlDesc:'股票&ETF 頁面，含股票列表與銀行帳戶列表',                  cssDesc:'.stock-item .stock-ticker .stock-chg 顏色徽章',       jsDesc:'renderStocksPage() 遍歷 db.stocks/db.banks' },
+  '[M-01] PledgePage'     : { html:[554,600],  css:[316,380],  js:[1450,1530],  htmlDesc:'質押管理頁面，含總覽卡片、分期摘要、倉位列表',             cssDesc:'.pledge-card safe/warn/danger 左框線色、維持率bar',   jsDesc:'renderPledgePage() 計算維持率、壓力測試跌50%' },
+  '[M-01] PledgeSummary'  : { html:[558,574],  css:[352,370],  js:[1460,1480],  htmlDesc:'質押總覽 2x2 格：質押總額/年利/進行中/已結清',             cssDesc:'.pledge-summary-grid .pledge-summary-item 背景格',    jsDesc:'active/closed 篩選、totalAmt/totalInterest 計算' },
+  '[M-01] PledgeList'     : { html:[590,596],  css:[316,330],  js:[1510,1530],  htmlDesc:'質押倉位卡片列表，每張含防守價與壓力測試列',               cssDesc:'.pledge-stat-grid 3欄統計格、.stress-row 警示列',     jsDesc:'pledges.map() 生成卡片 HTML、togglePledgeStatus()' },
+  '[M-02] DebtSummary'    : { html:[576,580],  css:[395,410],  js:[1218,1250],  htmlDesc:'分期貸款剩餘待還摘要卡（有分期才顯示）',                   cssDesc:'.debt-summary-card 紅色漸層邊框背景',                 jsDesc:'getInstallmentDebtSummary() 過濾 installment 模板' },
+  '[M-02] RecurringItem'  : { html:[null,null], css:[415,435], js:[1252,1280],  htmlDesc:'（動態生成）固定支出/分期項目列表卡片',                    cssDesc:'.recurring-card installment/fixed/settled 左線色',    jsDesc:'renderRecurringList() / renderFixedPage() 生成' },
+  '[M-04] TopNav'         : { html:[402,407],  css:[105,114],  js:[null,null],  htmlDesc:'頂部導覽：左標題、右月份選擇器按鈕',                       cssDesc:'.top-nav sticky定位、backdrop-filter 毛玻璃',         jsDesc:'無獨立JS，月份點擊 → toggleMonthPicker()' },
+  '[M-04] BottomNav'      : { html:[867,882],  css:[115,128],  js:[null,null],  htmlDesc:'底部固定導覽列，6個頁面切換按鈕',                          cssDesc:'.bottom-nav fixed、.nav-btn active 顏色切換',         jsDesc:'switchPage(page, btn) 切換 .page.active 狀態' },
+  '[M-05] TxPage'         : { html:[470,505],  css:[440,465],  js:[1082,1175],  htmlDesc:'交易記錄頁面：快速新增、多選列、標籤列、月份分組列表',      cssDesc:'.tx-item .tx-amount pos/neg 顏色、月份摺疊區',        jsDesc:'renderTxList() 依月份分組、filterTx() 類型篩選' },
+  '[M-05] TxTabs'         : { html:[490,494],  css:[278,285],  js:[1090,1100],  htmlDesc:'全部/收入/支出 三個篩選標籤',                              cssDesc:'.tab .tab.active 選中樣式',                           jsDesc:'filterTx(f, el) 更新 txFilter 並重新渲染列表' },
+  '[M-05] MultiselectBar' : { html:[484,489],  css:[470,480],  js:[1108,1130],  htmlDesc:'多選操作浮動列：顯示已選筆數、改分類、取消',               cssDesc:'.tx-multiselect-bar sticky定位、.tx-check checkbox',  jsDesc:'toggleTxMultiselect() 切換模式、batchEditCategory()' },
+  '[N-01] QuickAdd'       : { html:[474,479],  css:[265,280],  js:[1175,1195],  htmlDesc:'收入/支出 快速新增按鈕對，點擊開啟對應 Modal',             cssDesc:'.quick-add-btn income/expense 漸層按鈕、hover陰影',   jsDesc:'showAddTxType(type) 預設類型、動態改 Modal 邊框色' },
+  '[FX] FixedPage'        : { html:[603,650],  css:[390,415],  js:[1285,1340],  htmlDesc:'固定支出頁面：總覽數字、類別佔比圖、分期摘要、完整列表',  cssDesc:'.recurring-card 卡片、.install-bar 分期進度條',       jsDesc:'renderFixedPage() 統計 active/settled/installment' },
+  '[M-01] SettingsPage'   : { html:[653,800],  css:[230,248],  js:[1540,1600],  htmlDesc:'設定頁面：GitHub Gist 雲端、主題、預算、類別、資料管理',  cssDesc:'.settings-section .gist-config 金色邊框卡',          jsDesc:'renderSettings() saveGistConfig() syncToGist/FromGist()' },
+  '[CFG] GistSync'        : { html:[716,735],  css:[208,210],  js:[2160,2215],  htmlDesc:'Gist 設定卡：Token 輸入、Gist ID、儲存/載入/上傳按鈕',    cssDesc:'.gist-config 金色漸層背景邊框卡片',                  jsDesc:'saveGistConfig() syncToGist() syncFromGist() 雲端同步' },
+  '[CFG] GhPages'         : { html:[737,775],  css:[null,null], js:[null,null], htmlDesc:'GitHub Pages 部署流程說明卡（靜態展示，無互動）',          cssDesc:'（無專屬CSS，使用通用 card/settings-section）',       jsDesc:'（純 HTML 說明，無 JS 邏輯）' },
+  '[CFG] Supabase'        : { html:[777,800],  css:[null,null], js:[2148,2165], htmlDesc:'Supabase 資料表列表，動態由 SUPABASE_TABLES 陣列渲染',     cssDesc:'（無專屬CSS，使用通用 card 樣式）',                   jsDesc:'SUPABASE_TABLES[] 常數 + renderSupabaseTables() 渲染' },
+};
+
+let _devClickHandler = null;
+
 function toggleInspector() {
-  document.body.classList.toggle('inspector-mode');
-  toast(document.body.classList.contains('inspector-mode') ? '🔬 Inspector ON' : '🔬 Inspector OFF', 1500);
+  const isOn = document.body.classList.toggle('inspector-mode');
+  if (isOn) {
+    toast('🛠 中文開發者模式 已開啟', 1800);
+    // 綁定點擊偵測
+    _devClickHandler = function(e) {
+      const el = e.target.closest('[data-m]');
+      if (!el) { closeDevPanel(); return; }
+      e.stopPropagation();
+      e.preventDefault();
+      showDevPanel(el, e.clientX, e.clientY);
+    };
+    document.addEventListener('click', _devClickHandler, true);
+  } else {
+    toast('🛠 中文開發者模式 已關閉', 1500);
+    if (_devClickHandler) {
+      document.removeEventListener('click', _devClickHandler, true);
+      _devClickHandler = null;
+    }
+    closeDevPanel();
+  }
+}
+
+function showDevPanel(el, cx, cy) {
+  const key  = el.getAttribute('data-m');
+  const name = DEV_LABELS[key] || key;
+  const info = DEV_LINES[key]  || {};
+
+  const rows = [];
+  if (info.html && info.html[0]) rows.push({ tag:'HTML', tagCls:'dev-tag-html', s:info.html[0], e:info.html[1]||info.html[0], desc:info.htmlDesc||'' });
+  if (info.css  && info.css[0])  rows.push({ tag:'CSS',  tagCls:'dev-tag-css',  s:info.css[0],  e:info.css[1] ||info.css[0],  desc:info.cssDesc ||'' });
+  if (info.js   && info.js[0])   rows.push({ tag:'JS',   tagCls:'dev-tag-js',   s:info.js[0],   e:info.js[1]  ||info.js[0],   desc:info.jsDesc  ||'' });
+
+  const idStr    = el.id ? `#${el.id}` : '';
+  const clsStr   = Array.from(el.classList).filter(c=>c).slice(0,3).map(c=>'.'+c).join('');
+  const selector = (idStr || clsStr) || el.tagName.toLowerCase();
+
+  const content = document.getElementById('devPanelContent');
+  content.innerHTML = `
+    <div class="dev-section">
+      <div class="dev-section-label">區塊識別</div>
+      <div class="dev-row" onclick="devCopyText('${key}',this)" title="複製 data-m">
+        <div class="dev-row-tag" style="background:rgba(150,150,150,0.15);color:rgba(200,230,240,0.7);padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700;">ID</div>
+        <div class="dev-row-info" style="font-size:10px;">${key}</div>
+        <div class="dev-row-line" style="color:rgba(200,230,240,0.4)">複製</div>
+      </div>
+      <div class="dev-row" onclick="devCopyText('${selector}',this)" title="複製選擇器">
+        <div class="dev-row-tag dev-tag-css">CSS</div>
+        <div class="dev-row-info">${selector}</div>
+        <div class="dev-row-line" style="color:rgba(200,230,240,0.4)">複製</div>
+      </div>
+    </div>
+    <div class="dev-section">
+      <div class="dev-section-label">點擊複製該段原始碼</div>
+      ${rows.length ? rows.map(r => `
+        <div class="dev-row" onclick="devCopyCode(${r.s},${r.e},this)" title="複製 L${r.s}–${r.e} 的程式碼">
+          <div class="dev-row-tag ${r.tagCls}">${r.tag}</div>
+          <div class="dev-row-info">
+            <div style="font-size:11px;">L${r.s}${r.e!==r.s?'–'+r.e:''} <span style="color:var(--text-muted);font-size:10px;">(${r.e-r.s+1}行)</span></div>
+            ${r.desc ? `<div style="font-size:9px;color:rgba(150,200,220,0.55);margin-top:2px;line-height:1.4;">${r.desc}</div>` : ''}
+          </div>
+          <div class="dev-row-line" style="flex-shrink:0;">複製</div>
+        </div>`).join('')
+      : `<div style="font-size:11px;color:var(--text-muted);padding:6px 0;">此區塊尚未建立行號對照</div>`}
+    </div>`;
+
+  const panel = document.getElementById('devInfoPanel');
+  panel.classList.add('visible');
+  const pw = panel.offsetWidth||280, ph = panel.offsetHeight||200;
+  const vw = window.innerWidth,      vh = window.innerHeight;
+  let left = cx+12, top = cy+12;
+  if (left+pw > vw-8) left = cx-pw-12;
+  if (top+ph  > vh-80) top = cy-ph-12;
+  if (left < 8) left = 8;
+  if (top  < 8) top  = 8;
+  panel.style.left = left+'px';
+  panel.style.top  = top+'px';
+}
+
+// 複製指定行號範圍的原始碼（1-based）
+function devCopyCode(startLine, endLine, rowEl) {
+  if (!window._srcLines) { toast('⚠️ 原始碼尚未載入'); return; }
+  const code = window._srcLines.slice(startLine-1, endLine).join('\n');
+  _devWriteClipboard(code, rowEl, `L${startLine}–${endLine} (${endLine-startLine+1}行)`);
+}
+
+// 複製純文字（ID / selector）
+function devCopyText(text, rowEl) {
+  _devWriteClipboard(text, rowEl, text);
+}
+
+function _devWriteClipboard(text, rowEl, label) {
+  const done = () => {
+    const lineEl = rowEl && rowEl.querySelector('.dev-row-line');
+    if (lineEl) {
+      const orig = lineEl.textContent;
+      lineEl.textContent = '✓ 已複製'; lineEl.classList.add('dev-copied');
+      setTimeout(()=>{ lineEl.textContent=orig; lineEl.classList.remove('dev-copied'); }, 1600);
+    }
+    const hint = document.getElementById('devCopyHint');
+    if (hint) {
+      hint.textContent = '✅ ' + label; hint.style.color = 'rgba(62,207,142,0.8)';
+      setTimeout(()=>{ hint.textContent='點擊列複製該段原始碼'; hint.style.color=''; }, 2200);
+    }
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(()=>{ _devFallbackCopy(text); done(); });
+  } else { _devFallbackCopy(text); done(); }
+}
+
+function _devFallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); } catch(e) {}
+  document.body.removeChild(ta);
+}
+
+function closeDevPanel() {
+  const panel = document.getElementById('devInfoPanel');
+  if (panel) panel.classList.remove('visible');
 }
  
 // ===================================================================
@@ -1075,6 +1395,47 @@ function renderDashboard() {
   `).join('');
 
   renderDonut();
+}
+
+// ===================================================================
+//  DONUT CHART
+// ===================================================================
+function renderDonut() {
+  const svg = document.getElementById('donutSvg');
+  const legend = document.getElementById('donutLegend');
+  if (!svg || !legend) return;
+
+  const colors = ['#1a8fa0','#3ecf8e','#f0c040','#4dc4d4','#f0504a','#a78bfa'];
+  const total = db.stocks.reduce((s, st) => s + st.value, 0);
+  if (!total || !db.stocks.length) {
+    svg.innerHTML = '<circle cx="40" cy="40" r="28" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="12"/>';
+    legend.innerHTML = '<div style="font-size:11px;color:var(--text-muted);">尚無持股</div>';
+    return;
+  }
+
+  const r = 28, cx = 40, cy = 40, circ = 2 * Math.PI * r;
+  let offset = 0;
+  let paths = '<circle cx="40" cy="40" r="28" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="12"/>';
+
+  db.stocks.forEach((s, i) => {
+    const pct = s.value / total;
+    const dash = pct * circ;
+    const gap  = circ - dash;
+    paths += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none"
+      stroke="${colors[i % colors.length]}" stroke-width="12"
+      stroke-dasharray="${dash.toFixed(2)} ${gap.toFixed(2)}"
+      stroke-dashoffset="${(-offset * circ).toFixed(2)}"
+      transform="rotate(-90 ${cx} ${cy})"/>`;
+    offset += pct;
+  });
+
+  svg.innerHTML = paths;
+
+  legend.innerHTML = db.stocks.map((s, i) => `
+    <div class="legend-item">
+      <div class="legend-dot" style="background:${colors[i % colors.length]};"></div>
+      <span>${s.ticker} ${(s.value / total * 100).toFixed(0)}%</span>
+    </div>`).join('');
 }
 
  
@@ -1771,8 +2132,38 @@ function renderSettings() {
   document.getElementById('gistId').value = db.config.gistId||'';
   document.getElementById('budgetIncome').value = db.config.budgetIncome||'';
   document.getElementById('budgetExpense').value = db.config.budgetExpense||'';
+  // GitHub Pages 部署設定
+  const r = document.getElementById('ghRepo');   if(r) r.value = db.config.ghRepo||'';
+  const f = document.getElementById('ghFile');   if(f) f.value = db.config.ghFile||'index.html';
+  const b = document.getElementById('ghBranch'); if(b) b.value = db.config.ghBranch||'main';
   applyTheme(db.config.theme || 'ocean');
   renderCategoryList(); renderIncomeCategoryList(); updateSyncUI();
+  renderSupabaseTables();
+}
+
+// ===================================================================
+//  [CFG] SUPABASE 資料表說明
+// ===================================================================
+const SUPABASE_TABLES = [
+  { table:'appstate',     icon:'💾', color:'var(--ocean-light)',  desc:'應用狀態主表，存放整個 db JSON（跨裝置同步用）' },
+  { table:'transactions', icon:'📋', color:'var(--accent-green)', desc:'交易記錄，含 type/amount/category/date 欄位' },
+  { table:'chip_data',    icon:'📊', color:'var(--accent-gold)',  desc:'籌碼雷達 II：TWSE 三大法人、外資買賣超資料' },
+  { table:'etf_price',    icon:'📈', color:'var(--ocean-teal)',   desc:'ETF 日線收盤價，由 chip_bot.py GitHub Actions 寫入' },
+  { table:'quote_cache',  icon:'⚡', color:'var(--accent-red)',   desc:'Edge Function quote-proxy 行情快取（VIX/QQQ/油價）' },
+];
+function renderSupabaseTables() {
+  const el = document.getElementById('supabaseTableList');
+  if (!el) return;
+  el.innerHTML = SUPABASE_TABLES.map(t => `
+    <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-glass);">
+      <div style="font-size:16px;flex-shrink:0;padding-top:1px;">${t.icon}</div>
+      <div style="flex:1;">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+          <code style="font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:${t.color};">${t.table}</code>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);line-height:1.5;">${t.desc}</div>
+      </div>
+    </div>`).join('');
 }
 function renderCategoryList() {
   document.getElementById('categoryList').innerHTML = db.config.categories.map((c,i) => `
@@ -1847,6 +2238,93 @@ function saveGistConfig() {
   db.config.gistId=document.getElementById('gistId').value.trim();
   saveLocal(); toast('✅ Gist 設定已儲存'); updateSyncUI();
 }
+
+function saveGhPagesConfig() {
+  db.config.ghRepo   = (document.getElementById('ghRepo')?.value   || '').trim();
+  db.config.ghFile   = (document.getElementById('ghFile')?.value   || 'index.html').trim();
+  db.config.ghBranch = (document.getElementById('ghBranch')?.value || 'main').trim();
+  saveLocal(); toast('✅ 部署設定已儲存');
+}
+
+// ===================================================================
+//  🚀 一鍵部署到 GitHub Pages（GitHub Contents API）
+// ===================================================================
+async function pushToGitHub() {
+  // 1. 讀取設定（先儲存表單最新值）
+  saveGhPagesConfig();
+  const token  = db.config.gistToken;
+  const repo   = db.config.ghRepo;
+  const file   = db.config.ghFile   || 'index.html';
+  const branch = db.config.ghBranch || 'main';
+
+  if (!token) { toast('⚠️ 請先在上方設定 GitHub Token'); return; }
+  if (!repo)  { toast('⚠️ 請填寫 Repo（格式：username/repo-name）'); return; }
+
+  setDeployStatus('deploying');
+  const btn = document.getElementById('deployBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ 部署中...'; }
+
+  try {
+    const apiBase = `https://api.github.com/repos/${repo}/contents/${file}`;
+    const headers = { Authorization: `token ${token}`, 'Content-Type': 'application/json' };
+
+    // 2. 取得目前檔案的 SHA（PUT 更新時必填）
+    let sha = null;
+    const getRes = await fetch(`${apiBase}?ref=${branch}`, { headers });
+    if (getRes.ok) {
+      const meta = await getRes.json();
+      sha = meta.sha;
+    } else if (getRes.status !== 404) {
+      throw new Error(`取得檔案失敗：HTTP ${getRes.status}`);
+    }
+
+    // 3. 取得本頁完整 HTML 原始碼
+    const htmlSource = await fetch(location.href).then(r => r.text());
+
+    // 4. Base64 encode（GitHub API 要求）
+    const encoded = btoa(unescape(encodeURIComponent(htmlSource)));
+
+    // 5. PUT 更新或建立檔案
+    const now = new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' });
+    const body = {
+      message: `🚀 一鍵部署 ${now}`,
+      content: encoded,
+      branch,
+      ...(sha ? { sha } : {})
+    };
+
+    const putRes = await fetch(apiBase, {
+      method: 'PUT', headers,
+      body: JSON.stringify(body)
+    });
+
+    if (!putRes.ok) {
+      const err = await putRes.json().catch(() => ({}));
+      throw new Error(err.message || `HTTP ${putRes.status}`);
+    }
+
+    const result = await putRes.json();
+    const commitUrl = result.commit?.html_url || `https://github.com/${repo}/actions`;
+    setDeployStatus('ok', `已部署 · ${now}`);
+    toast(`✅ Push 成功！Pages 約 30 秒後更新`, 3000);
+    console.log('[Deploy] commit:', commitUrl);
+
+  } catch(e) {
+    setDeployStatus('error', '部署失敗：' + e.message);
+    toast('❌ 部署失敗：' + e.message, 4000);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '🚀 一鍵部署到 GitHub Pages'; }
+  }
+}
+
+function setDeployStatus(s, msg) {
+  const dot = document.getElementById('deployDot');
+  const txt = document.getElementById('deployStatus');
+  if (!dot || !txt) return;
+  if (s === 'ok')       { dot.className = 'sync-dot';         txt.textContent = msg || '部署成功'; }
+  else if (s === 'deploying') { dot.className = 'sync-dot';   txt.textContent = '部署中，請稍候…'; }
+  else                  { dot.className = 'sync-dot offline'; txt.textContent = msg || '部署失敗'; }
+}
  
 // ===================================================================
 //  GITHUB GIST SYNC
@@ -1886,6 +2364,8 @@ async function syncFromGist() {
     if (!db.meta.lastSyncDate) db.meta.lastSyncDate = null;
     if (!db.config.incomeCategories) db.config.incomeCategories = [{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資',icon:'📈'},{name:'其他收入',icon:'💹'}];
     if (!db.config.theme) db.config.theme = 'ocean';
+      if (!db.config.ghFile) db.config.ghFile = 'index.html';
+      if (!db.config.ghBranch) db.config.ghBranch = 'main';
     applyTheme(db.config.theme);
     saveLocal(); toast('✅ 雲端資料已載入'); setSyncStatus('ok'); renderDashboard(); renderSettings();
   } catch(e) { setSyncStatus('error'); toast('❌ 載入失敗：'+e.message); }
@@ -1921,6 +2401,8 @@ function loadLocal() {
       if (!db.meta.lastSyncDate) db.meta.lastSyncDate = null; // [M-02] migrate
       if (!db.config.incomeCategories) db.config.incomeCategories = [{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資',icon:'📈'},{name:'其他收入',icon:'💹'}];
       if (!db.config.theme) db.config.theme = 'ocean';
+      if (!db.config.ghFile) db.config.ghFile = 'index.html';
+      if (!db.config.ghBranch) db.config.ghBranch = 'main';
     }
   } catch(e) {}
 }
@@ -2084,6 +2566,8 @@ function closeMonthPicker() {
 //  INIT
 // ===================================================================
 window.addEventListener('load', () => {
+  // 開發者模式：把自身原始碼存為行陣列，供複製使用
+  fetch(location.href).then(r=>r.text()).then(t=>{ window._srcLines = t.split('\n'); }).catch(()=>{});
   initParticles(); loadLocal();
   applyTheme(db.config.theme || 'ocean');
   runRecurringEngine(); // [M-02] auto-generate recurring transactions
