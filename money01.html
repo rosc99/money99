@@ -382,9 +382,9 @@
   .tx-item.selectable { padding-left: 4px; }
 </style>/* --- [CSS END] --- */
 </head>
-<body>
+<body><!-- --- [HTML START] --- -->
  
-<!-- Particles -->
+<!-- Particles --><!-- 這裡放你的導覽列、卡片等所有看得到的東西 -->
 <div class="particles" id="particles"></div>
  
 <!-- [M-04] Inspector Toggle (hidden corner button) -->
@@ -879,9 +879,9 @@
       <button class="btn" style="background:rgba(255,255,255,0.07);flex:1;" onclick="closeModal('recurringModal')">取消</button>
     </div>
   </div>
-</div>
+</div><!-- --- [HTML END] --- -->
  
-<script>
+<script>/* --- [JS START] --- */
 // ===================================================================
 //  [M-01] CENTRAL STORE — DATA STRUCTURE
 // ===================================================================
@@ -2142,6 +2142,6 @@ window.addEventListener('load', () => {
   else { document.getElementById('syncDot').className='sync-dot offline'; document.getElementById('syncText').textContent='未設定雲端同步'; }
   document.querySelectorAll('[id$="Modal"]').forEach(m => { m.addEventListener('click', e => { if (e.target===m) m.style.display='none'; }); });
 });
-</script>
+</script> /* --- [JS END] --- */
 </body>
 </html>
