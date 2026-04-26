@@ -94,7 +94,7 @@
   .nav-month:hover { background: var(--bg-glass-hover); }
   .nav-icon { font-size: 15px; }
  
-  /* ===== BOTTOM NAV ===== */
+  /* ===== BOTTOM NAV 導覽列===== */
   .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; display: flex; background: var(--nav-bg); backdrop-filter: blur(16px); border-top: 1px solid var(--border-glass); z-index: 200; padding-bottom: env(safe-area-inset-bottom, 0); }
   .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 8px 0 10px; cursor: pointer; transition: var(--transition); border: none; background: none; color: var(--text-muted); gap: 2px; font-family: 'Noto Sans TC', sans-serif; min-width: 0; }
   .nav-btn.active { color: var(--ocean-light); }
@@ -392,9 +392,9 @@
  
 <div id="app">
  
-  <!-- Top Nav -->
+  <!-- Top Nav  頂部導覽-->
   <div class="top-nav" data-m="[M-04] TopNav">
-    <div class="nav-title">🌊 資產概覽</div>
+    <div class="nav-title">🪙 資產概覽</div>
     <div class="nav-month" onclick="toggleMonthPicker()">
       <span class="nav-icon">📅</span>
       <span id="currentMonthLabel">12月</span>
@@ -402,7 +402,7 @@
     </div>
   </div>
  
-  <!-- ===== DASHBOARD PAGE ===== -->
+  <!-- ===== DASHBOARD PAGE 儀錶板===== -->
   <div class="page active" id="page-dashboard" data-m="[M-01] DashboardPage">
  
     <div class="card asset-total-card" data-m="[M-01] TotalAssets" onclick="switchPage('stocks', document.querySelector('[data-page=stocks]'))" style="cursor:pointer;">
@@ -422,7 +422,7 @@
  
     <div class="card" data-m="[M-01] CashFlow" onclick="switchPage('tx', document.querySelector('[data-page=tx]'))" style="cursor:pointer;">
       <div class="cashflow-section">
-        <div class="cashflow-title">流<br>現<br>金</div>
+        <div class="cashflow-title">流<br>金<br>現</div>
         <div class="water-ball-wrap">
           <div class="water-ball">
             <div class="water-fill" id="waterFill" style="height:50%"></div>
@@ -486,7 +486,7 @@
  
   </div><!-- end dashboard -->
  
-  <!-- ===== TRANSACTIONS PAGE ===== -->
+  <!-- ===== TRANSACTIONS PAGE 收入支出===== -->
   <div class="page" id="page-tx" data-m="[M-05] TxPage">
     <div style="height:12px"></div>
     <div class="section-header">
@@ -666,7 +666,7 @@
         <div style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;">選擇介面配色風格</div>
         <div class="theme-swatches">
           <div onclick="setTheme('ocean')" id="themeSwatchOcean" class="theme-swatch theme-swatch-ocean active" title="海洋藍（預設）">
-            <div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:18px;">🌊</div>
+            <div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:18px;">🪙</div>
           </div>
           <div onclick="setTheme('black')" id="themeSwatchBlack" class="theme-swatch theme-swatch-black" title="暗黑金">
             <div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:18px;">🌑</div>
