@@ -606,13 +606,84 @@
   <!-- ===== STOCKS PAGE ===== -->
   <div class="page" id="page-stocks" data-m="[M-01] StocksPage">
     <div style="height:12px"></div>
+
+    <!-- 總市值卡 -->
+    <div class="card asset-total-card" style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <div class="card-title">股票總市值</div>
+          <div class="total-amount" style="font-size:26px;">
+            <span id="stocksTotalVal" class="mono">--</span>
+            <span id="stocksTotalBadge" class="total-badge">+0%</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:6px;" id="stocksLastUpdate">資料更新中…</div>
+        </div>
+        <button onclick="fetchAllQuotes()" style="background:rgba(77,196,212,0.15);border:1px solid rgba(77,196,212,0.3);color:var(--ocean-light);border-radius:10px;padding:6px 12px;font-size:11px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;white-space:nowrap;" id="refreshBtn">🔄 刷新</button>
+      </div>
+    </div>
+
+    <!-- 股票清單 -->
     <div class="section-header">
-      <div class="section-title">股票 & ETF</div>
+      <div class="section-title">持股明細</div>
       <div class="section-more" onclick="showAddStock()">＋ 新增</div>
     </div>
     <div class="card" style="padding:12px 16px;">
       <div id="stockList"></div>
     </div>
+
+    <!-- 圖表分析區塊 -->
+    <div class="section-header" style="margin-top:4px;">
+      <div class="section-title">📊 股價分析</div>
+    </div>
+    <div class="card" style="padding:14px 16px;margin-bottom:12px;" id="chartAnalysisCard">
+      <!-- 股票選擇器 -->
+      <div style="display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px;" id="chartTickerSelector"></div>
+      <!-- 週期切換 -->
+      <div style="display:flex;gap:6px;margin-bottom:12px;">
+        <div class="tab active" style="flex:1;text-align:center;" onclick="switchChartPeriod('D',this)">日線</div>
+        <div class="tab" style="flex:1;text-align:center;" onclick="switchChartPeriod('W',this)">週線</div>
+        <div class="tab" style="flex:1;text-align:center;" onclick="switchChartPeriod('M',this)">月線</div>
+      </div>
+      <!-- 迷你K線圖 + 成交量 -->
+      <div style="position:relative;width:100%;height:200px;background:rgba(0,0,0,0.2);border-radius:12px;overflow:hidden;margin-bottom:10px;">
+        <canvas id="priceCanvas" style="width:100%;height:140px;display:block;"></canvas>
+        <canvas id="volCanvas" style="width:100%;height:55px;display:block;margin-top:5px;"></canvas>
+        <div id="chartLoading" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--text-muted);">選擇持股查看圖表</div>
+      </div>
+      <!-- 開TradingView按鈕 -->
+      <div id="tvLink" style="display:none;margin-bottom:12px;">
+        <a id="tvBtn" href="#" target="_blank" style="display:block;text-align:center;padding:9px;background:linear-gradient(135deg,rgba(26,143,160,0.25),rgba(77,196,212,0.15));border:1px solid rgba(77,196,212,0.35);border-radius:10px;color:var(--ocean-light);font-size:12px;font-weight:700;text-decoration:none;letter-spacing:0.04em;">
+          📈 在 TradingView 開啟完整圖表
+        </a>
+      </div>
+      <!-- 壓力支撐 & 趨勢分析 -->
+      <div id="technicalPanel" style="display:none;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+          <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:10px;">
+            <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">📌 壓力位</div>
+            <div id="resistanceVal" style="font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:var(--accent-red);">--</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:10px;">
+            <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">🛡 支撐位</div>
+            <div id="supportVal" style="font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:var(--accent-green);">--</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:10px;">
+            <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">🏔 近期高點</div>
+            <div id="highPointVal" style="font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:var(--accent-gold);">--</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:10px;">
+            <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">目前價</div>
+            <div id="currentPriceVal" style="font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:var(--ocean-light);">--</div>
+          </div>
+        </div>
+        <!-- 趨勢判斷 -->
+        <div id="trendBadge" style="padding:10px 14px;border-radius:10px;font-size:13px;font-weight:700;text-align:center;margin-bottom:10px;">--</div>
+        <!-- 下跌警示 -->
+        <div id="dropAlerts" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+      </div>
+    </div>
+
+    <!-- 銀行帳戶 -->
     <div class="section-header" style="margin-top:4px;">
       <div class="section-title">銀行帳戶</div>
       <div class="section-more" onclick="showAddBank()">＋ 新增</div>
@@ -1884,27 +1955,400 @@ function deleteTx(id) { db.transactions=db.transactions.filter(t=>t.id!==id); re
 // ===================================================================
 //  STOCKS & BANKS PAGE
 // ===================================================================
+
+// ── 股市行情狀態 ──
+let stockQuotes = {}; // { ticker: { price, change, changeAmt, high52, low52, volume } }
+let chartState = { ticker: null, period: 'D', candles: [], vols: [] };
+
+// Yahoo Finance proxy
+async function fetchQuote(ticker) {
+  const tw = ticker.match(/^\d/) ? ticker + '.TW' : ticker;
+  const url = `https://api.allorigins.win/raw?url=${encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/' + tw + '?interval=1d&range=3mo')}`;
+  try {
+    const r = await fetch(url, { signal: AbortSignal.timeout(8000) });
+    const d = await r.json();
+    const meta = d?.chart?.result?.[0]?.meta;
+    const quotes = d?.chart?.result?.[0]?.indicators?.quote?.[0];
+    const timestamps = d?.chart?.result?.[0]?.timestamp || [];
+    if (!meta) return null;
+    const closes = (quotes?.close || []).filter(x=>x!=null);
+    const highs  = (quotes?.high  || []).filter(x=>x!=null);
+    const lows   = (quotes?.low   || []).filter(x=>x!=null);
+    const vols   = quotes?.volume || [];
+    return {
+      price:     meta.regularMarketPrice || closes[closes.length-1],
+      prevClose: meta.previousClose || meta.chartPreviousClose,
+      high52:    meta.fiftyTwoWeekHigh,
+      low52:     meta.fiftyTwoWeekLow,
+      closes, highs, lows, vols, timestamps,
+      ticker, tw
+    };
+  } catch(e) { return null; }
+}
+
+async function fetchAllQuotes() {
+  if (!db.stocks.length) return;
+  const btn = document.getElementById('refreshBtn');
+  if (btn) { btn.textContent = '⏳ 更新中…'; btn.disabled = true; }
+  for (const s of db.stocks) {
+    if (s.ticker === '其他') continue;
+    const q = await fetchQuote(s.ticker);
+    if (q) {
+      stockQuotes[s.ticker] = q;
+      const chg = q.prevClose ? ((q.price - q.prevClose) / q.prevClose * 100) : s.change;
+      s.change = parseFloat(chg.toFixed(2));
+      s.price  = q.price;
+      // 更新市值：若有持股數量則用 shares*1000*price，否則保留舊值
+      if (s.shares) s.value = Math.round(s.shares * 1000 * q.price);
+    }
+  }
+  saveLocal();
+  renderStocksPage();
+  renderDashboard();
+  if (btn) { btn.textContent = '🔄 刷新'; btn.disabled = false; }
+  const now = new Date();
+  const upEl = document.getElementById('stocksLastUpdate');
+  if (upEl) upEl.textContent = `最後更新：${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+}
+
 function renderStocksPage() {
   const colors = ['#1a8fa0','#3ecf8e','#f0c040','#4dc4d4','#f0504a','#a78bfa'];
   const stockList = document.getElementById('stockList');
-  stockList.innerHTML = !db.stocks.length ? `<div class="empty"><span class="icon">📊</span>尚未加入任何股票</div>` :
-    db.stocks.map((s,i) => `
-      <div class="stock-item">
-        <div class="stock-ticker" style="color:${colors[i%colors.length]}">${s.ticker}</div>
-        <div class="stock-name">${s.name}</div>
-        <div style="text-align:right;"><div class="stock-val">${fmt(s.value)}</div><div class="stock-chg ${s.change>=0?'pos':'neg'}">${s.change>=0?'+':''}${s.change}%</div></div>
-        <div style="padding-left:8px;cursor:pointer;color:rgba(200,230,240,0.3);font-size:14px;" onclick="deleteStock('${s.id}')">✕</div>
-      </div>`).join('');
+
+  // 總市值
+  const totalVal = db.stocks.reduce((s,st)=>s+(st.value||0),0);
+  const totalChg = db.stocks.length
+    ? db.stocks.reduce((s,st)=>s+(st.change||0),0)/db.stocks.length : 0;
+  const tvEl = document.getElementById('stocksTotalVal');
+  const tbEl = document.getElementById('stocksTotalBadge');
+  if (tvEl) tvEl.textContent = fmt(totalVal);
+  if (tbEl) {
+    tbEl.textContent = (totalChg>=0?'+':'') + totalChg.toFixed(2) + '%';
+    tbEl.className = 'total-badge' + (totalChg<0?' neg':'');
+  }
+
+  // 持股清單（點擊顯示圖表）
+  stockList.innerHTML = !db.stocks.length
+    ? `<div class="empty"><span class="icon">📊</span>尚未加入任何股票</div>`
+    : db.stocks.map((s,i) => {
+        const q = stockQuotes[s.ticker];
+        const priceStr = q ? `$${q.price.toFixed(2)}` : (s.price ? `$${s.price}` : '--');
+        return `
+        <div class="stock-item" style="cursor:pointer;" onclick="selectChartTicker('${s.ticker}')">
+          <div class="stock-ticker" style="color:${colors[i%colors.length]}">${s.ticker}</div>
+          <div>
+            <div class="stock-name">${s.name}</div>
+            <div style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;">${priceStr}</div>
+          </div>
+          <div style="text-align:right;margin-left:auto;">
+            <div class="stock-val">${fmt(s.value)}</div>
+            <div class="stock-chg ${s.change>=0?'pos':'neg'}">${s.change>=0?'+':''}${s.change}%</div>
+          </div>
+          <div style="padding-left:8px;cursor:pointer;color:rgba(200,230,240,0.3);font-size:14px;" onclick="event.stopPropagation();deleteStock('${s.id}')">✕</div>
+        </div>`;
+      }).join('');
+
+  // 圖表股票選擇器
+  const sel = document.getElementById('chartTickerSelector');
+  if (sel) {
+    sel.innerHTML = db.stocks.filter(s=>s.ticker!=='其他').map(s => `
+      <button onclick="selectChartTicker('${s.ticker}')" id="ctab-${s.ticker}"
+        style="white-space:nowrap;padding:6px 12px;border-radius:8px;border:1px solid var(--border-glass);
+        background:var(--bg-glass);color:var(--text-secondary);font-size:12px;cursor:pointer;
+        font-family:'Noto Sans TC',sans-serif;transition:all 0.2s;"
+        onmouseover="this.style.borderColor='rgba(77,196,212,0.4)'"
+        onmouseout="if(chartState.ticker!=='${s.ticker}')this.style.borderColor=''">
+        ${s.ticker} ${s.name}
+      </button>`).join('');
+  }
+
+  // 銀行
   const bankMax = Math.max(...db.banks.map(b=>b.balance), 1);
   const bColors = ['#1a8fa0','#1a7060','#2a5f80'];
-  document.getElementById('bankFullList').innerHTML = !db.banks.length ? `<div class="empty"><span class="icon">🏦</span>尚未加入任何帳戶</div>` :
-    db.banks.map((b,i) => `
+  document.getElementById('bankFullList').innerHTML = !db.banks.length
+    ? `<div class="empty"><span class="icon">🏦</span>尚未加入任何帳戶</div>`
+    : db.banks.map((b,i) => `
       <div class="bank-bar-row">
         <div class="bank-name">${b.name}</div>
         <div class="bank-track"><div class="bank-fill" style="width:${Math.round(b.balance/bankMax*80)+15}%;background:${bColors[i%bColors.length]};">${fmt(b.balance)}</div></div>
         <div style="padding-left:8px;cursor:pointer;color:rgba(200,230,240,0.3);font-size:14px;" onclick="deleteBank('${b.id}')">✕</div>
       </div>`).join('');
+
+  // 若已選股自動刷圖
+  if (chartState.ticker) selectChartTicker(chartState.ticker);
 }
+
+// ── 圖表核心 ──
+function selectChartTicker(ticker) {
+  chartState.ticker = ticker;
+  // 更新 tab 樣式
+  document.querySelectorAll('[id^="ctab-"]').forEach(b => {
+    b.style.background = 'var(--bg-glass)';
+    b.style.color = 'var(--text-secondary)';
+    b.style.borderColor = '';
+  });
+  const active = document.getElementById('ctab-' + ticker);
+  if (active) {
+    active.style.background = 'rgba(26,143,160,0.25)';
+    active.style.color = 'var(--ocean-light)';
+    active.style.borderColor = 'rgba(77,196,212,0.5)';
+  }
+  drawChart(ticker);
+}
+
+function switchChartPeriod(period, el) {
+  chartState.period = period;
+  document.querySelectorAll('#chartAnalysisCard .tab').forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+  if (chartState.ticker) drawChart(chartState.ticker);
+}
+
+function drawChart(ticker) {
+  const loading = document.getElementById('chartLoading');
+  const tvLink  = document.getElementById('tvLink');
+  const tvBtn   = document.getElementById('tvBtn');
+  const panel   = document.getElementById('technicalPanel');
+
+  const q = stockQuotes[ticker];
+  if (!q || !q.closes.length) {
+    if (loading) { loading.style.display='flex'; loading.textContent='資料載入中，請先點擊刷新…'; }
+    if (tvLink) tvLink.style.display = 'block';
+    // TradingView link
+    const tw = ticker.match(/^\d/) ? ticker + '.TW' : ticker;
+    const period = chartState.period === 'D' ? 'D' : chartState.period === 'W' ? 'W' : 'M';
+    if (tvBtn) tvBtn.href = `https://tw.tradingview.com/chart/?symbol=TWSE:${tw.replace('.TW','')}&interval=${period}`;
+    if (panel) panel.style.display = 'none';
+    return;
+  }
+
+  if (loading) loading.style.display = 'none';
+  if (tvLink) tvLink.style.display = 'block';
+
+  // TradingView link
+  const sym = ticker.replace('.TW','');
+  const period = chartState.period === 'D' ? 'D' : chartState.period === 'W' ? 'W' : 'M';
+  if (tvBtn) tvBtn.href = `https://tw.tradingview.com/chart/?symbol=TWSE:${sym}&interval=${period}`;
+
+  // 根據期間採樣
+  let closes = q.closes, highs = q.highs, lows = q.lows, vols = q.vols;
+  if (chartState.period === 'W') {
+    // 取每5個最後一個
+    closes = closes.filter((_,i)=>(i+1)%5===0 || i===closes.length-1);
+    highs  = highs .filter((_,i)=>(i+1)%5===0 || i===highs .length-1);
+    lows   = lows  .filter((_,i)=>(i+1)%5===0 || i===lows  .length-1);
+    vols   = vols  .filter((_,i)=>(i+1)%5===0 || i===vols  .length-1);
+  } else if (chartState.period === 'M') {
+    closes = closes.filter((_,i)=>(i+1)%22===0 || i===closes.length-1);
+    highs  = highs .filter((_,i)=>(i+1)%22===0 || i===highs .length-1);
+    lows   = lows  .filter((_,i)=>(i+1)%22===0 || i===lows  .length-1);
+    vols   = vols  .filter((_,i)=>(i+1)%22===0 || i===vols  .length-1);
+  }
+
+  drawPriceCanvas(closes, highs, lows);
+  drawVolCanvas(vols, closes);
+  drawTechnical(closes, highs, lows, q.price, q.high52);
+}
+
+function drawPriceCanvas(closes, highs, lows) {
+  const canvas = document.getElementById('priceCanvas');
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.parentElement.clientWidth;
+  const H = 140;
+  canvas.width  = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width  = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+
+  if (!closes.length) return;
+  const allVals = [...closes, ...highs, ...lows].filter(x=>x!=null);
+  const minV = Math.min(...allVals) * 0.998;
+  const maxV = Math.max(...allVals) * 1.002;
+  const pad = { l:4, r:4, t:8, b:18 };
+  const cW = W - pad.l - pad.r;
+  const cH = H - pad.t - pad.b;
+  const n = closes.length;
+  const toX = i => pad.l + (i / (n-1)) * cW;
+  const toY = v => pad.t + (1 - (v - minV) / (maxV - minV)) * cH;
+
+  // 格線
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 0.5;
+  for (let i=1; i<4; i++) {
+    const y = pad.t + (cH / 4) * i;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W-pad.r, y); ctx.stroke();
+  }
+
+  // 面積
+  const trend = closes[closes.length-1] >= closes[0];
+  const lineColor = trend ? '#3ecf8e' : '#f0504a';
+  const grad = ctx.createLinearGradient(0, pad.t, 0, H);
+  grad.addColorStop(0, trend ? 'rgba(62,207,142,0.35)' : 'rgba(240,80,74,0.35)');
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.beginPath();
+  ctx.moveTo(toX(0), toY(closes[0]));
+  closes.forEach((v,i) => { if (v!=null) ctx.lineTo(toX(i), toY(v)); });
+  ctx.lineTo(toX(n-1), H);
+  ctx.lineTo(toX(0), H);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // 折線
+  ctx.beginPath();
+  ctx.strokeStyle = lineColor;
+  ctx.lineWidth = 1.5;
+  closes.forEach((v,i) => {
+    if (v==null) return;
+    i===0 ? ctx.moveTo(toX(i),toY(v)) : ctx.lineTo(toX(i),toY(v));
+  });
+  ctx.stroke();
+
+  // 最新價標籤
+  const lastX = toX(n-1);
+  const lastY = toY(closes[n-1]);
+  ctx.beginPath();
+  ctx.arc(lastX, lastY, 3, 0, Math.PI*2);
+  ctx.fillStyle = lineColor;
+  ctx.fill();
+  ctx.fillStyle = lineColor;
+  ctx.font = `bold 10px 'DM Mono', monospace`;
+  ctx.textAlign = 'right';
+  ctx.fillText('$' + closes[n-1].toFixed(2), W - pad.r, lastY - 4);
+
+  // Y軸最小最大值
+  ctx.fillStyle = 'rgba(150,200,220,0.45)';
+  ctx.font = '9px monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText(minV.toFixed(1), pad.l, H - 2);
+  ctx.fillText(maxV.toFixed(1), pad.l, pad.t + 9);
+}
+
+function drawVolCanvas(vols, closes) {
+  const canvas = document.getElementById('volCanvas');
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.parentElement.clientWidth;
+  const H = 55;
+  canvas.width  = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width  = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+
+  if (!vols || !vols.length) return;
+  const n = vols.length;
+  const maxV = Math.max(...vols.filter(v=>v!=null), 1);
+  const bW = Math.max(1, (W - 8) / n - 1);
+
+  // 標題
+  ctx.fillStyle = 'rgba(150,200,220,0.4)';
+  ctx.font = '9px monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText('成交量', 4, 10);
+
+  vols.forEach((v, i) => {
+    if (!v) return;
+    const pct = v / maxV;
+    const x = 4 + i * ((W-8)/n);
+    const barH = Math.max(2, (H - 16) * pct);
+    const up = closes[i] >= (closes[i-1] || closes[i]);
+    ctx.fillStyle = up ? 'rgba(62,207,142,0.55)' : 'rgba(240,80,74,0.55)';
+    ctx.fillRect(x, H - barH, bW, barH);
+  });
+}
+
+// ── 技術分析面板 ──
+function drawTechnical(closes, highs, lows, currentPrice, high52) {
+  const panel = document.getElementById('technicalPanel');
+  if (!panel) return;
+  panel.style.display = 'block';
+
+  // 壓力支撐：取最近60期的 HVN（高量價位）
+  const recent = closes.slice(-Math.min(60, closes.length));
+  const recentH = highs.slice(-Math.min(60, highs.length));
+  const recentL = lows.slice(-Math.min(60, lows.length));
+
+  // 壓力 = 最近局部高點平均
+  const localHighs = [];
+  for (let i=1; i<recentH.length-1; i++) {
+    if (recentH[i] > recentH[i-1] && recentH[i] > recentH[i+1]) localHighs.push(recentH[i]);
+  }
+  const localLows = [];
+  for (let i=1; i<recentL.length-1; i++) {
+    if (recentL[i] < recentL[i-1] && recentL[i] < recentL[i+1]) localLows.push(recentL[i]);
+  }
+
+  const resistance = localHighs.length ? localHighs.sort((a,b)=>b-a)[0] : Math.max(...recentH);
+  const support    = localLows.length  ? localLows.sort((a,b)=>a-b)[0]  : Math.min(...recentL);
+
+  // 近期最高點（整段資料）
+  const peak = Math.max(...highs);
+
+  document.getElementById('resistanceVal').textContent  = '$' + resistance.toFixed(2);
+  document.getElementById('supportVal').textContent     = '$' + support.toFixed(2);
+  document.getElementById('highPointVal').textContent   = '$' + peak.toFixed(2);
+  document.getElementById('currentPriceVal').textContent = '$' + currentPrice.toFixed(2);
+
+  // 趨勢判斷（簡易MA5 vs MA20）
+  const ma = (arr, n) => {
+    const s = arr.slice(-n);
+    return s.length ? s.reduce((a,b)=>a+b,0)/s.length : null;
+  };
+  const ma5  = ma(closes, 5);
+  const ma20 = ma(closes, 20);
+  const trend = document.getElementById('trendBadge');
+  if (ma5 && ma20) {
+    const isBull = ma5 > ma20 && currentPrice > ma20;
+    const isBear = ma5 < ma20 && currentPrice < ma20;
+    if (isBull) {
+      trend.textContent = '📈 多頭趨勢 — MA5 上穿 MA20，價格站上均線';
+      trend.style.cssText = 'padding:10px 14px;border-radius:10px;font-size:12px;font-weight:700;text-align:center;margin-bottom:10px;background:rgba(62,207,142,0.12);border:1px solid rgba(62,207,142,0.3);color:var(--accent-green);';
+    } else if (isBear) {
+      trend.textContent = '📉 空頭趨勢 — MA5 跌破 MA20，價格跌破均線';
+      trend.style.cssText = 'padding:10px 14px;border-radius:10px;font-size:12px;font-weight:700;text-align:center;margin-bottom:10px;background:rgba(240,80,74,0.12);border:1px solid rgba(240,80,74,0.3);color:var(--accent-red);';
+    } else {
+      trend.textContent = '↔️ 盤整區間 — 多空信號未明';
+      trend.style.cssText = 'padding:10px 14px;border-radius:10px;font-size:12px;font-weight:700;text-align:center;margin-bottom:10px;background:rgba(240,192,64,0.1);border:1px solid rgba(240,192,64,0.25);color:var(--accent-gold);';
+    }
+  } else {
+    trend.textContent = '資料不足，無法判斷趨勢';
+    trend.style.cssText = 'padding:10px 14px;border-radius:10px;font-size:12px;text-align:center;margin-bottom:10px;background:rgba(255,255,255,0.05);color:var(--text-muted);';
+  }
+
+  // 下跌警示（從最高點計算）
+  const dropContainer = document.getElementById('dropAlerts');
+  if (dropContainer) {
+    const dropFrom = peak;
+    const pct5  = dropFrom * 0.95;
+    const pct10 = dropFrom * 0.90;
+    const pct20 = dropFrom * 0.80;
+    const dropped = (dropFrom - currentPrice) / dropFrom * 100;
+
+    const alertItem = (label, price, hit) => `
+      <div style="flex:1;min-width:80px;padding:8px 10px;border-radius:8px;
+        background:${hit?'rgba(240,80,74,0.15)':'rgba(255,255,255,0.04)'};
+        border:1px solid ${hit?'rgba(240,80,74,0.4)':'rgba(255,255,255,0.08)'};text-align:center;">
+        <div style="font-size:10px;color:${hit?'var(--accent-red)':'var(--text-muted)'};margin-bottom:3px;">${label}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:${hit?'var(--accent-red)':'var(--text-secondary)'};">$${price.toFixed(2)}</div>
+        ${hit ? '<div style="font-size:9px;color:var(--accent-red);margin-top:2px;">⚠️ 已觸及</div>' : ''}
+      </div>`;
+
+    dropContainer.innerHTML = `
+      <div style="width:100%;font-size:10px;color:var(--text-muted);margin-bottom:6px;">
+        ▽ 從近期高點 $${dropFrom.toFixed(2)} 計算下跌警戒（目前跌幅 ${dropped.toFixed(1)}%）
+      </div>
+      ${alertItem('下跌 5%',  pct5,  currentPrice <= pct5)}
+      ${alertItem('下跌 10%', pct10, currentPrice <= pct10)}
+      ${alertItem('下跌 20%', pct20, currentPrice <= pct20)}`;
+  }
+}
+
 function showAddStock() { document.getElementById('stockModal').style.display = 'flex'; }
 function addStock() {
   const ticker=document.getElementById('stockTicker').value.trim(), name=document.getElementById('stockName').value.trim(),
@@ -2460,7 +2904,7 @@ function refreshCurrentPage() {
 switch (page) {
   case 'dashboard': renderDashboard();  break; // 儀表板
   case 'tx':        renderTxList();     break; // 交易列表
-  case 'stocks':    renderStocksPage();  break; // 股票頁面
+  case 'stocks':    renderStocksPage(); if(!Object.keys(stockQuotes).length) fetchAllQuotes(); break; // 股票頁面
   case 'pledge':    renderPledgePage();  break; // 質押頁面
   case 'settings':  renderSettings();   break; // 設定
   default:          renderDashboard();         // 預設顯示儀表板
