@@ -24,14 +24,56 @@
     --text-muted: rgba(150,200,220,0.45);
     --card-radius: 20px;
     --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+    --bg-body: #0a2a3d;
+    --bg-grad1: rgba(26,143,160,0.25);
+    --bg-grad2: rgba(13,79,110,0.4);
+    --bg-grad3: #061824;
+    --bg-grad4: #0a2a3d;
+    --bg-grad5: #061220;
+    --modal-bg: #0d2535;
+    --nav-bg: rgba(6,24,36,0.92);
+    --topnav-bg: rgba(6,24,36,0.95);
+    --particle-color: var(--ocean-light);
   }
+  body.theme-black {
+    --ocean-deep: #0d0d0d;
+    --ocean-mid: #1a1a1a;
+    --ocean-teal: #c0a030;
+    --ocean-light: #e0c060;
+    --ocean-foam: #f0e0a0;
+    --accent-gold: #f0c040;
+    --accent-green: #3ecf8e;
+    --accent-red: #f0504a;
+    --bg-glass: rgba(255,255,255,0.05);
+    --bg-glass-hover: rgba(255,255,255,0.08);
+    --border-glass: rgba(255,255,255,0.1);
+    --text-primary: #f0ece0;
+    --text-secondary: rgba(230,220,190,0.7);
+    --text-muted: rgba(180,170,140,0.5);
+    --bg-body: #0d0d0d;
+    --bg-grad1: rgba(60,50,10,0.3);
+    --bg-grad2: rgba(20,18,5,0.6);
+    --bg-grad3: #080808;
+    --bg-grad4: #0d0d0d;
+    --bg-grad5: #050505;
+    --modal-bg: #141414;
+    --nav-bg: rgba(8,8,8,0.95);
+    --topnav-bg: rgba(8,8,8,0.98);
+  }
+
+  /* Theme swatch buttons */
+  .theme-swatches { display:flex; gap:10px; margin-top:8px; }
+  .theme-swatch { width:48px; height:48px; border-radius:12px; cursor:pointer; border:2px solid transparent; transition:all 0.2s; display:flex; flex-direction:column; overflow:hidden; }
+  .theme-swatch.active { border-color: var(--ocean-light); box-shadow: 0 0 12px rgba(77,196,212,0.4); }
+  .theme-swatch-ocean { background: linear-gradient(135deg, #061824 0%, #1a8fa0 100%); }
+  .theme-swatch-black { background: linear-gradient(135deg, #0d0d0d 0%, #c0a030 100%); }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Noto Sans TC', sans-serif; background: var(--ocean-deep); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
+  body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg-body); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
   body::before {
     content: ''; position: fixed; inset: 0;
-    background: radial-gradient(ellipse 80% 60% at 20% 10%, rgba(26,143,160,0.25) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 80% at 80% 80%, rgba(13,79,110,0.4) 0%, transparent 60%),
-      linear-gradient(180deg, #061824 0%, #0a2a3d 50%, #061220 100%);
+    background: radial-gradient(ellipse 80% 60% at 20% 10%, var(--bg-grad1) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 80% 80%, var(--bg-grad2) 0%, transparent 60%),
+      linear-gradient(180deg, var(--bg-grad3) 0%, var(--bg-grad4) 50%, var(--bg-grad5) 100%);
     z-index: 0; pointer-events: none;
   }
   .particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
@@ -46,19 +88,19 @@
   #app { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
  
   /* ===== TOP NAV ===== */
-  .top-nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 8px; position: sticky; top: 0; z-index: 100; background: linear-gradient(180deg, rgba(6,24,36,0.95) 0%, transparent 100%); backdrop-filter: blur(8px); }
+  .top-nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 8px; position: sticky; top: 0; z-index: 100; background: linear-gradient(180deg, var(--topnav-bg) 0%, transparent 100%); backdrop-filter: blur(8px); }
   .nav-title { font-size: 18px; font-weight: 700; letter-spacing: 0.02em; }
   .nav-month { display: flex; align-items: center; gap: 6px; background: var(--bg-glass); border: 1px solid var(--border-glass); border-radius: 20px; padding: 6px 14px; font-size: 14px; cursor: pointer; transition: var(--transition); }
   .nav-month:hover { background: var(--bg-glass-hover); }
   .nav-icon { font-size: 15px; }
  
   /* ===== BOTTOM NAV ===== */
-  .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; display: flex; background: rgba(6,24,36,0.92); backdrop-filter: blur(16px); border-top: 1px solid var(--border-glass); z-index: 200; padding-bottom: env(safe-area-inset-bottom, 0); }
-  .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px 0 12px; cursor: pointer; transition: var(--transition); border: none; background: none; color: var(--text-muted); gap: 3px; font-family: 'Noto Sans TC', sans-serif; }
+  .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; display: flex; background: var(--nav-bg); backdrop-filter: blur(16px); border-top: 1px solid var(--border-glass); z-index: 200; padding-bottom: env(safe-area-inset-bottom, 0); }
+  .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 8px 0 10px; cursor: pointer; transition: var(--transition); border: none; background: none; color: var(--text-muted); gap: 2px; font-family: 'Noto Sans TC', sans-serif; min-width: 0; }
   .nav-btn.active { color: var(--ocean-light); }
   .nav-btn:hover { color: var(--ocean-foam); }
-  .nav-btn .icon { font-size: 20px; }
-  .nav-btn .label { font-size: 10px; letter-spacing: 0.03em; }
+  .nav-btn .icon { font-size: 18px; }
+  .nav-btn .label { font-size: 9px; letter-spacing: 0.02em; }
  
   /* ===== PAGES ===== */
   .page { display: none; padding: 0 16px 100px; animation: fadeIn 0.4s ease; }
@@ -96,8 +138,8 @@
     50% { clip-path: polygon(0% 4%, 15% 8%, 30% 4%, 45% 8%, 60% 4%, 75% 8%, 90% 4%, 100% 8%, 100% 100%, 0% 100%); }
   }
   .water-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.6); z-index: 2; }
-  .water-pct { font-size: 22px; font-weight: 900; font-family: 'DM Mono', monospace; }
-  .water-sub { font-size: 10px; opacity: 0.85; margin-top: 2px; }
+  .water-pct { font-size: 13px; font-weight: 700; font-family: 'DM Mono', monospace; opacity: 0.85; margin-top: 2px; }
+  .water-sub { font-size: 20px; font-weight: 900; font-family: 'DM Mono', monospace; line-height: 1; }
   .water-shine { position: absolute; top: 10px; left: 18px; width: 24px; height: 14px; background: radial-gradient(ellipse, rgba(255,255,255,0.35) 0%, transparent 70%); border-radius: 50%; transform: rotate(-25deg); z-index: 3; }
  
   /* ===== BALANCE CHART ===== */
@@ -109,7 +151,7 @@
   .bar-label { font-size: 11px; color: var(--text-secondary); width: 32px; text-align: right; flex-shrink: 0; }
   .bar-track { flex: 1; height: 14px; border-radius: 4px; background: rgba(255,255,255,0.05); overflow: hidden; }
   .bar-fill { height: 100%; border-radius: 4px; transition: width 1s cubic-bezier(0.4,0,0.2,1); }
-  .bar-expense { background: linear-gradient(90deg, #1a6fa0, #1a8fa0); }
+  .bar-expense { background: linear-gradient(90deg, #a02020, #f0504a); }
   .bar-income { background: linear-gradient(90deg, #1a8060, #3ecf8e); }
   .bar-income-2 { background: linear-gradient(90deg, #2a9060, #3ecf8e); }
   .bar-income-3 { background: linear-gradient(90deg, #1a7050, #2eaf6e); }
@@ -138,7 +180,7 @@
   .form-input { flex: 1; background: rgba(255,255,255,0.06); border: 1px solid var(--border-glass); border-radius: 10px; padding: 8px 12px; color: var(--text-primary); font-family: 'DM Mono', monospace; font-size: 13px; outline: none; transition: var(--transition); }
   .form-input:focus { border-color: var(--ocean-light); background: rgba(77,196,212,0.08); }
   .form-input::placeholder { color: var(--text-muted); }
-  select.form-input option { background: #0a2a3d; }
+  select.form-input option { background: var(--modal-bg); }
   .btn { border: none; border-radius: 12px; padding: 10px 20px; font-family: 'Noto Sans TC', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: var(--transition); letter-spacing: 0.03em; }
   .btn-primary { background: linear-gradient(135deg, var(--ocean-teal), var(--ocean-light)); color: #fff; }
   .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
@@ -316,7 +358,7 @@
  
   /* ===== ICON PICKER ===== */
   .icon-picker-overlay { position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:700;display:flex;align-items:center;justify-content:center; }
-  .icon-picker-box { background:#0d2535;border-radius:20px;padding:18px;width:300px;max-height:60vh;overflow-y:auto;border:1px solid rgba(77,196,212,0.25);box-shadow:0 20px 60px rgba(0,0,0,0.5); }
+  .icon-picker-box { background:var(--modal-bg);border-radius:20px;padding:18px;width:300px;max-height:60vh;overflow-y:auto;border:1px solid rgba(77,196,212,0.25);box-shadow:0 20px 60px rgba(0,0,0,0.5); }
   .icon-picker-title { font-size:13px;font-weight:700;color:var(--ocean-foam);margin-bottom:12px;text-align:center; }
   .icon-picker-grid { display:grid;grid-template-columns:repeat(7,1fr);gap:6px; }
   .icon-picker-item { width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;background:rgba(255,255,255,0.04);border:1px solid transparent;transition:all 0.15s; }
@@ -385,8 +427,8 @@
           <div class="water-ball">
             <div class="water-fill" id="waterFill" style="height:50%"></div>
             <div class="water-text">
-              <div class="water-pct" id="waterPct">50%</div>
               <div class="water-sub" id="waterSub">$0</div>
+              <div class="water-pct" id="waterPct">50%</div>
             </div>
             <div class="water-shine"></div>
           </div>
@@ -530,16 +572,19 @@
       <div class="card-title">📆 分期貸款剩餘待還</div>
       <div class="debt-summary-grid" id="debtSummaryGrid"></div>
     </div>
- 
-    <!-- [M-02] Recurring Templates Section -->
-    <div class="section-header" style="margin-top:4px;" data-m="[M-02] RecurringHeader">
-      <div class="section-title">🔁 固定支出模板</div>
-      <div class="section-more" onclick="showAddRecurring()">＋ 新增</div>
+
+    <!-- Shortcut to fixed page -->
+    <div class="card" style="background:rgba(240,80,74,0.06);border:1px solid rgba(240,80,74,0.18);padding:14px 16px;cursor:pointer;" onclick="switchPage('fixed',document.querySelector('[data-page=fixed]'))">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:22px;">🔁</span>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;">固定支出管理</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">點此前往固定支出分頁</div>
+        </div>
+        <span style="color:var(--ocean-light);font-size:16px;">›</span>
+      </div>
     </div>
-    <div class="card" style="padding:12px 16px;" data-m="[M-02] RecurringList">
-      <div id="recurringList"><div class="empty"><span class="icon">📅</span>尚無固定支出模板</div></div>
-    </div>
- 
+
     <div class="card" data-m="[M-01] PledgeList" style="padding:12px 16px;">
       <div class="section-header" style="margin-bottom:10px;">
         <div class="section-title" style="font-size:13px;">🔒 質押倉位</div>
@@ -547,7 +592,48 @@
       <div id="pledgeList"><div class="empty"><span class="icon">🔒</span>尚無質押記錄</div></div>
     </div>
   </div>
- 
+
+  <!-- ===== FIXED EXPENSE PAGE ===== -->
+  <div class="page" id="page-fixed" data-m="[FX] FixedPage">
+    <div style="height:12px"></div>
+    <div class="section-header">
+      <div class="section-title">🔁 固定支出</div>
+      <div class="section-more" onclick="showAddRecurring()">＋ 新增</div>
+    </div>
+    <div class="card" style="background:linear-gradient(135deg,rgba(240,80,74,0.12),rgba(240,80,74,0.05));border:1px solid rgba(240,80,74,0.25);">
+      <div class="card-title">固定支出總覽</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;">
+        <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:12px;">
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">每月固定</div>
+          <div id="fixedMonthlyTotal" style="font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--accent-red);">--</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:12px;">
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">年化金額</div>
+          <div id="fixedAnnualTotal" style="font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--accent-gold);">--</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:12px;">
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">進行中項目</div>
+          <div id="fixedActiveCount" style="font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--ocean-light);">0</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:12px;">
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">分期剩餘待還</div>
+          <div id="fixedInstallDebt" style="font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--accent-red);">--</div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="padding:14px 16px;">
+      <div class="card-title" style="margin-bottom:10px;">類別佔比</div>
+      <div id="fixedCategoryChart"></div>
+    </div>
+    <div class="card debt-summary-card" id="fixedDebtSummaryCard" style="display:none;">
+      <div class="card-title">📆 分期貸款剩餘待還</div>
+      <div class="debt-summary-grid" id="fixedDebtSummaryGrid"></div>
+    </div>
+    <div class="card" style="padding:12px 16px;">
+      <div id="fixedRecurringList"><div class="empty"><span class="icon">📅</span>尚無固定支出模板</div></div>
+    </div>
+  </div>
+
   <!-- ===== SETTINGS PAGE ===== -->
   <div class="page" id="page-settings" data-m="[M-01] SettingsPage">
     <div style="height:12px"></div>
@@ -574,6 +660,22 @@
       </div>
     </div>
  
+    <div class="settings-section">
+      <div class="settings-section-title">🎨 顏色主題</div>
+      <div class="card" style="padding:14px 16px;">
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;">選擇介面配色風格</div>
+        <div class="theme-swatches">
+          <div onclick="setTheme('ocean')" id="themeSwatchOcean" class="theme-swatch theme-swatch-ocean active" title="海洋藍（預設）">
+            <div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:18px;">🌊</div>
+          </div>
+          <div onclick="setTheme('black')" id="themeSwatchBlack" class="theme-swatch theme-swatch-black" title="暗黑金">
+            <div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:18px;">🌑</div>
+          </div>
+        </div>
+        <div id="themeLabel" style="font-size:11px;color:var(--text-muted);margin-top:8px;">目前：海洋藍</div>
+      </div>
+    </div>
+
     <div class="settings-section">
       <div class="settings-section-title">📊 每月預算設定</div>
       <div class="card" style="padding:14px 16px;">
@@ -641,6 +743,9 @@
   <button class="nav-btn" data-page="stocks" onclick="switchPage('stocks',this)">
     <span class="icon">📈</span><span class="label">資產</span>
   </button>
+  <button class="nav-btn" data-page="fixed" onclick="switchPage('fixed',this)">
+    <span class="icon">🔁</span><span class="label">固定</span>
+  </button>
   <button class="nav-btn" data-page="pledge" onclick="switchPage('pledge',this)">
     <span class="icon">🔒</span><span class="label">質押</span>
   </button>
@@ -653,7 +758,7 @@
  
 <!-- Add TX Modal -->
 <div id="txModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:flex-end;">
-  <div style="background:#0d2535;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:2px solid rgba(77,196,212,0.2);transition:border-top 0.2s;">
+  <div style="background:var(--modal-bg);border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:2px solid rgba(77,196,212,0.2);transition:border-top 0.2s;">
     <div id="txModalTitle" style="font-size:16px;font-weight:700;margin-bottom:16px;">新增交易</div>
     <div class="form-row"><div class="form-label">類型</div><select class="form-input" id="txType"><option value="expense">支出</option><option value="income">收入</option></select></div>
     <div class="form-row"><div class="form-label">名稱</div><input class="form-input" id="txName" placeholder="房貸、薪資…" /></div>
@@ -669,7 +774,7 @@
  
 <!-- Add Stock Modal -->
 <div id="stockModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:flex-end;">
-  <div style="background:#0d2535;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:1px solid rgba(77,196,212,0.2);">
+  <div style="background:var(--modal-bg);border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:1px solid rgba(77,196,212,0.2);">
     <div style="font-size:16px;font-weight:700;margin-bottom:16px;">新增股票/ETF</div>
     <div class="form-row"><div class="form-label">代號</div><input class="form-input" id="stockTicker" placeholder="2330、0050…" /></div>
     <div class="form-row"><div class="form-label">名稱</div><input class="form-input" id="stockName" placeholder="台積電" /></div>
@@ -684,7 +789,7 @@
  
 <!-- Add Bank Modal -->
 <div id="bankModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:flex-end;">
-  <div style="background:#0d2535;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:1px solid rgba(77,196,212,0.2);">
+  <div style="background:var(--modal-bg);border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:1px solid rgba(77,196,212,0.2);">
     <div style="font-size:16px;font-weight:700;margin-bottom:16px;">新增銀行帳戶</div>
     <div class="form-row"><div class="form-label">銀行名</div><input class="form-input" id="bankName" placeholder="國泰、玉山…" /></div>
     <div class="form-row"><div class="form-label">餘額</div><input class="form-input" type="number" id="bankBalance" placeholder="0" /></div>
@@ -697,7 +802,7 @@
  
 <!-- [M-03] Add Pledge Modal -->
 <div id="pledgeModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:flex-end;overflow-y:auto;">
-  <div style="background:#0d2535;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:2px solid rgba(240,192,64,0.35);">
+  <div style="background:var(--modal-bg);border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:2px solid rgba(240,192,64,0.35);">
     <div style="font-size:16px;font-weight:700;margin-bottom:4px;color:var(--accent-gold);">🔒 新增質押倉位</div>
     <div style="font-size:11px;color:var(--text-muted);margin-bottom:16px;">填入後自動計算維持率與防守價</div>
  
@@ -732,7 +837,7 @@
  
 <!-- [M-02] Add Recurring Template Modal -->
 <div id="recurringModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:flex-end;overflow-y:auto;">
-  <div style="background:#0d2535;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:2px solid rgba(77,196,212,0.3);">
+  <div style="background:var(--modal-bg);border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:2px solid rgba(77,196,212,0.3);">
     <div style="font-size:16px;font-weight:700;margin-bottom:4px;color:var(--ocean-light);">🔁 新增固定支出模板</div>
     <div style="font-size:11px;color:var(--text-muted);margin-bottom:16px;">設定後每月自動產生一筆支出記錄</div>
  
@@ -792,7 +897,12 @@ let db = {
       { name:'房貸', icon:'🏠' }, { name:'生活費', icon:'🛒' },
       { name:'交通', icon:'🚌' }, { name:'醫療', icon:'💊' },
       { name:'娛樂', icon:'🎮' }, { name:'其他', icon:'📦' },
-    ]
+    ],
+    incomeCategories: [
+      { name:'薪資', icon:'💰' }, { name:'獎金', icon:'🎁' },
+      { name:'投資', icon:'📈' }, { name:'其他收入', icon:'💹' },
+    ],
+    theme: 'ocean'
   },
   transactions: [],
   banks: [
@@ -889,6 +999,7 @@ function switchPage(page, btn) {
   if (page === 'tx') renderTxList();
   if (page === 'stocks') renderStocksPage();
   if (page === 'pledge') renderPledgePage(); // [M-01]
+  if (page === 'fixed') renderFixedPage();
 }
  
 // ===================================================================
@@ -1102,19 +1213,16 @@ function addRecurringTemplate() {
   db.recurringTemplates.push(tpl);
   closeModal('recurringModal');
   toast('✅ 固定支出已新增');
-  saveLocal(); renderRecurringList(); renderPledgePage(); autoSync();
+  saveLocal(); renderRecurringList(); renderFixedPage(); renderPledgePage(); renderDashboard(); autoSync();
 }
 function deleteRecurring(id) {
   db.recurringTemplates = db.recurringTemplates.filter(t=>t.id!==id);
-  saveLocal(); renderRecurringList(); renderPledgePage(); autoSync();
+  saveLocal(); renderRecurringList(); renderFixedPage(); renderPledgePage(); renderDashboard(); autoSync();
 }
 function renderRecurringList() {
   const tpls = db.recurringTemplates || [];
   const container = document.getElementById('recurringList');
-  if (!tpls.length) {
-    container.innerHTML = `<div class="empty"><span class="icon">📅</span>尚無固定支出模板</div>`;
-    return;
-  }
+  if (!container) return; // container removed - now on fixed page
   container.innerHTML = tpls.map(tpl => {
     const isInstall = tpl.type === 'installment';
     const isSettled = tpl.status === 'settled';
@@ -1155,6 +1263,131 @@ function getInstallmentDebtSummary() {
   const total = tpls.reduce((s, t) => s + t.amount * (t.remainingInstallments || 0), 0);
   const count = tpls.length;
   return { total, count, tpls };
+}
+
+// ===================================================================
+//  FIXED EXPENSE PAGE
+// ===================================================================
+function renderFixedPage() {
+  const tpls = db.recurringTemplates || [];
+  const active = tpls.filter(t => t.status !== 'settled');
+  const monthlyTotal = active.reduce((s,t) => s+t.amount, 0);
+  const installDebt = tpls.filter(t=>t.type==='installment'&&t.status!=='settled')
+    .reduce((s,t)=>s+t.amount*(t.remainingInstallments||0),0);
+
+  const mEl = document.getElementById('fixedMonthlyTotal');
+  const aEl = document.getElementById('fixedAnnualTotal');
+  const cEl = document.getElementById('fixedActiveCount');
+  const dEl = document.getElementById('fixedInstallDebt');
+  if (mEl) mEl.textContent = fmt(monthlyTotal);
+  if (aEl) aEl.textContent = fmt(monthlyTotal * 12);
+  if (cEl) cEl.textContent = active.length;
+  if (dEl) dEl.textContent = installDebt > 0 ? fmt(installDebt) : '--';
+
+  // Category chart
+  const catTotals = {};
+  active.forEach(t => { catTotals[t.category] = (catTotals[t.category]||0) + t.amount; });
+  const maxCat = Math.max(...Object.values(catTotals), 1);
+  const chartEl = document.getElementById('fixedCategoryChart');
+  if (chartEl) {
+    if (!Object.keys(catTotals).length) {
+      chartEl.innerHTML = '<div class="empty" style="padding:16px 0;">尚無資料</div>';
+    } else {
+      chartEl.innerHTML = Object.entries(catTotals).sort((a,b)=>b[1]-a[1]).map(([cat,val]) => `
+        <div style="margin-bottom:10px;">
+          <div class="bar-row">
+            <div class="bar-track" style="flex:1;">
+              <div class="bar-fill bar-expense" style="width:${Math.round(val/maxCat*100)}%;min-width:2px;"></div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;font-family:'DM Mono',monospace;color:rgba(200,200,200,0.7);margin-top:2px;">
+            <span>${cat}</span><span>${fmt(val)}/月</span>
+          </div>
+        </div>`).join('');
+    }
+  }
+
+  // Installment debt summary
+  const { count: debtCount, tpls: debtTpls } = getInstallmentDebtSummary();
+  const debtCard = document.getElementById('fixedDebtSummaryCard');
+  const debtGrid = document.getElementById('fixedDebtSummaryGrid');
+  if (debtCard && debtGrid) {
+    if (debtCount > 0) {
+      debtCard.style.display = 'block';
+      const monthlyInstall = debtTpls.reduce((s,t)=>s+t.amount,0);
+      debtGrid.innerHTML = `
+        <div class="debt-summary-item"><div class="debt-summary-lbl">剩餘總額</div><div class="debt-summary-val" style="color:var(--accent-red)">${fmt(installDebt)}</div></div>
+        <div class="debt-summary-item"><div class="debt-summary-lbl">每月應付</div><div class="debt-summary-val" style="color:var(--accent-gold)">${fmt(monthlyInstall)}</div></div>
+        <div class="debt-summary-item"><div class="debt-summary-lbl">進行中項目</div><div class="debt-summary-val" style="color:var(--ocean-light)">${debtCount} 筆</div></div>
+        <div class="debt-summary-item"><div class="debt-summary-lbl">最長剩餘期數</div><div class="debt-summary-val">${Math.max(...debtTpls.map(t=>t.remainingInstallments||0))} 期</div></div>`;
+    } else {
+      debtCard.style.display = 'none';
+    }
+  }
+
+  // Full recurring list
+  const listEl = document.getElementById('fixedRecurringList');
+  if (!listEl) return;
+  if (!tpls.length) {
+    listEl.innerHTML = '<div class="empty"><span class="icon">📅</span>尚無固定支出模板</div>';
+    return;
+  }
+  listEl.innerHTML = tpls.map(tpl => {
+    const isInstall = tpl.type === 'installment';
+    const isSettled = tpl.status === 'settled';
+    const done = isInstall ? (tpl.totalInstallments - tpl.remainingInstallments) : 0;
+    const pct = isInstall && tpl.totalInstallments ? Math.round(done / tpl.totalInstallments * 100) : 0;
+    const cardCls = isSettled ? 'settled' : isInstall ? 'installment' : 'fixed';
+    const tagColor = isSettled ? 'var(--text-muted)' : isInstall ? 'var(--accent-gold)' : 'var(--ocean-light)';
+    const tagLabel = isSettled ? '已結清' : isInstall ? '分期' : '固定';
+    const icon = isSettled ? '✅' : isInstall ? '📆' : '🔁';
+    return `
+    <div class="recurring-card ${cardCls}">
+      <div class="recurring-header">
+        <div class="recurring-icon">${icon}</div>
+        <div class="recurring-name">
+          <div class="recurring-title">${tpl.name}</div>
+          <div class="recurring-sub">${tpl.category} · <span style="color:${tagColor};font-weight:700;">${tagLabel}</span></div>
+        </div>
+        <div style="text-align:right;">
+          <div class="recurring-amount">-${fmt(tpl.amount)}</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">每月</div>
+        </div>
+        <div style="padding-left:8px;cursor:pointer;color:rgba(200,230,240,0.3);font-size:14px;" onclick="deleteRecurring('${tpl.id}')">✕</div>
+      </div>
+      ${isInstall && !isSettled ? `
+      <div class="install-bar-wrap">
+        <div class="install-bar-track"><div class="install-bar-fill" style="width:${pct}%"></div></div>
+        <div class="install-bar-label">
+          <span>已還 ${done}/${tpl.totalInstallments} 期</span>
+          <span>剩餘 ${tpl.remainingInstallments} 期 · ${fmt(tpl.amount * tpl.remainingInstallments)}</span>
+        </div>
+      </div>` : ''}
+      ${isSettled ? `<div style="font-size:11px;color:var(--accent-green);text-align:center;padding:4px 0;">🎉 分期已全數結清</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ===================================================================
+//  THEME SWITCHER
+// ===================================================================
+function setTheme(theme) {
+  db.config.theme = theme;
+  saveLocal();
+  applyTheme(theme);
+}
+function applyTheme(theme) {
+  document.body.classList.toggle('theme-black', theme === 'black');
+  const labels = { ocean: '海洋藍', black: '暗黑金' };
+  const labelEl = document.getElementById('themeLabel');
+  if (labelEl) labelEl.textContent = '目前：' + (labels[theme] || '海洋藍');
+  ['themeSwatchOcean','themeSwatchBlack'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  });
+  const activeId = theme === 'black' ? 'themeSwatchBlack' : 'themeSwatchOcean';
+  const activeEl = document.getElementById(activeId);
+  if (activeEl) activeEl.classList.add('active');
 }
  
 // ===================================================================
@@ -1205,7 +1438,7 @@ function batchEditCategory() {
   const opts = cats.map(c => `<option>${c}</option>`).join('');
   const modal = document.createElement('div');
   modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:600;display:flex;align-items:center;justify-content:center;';
-  modal.innerHTML = `<div style="background:#0d2535;border-radius:20px;padding:20px;width:280px;border:1px solid rgba(77,196,212,0.2);">
+  modal.innerHTML = `<div style="background:var(--modal-bg);border-radius:20px;padding:20px;width:280px;border:1px solid rgba(77,196,212,0.2);">
     <div style="font-size:15px;font-weight:700;margin-bottom:14px;">批次修改分類</div>
     <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">將 ${txSelected.size} 筆交易改為：</div>
     <select id="batchCat" class="form-input" style="margin-bottom:12px;">${opts}</select>
@@ -1583,6 +1816,7 @@ function renderSettings() {
   document.getElementById('gistId').value = db.config.gistId||'';
   document.getElementById('budgetIncome').value = db.config.budgetIncome||'';
   document.getElementById('budgetExpense').value = db.config.budgetExpense||'';
+  applyTheme(db.config.theme || 'ocean');
   renderCategoryList(); renderIncomeCategoryList(); updateSyncUI();
 }
 function renderCategoryList() {
@@ -1696,6 +1930,8 @@ async function syncFromGist() {
     if (!db.recurringTemplates) db.recurringTemplates = []; // [M-02] migrate
     if (!db.meta.lastSyncDate) db.meta.lastSyncDate = null;
     if (!db.config.incomeCategories) db.config.incomeCategories = [{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資',icon:'📈'},{name:'其他收入',icon:'💹'}];
+    if (!db.config.theme) db.config.theme = 'ocean';
+    applyTheme(db.config.theme);
     saveLocal(); toast('✅ 雲端資料已載入'); setSyncStatus('ok'); renderDashboard(); renderSettings();
   } catch(e) { setSyncStatus('error'); toast('❌ 載入失敗：'+e.message); }
 }
@@ -1729,6 +1965,7 @@ function loadLocal() {
       if (!db.recurringTemplates) db.recurringTemplates = []; // [M-02] migrate
       if (!db.meta.lastSyncDate) db.meta.lastSyncDate = null; // [M-02] migrate
       if (!db.config.incomeCategories) db.config.incomeCategories = [{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資',icon:'📈'},{name:'其他收入',icon:'💹'}];
+      if (!db.config.theme) db.config.theme = 'ocean';
     }
   } catch(e) {}
 }
@@ -1749,6 +1986,8 @@ function importData(e) {
       if (!db.recurringTemplates) db.recurringTemplates=[]; // [M-02] migrate
       if (!db.meta.lastSyncDate) db.meta.lastSyncDate=null;
       if (!db.config.incomeCategories) db.config.incomeCategories=[{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資',icon:'📈'},{name:'其他收入',icon:'💹'}];
+      if (!db.config.theme) db.config.theme='ocean';
+      applyTheme(db.config.theme);
       saveLocal(); toast('✅ 資料已匯入'); renderDashboard(); renderSettings();
     } catch { toast('❌ 格式錯誤'); }
   };
@@ -1812,7 +2051,7 @@ function toggleMonthPicker() {
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:600;display:flex;align-items:center;justify-content:center;';
  
   overlay.innerHTML = `
-    <div id="monthPickerBox" style="background:#0d2535;border-radius:20px;padding:20px;width:300px;border:1px solid rgba(77,196,212,0.25);box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+    <div id="monthPickerBox" style="background:var(--modal-bg);border-radius:20px;padding:20px;width:300px;border:1px solid rgba(77,196,212,0.25);box-shadow:0 20px 60px rgba(0,0,0,0.5);">
       <div style="font-size:15px;font-weight:700;margin-bottom:12px;text-align:center;color:var(--ocean-foam);">📅 選擇年 / 月</div>
  
       <!-- Year row -->
@@ -1891,6 +2130,7 @@ function closeMonthPicker() {
 // ===================================================================
 window.addEventListener('load', () => {
   initParticles(); loadLocal();
+  applyTheme(db.config.theme || 'ocean');
   runRecurringEngine(); // [M-02] auto-generate recurring transactions
   renderDashboard();
   // [N-04] 初始化月份標籤
