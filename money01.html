@@ -422,7 +422,7 @@
  
     <div class="card" data-m="[M-01] CashFlow" onclick="switchPage('tx', document.querySelector('[data-page=tx]'))" style="cursor:pointer;">
       <div class="cashflow-section">
-        <div class="cashflow-title">現<br>金<br>流</div>
+        <div class="cashflow-title">流<br>現<br>金</div>
         <div class="water-ball-wrap">
           <div class="water-ball">
             <div class="water-fill" id="waterFill" style="height:50%"></div>
@@ -541,7 +541,7 @@
   <div class="page" id="page-pledge" data-m="[M-01] PledgePage">
     <div style="height:12px"></div>
     <div class="section-header">
-      <div class="section-title">🔒 質押管理</div>
+      <div class="section-title">💰 質押管理</div>
       <div class="section-more" onclick="showAddPledge()">＋ 新增</div>
     </div>
  
@@ -587,9 +587,9 @@
 
     <div class="card" data-m="[M-01] PledgeList" style="padding:12px 16px;">
       <div class="section-header" style="margin-bottom:10px;">
-        <div class="section-title" style="font-size:13px;">🔒 質押倉位</div>
+        <div class="section-title" style="font-size:13px;">💰 質押倉位</div>
       </div>
-      <div id="pledgeList"><div class="empty"><span class="icon">🔒</span>尚無質押記錄</div></div>
+      <div id="pledgeList"><div class="empty"><span class="icon">💰</span>尚無質押記錄</div></div>
     </div>
   </div>
 
@@ -747,7 +747,7 @@
     <span class="icon">🔁</span><span class="label">固定</span>
   </button>
   <button class="nav-btn" data-page="pledge" onclick="switchPage('pledge',this)">
-    <span class="icon">🔒</span><span class="label">質押</span>
+    <span class="icon">💰</span><span class="label">質押</span>
   </button>
   <button class="nav-btn" data-page="settings" onclick="switchPage('settings',this)">
     <span class="icon">⚙️</span><span class="label">設定</span>
@@ -803,7 +803,7 @@
 <!-- [M-03] Add Pledge Modal -->
 <div id="pledgeModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:flex-end;overflow-y:auto;">
   <div style="background:var(--modal-bg);border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:2px solid rgba(240,192,64,0.35);">
-    <div style="font-size:16px;font-weight:700;margin-bottom:4px;color:var(--accent-gold);">🔒 新增質押倉位</div>
+    <div style="font-size:16px;font-weight:700;margin-bottom:4px;color:var(--accent-gold);">💰 新增質押倉位</div>
     <div style="font-size:11px;color:var(--text-muted);margin-bottom:16px;">填入後自動計算維持率與防守價</div>
  
     <div style="font-size:11px;color:var(--ocean-light);font-weight:700;letter-spacing:0.06em;margin-bottom:8px;">▸ 基本資訊</div>
@@ -1711,7 +1711,7 @@ function renderPledgePage() {
   // Pledge list
   const list = document.getElementById('pledgeList');
   if (!pledges.length) {
-    list.innerHTML = '<div class="empty"><span class="icon">🔒</span>尚無質押倉位，點右上角新增</div>';
+    list.innerHTML = '<div class="empty"><span class="icon">💰</span>尚無質押倉位，點右上角新增</div>';
     return;
   }
  
@@ -1744,7 +1744,7 @@ function renderPledgePage() {
     return `
     <div class="pledge-card ${lvl}">
       <div class="pledge-card-header">
-        <div class="pledge-card-icon ${lvl}">${isClosed ? '🔓' : maint ? pledgeMaintIcon(maint) : '🔒'}</div>
+        <div class="pledge-card-icon ${lvl}">${isClosed ? '🔓' : maint ? pledgeMaintIcon(maint) : '💰'}</div>
         <div class="pledge-card-title">
           <div class="pledge-card-name">${p.name}</div>
           <div class="pledge-card-sub">${p.asset||''}${p.stockName?' · '+p.stockName:''} · 年利 ${p.rate}% · ${p.startDate||''}</div>
@@ -1859,7 +1859,7 @@ function addIncomeCategory() {
 function deleteIncomeCategory(i) { db.config.incomeCategories.splice(i,1); renderIncomeCategoryList(); saveLocal(); }
 
 // ===== Icon Picker =====
-const ICONS_LIST = ['🏠','🛒','🚌','💊','🎮','📦','💰','🎁','📈','💹','🍔','☕','🎵','📱','💻','✈️','🏖️','🎓','💼','🏥','🚗','⚡','🌐','🔑','🎯','💡','📅','🔒','🏋️','🎨','🍕','🛡️','💎','🔧','📊','🌿','🎪','🐶','🌸','🎂','🏆','🎲','📰','🛍️','🎬','🔔','🌙','⭐','🦋','🍀'];
+const ICONS_LIST = ['🏠','💰','📈','📋','🔁','🔒','⚙️','👤','🔔','🔍','📅','💳','🏦','💸','🧾','🛒','🛍️','🎁','🍔','☕','🍺','💊','🚗','🚌','✈️','🏖️','💼','💻','📱','🎓','📝','💡','🎯','🎮','🎵','🎬','📷','🎨','🏆','🏋️','🔧','⚡','🔋','🔑','🛡️','📦','🏠','🌸','🌿','⭐','🌙','☀️','☁️','🐱','🐶','🎂','🎈','🍀','✅','❌'];
 function toggleIconPicker(btnId, hiddenId) {
   const existing = document.getElementById('iconPickerOverlay');
   if (existing) { existing.remove(); return; }
