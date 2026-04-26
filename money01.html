@@ -2019,15 +2019,15 @@ function refreshCurrentPage() {
   document.getElementById('currentMonthLabel').textContent =
     (y !== curYear ? y + '年' : '') + m + '月';
  
-  // 根據分頁更新對應內容
-  switch (page) {
-    case 'dashboard': renderDashboard(); break;
-    case 'tx':        renderTxList();    break;
-    case 'stocks':    renderStocksPage(); break;
-    case 'pledge':    renderPledgePage(); break;
-    case 'settings':  renderSettings();  break;
-    default:          renderDashboard();
-  }
+  // 根據頁面切換更新對應內容
+switch (page) {
+  case 'dashboard': renderDashboard();  break; // 儀表板
+  case 'tx':        renderTxList();     break; // 交易列表
+  case 'stocks':    renderStocksPage();  break; // 股票頁面
+  case 'pledge':    renderPledgePage();  break; // 質押頁面
+  case 'settings':  renderSettings();   break; // 設定
+  default:          renderDashboard();         // 預設顯示儀表板
+}
   // 首頁永遠同步（不管在哪個分頁，dashboard 數字要反映選取月份）
   if (page !== 'dashboard') renderDashboard();
 }
