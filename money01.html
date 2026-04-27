@@ -3008,4 +3008,298 @@ async function pushToGitHub() {
     const body = {
       message: `🚀 一鍵部署 ${now}`,
       content: encoded,
-   
+      branch,
+      ...(sha ? { sha } : {})
+    };
+
+    const putRes = await fetch(apiBase, {
+      method: 'PUT', headers,
+      body: JSON.stringify(body)
+    });
+
+    if (!putRes.ok) {
+      const err = await putRes.json().catch(() => ({}));
+      throw new Error(err.message || `HTTP ${putRes.status}`);
+    }
+
+    const result = await putRes.json();
+    const commitUrl = result.commit?.html_url || `https://github.com/${repo}/actions`;
+    setDeployStatus('ok', `已部署 · ${now}`);
+    toast(`✅ Push 成功！Pages 約 30 秒後更新`, 3000);
+    console.log('[Deploy] commit:', commitUrl);
+
+  } catch(e) {
+    setDeployStatus('error', '部署失敗：' + e.message);
+    toast('❌ 部署失敗：' + e.message, 4000);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '🚀 一鍵部署到 GitHub Pages'; }
+  }
+}
+
+function setDeployStatus(s, msg) {
+  const dot = document.getElementById('deployDot');
+  const txt = document.getElementById('deployStatus');
+  if (!dot || !txt) return;
+  if (s === 'ok')       { dot.className = 'sync-dot';         txt.textContent = msg || '部署成功'; }
+  else if (s === 'deploying') { dot.className = 'sync-dot';   txt.textContent = '部署中，請稍候…'; }
+  else                  { dot.className = 'sync-dot offline'; txt.textContent = msg || '部署失敗'; }
+}
+ 
+// ===================================================================
+//  GITHUB GIST SYNC
+// ===================================================================
+const GIST_FILENAME = 'asset_db.json';
+async function syncToGist() {
+  const token = db.config.gistToken;
+  if (!token) { toast('⚠️ 請先設定 GitHub Token'); return; }
+  setSyncStatus('syncing');
+  try {
+    const payload = { ...db }; payload.meta.lastSync = new Date().toISOString();
+    const body = { files: { [GIST_FILENAME]: { content: JSON.stringify(payload, null, 2) } } };
+    let url = 'https://api.github.com/gists', method = 'POST';
+    if (db.config.gistId) { url += '/' + db.config.gistId; method = 'PATCH'; }
+    else { body.description = '資產管理 Dashboard 資料庫'; body.public = false; }
+    const res = await fetch(url, { method, headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+    if (!db.config.gistId) { db.config.gistId=data.id; document.getElementById('gistId').value=data.id; saveLocal(); toast('✅ Gist 已建立：'+data.id); }
+    else { toast('✅ 已同步至 GitHub Gist'); }
+    setSyncStatus('ok');
+  } catch(e) { setSyncStatus('error'); toast('❌ 同步失敗：'+e.message); }
+}
+async function syncFromGist() {
+  const token=db.config.gistToken, gistId=db.config.gistId;
+  if (!token||!gistId) { toast('⚠️ 請先設定 Token 和 Gist ID'); return; }
+  setSyncStatus('syncing');
+  try {
+    const res = await fetch(`https://api.github.com/gists/${gistId}`, { headers: { Authorization: `token ${token}` } });
+    if (!res.ok) throw new Error(await res.text());
+    const gist = await res.json(); const raw = gist.files[GIST_FILENAME]?.content;
+    if (!raw) throw new Error('找不到資料檔案');
+    const loaded = JSON.parse(raw); const gistToken=db.config.gistToken, gistIdVal=db.config.gistId;
+    db=loaded; db.config.gistToken=gistToken; db.config.gistId=gistIdVal;
+    if (!db.pledges) db.pledges = []; // [M-01] ensure pledge array exists
+    if (!db.recurringTemplates) db.recurringTemplates = []; // [M-02] migrate
+    if (!db.meta.lastSyncDate) db.meta.lastSyncDate = null;
+    if (!db.config.incomeCategories) db.config.incomeCategories = [{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資',icon:'📈'},{name:'其他收入',icon:'💹'}];
+    if (!db.config.theme) db.config.theme = 'ocean';
+      if (!db.config.ghFile) db.config.ghFile = 'index.html';
+      if (!db.config.ghBranch) db.config.ghBranch = 'main';
+    applyTheme(db.config.theme);
+    saveLocal(); toast('✅ 雲端資料已載入'); setSyncStatus('ok'); renderDashboard(); renderSettings();
+  } catch(e) { setSyncStatus('error'); toast('❌ 載入失敗：'+e.message); }
+}
+let autoSyncTimer;
+function autoSync() {
+  clearTimeout(autoSyncTimer);
+  if (db.config.gistToken && db.config.gistId) autoSyncTimer = setTimeout(syncToGist, 3000);
+}
+function setSyncStatus(s) {
+  const dot=document.getElementById('syncDot'), txt=document.getElementById('syncText');
+  const dot2=document.getElementById('settingsSyncDot'), txt2=document.getElementById('settingsSyncText');
+  if (s==='ok') { const ts=new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'}); [dot,dot2].forEach(d=>d&&(d.className='sync-dot')); [txt,txt2].forEach(t=>t&&(t.textContent='已同步 '+ts)); }
+  else if (s==='syncing') { [dot,dot2].forEach(d=>d&&(d.className='sync-dot')); [txt,txt2].forEach(t=>t&&(t.textContent='同步中…')); }
+  else { [dot,dot2].forEach(d=>d&&(d.className='sync-dot offline')); [txt,txt2].forEach(t=>t&&(t.textContent='同步失敗')); }
+}
+function updateSyncUI() {
+  if (db.config.gistToken) { setSyncStatus(db.config.gistId?'ok':'syncing'); document.getElementById('settingsSyncText').textContent=db.config.gistId?'已設定 Gist':'Token 已設定，未建立 Gist'; }
+  else { setSyncStatus('error'); document.getElementById('settingsSyncText').textContent='未設定 Token'; }
+}
+ 
+// ===================================================================
+//  STORAGE
+// ===================================================================
+function saveLocal() { try { localStorage.setItem('assetDB', JSON.stringify(db)); } catch(e) {} }
+function loadLocal() {
+  try {
+    const raw = localStorage.getItem('assetDB');
+    if (raw) {
+      const loaded = JSON.parse(raw); db = loaded;
+      if (!db.pledges) db.pledges = []; // [M-01] migrate
+      if (!db.recurringTemplates) db.recurringTemplates = []; // [M-02] migrate
+      if (!db.meta.lastSyncDate) db.meta.lastSyncDate = null; // [M-02] migrate
+      if (!db.config.incomeCategories) db.config.incomeCategories = [{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資',icon:'📈'},{name:'其他收入',icon:'💹'}];
+      if (!db.config.theme) db.config.theme = 'ocean';
+      if (!db.config.ghFile) db.config.ghFile = 'index.html';
+      if (!db.config.ghBranch) db.config.ghBranch = 'main';
+    }
+  } catch(e) {}
+}
+function exportData() {
+  const blob = new Blob([JSON.stringify(db, null, 2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `asset_db_${new Date().toISOString().slice(0,10)}.json`; a.click();
+}
+function triggerImport() { document.getElementById('importFile').click(); }
+function importData(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const loaded = JSON.parse(ev.target.result); const token=db.config.gistToken, gistId=db.config.gistId;
+      db=loaded; if (!db.config.gistToken) { db.config.gistToken=token; db.config.gistId=gistId; }
+      if (!db.pledges) db.pledges=[]; // [M-01] migrate
+      if (!db.recurringTemplates) db.recurringTemplates=[]; // [M-02] migrate
+      if (!db.meta.lastSyncDate) db.meta.lastSyncDate=null;
+      if (!db.config.incomeCategories) db.config.incomeCategories=[{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資',icon:'📈'},{name:'其他收入',icon:'💹'}];
+      if (!db.config.theme) db.config.theme='ocean';
+      applyTheme(db.config.theme);
+      saveLocal(); toast('✅ 資料已匯入'); renderDashboard(); renderSettings();
+    } catch { toast('❌ 格式錯誤'); }
+  };
+  reader.readAsText(file);
+}
+function clearAllData() {
+  if (!confirm('確定要清除所有資料？')) return;
+  const token=db.config.gistToken, gistId=db.config.gistId;
+  db = { meta:{version:2,lastSync:null,lastSyncDate:null}, config:{budgetIncome:0,budgetExpense:0,currentMonth:new Date().getMonth()+1,currentYear:new Date().getFullYear(),gistToken:token,gistId:gistId,categories:[],incomeCategories:[{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資',icon:'📈'},{name:'其他收入',icon:'💹'}]}, transactions:[], banks:[], stocks:[], loans:[], pledges:[], recurringTemplates:[] };
+  saveLocal(); renderDashboard(); renderSettings(); toast('🗑️ 資料已清除');
+}
+ 
+// ===================================================================
+//  [N-04] MONTH / YEAR PICKER — 修正版
+// ===================================================================
+ 
+// 取得當前可見分頁 id
+function getActivePage() {
+  const p = document.querySelector('.page.active');
+  return p ? p.id.replace('page-','') : 'dashboard';
+}
+ 
+// 依當前分頁重新渲染，切換月份後正確更新所有圖表
+function refreshCurrentPage() {
+  const page = getActivePage();
+  // 永遠更新 top-nav 標籤
+  const m = db.config.currentMonth, y = db.config.currentYear;
+  const curYear = new Date().getFullYear();
+  document.getElementById('currentMonthLabel').textContent =
+    (y !== curYear ? y + '年' : '') + m + '月';
+ 
+  // 根據頁面切換更新對應內容
+switch (page) {
+  case 'dashboard': renderDashboard();  break; // 儀表板
+  case 'tx':        renderTxList();     break; // 交易列表
+  case 'stocks':    renderStocksPage(); if(!Object.keys(stockQuotes).length) fetchAllQuotes(); break; // 股票頁面
+  case 'pledge':    renderPledgePage();  break; // 質押頁面
+  case 'settings':  renderSettings();   break; // 設定
+  default:          renderDashboard();         // 預設顯示儀表板
+}
+  // 首頁永遠同步（不管在哪個分頁，dashboard 數字要反映選取月份）
+  if (page !== 'dashboard') renderDashboard();
+}
+ 
+function toggleMonthPicker() {
+  // 防止重複建立：若已存在就先移除
+  const existing = document.getElementById('monthPickerOverlay');
+  if (existing) { existing.remove(); return; }
+ 
+  const months = ['一','二','三','四','五','六','七','八','九','十','十一','十二'];
+  const curM = db.config.currentMonth;
+  const curY = db.config.currentYear;
+  const thisYear = new Date().getFullYear();
+ 
+  // 年份選項：前2年 ~ 今年+1
+  const years = [];
+  for (let y = thisYear - 2; y <= thisYear + 1; y++) years.push(y);
+ 
+  const overlay = document.createElement('div');
+  overlay.id = 'monthPickerOverlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:600;display:flex;align-items:center;justify-content:center;';
+ 
+  overlay.innerHTML = `
+    <div id="monthPickerBox" style="background:var(--modal-bg);border-radius:20px;padding:20px;width:300px;border:1px solid rgba(77,196,212,0.25);box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+      <div style="font-size:15px;font-weight:700;margin-bottom:12px;text-align:center;color:var(--ocean-foam);">📅 選擇年 / 月</div>
+ 
+      <!-- Year row -->
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px;">
+        <button onclick="shiftPickerYear(-1)" style="${pickerNavBtnStyle()}">‹</button>
+        <span id="pickerYearLabel" style="font-family:'DM Mono',monospace;font-size:16px;font-weight:700;color:var(--ocean-light);min-width:56px;text-align:center;">${curY}</span>
+        <button onclick="shiftPickerYear(+1)" style="${pickerNavBtnStyle()}">›</button>
+      </div>
+ 
+      <!-- Month grid -->
+      <div id="pickerMonthGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;">
+        ${months.map((name, i) => monthPickerBtn(i+1, curM, curY, curY)).join('')}
+      </div>
+ 
+      <button onclick="closeMonthPicker()" style="margin-top:14px;width:100%;padding:10px;border-radius:10px;border:none;background:rgba(255,255,255,0.07);color:var(--text-secondary);font-family:'Noto Sans TC',sans-serif;cursor:pointer;font-size:13px;">取消</button>
+    </div>`;
+ 
+  // 點擊背景關閉（只針對 overlay 本身，不包含內部 box）
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closeMonthPicker();
+  });
+ 
+  document.body.appendChild(overlay);
+ 
+  // 儲存 picker 目前選取年（尚未 confirm，只是 UI 暫存）
+  overlay._pickerYear = curY;
+}
+ 
+function pickerNavBtnStyle() {
+  return 'width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:var(--ocean-light);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;font-family:monospace;';
+}
+ 
+function monthPickerBtn(mo, selectedM, selectedY, displayY) {
+  const isActive = (mo === selectedM && displayY === selectedY);
+  return `<button onclick="selectMonth(${mo})"
+    style="padding:9px 0;border-radius:10px;border:1px solid ${isActive?'rgba(77,196,212,0.6)':'rgba(255,255,255,0.08)'};
+    background:${isActive?'rgba(26,143,160,0.35)':'rgba(255,255,255,0.04)'};
+    color:${isActive?'var(--ocean-light)':'var(--text-secondary)'};
+    font-family:'Noto Sans TC',sans-serif;cursor:pointer;font-size:13px;
+    font-weight:${isActive?'700':'400'};transition:background 0.2s;"
+    onmouseover="this.style.background='rgba(77,196,212,0.15)'"
+    onmouseout="this.style.background='${isActive?'rgba(26,143,160,0.35)':'rgba(255,255,255,0.04)'}'">
+    ${['一','二','三','四','五','六','七','八','九','十','十一','十二'][mo-1]}月
+  </button>`;
+}
+ 
+function shiftPickerYear(delta) {
+  const overlay = document.getElementById('monthPickerOverlay');
+  if (!overlay) return;
+  overlay._pickerYear = (overlay._pickerYear || db.config.currentYear) + delta;
+  const py = overlay._pickerYear;
+  document.getElementById('pickerYearLabel').textContent = py;
+  // 重繪月份格：用 currentMonth / currentYear 判斷哪個被選中
+  document.getElementById('pickerMonthGrid').innerHTML =
+    ['一','二','三','四','五','六','七','八','九','十','十一','十二']
+      .map((_,i) => monthPickerBtn(i+1, db.config.currentMonth, db.config.currentYear, py)).join('');
+}
+ 
+function selectMonth(m) {
+  const overlay = document.getElementById('monthPickerOverlay');
+  const y = overlay ? (overlay._pickerYear || db.config.currentYear) : db.config.currentYear;
+  db.config.currentMonth = m;
+  db.config.currentYear  = y;
+  saveLocal();
+  closeMonthPicker();
+  refreshCurrentPage();
+}
+ 
+function closeMonthPicker() {
+  const overlay = document.getElementById('monthPickerOverlay');
+  if (overlay) overlay.remove();
+}
+ 
+// ===================================================================
+//  INIT
+// ===================================================================
+window.addEventListener('load', () => {
+  // 開發者模式：把自身原始碼存為行陣列，供複製使用
+  fetch(location.href).then(r=>r.text()).then(t=>{ window._srcLines = t.split('\n'); }).catch(()=>{});
+  initParticles(); loadLocal();
+  applyTheme(db.config.theme || 'ocean');
+  runRecurringEngine(); // [M-02] auto-generate recurring transactions
+  renderDashboard();
+  // [N-04] 初始化月份標籤
+  const initY = db.config.currentYear, initM = db.config.currentMonth;
+  const thisY = new Date().getFullYear();
+  document.getElementById('currentMonthLabel').textContent =
+    (initY !== thisY ? initY + '年' : '') + initM + '月';
+  if (db.config.gistToken) { setSyncStatus(db.config.gistId?'ok':'error'); }
+  else { document.getElementById('syncDot').className='sync-dot offline'; document.getElementById('syncText').textContent='未設定雲端同步'; }
+  document.querySelectorAll('[id$="Modal"]').forEach(m => { m.addEventListener('click', e => { if (e.target===m) m.style.display='none'; }); });
+});
+</script> /* --- [JS END] --- */
+</body>
+</html>
