@@ -2290,46 +2290,36 @@ const QUOTE_PROXY_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 
 async function fetchQuote(ticker) {
   const tw = ticker.match(/^\d/) ? ticker + '.TW' : ticker;
-  const timeout = 10000; // 延長至 10 秒
   
-  // 方案 A: Supabase Edge Function
-  try {
-    const res = await fetch(`${QUOTE_PROXY_URL}?ticker=${encodeURIComponent(ticker)}`, {
-      headers: { 'Authorization': `Bearer ${QUOTE_PROXY_KEY}` },
-      signal: AbortSignal.timeout(timeout)
-    });
-    const data = await res.json();
-    if (data && data.price) return { price: data.price, prevClose: data.prevClose, source: 'Supabase' };
-  } catch(e) {}
-
-  // 方案 B: Yahoo Finance (代理 1: AllOrigins)
-  try {
-    const url = `https://api.allorigins.win/raw?url=${encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/' + tw + '?interval=1d&range=1d')}`;
-    const res = await fetch(url, { signal: AbortSignal.timeout(timeout) });
-    const d = await res.json();
-    const meta = d?.chart?.result?.[0]?.meta;
-    if (meta && meta.regularMarketPrice) return { price: meta.regularMarketPrice, prevClose: meta.previousClose, source: 'Yahoo(A)' };
-  } catch(e) {}
-
-  // 方案 B2: Yahoo Finance (代理 2: CORSProxy.io)
+  // 方案 1: Yahoo Finance (代理 C: corsproxy.io) - 測試證明最快最穩
   try {
     const url = `https://corsproxy.io/?${encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/' + tw + '?interval=1d&range=1d')}`;
-    const res = await fetch(url, { signal: AbortSignal.timeout(timeout) });
+    const res = await fetch(url, { signal: AbortSignal.timeout(4000) });
     const d = await res.json();
     const meta = d?.chart?.result?.[0]?.meta;
     if (meta && meta.regularMarketPrice) return { price: meta.regularMarketPrice, prevClose: meta.previousClose, source: 'Yahoo(C)' };
   } catch(e) {}
 
-  // 方案 C: 台灣證交所 MIS (台股專用)
+  // 方案 2: 台灣證交所 MIS (台股備援) - 測試證明可用但較慢
   if (ticker.match(/^\d/)) {
     try {
       const url = `https://api.allorigins.win/raw?url=${encodeURIComponent('https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_' + ticker + '.tw|otc_' + ticker + '.tw')}`;
-      const res = await fetch(url, { signal: AbortSignal.timeout(timeout) });
+      const res = await fetch(url, { signal: AbortSignal.timeout(6000) });
       const d = await res.json();
       const info = d?.msgArray?.[0];
       if (info && info.z && info.z !== '-') return { price: parseFloat(info.z), prevClose: parseFloat(info.y), source: 'TWSE' };
     } catch(e) {}
   }
+
+  // 方案 3: Supabase Edge Function (先前測試失敗，放後面並縮短超時)
+  try {
+    const res = await fetch(`${QUOTE_PROXY_URL}?ticker=${encodeURIComponent(ticker)}`, {
+      headers: { 'Authorization': `Bearer ${QUOTE_PROXY_KEY}` },
+      signal: AbortSignal.timeout(3000)
+    });
+    const data = await res.json();
+    if (data && data.price) return { price: data.price, prevClose: data.prevClose, source: 'Supabase' };
+  } catch(e) {}
 
   return null;
 }
