@@ -2290,48 +2290,50 @@ const QUOTE_PROXY_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 
 async function fetchQuote(ticker) {
   const tw = ticker.match(/^\d/) ? ticker + '.TW' : ticker;
+  const timeout = 10000; // 延長至 10 秒
   
-  // 方案 A: Supabase Edge Function (穩定首選)
+  // 方案 A: Supabase Edge Function
   try {
     const res = await fetch(`${QUOTE_PROXY_URL}?ticker=${encodeURIComponent(ticker)}`, {
       headers: { 'Authorization': `Bearer ${QUOTE_PROXY_KEY}` },
-      signal: AbortSignal.timeout(5000)
+      signal: AbortSignal.timeout(timeout)
     });
     const data = await res.json();
-    if (data && data.price) {
-      return { price: data.price, prevClose: data.prevClose, source: 'Supabase' };
-    }
-  } catch(e) { console.warn('[Quote] Supabase failed, trying Yahoo...'); }
+    if (data && data.price) return { price: data.price, prevClose: data.prevClose, source: 'Supabase' };
+  } catch(e) {}
 
-  // 方案 B: Yahoo Finance via AllOrigins (備援)
+  // 方案 B: Yahoo Finance (代理 1: AllOrigins)
   try {
     const url = `https://api.allorigins.win/raw?url=${encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/' + tw + '?interval=1d&range=1d')}`;
-    const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
+    const res = await fetch(url, { signal: AbortSignal.timeout(timeout) });
     const d = await res.json();
     const meta = d?.chart?.result?.[0]?.meta;
-    if (meta && meta.regularMarketPrice) {
-      return { price: meta.regularMarketPrice, prevClose: meta.previousClose, source: 'Yahoo' };
-    }
-  } catch(e) { console.warn('[Quote] Yahoo failed, trying TWSE...'); }
+    if (meta && meta.regularMarketPrice) return { price: meta.regularMarketPrice, prevClose: meta.previousClose, source: 'Yahoo(A)' };
+  } catch(e) {}
 
-  // 方案 C: 台灣證交所 MIS API (僅限台股備援)
+  // 方案 B2: Yahoo Finance (代理 2: CORSProxy.io)
+  try {
+    const url = `https://corsproxy.io/?${encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/' + tw + '?interval=1d&range=1d')}`;
+    const res = await fetch(url, { signal: AbortSignal.timeout(timeout) });
+    const d = await res.json();
+    const meta = d?.chart?.result?.[0]?.meta;
+    if (meta && meta.regularMarketPrice) return { price: meta.regularMarketPrice, prevClose: meta.previousClose, source: 'Yahoo(C)' };
+  } catch(e) {}
+
+  // 方案 C: 台灣證交所 MIS (台股專用)
   if (ticker.match(/^\d/)) {
     try {
-      const ts = Date.now();
-      const url = `https://api.allorigins.win/raw?url=${encodeURIComponent('https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_' + ticker + '.tw&_=' + ts)}`;
-      const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
+      const url = `https://api.allorigins.win/raw?url=${encodeURIComponent('https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_' + ticker + '.tw|otc_' + ticker + '.tw')}`;
+      const res = await fetch(url, { signal: AbortSignal.timeout(timeout) });
       const d = await res.json();
       const info = d?.msgArray?.[0];
-      if (info && info.z !== '-') {
-        return { price: parseFloat(info.z), prevClose: parseFloat(info.y), source: 'TWSE' };
-      }
-    } catch(e) { console.error('[Quote] All sources failed for', ticker); }
+      if (info && info.z && info.z !== '-') return { price: parseFloat(info.z), prevClose: parseFloat(info.y), source: 'TWSE' };
+    } catch(e) {}
   }
 
   return null;
 }
 
-// ── 連線診斷工具 ──
 async function showConnTest() {
   const modal = document.getElementById('connModal');
   const list = document.getElementById('connList');
@@ -2339,36 +2341,24 @@ async function showConnTest() {
   list.innerHTML = '<div style="color:var(--text-muted);font-size:12px;text-align:center;">正在測試各服務連線...</div>';
 
   const targets = [
-    { name: 'Supabase Proxy', url: QUOTE_PROXY_URL + '?ticker=2330' },
-    { name: 'Yahoo (Proxy)',  url: 'https://api.allorigins.win/get?url=https://www.yahoo.com' },
-    { name: 'TWSE MIS',       url: 'https://api.allorigins.win/raw?url=https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_2330.tw' }
+    { name: 'Supabase (主線)', url: QUOTE_PROXY_URL + '?ticker=2330' },
+    { name: 'Yahoo (代理A)', url: 'https://api.allorigins.win/get?url=https://www.google.com' },
+    { name: 'Yahoo (代理C)', url: 'https://corsproxy.io/?https://www.google.com' },
+    { name: 'TWSE (證交所)', url: 'https://api.allorigins.win/raw?url=https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_2330.tw' }
   ];
 
   let html = '';
   for (const t of targets) {
     const start = Date.now();
-    let status = '⏳';
-    let color = 'var(--text-muted)';
+    let status = '⏳'; let color = 'var(--text-muted)';
     try {
-      const h = t.name === 'Supabase Proxy' ? { 'Authorization': `Bearer ${QUOTE_PROXY_KEY}` } : {};
-      const res = await fetch(t.url, { headers: h, signal: AbortSignal.timeout(5000) });
+      const h = t.name.includes('Supabase') ? { 'Authorization': `Bearer ${QUOTE_PROXY_KEY}` } : {};
+      const res = await fetch(t.url, { headers: h, signal: AbortSignal.timeout(8000) });
       const ms = Date.now() - start;
-      if (res.ok) {
-        status = `✅ OK (${ms}ms)`;
-        color = 'var(--accent-green)';
-      } else {
-        status = `❌ 錯誤 ${res.status}`;
-        color = 'var(--accent-red)';
-      }
-    } catch(e) {
-      status = '❌ 連線超時/失敗';
-      color = 'var(--accent-red)';
-    }
-    html += `
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(255,255,255,0.03);border-radius:10px;">
-        <span style="font-size:13px;font-weight:600;">${t.name}</span>
-        <span style="font-family:'DM Mono',monospace;font-size:11px;color:${color}">${status}</span>
-      </div>`;
+      status = res.ok ? `✅ OK (${ms}ms)` : `❌ 錯誤 ${res.status}`;
+      color = res.ok ? 'var(--accent-green)' : 'var(--accent-red)';
+    } catch(e) { status = '❌ 超時/失敗'; color = 'var(--accent-red)'; }
+    html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(255,255,255,0.03);border-radius:10px;"><span style="font-size:13px;">${t.name}</span><span style="font-family:monospace;font-size:11px;color:${color}">${status}</span></div>`;
   }
   list.innerHTML = html;
 }
