@@ -2542,79 +2542,65 @@ function drawChart(ticker) {
 function drawPriceCanvas(closes, highs, lows) {
   const canvas = document.getElementById('priceCanvas');
   if (!canvas) return;
-  const dpr = window.devicePixelRatio || 1;
-  const W = canvas.parentElement.clientWidth;
-  const H = 140;
-  canvas.width  = W * dpr;
-  canvas.height = H * dpr;
-  canvas.style.width  = W + 'px';
-  canvas.style.height = H + 'px';
   const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.parentElement.clientWidth * dpr;
+  const H = 140 * dpr;
+  canvas.width = W; canvas.height = H;
+  canvas.style.width = canvas.parentElement.clientWidth + 'px';
+  canvas.style.height = '140px';
+  
   ctx.scale(dpr, dpr);
-  ctx.clearRect(0, 0, W, H);
+  const w = canvas.parentElement.clientWidth;
+  const h = 140;
+  ctx.clearRect(0, 0, w, h);
 
   if (!closes.length) return;
-  const allVals = [...closes, ...highs, ...lows].filter(x=>x!=null);
-  const minV = Math.min(...allVals) * 0.998;
-  const maxV = Math.max(...allVals) * 1.002;
-  const pad = { l:4, r:4, t:8, b:18 };
-  const cW = W - pad.l - pad.r;
-  const cH = H - pad.t - pad.b;
+  const pad = { t: 20, b: 15, l: 10, r: 60 };
+  const maxP = Math.max(...highs) * 1.01;
+  const minP = Math.min(...lows) * 0.99;
+  const range = (maxP - minP) || 1;
   const n = closes.length;
-  const toX = i => pad.l + (i / (n-1)) * cW;
-  const toY = v => pad.t + (1 - (v - minV) / (maxV - minV)) * cH;
 
-  // 格線
+  const toX = i => pad.l + (i / (n - 1)) * (w - pad.l - pad.r);
+  const toY = p => pad.t + (1 - (p - minP) / range) * (h - pad.t - pad.b);
+
+  // 繪製格線
   ctx.strokeStyle = 'rgba(255,255,255,0.05)';
   ctx.lineWidth = 0.5;
-  for (let i=1; i<4; i++) {
-    const y = pad.t + (cH / 4) * i;
-    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W-pad.r, y); ctx.stroke();
-  }
+  [0.25, 0.5, 0.75].forEach(pct => {
+    const y = pad.t + (h - pad.t - pad.b) * pct;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
+  });
 
-  // 面積
-  const trend = closes[closes.length-1] >= closes[0];
-  const lineColor = trend ? '#3ecf8e' : '#f0504a';
-  const grad = ctx.createLinearGradient(0, pad.t, 0, H);
-  grad.addColorStop(0, trend ? 'rgba(62,207,142,0.35)' : 'rgba(240,80,74,0.35)');
+  // 漸層
+  const isUp = closes[n-1] >= closes[0];
+  const color = isUp ? '#3ecf8e' : '#f0504a';
+  const grad = ctx.createLinearGradient(0, pad.t, 0, h);
+  grad.addColorStop(0, isUp ? 'rgba(62,207,142,0.2)' : 'rgba(240,80,74,0.2)');
   grad.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.beginPath();
-  ctx.moveTo(toX(0), toY(closes[0]));
-  closes.forEach((v,i) => { if (v!=null) ctx.lineTo(toX(i), toY(v)); });
-  ctx.lineTo(toX(n-1), H);
-  ctx.lineTo(toX(0), H);
-  ctx.closePath();
   ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.moveTo(toX(0), h);
+  closes.forEach((p, i) => ctx.lineTo(toX(i), toY(p)));
+  ctx.lineTo(toX(n - 1), h);
   ctx.fill();
 
-  // 折線
+  // 主線
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.lineJoin = 'round';
   ctx.beginPath();
-  ctx.strokeStyle = lineColor;
-  ctx.lineWidth = 1.5;
-  closes.forEach((v,i) => {
-    if (v==null) return;
-    i===0 ? ctx.moveTo(toX(i),toY(v)) : ctx.lineTo(toX(i),toY(v));
-  });
+  closes.forEach((p, i) => i === 0 ? ctx.moveTo(toX(i), toY(p)) : ctx.lineTo(toX(i), toY(p)));
   ctx.stroke();
 
-  // 最新價標籤
-  const lastX = toX(n-1);
+  // 標籤
   const lastY = toY(closes[n-1]);
-  ctx.beginPath();
-  ctx.arc(lastX, lastY, 3, 0, Math.PI*2);
-  ctx.fillStyle = lineColor;
-  ctx.fill();
-  ctx.fillStyle = lineColor;
-  ctx.font = `bold 10px 'DM Mono', monospace`;
-  ctx.textAlign = 'right';
-  ctx.fillText(closes[n-1].toFixed(2), W - pad.r, lastY - 4);
-
-  // Y軸最小最大值
-  ctx.fillStyle = 'rgba(150,200,220,0.45)';
-  ctx.font = '9px monospace';
-  ctx.textAlign = 'left';
-  ctx.fillText(minV.toFixed(1), pad.l, H - 2);
-  ctx.fillText(maxV.toFixed(1), pad.l, pad.t + 9);
+  ctx.fillStyle = color;
+  ctx.beginPath(); ctx.arc(toX(n-1), lastY, 3, 0, Math.PI*2); ctx.fill();
+  ctx.font = "bold 11px 'DM Mono'";
+  ctx.textAlign = "left";
+  ctx.fillText(closes[n-1].toFixed(2), w - pad.r + 5, lastY + 4);
 }
 
 function drawVolCanvas(vols, closes) {
