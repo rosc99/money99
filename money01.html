@@ -2416,16 +2416,29 @@ async function fetchAllQuotes() {
   if (btn) { btn.textContent = '⏳ 更新中…'; btn.disabled = true; }
   
   let successCount = 0;
+  const now = new Date();
+  const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+
   for (const s of db.stocks) {
-    if (s.ticker === '其他') continue;
+    // 基本防呆：確保代號存在
+    if (s.ticker === '其他' || !s.ticker) {
+      if (s.shares && s.price) s.value = Math.round(s.shares * 1000 * s.price);
+      continue;
+    }
+
     const q = await fetchQuote(s.ticker);
     if (q) {
       successCount++;
-      stockQuotes[s.ticker] = q; // 存入緩存供 render 判斷
+      stockQuotes[s.ticker] = q;
       const chg = q.prevClose ? ((q.price - q.prevClose) / q.prevClose * 100) : (s.change || 0);
       s.change = parseFloat(chg.toFixed(2));
       s.price  = q.price;
-      if (s.shares) s.value = Math.round(s.shares * 1000 * q.price);
+      s.lastUpdate = timeStr; // 紀錄本次成功更新時間
+    }
+    
+    // 無論是否更新成功，都基於目前的 s.price 重新計算市值
+    if (s.shares && s.price) {
+      s.value = Math.round(s.shares * 1000 * s.price);
     }
   }
   
@@ -2434,11 +2447,10 @@ async function fetchAllQuotes() {
   renderDashboard();
   
   if (btn) { btn.textContent = '🔄 刷新'; btn.disabled = false; }
-  const now = new Date();
   const upEl = document.getElementById('stocksLastUpdate');
-  if (upEl) upEl.textContent = `最後更新：${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')} (成功 ${successCount}/${db.stocks.length})`;
+  if (upEl) upEl.textContent = `最後更新：${timeStr} (成功 ${successCount}/${db.stocks.length})`;
   
-  if (successCount === 0) toast('❌ 股價更新失敗，請檢查連線');
+  if (successCount === 0) toast('❌ 股價更新失敗，已沿用舊有資料計算市值');
   else toast(`✅ 已更新 ${successCount} 筆持股報價`);
 }
 
@@ -2458,9 +2470,11 @@ function renderStocksPage() {
   // 1. 渲染底部明細清單
   stockList.innerHTML = (!db.stocks || !db.stocks.length) ? `<div class="empty">尚未加入股票</div>` : db.stocks.map((s, i) => {
     const isFresh = !!stockQuotes[s.ticker];
-    const displayPrice = isFresh ? stockQuotes[s.ticker].price : s.price;
+    const displayPrice = s.price || 0;
+    const updateTime = s.lastUpdate ? `<span style="font-size:9px;color:var(--text-muted);font-weight:400;margin-left:4px;">(${s.lastUpdate})</span>` : '';
+    
     const priceTag = displayPrice 
-      ? `<span style="color:${isFresh ? 'var(--ocean-light)' : 'var(--text-muted)'};font-family:'DM Mono',monospace;margin-left:8px;font-size:14px;font-weight:900;">${displayPrice.toFixed(2)}${!isFresh ? ' <span style="font-size:9px;font-weight:400;">(非即時)</span>' : ''}</span>`
+      ? `<span style="color:${isFresh ? 'var(--ocean-light)' : 'var(--text-muted)'};font-family:'DM Mono',monospace;margin-left:8px;font-size:14px;font-weight:900;">${displayPrice.toFixed(2)}${updateTime}</span>`
       : '';
     return `
     <div class="stock-item" onclick="openEditStock('${s.id}')">
@@ -2738,26 +2752,26 @@ function drawPriceCanvas(closes, highs, lows, opens, vols, tech) {
   ctx.clearRect(0, 0, w, h);
 
   const pad = { t: 25, b: 20, l: 15, r: 65 };
-  const maxP = Math.max(...highs) * 1.01;
-  const minP = Math.min(...lows) * 0.99;
+  const maxP = Math.max(...highs) * 1.005;
+  const minP = Math.min(...lows) * 0.995;
   const range = (maxP - minP) || 1;
   const n = closes.length;
 
   const toX = i => pad.l + (i / (n - 1)) * (w - pad.l - pad.r);
   const toY = p => pad.t + (1 - (p - minP) / range) * (h - pad.t - pad.b);
 
-  // 1. 繪製 Volume Profile (VRVP) - 背景長條
-  const bins = 20;
+  // 1. 繪製 Volume Profile (VRVP) - 背景長條 (右側 35%)
+  const bins = 25;
   const profile = new Array(bins).fill(0);
   const binStep = range / bins;
   vols.forEach((v, i) => {
-    const binIdx = Math.floor((closes[i] - minP) / binStep);
-    if (binIdx >= 0 && binIdx < bins) profile[binIdx] += v;
+    const binIdx = Math.min(bins - 1, Math.floor((closes[i] - minP) / binStep));
+    if (binIdx >= 0) profile[binIdx] += v;
   });
   const maxVol = Math.max(...profile, 1);
-  ctx.fillStyle = 'rgba(77, 196, 212, 0.15)';
+  ctx.fillStyle = 'rgba(77, 196, 212, 0.12)';
   profile.forEach((v, i) => {
-    const barW = (v / maxVol) * (w * 0.4);
+    const barW = (v / maxVol) * (w * 0.35);
     const barY = pad.t + (h - pad.t - pad.b) * (1 - (i + 1) / bins);
     const barH = (h - pad.t - pad.b) / bins - 1;
     ctx.fillRect(w - pad.r - barW, barY, barW, barH);
@@ -2766,17 +2780,17 @@ function drawPriceCanvas(closes, highs, lows, opens, vols, tech) {
   // 2. 繪製格線
   ctx.strokeStyle = 'rgba(255,255,255,0.05)';
   ctx.lineWidth = 0.5;
-  [0, 0.5, 1].forEach(pct => {
+  [0, 0.25, 0.5, 0.75, 1].forEach(pct => {
     const y = pad.t + (h - pad.t - pad.b) * pct;
     ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
   });
 
   // 3. 繪製 K 線 (Candlestick)
-  const candleW = Math.max(1, ((w - pad.l - pad.r) / n) * 0.7);
+  const candleW = Math.max(1, ((w - pad.l - pad.r) / n) * 0.75);
   closes.forEach((c, i) => {
-    const o = opens[i], h = highs[i], l = lows[i];
+    const o = opens[i] || c, h = highs[i] || c, l = lows[i] || c;
     const isUp = c >= o;
-    const color = isUp ? '#f0504a' : '#3ecf8e'; // 台灣習慣：紅漲綠跌
+    const color = isUp ? '#f0504a' : '#3ecf8e'; 
     ctx.strokeStyle = color;
     ctx.fillStyle = color;
     ctx.lineWidth = 1;
@@ -2787,36 +2801,46 @@ function drawPriceCanvas(closes, highs, lows, opens, vols, tech) {
     // 實體
     const top = toY(Math.max(o, c));
     const bot = toY(Math.min(o, c));
-    const bodyH = Math.max(1, bot - top);
+    const bodyH = Math.max(1.5, bot - top);
     ctx.fillRect(x - candleW/2, top, candleW, bodyH);
   });
 
-  // 4. 繪製水平虛線 (壓力 & 支撐)
+  // 4. 繪製水平標記線 (壓力 & 支撐)
   const drawLevel = (price, label, color) => {
+    if (!price) return;
     const y = toY(price);
-    ctx.setLineDash([4, 4]);
+    if (y < pad.t || y > h - pad.b) return;
+
+    ctx.setLineDash([4, 3]);
     ctx.strokeStyle = color;
     ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
     ctx.setLineDash([]);
     
-    // Y 軸標籤
+    // Y 軸標籤容器
     ctx.fillStyle = color;
-    ctx.font = "bold 10px 'DM Mono'";
-    ctx.fillRect(w - pad.r, y - 8, pad.r - 5, 16);
+    const labelW = pad.r - 8;
+    ctx.beginPath();
+    ctx.roundRect(w - pad.r + 2, y - 8, labelW, 16, 4);
+    ctx.fill();
+
     ctx.fillStyle = '#fff';
-    ctx.fillText(price.toFixed(1), w - pad.r + 5, y + 4);
+    ctx.font = "bold 10px 'DM Mono'";
+    ctx.textAlign = "left";
+    ctx.fillText(price.toFixed(1), w - pad.r + 6, y + 4);
     ctx.font = "8px 'Noto Sans TC'";
-    ctx.fillText(label, w - pad.r + 40, y + 4);
+    ctx.fillText(label, w - pad.r + labelW - 10, y + 4);
   };
 
   if (tech.resistance) drawLevel(tech.resistance, '壓', '#f0504a');
   if (tech.support) drawLevel(tech.support, '撐', '#3ecf8e');
 
-  // 最新價圓點與數值
+  // 最新價圓點與標籤
   const lastY = toY(closes[n-1]);
-  ctx.fillStyle = closes[n-1] >= opens[n-1] ? '#f0504a' : '#3ecf8e';
-  ctx.beginPath(); ctx.arc(toX(n-1), lastY, 3, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = closes[n-1] >= (opens[n-1] || closes[n-1]) ? '#f0504a' : '#3ecf8e';
+  ctx.beginPath(); ctx.arc(toX(n-1), lastY, 3.5, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 1; ctx.stroke();
 }
+
 
 // ── 下方成交量柱狀圖 ──
 function drawVolCanvas(vols, closes) {
