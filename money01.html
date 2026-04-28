@@ -767,7 +767,10 @@
           </div>
           <div style="font-size:11px;color:var(--text-muted);margin-top:6px;" id="stocksLastUpdate">資料更新中…</div>
         </div>
-        <button onclick="fetchAllQuotes()" style="background:rgba(77,196,212,0.15);border:1px solid rgba(77,196,212,0.3);color:var(--ocean-light);border-radius:10px;padding:6px 12px;font-size:11px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;white-space:nowrap;" id="refreshBtn">🔄 刷新</button>
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+          <button onclick="fetchAllQuotes()" style="background:rgba(77,196,212,0.15);border:1px solid rgba(77,196,212,0.3);color:var(--ocean-light);border-radius:10px;padding:6px 12px;font-size:11px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;white-space:nowrap;" id="refreshBtn">🔄 刷新</button>
+          <div onclick="showConnTest()" style="font-size:9px;color:var(--text-muted);cursor:pointer;text-decoration:underline;">連線測試</div>
+        </div>
       </div>
     </div>
 
@@ -1293,6 +1296,15 @@
       <button class="btn btn-primary" style="flex:1;" onclick="addRecurringTemplate()">確認新增</button>
       <button class="btn" style="background:rgba(255,255,255,0.07);flex:1;" onclick="closeModal('recurringModal')">取消</button>
     </div>
+  </div>
+</div>
+ 
+<!-- 連線診斷 Modal -->
+<div id="connModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:900;align-items:center;justify-content:center;">
+  <div style="background:var(--modal-bg);border-radius:20px;padding:24px;width:90%;max-width:320px;border:1px solid rgba(77,196,212,0.3);">
+    <div style="font-size:15px;font-weight:700;margin-bottom:16px;color:var(--ocean-foam);">🌐 API 連線狀態診斷</div>
+    <div id="connList" style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;"></div>
+    <button class="btn btn-primary" style="width:100%;" onclick="closeModal('connModal')">關閉</button>
   </div>
 </div><!-- --- [HTML END] --- -->
  
@@ -2272,55 +2284,124 @@ function deleteTx(id) { db.transactions=db.transactions.filter(t=>t.id!==id); re
 let stockQuotes = {}; // { ticker: { price, change, changeAmt, high52, low52, volume } }
 let chartState = { ticker: null, period: 'D', candles: [], vols: [] };
 
-// Yahoo Finance proxy
+// ── 股市行情核心設定 ──
+const QUOTE_PROXY_URL = 'https://dlwswwioqbghwpksbnjv.supabase.co/functions/v1/quote-proxy';
+const QUOTE_PROXY_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsd3N3d2lvcWJnaHdwa3Nibmp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MzQ3NjEsImV4cCI6MjA4ODMxMDc2MX0.d5jRhb_6qQDnfcEIfvRErfAWIEWcEnuR74diYtAicfg';
+
 async function fetchQuote(ticker) {
   const tw = ticker.match(/^\d/) ? ticker + '.TW' : ticker;
-  const url = `https://api.allorigins.win/raw?url=${encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/' + tw + '?interval=1d&range=3mo')}`;
+  
+  // 方案 A: Supabase Edge Function (穩定首選)
   try {
-    const r = await fetch(url, { signal: AbortSignal.timeout(8000) });
-    const d = await r.json();
+    const res = await fetch(`${QUOTE_PROXY_URL}?ticker=${encodeURIComponent(ticker)}`, {
+      headers: { 'Authorization': `Bearer ${QUOTE_PROXY_KEY}` },
+      signal: AbortSignal.timeout(5000)
+    });
+    const data = await res.json();
+    if (data && data.price) {
+      return { price: data.price, prevClose: data.prevClose, source: 'Supabase' };
+    }
+  } catch(e) { console.warn('[Quote] Supabase failed, trying Yahoo...'); }
+
+  // 方案 B: Yahoo Finance via AllOrigins (備援)
+  try {
+    const url = `https://api.allorigins.win/raw?url=${encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/' + tw + '?interval=1d&range=1d')}`;
+    const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
+    const d = await res.json();
     const meta = d?.chart?.result?.[0]?.meta;
-    const quotes = d?.chart?.result?.[0]?.indicators?.quote?.[0];
-    const timestamps = d?.chart?.result?.[0]?.timestamp || [];
-    if (!meta) return null;
-    const closes = (quotes?.close || []).filter(x=>x!=null);
-    const highs  = (quotes?.high  || []).filter(x=>x!=null);
-    const lows   = (quotes?.low   || []).filter(x=>x!=null);
-    const vols   = quotes?.volume || [];
-    return {
-      price:     meta.regularMarketPrice || closes[closes.length-1],
-      prevClose: meta.previousClose || meta.chartPreviousClose,
-      high52:    meta.fiftyTwoWeekHigh,
-      low52:     meta.fiftyTwoWeekLow,
-      closes, highs, lows, vols, timestamps,
-      ticker, tw
-    };
-  } catch(e) { return null; }
+    if (meta && meta.regularMarketPrice) {
+      return { price: meta.regularMarketPrice, prevClose: meta.previousClose, source: 'Yahoo' };
+    }
+  } catch(e) { console.warn('[Quote] Yahoo failed, trying TWSE...'); }
+
+  // 方案 C: 台灣證交所 MIS API (僅限台股備援)
+  if (ticker.match(/^\d/)) {
+    try {
+      const ts = Date.now();
+      const url = `https://api.allorigins.win/raw?url=${encodeURIComponent('https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_' + ticker + '.tw&_=' + ts)}`;
+      const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
+      const d = await res.json();
+      const info = d?.msgArray?.[0];
+      if (info && info.z !== '-') {
+        return { price: parseFloat(info.z), prevClose: parseFloat(info.y), source: 'TWSE' };
+      }
+    } catch(e) { console.error('[Quote] All sources failed for', ticker); }
+  }
+
+  return null;
+}
+
+// ── 連線診斷工具 ──
+async function showConnTest() {
+  const modal = document.getElementById('connModal');
+  const list = document.getElementById('connList');
+  modal.style.display = 'flex';
+  list.innerHTML = '<div style="color:var(--text-muted);font-size:12px;text-align:center;">正在測試各服務連線...</div>';
+
+  const targets = [
+    { name: 'Supabase Proxy', url: QUOTE_PROXY_URL + '?ticker=2330' },
+    { name: 'Yahoo (Proxy)',  url: 'https://api.allorigins.win/get?url=https://www.yahoo.com' },
+    { name: 'TWSE MIS',       url: 'https://api.allorigins.win/raw?url=https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_2330.tw' }
+  ];
+
+  let html = '';
+  for (const t of targets) {
+    const start = Date.now();
+    let status = '⏳';
+    let color = 'var(--text-muted)';
+    try {
+      const h = t.name === 'Supabase Proxy' ? { 'Authorization': `Bearer ${QUOTE_PROXY_KEY}` } : {};
+      const res = await fetch(t.url, { headers: h, signal: AbortSignal.timeout(5000) });
+      const ms = Date.now() - start;
+      if (res.ok) {
+        status = `✅ OK (${ms}ms)`;
+        color = 'var(--accent-green)';
+      } else {
+        status = `❌ 錯誤 ${res.status}`;
+        color = 'var(--accent-red)';
+      }
+    } catch(e) {
+      status = '❌ 連線超時/失敗';
+      color = 'var(--accent-red)';
+    }
+    html += `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(255,255,255,0.03);border-radius:10px;">
+        <span style="font-size:13px;font-weight:600;">${t.name}</span>
+        <span style="font-family:'DM Mono',monospace;font-size:11px;color:${color}">${status}</span>
+      </div>`;
+  }
+  list.innerHTML = html;
 }
 
 async function fetchAllQuotes() {
   if (!db.stocks.length) return;
   const btn = document.getElementById('refreshBtn');
   if (btn) { btn.textContent = '⏳ 更新中…'; btn.disabled = true; }
+  
+  let successCount = 0;
   for (const s of db.stocks) {
     if (s.ticker === '其他') continue;
     const q = await fetchQuote(s.ticker);
     if (q) {
-      stockQuotes[s.ticker] = q;
-      const chg = q.prevClose ? ((q.price - q.prevClose) / q.prevClose * 100) : s.change;
+      successCount++;
+      const chg = q.prevClose ? ((q.price - q.prevClose) / q.prevClose * 100) : (s.change || 0);
       s.change = parseFloat(chg.toFixed(2));
       s.price  = q.price;
-      // 更新市值：若有持股數量則用 shares*1000*price，否則保留舊值
       if (s.shares) s.value = Math.round(s.shares * 1000 * q.price);
     }
   }
+  
   saveLocal();
   renderStocksPage();
   renderDashboard();
+  
   if (btn) { btn.textContent = '🔄 刷新'; btn.disabled = false; }
   const now = new Date();
   const upEl = document.getElementById('stocksLastUpdate');
-  if (upEl) upEl.textContent = `最後更新：${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+  if (upEl) upEl.textContent = `最後更新：${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')} (成功 ${successCount}/${db.stocks.length})`;
+  
+  if (successCount === 0) toast('❌ 股價更新失敗，請檢查連線');
+  else toast(`✅ 已更新 ${successCount} 筆持股報價`);
 }
 
 function renderStocksPage() {
