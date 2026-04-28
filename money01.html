@@ -2338,29 +2338,30 @@ async function fetchChartHistory(ticker) {
   const tw = ticker.match(/^\d/) ? ticker + '.TW' : ticker;
   const rangeMap = { D: '3mo', W: '1y', M: '2y', Y: '5y' };
   const range = rangeMap[chartState.period] || '3mo';
-  const timeout = 12000;
+  const timeout = 8000;
   
-  // 按照穩定度排序的 Proxy 列表
+  // 多重代理備援
   const proxies = [
-    url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
-    url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-    url => `https://cors-anywhere.azm.workers.dev/${url}`
+    url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+    url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
   ];
 
-  const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${tw}?interval=1d&range=${range}&includePrePost=false&events=div%7Csplit%7Cearn`;
+  const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${tw}?interval=1d&range=${range}`;
 
   for (const proxy of proxies) {
     try {
       const res = await fetch(proxy(yahooUrl), { signal: AbortSignal.timeout(timeout) });
       if (!res.ok) continue;
-      
       const data = await res.json();
       const r = data?.chart?.result?.[0];
-      if (!r || !r.indicators?.quote?.[0]?.close) continue;
+      if (!r) continue;
       
       const meta = r.meta;
-      const q = r.indicators.quote[0];
+      const q = r.indicators?.quote?.[0];
       const ts = r.timestamp || [];
+      
+      if (!q || !q.close) continue;
+      
       const valid = ts.map((t, i) => ({
         t, c: q.close[i], h: q.high[i], l: q.low[i], o: q.open[i], v: q.volume[i]
       })).filter(x => x.c != null && x.o != null);
@@ -2370,7 +2371,6 @@ async function fetchChartHistory(ticker) {
       return {
         price: meta.regularMarketPrice || valid[valid.length-1].c,
         prevClose: meta.previousClose || valid[valid.length-2].c,
-        high52: meta.fiftyTwoWeekHigh || Math.max(...valid.map(x=>x.h)),
         closes: valid.map(x => x.c),
         highs: valid.map(x => x.h),
         lows: valid.map(x => x.l),
@@ -2378,7 +2378,9 @@ async function fetchChartHistory(ticker) {
         vols: valid.map(x => x.v),
         source: 'Yahoo-Hist'
       };
-    } catch(e) { console.warn(`[Chart] Proxy fail:`, e); }
+    } catch(e) {
+      console.warn(`[Chart] Proxy failed:`, e);
+    }
   }
   return null;
 }
@@ -2387,12 +2389,13 @@ async function showConnTest() {
   const modal = document.getElementById('connModal');
   const list = document.getElementById('connList');
   modal.style.display = 'flex';
-  list.innerHTML = '<div style="color:var(--text-muted);font-size:12px;text-align:center;">正在測試連線...</div>';
+  list.innerHTML = '<div style="color:var(--text-muted);font-size:12px;text-align:center;">正在測試各服務連線...</div>';
 
   const targets = [
-    { name: 'AllOrigins (Proxy A)', url: 'https://api.allorigins.win/get?url=https://www.google.com' },
-    { name: 'CorsProxy (Proxy C)', url: 'https://corsproxy.io/?https://www.google.com' },
-    { name: '證交所 API', url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_2330.tw') }
+    { name: 'Supabase (主線)', url: QUOTE_PROXY_URL + '?ticker=2330' },
+    { name: 'Yahoo (代理A)', url: 'https://api.allorigins.win/get?url=https://www.google.com' },
+    { name: 'Yahoo (代理C)', url: 'https://corsproxy.io/?https://www.google.com' },
+    { name: 'TWSE (證交所)', url: 'https://api.allorigins.win/raw?url=https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_2330.tw' }
   ];
 
   let html = '';
@@ -2400,12 +2403,13 @@ async function showConnTest() {
     const start = Date.now();
     let status = '⏳'; let color = 'var(--text-muted)';
     try {
-      const res = await fetch(t.url, { signal: AbortSignal.timeout(6000) });
+      const h = t.name.includes('Supabase') ? { 'Authorization': `Bearer ${QUOTE_PROXY_KEY}` } : {};
+      const res = await fetch(t.url, { headers: h, signal: AbortSignal.timeout(8000) });
       const ms = Date.now() - start;
-      status = res.ok ? `✅ OK (${ms}ms)` : `❌ ${res.status}`;
+      status = res.ok ? `✅ OK (${ms}ms)` : `❌ 錯誤 ${res.status}`;
       color = res.ok ? 'var(--accent-green)' : 'var(--accent-red)';
-    } catch(e) { status = '❌ 失敗'; color = 'var(--accent-red)'; }
-    html += `<div style="display:flex;justify-content:space-between;padding:10px;background:rgba(255,255,255,0.03);border-radius:10px;"><span style="font-size:13px;">${t.name}</span><span style="font-family:monospace;font-size:11px;color:${color}">${status}</span></div>`;
+    } catch(e) { status = '❌ 超時/失敗'; color = 'var(--accent-red)'; }
+    html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(255,255,255,0.03);border-radius:10px;"><span style="font-size:13px;">${t.name}</span><span style="font-family:monospace;font-size:11px;color:${color}">${status}</span></div>`;
   }
   list.innerHTML = html;
 }
@@ -2529,58 +2533,19 @@ async function selectChartTicker(ticker) {
   const loading = document.getElementById('chartLoading');
   if (loading) { loading.style.display = 'flex'; loading.textContent = '讀取走勢中...'; }
 
-  // 檢查是否有歷史資料，若無則抓取
+  // 檢查是否有歷史資料，沒有就抓完整 K 線歷史
   let q = stockQuotes[ticker];
   if (!q || !q.closes) {
-    const fresh = await fetchChartHistory(ticker);
-    if (fresh) {
-      stockQuotes[ticker] = fresh;
-      q = fresh;
-    } else {
+    q = await fetchChartHistory(ticker);
+    if (q) stockQuotes[ticker] = q;
+    else {
       const basic = await fetchQuote(ticker);
-      if (basic) {
-        if (!stockQuotes[ticker]) stockQuotes[ticker] = basic;
-        else Object.assign(stockQuotes[ticker], basic);
-        q = stockQuotes[ticker];
-      }
+      if (basic) stockQuotes[ticker] = basic;
     }
   }
   
-  if (q && q.closes && q.closes.length) {
-    drawChart(ticker);
-  } else if (loading) {
-    loading.innerHTML = `<div style="text-align:center;padding:20px;">
-      <div style="font-size:13px;color:var(--accent-red);margin-bottom:10px;">連線失敗 (Proxy 限制)</div>
-      <button class="btn btn-sm btn-primary" onclick="delete stockQuotes['${ticker}']; selectChartTicker('${ticker}')">🔄 重試</button>
-    </div>`;
-  }
-}
-
-async function showConnTest() {
-  const modal = document.getElementById('connModal');
-  const list = document.getElementById('connList');
-  modal.style.display = 'flex';
-  list.innerHTML = '<div style="color:var(--text-muted);font-size:12px;text-align:center;">正在測試連線...</div>';
-
-  const targets = [
-    { name: 'CodeTabs (超強代理)', url: 'https://api.codetabs.com/v1/proxy?quest=https://www.google.com' },
-    { name: 'AllOrigins (穩定代理)', url: 'https://api.allorigins.win/get?url=https://www.google.com' },
-    { name: '證交所 API', url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_2330.tw&_=' + Date.now()) }
-  ];
-
-  let html = '';
-  for (const t of targets) {
-    const start = Date.now();
-    let status = '⏳'; let color = 'var(--text-muted)';
-    try {
-      const res = await fetch(t.url, { signal: AbortSignal.timeout(8000) });
-      const ms = Date.now() - start;
-      status = res.ok ? `✅ OK (${ms}ms)` : `❌ ${res.status}`;
-      color = res.ok ? 'var(--accent-green)' : 'var(--accent-red)';
-    } catch(e) { status = '❌ 失敗'; color = 'var(--accent-red)'; }
-    html += `<div style="display:flex;justify-content:space-between;padding:10px;background:rgba(255,255,255,0.03);border-radius:10px;"><span style="font-size:13px;">${t.name}</span><span style="font-family:monospace;font-size:11px;color:${color}">${status}</span></div>`;
-  }
-  list.innerHTML = html;
+  if (q && q.closes && q.closes.length) drawChart(ticker);
+  else if (loading) loading.textContent = '走勢載入失敗，請檢查網路';
 }
 
 function switchChartPeriod(period, el) {
@@ -2601,24 +2566,13 @@ function drawChart(ticker) {
   const panel   = document.getElementById('technicalPanel');
 
   const q = stockQuotes[ticker];
-  // 即使沒有 K 線歷史，也要嘗試取得目前市價與最高點
-  const currentPrice = q?.price || 0;
-  
   if (!q || !q.closes || !q.closes.length) {
-    if (loading) { 
-      loading.style.display='flex'; 
-      loading.innerHTML = `<div>連線不穩，無法載入走勢圖<br><small style="opacity:0.6">但仍顯示技術分析</small></div>`; 
-    }
+    if (loading) { loading.style.display='flex'; loading.textContent='資料載入中，請先點擊刷新…'; }
     if (tvLink) tvLink.style.display = 'block';
     const tw = ticker.match(/^\d/) ? ticker + '.TW' : ticker;
     const period = chartState.period === 'D' ? 'D' : chartState.period === 'W' ? 'W' : 'M';
     if (tvBtn) tvBtn.href = `https://tw.tradingview.com/chart/?symbol=TWSE:${tw.replace('.TW','')}&interval=${period}`;
-    
-    // 如果有基本報價，也顯示下跌警示
-    if (currentPrice > 0) {
-      const peak = q.high52 || currentPrice * 1.05;
-      renderTechnicalPanel({ peak, resistance:0, support:0, ma5:0, ma20:0 }, currentPrice);
-    }
+    if (panel) panel.style.display = 'none';
     return;
   }
 
@@ -2630,77 +2584,12 @@ function drawChart(ticker) {
   if (tvBtn) tvBtn.href = `https://tw.tradingview.com/chart/?symbol=TWSE:${sym}&interval=${period}`;
 
   // 採樣資料
-  const { closes, highs, lows, opens, vols, price, high52 } = q;
+  const { closes, highs, lows, opens, vols, price } = q;
   const tech = calcTechnicalData(closes, highs, lows);
-  // 綜合判斷最高點
-  if (high52) tech.peak = Math.max(tech.peak, high52);
   
   drawPriceCanvas(closes, highs, lows, opens, vols, tech);
   drawVolCanvas(vols, closes);
   renderTechnicalPanel(tech, price);
-}
-
-function renderTechnicalPanel(tech, currentPrice) {
-  const panel = document.getElementById('technicalPanel');
-  if (!panel) return;
-  panel.style.display = 'block';
-
-  const resEl = document.getElementById('resistanceVal');
-  const supEl = document.getElementById('supportVal');
-  const peakEl = document.getElementById('highPointVal');
-  const curEl = document.getElementById('currentPriceVal');
-
-  if (resEl) resEl.textContent = tech.resistance > 0 ? tech.resistance.toFixed(2) : '--';
-  if (supEl) supEl.textContent = tech.support > 0 ? tech.support.toFixed(2) : '--';
-  if (peakEl) peakEl.textContent = tech.peak.toFixed(2);
-  if (curEl) curEl.textContent = currentPrice.toFixed(2);
-
-  const trend = document.getElementById('trendBadge');
-  if (trend) {
-    if (tech.ma5 && tech.ma20) {
-      const isBull = tech.ma5 > tech.ma20 && currentPrice > tech.ma20;
-      const isBear = tech.ma5 < tech.ma20 && currentPrice < tech.ma20;
-      if (isBull) {
-        trend.textContent = '📈 多頭趨勢 — MA5 高於 MA20';
-        trend.style.cssText = 'padding:10px 14px;border-radius:10px;font-size:12px;font-weight:700;text-align:center;margin-bottom:10px;background:rgba(62,207,142,0.12);border:1px solid rgba(62,207,142,0.3);color:var(--accent-green);';
-      } else if (isBear) {
-        trend.textContent = '📉 空頭趨勢 — MA5 低於 MA20';
-        trend.style.cssText = 'padding:10px 14px;border-radius:10px;font-size:12px;font-weight:700;text-align:center;margin-bottom:10px;background:rgba(240,80,74,0.12);border:1px solid rgba(240,80,74,0.3);color:var(--accent-red);';
-      } else {
-        trend.textContent = '↔️ 盤整區間 — 趨勢不明';
-        trend.style.cssText = 'padding:10px 14px;border-radius:10px;font-size:12px;font-weight:700;text-align:center;margin-bottom:10px;background:rgba(240,192,64,0.1);border:1px solid rgba(240,192,64,0.25);color:var(--accent-gold);';
-      }
-    } else {
-      trend.textContent = '資料載入中…';
-      trend.style.background = 'rgba(255,255,255,0.05)';
-    }
-  }
-
-  const dropContainer = document.getElementById('dropAlerts');
-  if (dropContainer) {
-    const dropFrom = tech.peak;
-    const pct5  = dropFrom * 0.95;
-    const pct10 = dropFrom * 0.90;
-    const pct20 = dropFrom * 0.80;
-    const dropped = (dropFrom - currentPrice) / dropFrom * 100;
-    
-    const alertItem = (label, price, hit) => `
-      <div style="flex:1;min-width:80px;padding:8px 10px;border-radius:8px;
-        background:${hit?'rgba(240,80,74,0.15)':'rgba(255,255,255,0.04)'};
-        border:1px solid ${hit?'rgba(240,80,74,0.4)':'rgba(255,255,255,0.08)'};text-align:center;">
-        <div style="font-size:10px;color:${hit?'var(--accent-red)':'var(--text-muted)'};margin-bottom:3px;">${label}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:${hit?'var(--accent-red)':'var(--text-secondary)'};">${price.toFixed(2)}</div>
-        ${hit ? '<div style="font-size:9px;color:var(--accent-red);margin-top:2px;">⚠️ 已觸及</div>' : ''}
-      </div>`;
-
-    dropContainer.innerHTML = `
-      <div style="width:100%;font-size:10px;color:var(--text-muted);margin-bottom:6px;">
-        ▽ 從最高點 $${dropFrom.toFixed(2)} 下跌警戒 (目前跌 ${dropped.toFixed(1)}%)
-      </div>
-      ${alertItem('下跌 5%',  pct5,  currentPrice <= pct5)}
-      ${alertItem('下跌 10%', pct10, currentPrice <= pct10)}
-      ${alertItem('下跌 20%', pct20, currentPrice <= pct20)}`;
-  }
 }
 
 // 輔助：計算技術指標
