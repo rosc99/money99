@@ -130,11 +130,69 @@
   .debt-amount { font-family: 'DM Mono', monospace; font-size: 15px; color: var(--accent-red); }
  
   /* ===== WATER BALL ===== */
-  .cashflow-section { display: flex; align-items: center; gap: 16px; padding: 4px 0; }
-  .cashflow-title { font-size: 22px; font-weight: 900; line-height: 1.3; color: var(--ocean-foam); flex-shrink: 0; writing-mode: vertical-rl; letter-spacing: 0.1em; }
-  .water-ball-wrap { flex: 1; display: flex; justify-content: center; position: relative; }
-  .cashflow-stats { flex: 1; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; }
-  .cashflow-stat-top { text-align: right; }
+  .cashflow-section { display: flex; align-items: flex-start; gap: 12px; padding: 20px 0 10px; min-height: 150px; }
+  .cashflow-title { font-size: 29px; font-weight: 900; line-height: 1.1; color: var(--ocean-foam); writing-mode: vertical-rl; letter-spacing: 0.1em; opacity: 0.7; flex-shrink: 0; padding-top: 2px; }
+  
+  .cashflow-body { flex: 2; display: flex; align-items: flex-start; justify-content: center; position: relative; padding-top: 10px; }
+  
+  .water-ball-wrap { position: relative; display: flex; justify-content: center; align-items: center; width: 110px; height: 110px; }
+
+  .cashflow-line-container {
+    position: absolute;
+    right: 80%; /* 從水球中心向左推開，確保不重疊 */
+    bottom: -5px;
+    display: flex;
+    flex-direction: row; /* 金額在左，線在右 */
+    align-items: center;
+    gap: 0;
+    z-index: 10;
+    pointer-events: none;
+    width: max-content;
+  }
+
+  .cashflow-amount-new {
+    font-family: 'DM Mono', monospace;
+    font-size: 17px;
+    font-weight: 900;
+    color: var(--text-primary);
+    text-shadow: 0 0 12px rgba(77,196,212,0.6);
+    white-space: nowrap;
+    background: rgba(10,42,61,0.8);
+    padding: 2px 6px;
+    border-radius: 6px;
+    border: 1px solid rgba(77,196,212,0.2);
+  }
+  
+  .cashflow-line {
+    width: 50px;
+    height: 40px;
+    position: relative;
+    margin-left: -2px; /* 讓線條緊貼金額背景 */
+  }
+  /* 第一段：水平短線 */
+  .cashflow-line::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 14px;
+    width: 15px;
+    height: 1.5px;
+    background: var(--ocean-light);
+    box-shadow: 0 0 8px var(--ocean-light);
+  }
+  /* 第二段：斜上長連線 */
+  .cashflow-line::after {
+    content: '';
+    position: absolute;
+    left: 15px;
+    bottom: 14px;
+    width: 45px;
+    height: 1.5px;
+    background: linear-gradient(90deg, var(--ocean-light), transparent);
+    transform: rotate(-38deg);
+    transform-origin: left center;
+  }
+  .cashflow-stat-top { text-align: left; }
   .cashflow-stat-bot { text-align: left; }
   .cashflow-stat-label { font-size: 10px; color: var(--text-muted); letter-spacing: 0.06em; margin-bottom: 2px; }
   .cashflow-stat-val { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 700; }
@@ -144,9 +202,8 @@
     0%, 100% { clip-path: polygon(0% 8%, 15% 4%, 30% 8%, 45% 4%, 60% 8%, 75% 4%, 90% 8%, 100% 4%, 100% 100%, 0% 100%); }
     50% { clip-path: polygon(0% 4%, 15% 8%, 30% 4%, 45% 8%, 60% 4%, 75% 8%, 90% 4%, 100% 8%, 100% 100%, 0% 100%); }
   }
-  .water-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 15px; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.6); z-index: 2; }
-  .water-pct { font-size: 13px; font-weight: 700; font-family: 'DM Mono', monospace; opacity: 0.85; margin-top: 2px; }
-  .water-sub { font-size: 20px; font-weight: 900; font-family: 'DM Mono', monospace; line-height: 1; }
+  .water-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.6); z-index: 2; }
+  .water-pct { font-size: 16px; font-weight: 900; font-family: 'DM Mono', monospace; opacity: 0.9; }
   .water-shine { position: absolute; top: 10px; left: 18px; width: 24px; height: 14px; background: radial-gradient(ellipse, rgba(255,255,255,0.35) 0%, transparent 70%); border-radius: 50%; transform: rotate(-25deg); z-index: 3; }
  
   /* ===== BALANCE CHART ===== */
@@ -454,15 +511,43 @@
   .invest-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   .invest-bar-label { font-size: 11px; color: var(--text-secondary); width: 60px; flex-shrink: 0; }
   .invest-bar-track-dual { flex: 1; height: 16px; display: flex; gap: 2px; }
-  .invest-bar-cost { height: 100%; background: var(--ocean-mid); border-radius: 4px 0 0 4px; transition: width 0.8s ease; }
-  .invest-bar-val  { height: 100%; background: var(--ocean-light); border-radius: 0 4px 4px 0; transition: width 0.8s ease; }
+  .invest-bar-cost { height: 100%; background: var(--ocean-light); border-radius: 4px 0 0 4px; transition: width 0.8s ease; opacity: 0.9; }
+  .invest-bar-val  {
+    height: 100%;
+    background: linear-gradient(90deg, #c0362e, var(--accent-red));
+    border-radius: 0 4px 4px 0;
+    transition: width 0.8s ease;
+    box-shadow: 0 0 10px rgba(240,80,74,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    overflow: hidden;
+    white-space: nowrap;
+  }
   .invest-item-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
   .invest-item-info { flex: 1; }
   .invest-item-name { font-size: 12px; font-weight: 500; }
   .invest-item-meta { font-size: 10px; color: var(--text-muted); }
   .invest-item-bars { width: 100px; height: 10px; display: flex; gap: 1px; background: rgba(255,255,255,0.03); border-radius: 3px; overflow: hidden; }
-  .invest-mini-cost { height: 100%; background: rgba(150,200,220,0.2); }
-  .invest-mini-val  { height: 100%; background: var(--ocean-light); }
+  .invest-mini-cost { height: 100%; background: var(--ocean-light); opacity: 0.8; }
+  .invest-mini-val  {
+    height: 100%;
+    background: var(--accent-red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    font-family: 'DM Mono', monospace;
+    font-weight: 900;
+    color: #fff;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 
   /* ===== [M-05] TX MONTH COLLAPSE ===== */
   .tx-month-group { margin-bottom: 10px; }
@@ -534,14 +619,20 @@
     <div class="card" data-m="[M-01] CashFlow" onclick="switchPage('tx', document.querySelector('[data-page=tx]'))" style="cursor:pointer;">
       <div class="cashflow-section">
         <div class="cashflow-title">流<br>金<br>現</div>
-        <div class="water-ball-wrap">
-          <div class="water-ball">
-            <div class="water-fill" id="waterFill" style="height:50%"></div>
-            <div class="water-text">
-              <div class="water-sub" id="waterSub">$0</div>
-              <div class="water-pct" id="waterPct">50%</div>
+        <div class="cashflow-body">
+          <div class="water-ball-wrap">
+            <div class="water-ball">
+              <div class="water-fill" id="waterFill" style="height:50%"></div>
+              <div class="water-text">
+                <div class="water-pct" id="waterPct">50%</div>
+              </div>
+              <div class="water-shine"></div>
             </div>
-            <div class="water-shine"></div>
+            <!-- 金額與連線固定在左下角 -->
+            <div class="cashflow-line-container">
+              <div class="cashflow-amount-new" id="waterSub">$0</div>
+              <div class="cashflow-line"></div>
+            </div>
           </div>
         </div>
         <div class="cashflow-stats">
@@ -590,11 +681,14 @@
       </div>
     </div>
  
-    <div class="card" data-m="[M-01] InvestAnalysis" onclick="switchPage('stocks', document.querySelector('[data-page=stocks]'))" style="cursor:pointer;">
+    <div class="card" data-m="[M-01] InvestAnalysis">
       <div class="card-title">💰 投資損益分析 (股票+基金)</div>
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;">
         <div class="total-amount" id="investTotalVal" style="font-size:24px;">--</div>
-        <div id="investTotalROI" class="total-badge">+0%</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+          <div id="investTotalROI" class="total-badge">+0%</div>
+          <div id="investTotalGain" style="font-family:'DM Mono',monospace;font-size:12px;font-weight:900;color:var(--text-secondary);">+$0</div>
+        </div>
       </div>
       
       <!-- 對稱長條圖 -->
@@ -611,11 +705,12 @@
         <span id="investTotalValSub">市值 --</span>
       </div>
 
-      <!-- 投資細項列表 (與收支平衡邏輯一致) -->
-      <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:12px;">
-        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:10px;font-weight:700;">項目明細 (成本 vs. 市值)</div>
-        <div id="investItemList"></div>
+      <!-- 切換按鈕與明細標題 -->
+      <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <div style="font-size:11px;color:var(--text-secondary);font-weight:700;">項目明細</div>
+        <div onclick="toggleInvestDisplayMode()" style="font-size:10px;color:var(--ocean-light);background:rgba(77,196,212,0.1);padding:4px 8px;border-radius:6px;cursor:pointer;font-weight:700;border:1px solid rgba(77,196,212,0.2);" id="investModeBtn">顯示：趴數</div>
       </div>
+      <div id="investItemList"></div>
     </div>
 
     <div class="sync-status">
@@ -1048,14 +1143,25 @@
  
 <!-- Add TX Modal -->
 <div id="txModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:flex-end;">
-  <div style="background:var(--modal-bg);border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:2px solid rgba(77,196,212,0.2);transition:border-top 0.2s;">
+  <div style="background:var(--modal-bg);border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:2px solid rgba(77,196,212,0.2);transition:border-top 0.2s;max-height:90vh;overflow-y:auto;">
     <div id="txModalTitle" style="font-size:16px;font-weight:700;margin-bottom:16px;">新增交易</div>
-    <div class="form-row"><div class="form-label">類型</div><select class="form-input" id="txType"><option value="expense">支出</option><option value="income">收入</option></select></div>
-    <div class="form-row"><div class="form-label">名稱</div><input class="form-input" id="txName" placeholder="房貸、薪資…" /></div>
+    <div class="form-row"><div class="form-label">類型</div><select class="form-input" id="txType" onchange="renderTxCategoryChips()"><option value="expense">支出</option><option value="income">收入</option></select></div>
+    
+    <!-- 類別選擇改為方塊 -->
+    <div style="margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div class="form-label" style="width:auto;">選擇類別</div>
+        <div style="font-size:11px;color:var(--ocean-light);cursor:pointer;" onclick="switchPage('settings', document.querySelector('[data-page=settings]'));closeModal('txModal');">⚙️ 管理類別</div>
+      </div>
+      <div id="txCategoryChips" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+      <input type="hidden" id="txCategory" />
+    </div>
+
+    <div class="form-row"><div class="form-label">名稱</div><input class="form-input" id="txName" placeholder="選填（預設為類別名稱）" /></div>
     <div class="form-row"><div class="form-label">金額</div><input class="form-input" type="number" id="txAmount" placeholder="0" /></div>
-    <div class="form-row"><div class="form-label">類別</div><select class="form-input" id="txCategory"></select></div>
     <div class="form-row"><div class="form-label">日期</div><input class="form-input" type="date" id="txDate" /></div>
-    <div style="display:flex;gap:10px;margin-top:8px;">
+    
+    <div style="display:flex;gap:10px;margin-top:16px;">
       <button id="txConfirmBtn" class="btn btn-primary" style="flex:1;" onclick="addTransaction()">確認新增</button>
       <button class="btn" style="background:rgba(255,255,255,0.07);flex:1;" onclick="closeModal('txModal')">取消</button>
     </div>
@@ -1501,6 +1607,14 @@ function closeDevPanel() {
 // ===================================================================
 //  DASHBOARD RENDER
 // ===================================================================
+// 投資顯示模式狀態
+let investDisplayMode = 'pct'; // 'pct' 或 'amt'
+function toggleInvestDisplayMode() {
+  investDisplayMode = (investDisplayMode === 'pct' ? 'amt' : 'pct');
+  document.getElementById('investModeBtn').textContent = '顯示：' + (investDisplayMode === 'pct' ? '趴數' : '金額');
+  renderDashboard();
+}
+
 function renderDashboard() {
   const { currentMonth: m, currentYear: y } = db.config;
   const monthTx = db.transactions.filter(t => {
@@ -1533,32 +1647,47 @@ function renderDashboard() {
     ...(db.funds || []).map(f => f.realized || 0)
   ].reduce((s, r) => s + r, 0);
   
-  const investTotalGain = (investVal + investRealized) - investCost;
-  const investROI = investCost > 0 ? (investTotalGain / investCost * 100) : 0;
+  const investTotalGainAmt = (investVal + investRealized) - investCost;
+  const investROI = investCost > 0 ? (investTotalGainAmt / investCost * 100) : 0;
 
   document.getElementById('investTotalVal').textContent = fmt(investVal);
   document.getElementById('investTotalCost').textContent = '成本 ' + fmt(investCost);
   document.getElementById('investTotalRealized').textContent = '回收 ' + fmt(investRealized);
   document.getElementById('investTotalValSub').textContent = '市值 ' + fmt(investVal);
+  
   const roiBadge = document.getElementById('investTotalROI');
   roiBadge.textContent = (investROI >= 0 ? '+' : '') + investROI.toFixed(2) + '%';
   roiBadge.className = 'total-badge' + (investROI < 0 ? ' neg' : '');
+  
+  const gainEl = document.getElementById('investTotalGain');
+  gainEl.textContent = (investTotalGainAmt >= 0 ? '+' : '') + fmt(investTotalGainAmt);
+  gainEl.style.color = investTotalGainAmt >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
 
   const maxI = Math.max(investCost, investVal + investRealized, 1);
   document.getElementById('investCostBar').style.width = (investCost / (investCost + investVal + investRealized) * 100) + '%';
-  document.getElementById('investValBar').style.width = ((investVal + investRealized) / (investCost + investVal + investRealized) * 100) + '%';
+  const valBar = document.getElementById('investValBar');
+  valBar.style.width = ((investVal + investRealized) / (investCost + investVal + investRealized) * 100) + '%';
+  valBar.textContent = investDisplayMode === 'pct' 
+    ? (investROI >= 0 ? '+' : '') + investROI.toFixed(1) + '%'
+    : (investTotalGainAmt >= 0 ? '+' : '') + fmt(investTotalGainAmt);
 
   document.getElementById('investItemList').innerHTML = investItems.slice(0, 5).map(i => {
     const itemRealized = [...db.stocks, ...(db.funds||[])].find(x=>x.name===i.name)?.realized || 0;
+    const itemGain = (i.val + itemRealized) - i.cost;
+    const itemROI = i.cost > 0 ? (itemGain / i.cost * 100) : 0;
     return `
-    <div class="invest-item-row">
+    <div class="invest-item-row" onclick="switchPage('stocks', document.querySelector('[data-page=stocks]'))" style="cursor:pointer;">
       <div class="invest-item-info">
         <div class="invest-item-name">${i.name}</div>
         <div class="invest-item-meta">成本 ${fmt(i.cost)} · 市值 ${fmt(i.val)} ${itemRealized > 0 ? `· 回收 ${fmt(itemRealized)}` : ''}</div>
       </div>
       <div class="invest-item-bars">
         <div class="invest-mini-cost" style="width:${(i.cost / (i.cost + i.val + itemRealized) * 100)}%"></div>
-        <div class="invest-mini-val" style="width:${((i.val + itemRealized) / (i.cost + i.val + itemRealized) * 100)}%"></div>
+        <div class="invest-mini-val" style="width:${((i.val + itemRealized) / (i.cost + i.val + itemRealized) * 100)}%">
+          ${investDisplayMode === 'pct' 
+            ? (itemROI >= 0 ? '+' : '') + itemROI.toFixed(0) + '%'
+            : (itemGain >= 0 ? '+' : '') + (Math.abs(itemGain) >= 10000 ? (itemGain/10000).toFixed(1)+'萬' : itemGain)}
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -1974,6 +2103,8 @@ function applyBatchCategory(overlay) {
   saveLocal(); renderTxList(); renderDashboard(); autoSync();
 }
  
+let expandedGroups = new Set();
+ 
 function renderTxList() {
   const m = db.config.currentMonth, y = db.config.currentYear;
   let list = db.transactions.filter(t => {
@@ -1985,7 +2116,6 @@ function renderTxList() {
   const icons = {};
   (db.config.categories||[]).forEach(c=>icons[c.name]=c.icon);
   (db.config.incomeCategories||[]).forEach(c=>icons[c.name]=c.icon);
-  // fallbacks
   Object.assign(icons, {'房貸':'🏠','生活費':'🛒','交通':'🚌','醫療':'💊','娛樂':'🎮','薪資':'💰','獎金':'🎁','投資':'📈','其他':'📦','其他收入':'💹'});
   const container = document.getElementById('txList');
  
@@ -1994,7 +2124,6 @@ function renderTxList() {
     return;
   }
  
-  // group by year-month
   const groups = {};
   list.forEach(t => {
     const d = new Date(t.date);
@@ -2003,13 +2132,16 @@ function renderTxList() {
     groups[key].push(t);
   });
  
-  const monthNames = ['一','二','三','四','五','六','七','八','九','十','十一','十二'];
+  // 初始展開：若是第一次渲染且沒有任何記錄，預設展開本月
   const currentKey = `${y}-${String(m).padStart(2,'0')}`;
+  if (expandedGroups.size === 0) expandedGroups.add(currentKey);
+
+  const monthNames = ['一','二','三','四','五','六','七','八','九','十','十一','十二'];
  
   container.innerHTML = Object.entries(groups).map(([key, txs]) => {
     const [gY, gM] = key.split('-');
     const mLabel = monthNames[parseInt(gM)-1] + '月';
-    const isCurrentMonth = key === currentKey;
+    const isExpanded = expandedGroups.has(key);
     const totalInc = txs.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
     const totalExp = txs.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
     const metaStr = totalInc > 0 ? `+${fmt(totalInc)} / -${fmt(totalExp)}` : `-${fmt(totalExp)}`;
@@ -2028,9 +2160,9 @@ function renderTxList() {
       <div class="tx-month-header" onclick="toggleMonthGroup('${key}')">
         <span class="tx-month-title">${gY}年 ${mLabel}</span>
         <span class="tx-month-meta">${metaStr}</span>
-        <span class="tx-month-chevron ${isCurrentMonth?'open':''}" id="chev-${key}">▼</span>
+        <span class="tx-month-chevron ${isExpanded?'open':''}" id="chev-${key}">▼</span>
       </div>
-      <div class="tx-month-body ${isCurrentMonth?'open':''}" id="grp-${key}">${txRows}</div>
+      <div class="tx-month-body ${isExpanded?'open':''}" id="grp-${key}">${txRows}</div>
     </div>`;
   }).join('');
 }
@@ -2039,21 +2171,60 @@ function toggleMonthGroup(key) {
   const body = document.getElementById('grp-' + key);
   const chev = document.getElementById('chev-' + key);
   if (!body) return;
+  const isOpening = !body.classList.contains('open');
+  if (isOpening) expandedGroups.add(key);
+  else expandedGroups.delete(key);
   body.classList.toggle('open');
   chev.classList.toggle('open');
 }
 /* [N-01] Quick add with pre-set type */
+function renderTxCategoryChips() {
+  const type = document.getElementById('txType').value;
+  const container = document.getElementById('txCategoryChips');
+  const hiddenInput = document.getElementById('txCategory');
+  
+  const incomeCats = (db.config.incomeCategories && db.config.incomeCategories.length)
+    ? db.config.incomeCategories
+    : [{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資獲利',icon:'📈'},{name:'其他收入',icon:'💹'}];
+  
+  const cats = type === 'income' ? incomeCats : db.config.categories;
+  
+  container.innerHTML = cats.map(c => `
+    <div class="category-chip" onclick="selectTxCategory('${c.name}', this)" 
+      style="padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.05);border:1.5px solid var(--border-glass);cursor:pointer;font-size:13px;display:flex;align-items:center;gap:6px;transition:0.2s;">
+      <span>${c.icon}</span>
+      <span>${c.name}</span>
+    </div>
+  `).join('');
+  
+  // 預設選擇第一個
+  if (cats.length > 0) {
+    selectTxCategory(cats[0].name, container.firstElementChild);
+  }
+}
+
+function selectTxCategory(name, el) {
+  // 移除其他選中狀態
+  document.querySelectorAll('.category-chip').forEach(chip => {
+    chip.style.background = 'rgba(255,255,255,0.05)';
+    chip.style.borderColor = 'var(--border-glass)';
+    chip.style.color = 'var(--text-primary)';
+  });
+  
+  // 設定當前選中
+  el.style.background = 'rgba(77,196,212,0.15)';
+  el.style.borderColor = 'var(--ocean-light)';
+  el.style.color = 'var(--ocean-light)';
+  
+  document.getElementById('txCategory').value = name;
+}
+
 function showAddTxType(type) {
   document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
   document.getElementById('txType').value = type;
-  // populate categories and filter by type if income
-  const incomeCats = (db.config.incomeCategories && db.config.incomeCategories.length)
-    ? db.config.incomeCategories.map(c=>c.name)
-    : ['薪資','獎金','投資','其他收入'];
-  const cats = type === 'income'
-    ? incomeCats.map(n => `<option>${n}</option>`).join('')
-    : db.config.categories.map(c=>`<option>${c.name}</option>`).join('');
-  document.getElementById('txCategory').innerHTML = cats;
+  
+  renderTxCategoryChips();
+  
   // style modal accent by type
   const modal = document.getElementById('txModal').querySelector('div');
   modal.style.borderTop = type==='income'
@@ -2068,14 +2239,28 @@ function showAddTxType(type) {
   document.getElementById('txAmount').value = '';
   document.getElementById('txModal').style.display = 'flex';
 }
+
 function showAddTx() { showAddTxType('expense'); }
+
 function addTransaction() {
-  const type=document.getElementById('txType').value, name=document.getElementById('txName').value.trim(),
-    amount=parseFloat(document.getElementById('txAmount').value), category=document.getElementById('txCategory').value,
-    date=document.getElementById('txDate').value;
-  if (!name||!amount||!date) { toast('請填寫完整！'); return; }
-  db.transactions.push({ id:uid(), type, name, amount, category, date });
-  closeModal('txModal'); toast('✅ 交易已新增'); saveLocal(); renderTxList(); renderDashboard(); autoSync();
+  const type = document.getElementById('txType').value;
+  let name = document.getElementById('txName').value.trim();
+  const amount = parseFloat(document.getElementById('txAmount').value);
+  const category = document.getElementById('txCategory').value;
+  const date = document.getElementById('txDate').value;
+  
+  if (!amount || !date || !category) { toast('請填寫金額與日期，並選擇類別！'); return; }
+  
+  // 若名稱為空，預設為類別名稱
+  if (!name) name = category;
+  
+  db.transactions.push({ id: uid(), type, name, amount, category, date });
+  closeModal('txModal'); 
+  toast('✅ 交易已新增'); 
+  saveLocal(); 
+  renderTxList(); 
+  renderDashboard(); 
+  autoSync();
 }
 function deleteTx(id) { db.transactions=db.transactions.filter(t=>t.id!==id); renderTxList(); renderDashboard(); saveLocal(); autoSync(); }
  
