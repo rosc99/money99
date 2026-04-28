@@ -794,17 +794,25 @@
 
     <!-- 圖表分析區塊 -->
     <div class="section-header" style="margin-top:4px;">
-      <div class="section-title">📊 股價分析</div>
+      <div class="section-title">📊 股價走勢分析</div>
     </div>
     <div class="card" style="padding:14px 16px;margin-bottom:12px;" id="chartAnalysisCard">
-      <!-- 股票選擇器 -->
-      <div style="display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px;" id="chartTickerSelector"></div>
+      <!-- 股票切換選單 -->
+      <div style="margin-bottom:12px;">
+        <div style="font-size:10px;color:var(--text-muted);margin-bottom:6px;letter-spacing:0.05em;">切換分析對象</div>
+        <select id="chartTickerSelector" onchange="selectChartTicker(this.value)" 
+          style="width:100%;background:rgba(255,255,255,0.06);border:1px solid var(--border-glass);border-radius:10px;padding:10px 12px;color:var(--text-primary);font-size:14px;font-weight:700;outline:none;">
+        </select>
+      </div>
+      
       <!-- 週期切換 -->
       <div style="display:flex;gap:6px;margin-bottom:12px;">
         <div class="tab active" style="flex:1;text-align:center;" onclick="switchChartPeriod('D',this)">日線</div>
         <div class="tab" style="flex:1;text-align:center;" onclick="switchChartPeriod('W',this)">週線</div>
         <div class="tab" style="flex:1;text-align:center;" onclick="switchChartPeriod('M',this)">月線</div>
+        <div class="tab" style="flex:1;text-align:center;" onclick="switchChartPeriod('Y',this)">年線</div>
       </div>
+      
       <!-- 迷你K線圖 + 成交量 -->
       <div style="position:relative;width:100%;height:200px;background:rgba(0,0,0,0.2);border-radius:12px;overflow:hidden;margin-bottom:10px;">
         <canvas id="priceCanvas" style="width:100%;height:140px;display:block;"></canvas>
