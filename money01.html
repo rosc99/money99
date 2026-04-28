@@ -1429,15 +1429,17 @@ function switchPage(page, btn) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
   if (btn) btn.classList.add('active');
-  // [N-04] 同步月份標籤
   const m = db.config.currentMonth, y = db.config.currentYear;
   const thisY = new Date().getFullYear();
-  document.getElementById('currentMonthLabel').textContent =
-    (y !== thisY ? y + '年' : '') + m + '月';
+  document.getElementById('currentMonthLabel').textContent = (y !== thisY ? y + '年' : '') + m + '月';
   if (page === 'settings') renderSettings();
   if (page === 'tx') renderTxList();
-  if (page === 'stocks') renderStocksPage();
-  if (page === 'pledge') renderPledgePage(); // [M-01]
+  if (page === 'stocks') {
+    renderStocksPage();
+    // 解決 Canvas 寬度問題：在分頁顯示後觸發重繪
+    setTimeout(() => { if (chartState.ticker) drawChart(chartState.ticker); }, 50);
+  }
+  if (page === 'pledge') renderPledgePage();
   if (page === 'fixed') renderFixedPage();
 }
  
@@ -2332,45 +2334,55 @@ async function fetchQuote(ticker) {
   return null;
 }
 
-// ── 歷史 K 線資料抓取（Yahoo Finance chart API）──
 async function fetchChartHistory(ticker) {
   const tw = ticker.match(/^\d/) ? ticker + '.TW' : ticker;
-  const rangeMap = { D: '1y', W: '2y', M: '5y', Y: '10y' };
-  const range = rangeMap[chartState.period] || '1y';
-  const intervalMap = { D: '1d', W: '1wk', M: '1mo', Y: '3mo' };
-  const interval = intervalMap[chartState.period] || '1d';
-  const url = `https://corsproxy.io/?${encodeURIComponent(
-    'https://query1.finance.yahoo.com/v8/finance/chart/' + tw +
-    '?interval=' + interval + '&range=' + range
-  )}`;
-  try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
-    const d = await res.json();
-    const r = d?.chart?.result?.[0];
-    if (!r) return null;
-    const meta = r.meta;
-    const timestamps = r.timestamp || [];
-    const q = r.indicators?.quote?.[0] || {};
-    const valid = timestamps.map((t,i)=>({
-      t, o:q.open?.[i], h:q.high?.[i], l:q.low?.[i], c:q.close?.[i], v:q.volume?.[i]
-    })).filter(x => x.c != null && x.h != null && x.l != null);
-    if (!valid.length) return null;
-    return {
-      price:     meta.regularMarketPrice || valid[valid.length-1].c,
-      prevClose: meta.previousClose || valid[valid.length-2]?.c,
-      high52:    meta.fiftyTwoWeekHigh || Math.max(...valid.map(x=>x.h)),
-      low52:     meta.fiftyTwoWeekLow  || Math.min(...valid.map(x=>x.l)),
-      opens:  valid.map(x=>x.o),
-      highs:  valid.map(x=>x.h),
-      lows:   valid.map(x=>x.l),
-      closes: valid.map(x=>x.c),
-      vols:   valid.map(x=>x.v),
-      dates:  valid.map(x=>x.t),
-      source: 'Yahoo-History'
-    };
-  } catch(e) { return null; }
-}
+  const rangeMap = { D: '3mo', W: '1y', M: '2y', Y: '5y' };
+  const range = rangeMap[chartState.period] || '3mo';
+  const timeout = 8000;
+  
+  // 多重代理備援
+  const proxies = [
+    url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+    url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
+  ];
 
+  const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${tw}?interval=1d&range=${range}`;
+
+  for (const proxy of proxies) {
+    try {
+      const res = await fetch(proxy(yahooUrl), { signal: AbortSignal.timeout(timeout) });
+      if (!res.ok) continue;
+      const data = await res.json();
+      const r = data?.chart?.result?.[0];
+      if (!r) continue;
+      
+      const meta = r.meta;
+      const q = r.indicators?.quote?.[0];
+      const ts = r.timestamp || [];
+      
+      if (!q || !q.close) continue;
+      
+      const valid = ts.map((t, i) => ({
+        t, c: q.close[i], h: q.high[i], l: q.low[i], v: q.volume[i]
+      })).filter(x => x.c != null);
+      
+      if (valid.length < 2) continue;
+      
+      return {
+        price: meta.regularMarketPrice || valid[valid.length-1].c,
+        prevClose: meta.previousClose || valid[valid.length-2].c,
+        closes: valid.map(x => x.c),
+        highs: valid.map(x => x.h),
+        lows: valid.map(x => x.l),
+        vols: valid.map(x => x.v),
+        source: 'Yahoo-Hist'
+      };
+    } catch(e) {
+      console.warn(`[Chart] Proxy failed:`, e);
+    }
+  }
+  return null;
+}
 
 async function showConnTest() {
   const modal = document.getElementById('connModal');
@@ -2438,7 +2450,8 @@ function renderStocksPage() {
   if (!stockList) return;
   
   const totalVal = (db.stocks || []).reduce((s, st) => s + (st.value || 0), 0);
-  document.getElementById('stocksTotalVal').textContent = fmt(totalVal);
+  const tvEl = document.getElementById('stocksTotalVal');
+  if (tvEl) tvEl.textContent = fmt(totalVal);
 
   renderFunds();
   renderInvestSummary();
@@ -2464,17 +2477,13 @@ function renderStocksPage() {
     </div>`;
   }).join('');
 
-  // 2. 渲染圖表分析用的股票選單 (橫向方塊)
+  // 2. 渲染圖表分析用的股票選單 (只顯示 0050 和 00662)
   const sel = document.getElementById('chartTickerSelector');
   if (sel) {
-    const validStocks = db.stocks.filter(s => s.ticker && s.ticker !== '其他');
-    // 預設加入 0050 / 00662 若持股裡沒有
-    const defaults = [
+    const allTickers = [
       { ticker:'0050', name:'元大台灣50' },
       { ticker:'00662', name:'富邦NASDAQ' },
     ];
-    const allTickers = [...validStocks];
-    defaults.forEach(d => { if (!allTickers.find(s=>s.ticker===d.ticker)) allTickers.push(d); });
 
     sel.innerHTML = allTickers.map(s => `
       <div onclick="selectChartTicker('${s.ticker}')" id="ctab-${s.ticker}"
@@ -2486,7 +2495,6 @@ function renderStocksPage() {
       </div>
     `).join('');
     
-    // 如果沒選過，預設選 0050
     if (!chartState.ticker) {
       selectChartTicker(allTickers[0].ticker);
     }
@@ -2511,6 +2519,7 @@ async function selectChartTicker(ticker) {
   // 更新 UI 選中狀態
   document.querySelectorAll('[id^="ctab-"]').forEach(el => {
     el.style.borderColor = 'transparent';
+    el.style.background = 'rgba(255,255,255,0.06)';
     el.querySelector('div').style.color = 'var(--text-primary)';
   });
   const active = document.getElementById('ctab-' + ticker);
@@ -2584,175 +2593,71 @@ function drawChart(ticker) {
 }
 
 // ── 主圖：折線 + VRVP右側成交量分佈 + 進場警示線 ──
-function drawPriceCanvas(closes, highs, lows, vols) {
+function drawPriceCanvas(closes, highs, lows) {
   const canvas = document.getElementById('priceCanvas');
-  if (!canvas) return;
+  if (!canvas || !closes || closes.length < 2) return;
   const ctx = canvas.getContext('2d');
   const dpr = window.devicePixelRatio || 1;
-  const cW = canvas.parentElement.clientWidth;
-  const cH = 180;
-  canvas.width  = cW * dpr;
-  canvas.height = cH * dpr;
-  canvas.style.width  = cW + 'px';
-  canvas.style.height = cH + 'px';
+  const w = canvas.parentElement.clientWidth || 300;
+  const h = 180;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
   ctx.scale(dpr, dpr);
-  const w = cW, h = cH;
   ctx.clearRect(0, 0, w, h);
-  if (!closes || !closes.length) return;
-
-  // 版面配置：左留 8px，右留 72px（VRVP 50px + 價格標籤 22px），上 24px，下 18px
-  const pad = { t: 24, b: 18, l: 8, r: 72 };
-  const chartW = w - pad.l - pad.r;
-  const chartH = h - pad.t - pad.b;
-
-  const allH = highs || closes, allL = lows || closes;
-  const maxP = Math.max(...allH) * 1.005;
-  const minP = Math.min(...allL) * 0.995;
-  const priceRange = (maxP - minP) || 1;
+  const pad = { t: 25, b: 20, l: 15, r: 65 };
+  const maxP = Math.max(...highs) * 1.01;
+  const minP = Math.min(...lows) * 0.99;
+  const range = (maxP - minP) || 1;
   const n = closes.length;
-
-  const toX = i => pad.l + (n <= 1 ? chartW/2 : (i / (n - 1)) * chartW);
-  const toY = p => pad.t + (1 - (p - minP) / priceRange) * chartH;
-
-  // ── 格線 ──
+  const toX = i => pad.l + (i / (n - 1)) * (w - pad.l - pad.r);
+  const toY = p => pad.t + (1 - (p - minP) / range) * (h - pad.t - pad.b);
   ctx.strokeStyle = 'rgba(255,255,255,0.05)';
   ctx.lineWidth = 0.5;
-  [0.25, 0.5, 0.75].forEach(pct => {
-    const y = pad.t + chartH * pct;
-    const price = maxP - pct * priceRange;
-    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l + chartW, y); ctx.stroke();
-    ctx.fillStyle = 'rgba(150,200,220,0.3)';
-    ctx.font = "9px 'DM Mono'"; ctx.textAlign = 'right';
-    ctx.fillText(price.toFixed(0), pad.l - 2, y + 3);
+  [0, 0.5, 1].forEach(pct => {
+    const y = pad.t + (h - pad.t - pad.b) * pct;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
   });
-
-  // ── 漸層底色 ──
   const isUp = closes[n-1] >= closes[0];
-  const lineColor = isUp ? '#3ecf8e' : '#f0504a';
+  const color = isUp ? '#3ecf8e' : '#f0504a';
   const grad = ctx.createLinearGradient(0, pad.t, 0, h);
-  grad.addColorStop(0, isUp ? 'rgba(62,207,142,0.18)' : 'rgba(240,80,74,0.18)');
+  grad.addColorStop(0, isUp ? 'rgba(62,207,142,0.2)' : 'rgba(240,80,74,0.2)');
   grad.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = grad;
-  ctx.beginPath(); ctx.moveTo(toX(0), h);
-  closes.forEach((p,i) => ctx.lineTo(toX(i), toY(p)));
-  ctx.lineTo(toX(n-1), h); ctx.fill();
-
-  // ── 主折線 ──
-  ctx.strokeStyle = lineColor; ctx.lineWidth = 1.8; ctx.lineJoin = 'round';
   ctx.beginPath();
-  closes.forEach((p,i) => i === 0 ? ctx.moveTo(toX(i), toY(p)) : ctx.lineTo(toX(i), toY(p)));
+  ctx.moveTo(toX(0), h - pad.b);
+  closes.forEach((p, i) => ctx.lineTo(toX(i), toY(p)));
+  ctx.lineTo(toX(n-1), h - pad.b);
+  ctx.fill();
+  ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.beginPath();
+  closes.forEach((p, i) => i === 0 ? ctx.moveTo(toX(i), toY(p)) : ctx.lineTo(toX(i), toY(p)));
   ctx.stroke();
-
-  // ── 近期最高點 & 進場警示線 ──
-  const peak = Math.max(...allH);
-  const entry5  = peak * 0.95;
-  const entry10 = peak * 0.90;
-  const currentPrice = closes[n-1];
-
-  const drawHLine = (price, label, color, dash) => {
-    if (price < minP || price > maxP) return;
-    const y = toY(price);
-    ctx.save();
-    ctx.strokeStyle = color; ctx.lineWidth = 1;
-    if (dash) ctx.setLineDash(dash); else ctx.setLineDash([]);
-    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l + chartW, y); ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle = color; ctx.font = "bold 9px 'DM Mono'"; ctx.textAlign = 'left';
-    ctx.fillText(label + ' ' + price.toFixed(1), pad.l + 2, y - 2);
-    ctx.restore();
-  };
-
-  drawHLine(peak,   '🏔', '#f0c040',  [4,3]);
-  drawHLine(entry5, '▼5%', 'rgba(62,207,142,0.85)', [3,3]);
-  drawHLine(entry10,'▼10%','rgba(77,196,212,0.85)',  [3,3]);
-
-  // ── 目前價格線 ──
-  const curY = toY(currentPrice);
-  ctx.save();
-  ctx.strokeStyle = lineColor; ctx.lineWidth = 1; ctx.setLineDash([2,4]);
-  ctx.beginPath(); ctx.moveTo(pad.l, curY); ctx.lineTo(pad.l + chartW, curY); ctx.stroke();
-  ctx.setLineDash([]);
-  // 右側標籤框
-  ctx.fillStyle = lineColor;
-  ctx.fillRect(pad.l + chartW + 1, curY - 8, 48, 16);
-  ctx.fillStyle = '#000'; ctx.font = "bold 10px 'DM Mono'"; ctx.textAlign = 'center';
-  ctx.fillText(currentPrice.toFixed(2), pad.l + chartW + 25, curY + 4);
-  ctx.restore();
-
-  // ── VRVP 右側成交量分佈 ──
-  if (vols && vols.length) {
-    const BINS = 20;
-    const binSize = priceRange / BINS;
-    const buckets = new Array(BINS).fill(0);
-    closes.forEach((c, i) => {
-      const v = vols[i] || 0;
-      const bin = Math.min(BINS-1, Math.floor((c - minP) / binSize));
-      buckets[bin] += v;
-    });
-    const maxBucket = Math.max(...buckets, 1);
-    const vrvrpX = pad.l + chartW + 2;
-    const vrvrpMaxW = 46;
-
-    // 找最高量 bin（HVN = 主力支撐/壓力）
-    const hvnBin = buckets.indexOf(maxBucket);
-
-    buckets.forEach((vol, bin) => {
-      if (!vol) return;
-      const barW = (vol / maxBucket) * vrvrpMaxW;
-      const yTop = pad.t + (1 - (bin+1)/BINS) * chartH;
-      const bH   = chartH / BINS;
-      const isHvn = bin === hvnBin;
-      ctx.fillStyle = isHvn
-        ? 'rgba(240,192,64,0.55)'
-        : (bin > BINS/2 ? 'rgba(240,80,74,0.28)' : 'rgba(62,207,142,0.28)');
-      ctx.fillRect(vrvrpX, yTop + 1, barW, bH - 1);
-      if (isHvn) {
-        // HVN 標籤
-        const hvnPrice = minP + (bin + 0.5) * binSize;
-        ctx.fillStyle = 'rgba(240,192,64,0.85)';
-        ctx.font = "bold 8px 'DM Mono'"; ctx.textAlign = 'right';
-        ctx.fillText('HVN', pad.l + chartW - 2, yTop + bH/2 + 3);
-      }
-    });
-
-    // VRVP 標題
-    ctx.fillStyle = 'rgba(150,200,220,0.35)';
-    ctx.font = "8px monospace"; ctx.textAlign = 'left';
-    ctx.fillText('VOL', vrvrpX, pad.t - 4);
-  }
-
-  // ── 最新點圓點 ──
-  ctx.fillStyle = lineColor;
-  ctx.beginPath(); ctx.arc(toX(n-1), toY(currentPrice), 3, 0, Math.PI*2); ctx.fill();
+  const lastY = toY(closes[n-1]);
+  ctx.fillStyle = color; ctx.beginPath(); ctx.arc(toX(n-1), lastY, 3, 0, Math.PI*2); ctx.fill();
+  ctx.font = "bold 11px 'DM Mono'";
+  ctx.fillText(closes[n-1].toFixed(2), w - pad.r + 5, lastY + 4);
 }
 
 // ── 下方成交量柱狀圖 ──
 function drawVolCanvas(vols, closes) {
   const canvas = document.getElementById('volCanvas');
-  if (!canvas) return;
-  const dpr = window.devicePixelRatio || 1;
-  const W = canvas.parentElement.clientWidth;
-  const H = 48;
-  canvas.width  = W * dpr; canvas.height = H * dpr;
-  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  if (!canvas || !vols || !vols.length) return;
   const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.parentElement.clientWidth || 300;
+  const h = 55;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
   ctx.scale(dpr, dpr);
-  ctx.clearRect(0, 0, W, H);
-  if (!vols || !vols.length) return;
+  ctx.clearRect(0, 0, w, h);
   const n = vols.length;
-  const maxV = Math.max(...vols.filter(v=>v!=null), 1);
-  const bW = Math.max(1, (W - 80) / n - 0.5);
-  ctx.fillStyle = 'rgba(150,200,220,0.35)';
-  ctx.font = '8px monospace'; ctx.textAlign = 'left';
-  ctx.fillText('成交量', 4, 10);
+  const maxV = Math.max(...vols, 1);
+  const bW = Math.max(1, (w - 80) / n - 1);
   vols.forEach((v, i) => {
-    if (!v) return;
-    const pct = v / maxV;
-    const x = 8 + i * ((W-80)/n);
-    const barH = Math.max(2, (H - 14) * pct);
-    const up = closes[i] >= (closes[i-1] ?? closes[i]);
-    ctx.fillStyle = up ? 'rgba(62,207,142,0.5)' : 'rgba(240,80,74,0.5)';
-    ctx.fillRect(x, H - barH, bW, barH);
+    const barH = (v / maxV) * h * 0.7;
+    const x = 15 + i * ((w - 80) / n);
+    const isUp = closes[i] >= (closes[i-1] || closes[i]);
+    ctx.fillStyle = isUp ? 'rgba(62,207,142,0.3)' : 'rgba(240,80,74,0.3)';
+    ctx.fillRect(x, h - barH, bW, barH);
   });
 }
 
@@ -2840,48 +2745,6 @@ function drawTechnical(closes, highs, lows, currentPrice, high52) {
       ${alertItem('下跌 5%',  pct5,  currentPrice <= pct5)}
       ${alertItem('下跌 10%', pct10, currentPrice <= pct10)}
       ${alertItem('下跌 20%', pct20, currentPrice <= pct20)}`;
-  }
-}
-
-function renderStocksPage() {
-  const stockList = document.getElementById('stockList');
-  const bankFullList = document.getElementById('bankFullList');
-  if (!stockList) return;
-  const totalVal = (db.stocks || []).reduce((s, st) => s + (st.value || 0), 0);
-  const tvEl = document.getElementById('stocksTotalVal');
-  if (tvEl) tvEl.textContent = fmt(totalVal);
-  renderFunds();
-  renderInvestSummary();
-  const colors = ['#1a8fa0','#3ecf8e','#f0c040','#4dc4d4','#f0504a','#a78bfa'];
-  stockList.innerHTML = (!db.stocks || !db.stocks.length) ? `<div class="empty">尚未加入股票</div>` : db.stocks.map((s, i) => {
-    const isFresh = !!stockQuotes[s.ticker];
-    const displayPrice = isFresh ? stockQuotes[s.ticker].price : s.price;
-    const priceTag = displayPrice 
-      ? `<span style="color:${isFresh ? 'var(--ocean-light)' : 'var(--text-muted)'};font-family:'DM Mono',monospace;margin-left:8px;font-size:14px;font-weight:900;">${displayPrice.toFixed(2)}${!isFresh ? ' <span style="font-size:9px;font-weight:400;">(非即時)</span>' : ''}</span>`
-      : '';
-    
-    return `
-    <div class="stock-item" onclick="openEditStock('${s.id}')">
-      <div class="stock-ticker" style="color:${colors[i % 6]}">${s.ticker || 'STK'}</div>
-      <div style="flex:1;">
-        <div style="display:flex;align-items:baseline;">
-          <span class="stock-name">${s.name || '未命名'}</span>
-          ${priceTag}
-        </div>
-        <div style="font-size:10px;color:var(--text-muted);">${s.shares ? s.shares + '張' : ''}</div>
-      </div>
-      <div style="text-align:right;"><div class="stock-val">${fmt(s.value || 0)}</div><div class="stock-chg ${(s.change || 0) >= 0 ? 'pos' : 'neg'}">${(s.change || 0) >= 0 ? '+' : ''}${(s.change || 0).toFixed(2)}%</div></div>
-      <div style="padding-left:12px;color:var(--text-muted);font-size:14px;cursor:pointer;" onclick="event.stopPropagation();deleteStock('${s.id}')">✕</div>
-    </div>`;
-  }).join('');
-  if (bankFullList) {
-    const maxB = Math.max(...(db.banks || []).map(b => b.balance || 0), 1);
-    bankFullList.innerHTML = (!db.banks || !db.banks.length) ? `<div class="empty">尚未加入帳戶</div>` : db.banks.map(b => `
-      <div class="bank-bar-row">
-        <div class="bank-name">${b.name}</div>
-        <div class="bank-track" onclick="openEditBank('${b.id}')"><div class="bank-fill" style="width:${Math.round((b.balance || 0) / maxB * 80) + 15}%;background:var(--ocean-teal);">${fmt(b.balance || 0)}</div></div>
-        <div style="padding-left:8px;color:var(--text-muted);font-size:14px;cursor:pointer;" onclick="deleteBank('${b.id}')">✕</div>
-      </div>`).join('');
   }
 }
 
