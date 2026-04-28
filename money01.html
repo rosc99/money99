@@ -2593,7 +2593,7 @@ function drawPriceCanvas(closes, highs, lows) {
   ctx.fillStyle = lineColor;
   ctx.font = `bold 10px 'DM Mono', monospace`;
   ctx.textAlign = 'right';
-  ctx.fillText('$' + closes[n-1].toFixed(2), W - pad.r, lastY - 4);
+  ctx.fillText(closes[n-1].toFixed(2), W - pad.r, lastY - 4);
 
   // Y軸最小最大值
   ctx.fillStyle = 'rgba(150,200,220,0.45)';
@@ -2666,10 +2666,10 @@ function drawTechnical(closes, highs, lows, currentPrice, high52) {
   // 近期最高點（整段資料）
   const peak = Math.max(...highs);
 
-  document.getElementById('resistanceVal').textContent  = '$' + resistance.toFixed(2);
-  document.getElementById('supportVal').textContent     = '$' + support.toFixed(2);
-  document.getElementById('highPointVal').textContent   = '$' + peak.toFixed(2);
-  document.getElementById('currentPriceVal').textContent = '$' + currentPrice.toFixed(2);
+  document.getElementById('resistanceVal').textContent  = resistance.toFixed(2);
+  document.getElementById('supportVal').textContent     = support.toFixed(2);
+  document.getElementById('highPointVal').textContent   = peak.toFixed(2);
+  document.getElementById('currentPriceVal').textContent = currentPrice.toFixed(2);
 
   // 趨勢判斷（簡易MA5 vs MA20）
   const ma = (arr, n) => {
@@ -2711,7 +2711,7 @@ function drawTechnical(closes, highs, lows, currentPrice, high52) {
         background:${hit?'rgba(240,80,74,0.15)':'rgba(255,255,255,0.04)'};
         border:1px solid ${hit?'rgba(240,80,74,0.4)':'rgba(255,255,255,0.08)'};text-align:center;">
         <div style="font-size:10px;color:${hit?'var(--accent-red)':'var(--text-muted)'};margin-bottom:3px;">${label}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:${hit?'var(--accent-red)':'var(--text-secondary)'};">$${price.toFixed(2)}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:${hit?'var(--accent-red)':'var(--text-secondary)'};">${price.toFixed(2)}</div>
         ${hit ? '<div style="font-size:9px;color:var(--accent-red);margin-top:2px;">⚠️ 已觸及</div>' : ''}
       </div>`;
 
@@ -2739,14 +2739,14 @@ function renderStocksPage() {
     const isFresh = !!stockQuotes[s.ticker];
     const displayPrice = isFresh ? stockQuotes[s.ticker].price : s.price;
     const priceTag = displayPrice 
-      ? `<span style="color:${isFresh ? 'var(--ocean-light)' : 'var(--text-muted)'};font-family:'DM Mono',monospace;margin-left:6px;">$${displayPrice.toFixed(2)}${!isFresh ? ' <span style="font-size:9px;">(非即時)</span>' : ''}</span>`
+      ? `<span style="color:${isFresh ? 'var(--ocean-light)' : 'var(--text-muted)'};font-family:'DM Mono',monospace;margin-left:8px;font-size:14px;font-weight:900;">${displayPrice.toFixed(2)}${!isFresh ? ' <span style="font-size:9px;font-weight:400;">(非即時)</span>' : ''}</span>`
       : '';
     
     return `
     <div class="stock-item" onclick="openEditStock('${s.id}')">
       <div class="stock-ticker" style="color:${colors[i % 6]}">${s.ticker || 'STK'}</div>
       <div style="flex:1;">
-        <div style="display:flex;align-items:center;">
+        <div style="display:flex;align-items:baseline;">
           <span class="stock-name">${s.name || '未命名'}</span>
           ${priceTag}
         </div>
