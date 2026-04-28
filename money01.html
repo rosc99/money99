@@ -2338,21 +2338,22 @@ async function fetchChartHistory(ticker) {
   const tw = ticker.match(/^\d/) ? ticker + '.TW' : ticker;
   const rangeMap = { D: '3mo', W: '1y', M: '2y', Y: '5y' };
   const range = rangeMap[chartState.period] || '3mo';
-  const timeout = 10000;
+  const timeout = 12000;
   
-  // 增加更多免費且穩定的 Proxy
+  // 按照穩定度排序的 Proxy 列表
   const proxies = [
+    url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
     url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-    url => `https://cors-anywhere.azm.workers.dev/${url}`,
-    url => `https://thingproxy.freeboard.io/fetch/${url}`
+    url => `https://cors-anywhere.azm.workers.dev/${url}`
   ];
 
-  const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${tw}?interval=1d&range=${range}`;
+  const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${tw}?interval=1d&range=${range}&includePrePost=false&events=div%7Csplit%7Cearn`;
 
   for (const proxy of proxies) {
     try {
       const res = await fetch(proxy(yahooUrl), { signal: AbortSignal.timeout(timeout) });
       if (!res.ok) continue;
+      
       const data = await res.json();
       const r = data?.chart?.result?.[0];
       if (!r || !r.indicators?.quote?.[0]?.close) continue;
@@ -2528,19 +2529,58 @@ async function selectChartTicker(ticker) {
   const loading = document.getElementById('chartLoading');
   if (loading) { loading.style.display = 'flex'; loading.textContent = '讀取走勢中...'; }
 
-  // 檢查是否有歷史資料，沒有就抓完整 K 線歷史
+  // 檢查是否有歷史資料，若無則抓取
   let q = stockQuotes[ticker];
   if (!q || !q.closes) {
-    q = await fetchChartHistory(ticker);
-    if (q) stockQuotes[ticker] = q;
-    else {
+    const fresh = await fetchChartHistory(ticker);
+    if (fresh) {
+      stockQuotes[ticker] = fresh;
+      q = fresh;
+    } else {
       const basic = await fetchQuote(ticker);
-      if (basic) stockQuotes[ticker] = basic;
+      if (basic) {
+        if (!stockQuotes[ticker]) stockQuotes[ticker] = basic;
+        else Object.assign(stockQuotes[ticker], basic);
+        q = stockQuotes[ticker];
+      }
     }
   }
   
-  if (q && q.closes && q.closes.length) drawChart(ticker);
-  else if (loading) loading.textContent = '走勢載入失敗，請檢查網路';
+  if (q && q.closes && q.closes.length) {
+    drawChart(ticker);
+  } else if (loading) {
+    loading.innerHTML = `<div style="text-align:center;padding:20px;">
+      <div style="font-size:13px;color:var(--accent-red);margin-bottom:10px;">連線失敗 (Proxy 限制)</div>
+      <button class="btn btn-sm btn-primary" onclick="delete stockQuotes['${ticker}']; selectChartTicker('${ticker}')">🔄 重試</button>
+    </div>`;
+  }
+}
+
+async function showConnTest() {
+  const modal = document.getElementById('connModal');
+  const list = document.getElementById('connList');
+  modal.style.display = 'flex';
+  list.innerHTML = '<div style="color:var(--text-muted);font-size:12px;text-align:center;">正在測試連線...</div>';
+
+  const targets = [
+    { name: 'CodeTabs (超強代理)', url: 'https://api.codetabs.com/v1/proxy?quest=https://www.google.com' },
+    { name: 'AllOrigins (穩定代理)', url: 'https://api.allorigins.win/get?url=https://www.google.com' },
+    { name: '證交所 API', url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_2330.tw&_=' + Date.now()) }
+  ];
+
+  let html = '';
+  for (const t of targets) {
+    const start = Date.now();
+    let status = '⏳'; let color = 'var(--text-muted)';
+    try {
+      const res = await fetch(t.url, { signal: AbortSignal.timeout(8000) });
+      const ms = Date.now() - start;
+      status = res.ok ? `✅ OK (${ms}ms)` : `❌ ${res.status}`;
+      color = res.ok ? 'var(--accent-green)' : 'var(--accent-red)';
+    } catch(e) { status = '❌ 失敗'; color = 'var(--accent-red)'; }
+    html += `<div style="display:flex;justify-content:space-between;padding:10px;background:rgba(255,255,255,0.03);border-radius:10px;"><span style="font-size:13px;">${t.name}</span><span style="font-family:monospace;font-size:11px;color:${color}">${status}</span></div>`;
+  }
+  list.innerHTML = html;
 }
 
 function switchChartPeriod(period, el) {
