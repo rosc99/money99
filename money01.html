@@ -2363,8 +2363,8 @@ async function fetchChartHistory(ticker) {
       if (!q || !q.close) continue;
       
       const valid = ts.map((t, i) => ({
-        t, c: q.close[i], h: q.high[i], l: q.low[i], o: q.open[i], v: q.volume[i]
-      })).filter(x => x.c != null && x.o != null);
+        t, c: q.close[i], h: q.high[i], l: q.low[i], v: q.volume[i]
+      })).filter(x => x.c != null);
       
       if (valid.length < 2) continue;
       
@@ -2374,7 +2374,6 @@ async function fetchChartHistory(ticker) {
         closes: valid.map(x => x.c),
         highs: valid.map(x => x.h),
         lows: valid.map(x => x.l),
-        opens: valid.map(x => x.o),
         vols: valid.map(x => x.v),
         source: 'Yahoo-Hist'
       };
@@ -2566,9 +2565,10 @@ function drawChart(ticker) {
   const panel   = document.getElementById('technicalPanel');
 
   const q = stockQuotes[ticker];
-  if (!q || !q.closes || !q.closes.length) {
+  if (!q || !q.closes.length) {
     if (loading) { loading.style.display='flex'; loading.textContent='資料載入中，請先點擊刷新…'; }
     if (tvLink) tvLink.style.display = 'block';
+    // TradingView link
     const tw = ticker.match(/^\d/) ? ticker + '.TW' : ticker;
     const period = chartState.period === 'D' ? 'D' : chartState.period === 'W' ? 'W' : 'M';
     if (tvBtn) tvBtn.href = `https://tw.tradingview.com/chart/?symbol=TWSE:${tw.replace('.TW','')}&interval=${period}`;
@@ -2579,42 +2579,21 @@ function drawChart(ticker) {
   if (loading) loading.style.display = 'none';
   if (tvLink) tvLink.style.display = 'block';
 
+  // TradingView link
   const sym = ticker.replace('.TW','');
   const period = chartState.period === 'D' ? 'D' : chartState.period === 'W' ? 'W' : 'M';
   if (tvBtn) tvBtn.href = `https://tw.tradingview.com/chart/?symbol=TWSE:${sym}&interval=${period}`;
 
-  // 採樣資料
-  const { closes, highs, lows, opens, vols, price } = q;
-  const tech = calcTechnicalData(closes, highs, lows);
-  
-  drawPriceCanvas(closes, highs, lows, opens, vols, tech);
+  // 根據期間採樣
+  let closes = q.closes, highs = q.highs, lows = q.lows, vols = q.vols;
+
+  drawPriceCanvas(closes, highs, lows, vols);
   drawVolCanvas(vols, closes);
-  renderTechnicalPanel(tech, price);
+  drawTechnical(closes, highs, lows, q.price, q.high52);
 }
 
-// 輔助：計算技術指標
-function calcTechnicalData(closes, highs, lows) {
-  const recentH = highs.slice(-60);
-  const recentL = lows.slice(-60);
-  const localHighs = [];
-  for (let i=1; i<recentH.length-1; i++) {
-    if (recentH[i] > recentH[i-1] && recentH[i] > recentH[i+1]) localHighs.push(recentH[i]);
-  }
-  const localLows = [];
-  for (let i=1; i<recentL.length-1; i++) {
-    if (recentL[i] < recentL[i-1] && recentL[i] < recentL[i+1]) localLows.push(recentL[i]);
-  }
-  return {
-    resistance: localHighs.length ? Math.max(...localHighs) : Math.max(...recentH),
-    support: localLows.length ? Math.min(...localLows) : Math.min(...recentL),
-    peak: Math.max(...highs),
-    ma5: closes.slice(-5).reduce((a,b)=>a+b,0)/5,
-    ma20: closes.slice(-20).reduce((a,b)=>a+b,0)/20
-  };
-}
-
-// ── 主圖：K線圖 + Volume Profile + 壓力支撐線 ──
-function drawPriceCanvas(closes, highs, lows, opens, vols, tech) {
+// ── 主圖：折線 + VRVP右側成交量分佈 + 進場警示線 ──
+function drawPriceCanvas(closes, highs, lows) {
   const canvas = document.getElementById('priceCanvas');
   if (!canvas || !closes || closes.length < 2) return;
   const ctx = canvas.getContext('2d');
@@ -2625,86 +2604,37 @@ function drawPriceCanvas(closes, highs, lows, opens, vols, tech) {
   canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
   ctx.scale(dpr, dpr);
   ctx.clearRect(0, 0, w, h);
-
   const pad = { t: 25, b: 20, l: 15, r: 65 };
   const maxP = Math.max(...highs) * 1.01;
   const minP = Math.min(...lows) * 0.99;
   const range = (maxP - minP) || 1;
   const n = closes.length;
-
   const toX = i => pad.l + (i / (n - 1)) * (w - pad.l - pad.r);
   const toY = p => pad.t + (1 - (p - minP) / range) * (h - pad.t - pad.b);
-
-  // 1. 繪製 Volume Profile (VRVP) - 背景長條
-  const bins = 20;
-  const profile = new Array(bins).fill(0);
-  const binStep = range / bins;
-  vols.forEach((v, i) => {
-    const binIdx = Math.floor((closes[i] - minP) / binStep);
-    if (binIdx >= 0 && binIdx < bins) profile[binIdx] += v;
-  });
-  const maxVol = Math.max(...profile, 1);
-  ctx.fillStyle = 'rgba(77, 196, 212, 0.15)';
-  profile.forEach((v, i) => {
-    const barW = (v / maxVol) * (w * 0.4);
-    const barY = pad.t + (h - pad.t - pad.b) * (1 - (i + 1) / bins);
-    const barH = (h - pad.t - pad.b) / bins - 1;
-    ctx.fillRect(w - pad.r - barW, barY, barW, barH);
-  });
-
-  // 2. 繪製格線
   ctx.strokeStyle = 'rgba(255,255,255,0.05)';
   ctx.lineWidth = 0.5;
   [0, 0.5, 1].forEach(pct => {
     const y = pad.t + (h - pad.t - pad.b) * pct;
     ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
   });
-
-  // 3. 繪製 K 線 (Candlestick)
-  const candleW = Math.max(1, ((w - pad.l - pad.r) / n) * 0.7);
-  closes.forEach((c, i) => {
-    const o = opens[i], h = highs[i], l = lows[i];
-    const isUp = c >= o;
-    const color = isUp ? '#f0504a' : '#3ecf8e'; // 台灣習慣：紅漲綠跌
-    ctx.strokeStyle = color;
-    ctx.fillStyle = color;
-    ctx.lineWidth = 1;
-
-    const x = toX(i);
-    // 引線
-    ctx.beginPath(); ctx.moveTo(x, toY(h)); ctx.lineTo(x, toY(l)); ctx.stroke();
-    // 實體
-    const top = toY(Math.max(o, c));
-    const bot = toY(Math.min(o, c));
-    const bodyH = Math.max(1, bot - top);
-    ctx.fillRect(x - candleW/2, top, candleW, bodyH);
-  });
-
-  // 4. 繪製水平虛線 (壓力 & 支撐)
-  const drawLevel = (price, label, color) => {
-    const y = toY(price);
-    ctx.setLineDash([4, 4]);
-    ctx.strokeStyle = color;
-    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
-    ctx.setLineDash([]);
-    
-    // Y 軸標籤
-    ctx.fillStyle = color;
-    ctx.font = "bold 10px 'DM Mono'";
-    ctx.fillRect(w - pad.r, y - 8, pad.r - 5, 16);
-    ctx.fillStyle = '#fff';
-    ctx.fillText(price.toFixed(1), w - pad.r + 5, y + 4);
-    ctx.font = "8px 'Noto Sans TC'";
-    ctx.fillText(label, w - pad.r + 40, y + 4);
-  };
-
-  if (tech.resistance) drawLevel(tech.resistance, '壓', '#f0504a');
-  if (tech.support) drawLevel(tech.support, '撐', '#3ecf8e');
-
-  // 最新價圓點與數值
+  const isUp = closes[n-1] >= closes[0];
+  const color = isUp ? '#3ecf8e' : '#f0504a';
+  const grad = ctx.createLinearGradient(0, pad.t, 0, h);
+  grad.addColorStop(0, isUp ? 'rgba(62,207,142,0.2)' : 'rgba(240,80,74,0.2)');
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.moveTo(toX(0), h - pad.b);
+  closes.forEach((p, i) => ctx.lineTo(toX(i), toY(p)));
+  ctx.lineTo(toX(n-1), h - pad.b);
+  ctx.fill();
+  ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.beginPath();
+  closes.forEach((p, i) => i === 0 ? ctx.moveTo(toX(i), toY(p)) : ctx.lineTo(toX(i), toY(p)));
+  ctx.stroke();
   const lastY = toY(closes[n-1]);
-  ctx.fillStyle = closes[n-1] >= opens[n-1] ? '#f0504a' : '#3ecf8e';
-  ctx.beginPath(); ctx.arc(toX(n-1), lastY, 3, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = color; ctx.beginPath(); ctx.arc(toX(n-1), lastY, 3, 0, Math.PI*2); ctx.fill();
+  ctx.font = "bold 11px 'DM Mono'";
+  ctx.fillText(closes[n-1].toFixed(2), w - pad.r + 5, lastY + 4);
 }
 
 // ── 下方成交量柱狀圖 ──
@@ -2731,6 +2661,92 @@ function drawVolCanvas(vols, closes) {
   });
 }
 
+
+// ── 技術分析面板 ──
+function drawTechnical(closes, highs, lows, currentPrice, high52) {
+  const panel = document.getElementById('technicalPanel');
+  if (!panel) return;
+  panel.style.display = 'block';
+
+  // 壓力支撐：取最近60期的 HVN（高量價位）
+  const recent = closes.slice(-Math.min(60, closes.length));
+  const recentH = highs.slice(-Math.min(60, highs.length));
+  const recentL = lows.slice(-Math.min(60, lows.length));
+
+  // 壓力 = 最近局部高點平均
+  const localHighs = [];
+  for (let i=1; i<recentH.length-1; i++) {
+    if (recentH[i] > recentH[i-1] && recentH[i] > recentH[i+1]) localHighs.push(recentH[i]);
+  }
+  const localLows = [];
+  for (let i=1; i<recentL.length-1; i++) {
+    if (recentL[i] < recentL[i-1] && recentL[i] < recentL[i+1]) localLows.push(recentL[i]);
+  }
+
+  const resistance = localHighs.length ? localHighs.sort((a,b)=>b-a)[0] : Math.max(...recentH);
+  const support    = localLows.length  ? localLows.sort((a,b)=>a-b)[0]  : Math.min(...recentL);
+
+  // 近期最高點（整段資料）
+  const peak = Math.max(...highs);
+
+  document.getElementById('resistanceVal').textContent  = resistance.toFixed(2);
+  document.getElementById('supportVal').textContent     = support.toFixed(2);
+  document.getElementById('highPointVal').textContent   = peak.toFixed(2);
+  document.getElementById('currentPriceVal').textContent = currentPrice.toFixed(2);
+
+  // 趨勢判斷（簡易MA5 vs MA20）
+  const ma = (arr, n) => {
+    const s = arr.slice(-n);
+    return s.length ? s.reduce((a,b)=>a+b,0)/s.length : null;
+  };
+  const ma5  = ma(closes, 5);
+  const ma20 = ma(closes, 20);
+  const trend = document.getElementById('trendBadge');
+  if (ma5 && ma20) {
+    const isBull = ma5 > ma20 && currentPrice > ma20;
+    const isBear = ma5 < ma20 && currentPrice < ma20;
+    if (isBull) {
+      trend.textContent = '📈 多頭趨勢 — MA5 上穿 MA20，價格站上均線';
+      trend.style.cssText = 'padding:10px 14px;border-radius:10px;font-size:12px;font-weight:700;text-align:center;margin-bottom:10px;background:rgba(62,207,142,0.12);border:1px solid rgba(62,207,142,0.3);color:var(--accent-green);';
+    } else if (isBear) {
+      trend.textContent = '📉 空頭趨勢 — MA5 跌破 MA20，價格跌破均線';
+      trend.style.cssText = 'padding:10px 14px;border-radius:10px;font-size:12px;font-weight:700;text-align:center;margin-bottom:10px;background:rgba(240,80,74,0.12);border:1px solid rgba(240,80,74,0.3);color:var(--accent-red);';
+    } else {
+      trend.textContent = '↔️ 盤整區間 — 多空信號未明';
+      trend.style.cssText = 'padding:10px 14px;border-radius:10px;font-size:12px;font-weight:700;text-align:center;margin-bottom:10px;background:rgba(240,192,64,0.1);border:1px solid rgba(240,192,64,0.25);color:var(--accent-gold);';
+    }
+  } else {
+    trend.textContent = '資料不足，無法判斷趨勢';
+    trend.style.cssText = 'padding:10px 14px;border-radius:10px;font-size:12px;text-align:center;margin-bottom:10px;background:rgba(255,255,255,0.05);color:var(--text-muted);';
+  }
+
+  // 下跌警示（從最高點計算）
+  const dropContainer = document.getElementById('dropAlerts');
+  if (dropContainer) {
+    const dropFrom = peak;
+    const pct5  = dropFrom * 0.95;
+    const pct10 = dropFrom * 0.90;
+    const pct20 = dropFrom * 0.80;
+    const dropped = (dropFrom - currentPrice) / dropFrom * 100;
+
+    const alertItem = (label, price, hit) => `
+      <div style="flex:1;min-width:80px;padding:8px 10px;border-radius:8px;
+        background:${hit?'rgba(240,80,74,0.15)':'rgba(255,255,255,0.04)'};
+        border:1px solid ${hit?'rgba(240,80,74,0.4)':'rgba(255,255,255,0.08)'};text-align:center;">
+        <div style="font-size:10px;color:${hit?'var(--accent-red)':'var(--text-muted)'};margin-bottom:3px;">${label}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:${hit?'var(--accent-red)':'var(--text-secondary)'};">${price.toFixed(2)}</div>
+        ${hit ? '<div style="font-size:9px;color:var(--accent-red);margin-top:2px;">⚠️ 已觸及</div>' : ''}
+      </div>`;
+
+    dropContainer.innerHTML = `
+      <div style="width:100%;font-size:10px;color:var(--text-muted);margin-bottom:6px;">
+        ▽ 從近期高點 $${dropFrom.toFixed(2)} 計算下跌警戒（目前跌幅 ${dropped.toFixed(1)}%）
+      </div>
+      ${alertItem('下跌 5%',  pct5,  currentPrice <= pct5)}
+      ${alertItem('下跌 10%', pct10, currentPrice <= pct10)}
+      ${alertItem('下跌 20%', pct20, currentPrice <= pct20)}`;
+  }
+}
 
 function renderInvestSummary() {
   const container = document.getElementById('investSummaryArea');
