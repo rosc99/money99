@@ -797,12 +797,12 @@
       <div class="section-title">📊 股價走勢分析</div>
     </div>
     <div class="card" style="padding:14px 16px;margin-bottom:12px;" id="chartAnalysisCard">
-      <!-- 股票切換選單 -->
-      <div style="margin-bottom:12px;">
-        <div style="font-size:10px;color:var(--text-muted);margin-bottom:6px;letter-spacing:0.05em;">切換分析對象</div>
-        <select id="chartTickerSelector" onchange="selectChartTicker(this.value)" 
-          style="width:100%;background:rgba(255,255,255,0.06);border:1px solid var(--border-glass);border-radius:10px;padding:10px 12px;color:var(--text-primary);font-size:14px;font-weight:700;outline:none;">
-        </select>
+      <!-- 股票切換橫向滑動區 -->
+      <div style="margin-bottom:14px;">
+        <div style="font-size:10px;color:var(--text-muted);margin-bottom:8px;letter-spacing:0.05em;">點擊切換分析對象</div>
+        <div id="chartTickerSelector" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;-ms-overflow-style:none;">
+          <!-- JS 動態生成按鈕 -->
+        </div>
       </div>
       
       <!-- 週期切換 -->
@@ -2394,90 +2394,96 @@ async function fetchAllQuotes() {
 }
 
 function renderStocksPage() {
-  const colors = ['#1a8fa0','#3ecf8e','#f0c040','#4dc4d4','#f0504a','#a78bfa'];
   const stockList = document.getElementById('stockList');
-
-  // 總市值
-  const totalVal = db.stocks.reduce((s,st)=>s+(st.value||0),0);
-  const totalChg = db.stocks.length
-    ? db.stocks.reduce((s,st)=>s+(st.change||0),0)/db.stocks.length : 0;
-  const tvEl = document.getElementById('stocksTotalVal');
-  const tbEl = document.getElementById('stocksTotalBadge');
-  if (tvEl) tvEl.textContent = fmt(totalVal);
-  if (tbEl) {
-    tbEl.textContent = (totalChg>=0?'+':'') + totalChg.toFixed(2) + '%';
-    tbEl.className = 'total-badge' + (totalChg<0?' neg':'');
-  }
+  if (!stockList) return;
+  
+  const totalVal = (db.stocks || []).reduce((s, st) => s + (st.value || 0), 0);
+  document.getElementById('stocksTotalVal').textContent = fmt(totalVal);
 
   renderFunds();
+  renderInvestSummary();
 
-  // 持股清單（點擊顯示圖表）
-  stockList.innerHTML = !db.stocks.length
-    ? `<div class="empty"><span class="icon">📊</span>尚未加入任何股票</div>`
-    : db.stocks.map((s,i) => {
-        const q = stockQuotes[s.ticker];
-        const priceStr = q ? `$${q.price.toFixed(2)}` : (s.price ? `$${s.price}` : '--');
-        return `
-        <div class="stock-item" style="cursor:pointer;" onclick="selectChartTicker('${s.ticker}')">
-          <div class="stock-ticker" style="color:${colors[i%colors.length]}">${s.ticker}</div>
-          <div>
-            <div class="stock-name">${s.name}</div>
-            <div style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;">${priceStr}</div>
-          </div>
-          <div style="text-align:right;margin-left:auto;">
-            <div class="stock-val">${fmt(s.value)}</div>
-            <div class="stock-chg ${s.change>=0?'pos':'neg'}">${s.change>=0?'+':''}${s.change}%</div>
-          </div>
-          <div style="padding-left:8px;cursor:pointer;color:rgba(200,230,240,0.3);font-size:14px;" onclick="event.stopPropagation();deleteStock('${s.id}')">✕</div>
-        </div>`;
-      }).join('');
+  const colors = ['#1a8fa0','#3ecf8e','#f0c040','#4dc4d4','#f0504a','#a78bfa'];
+  
+  // 1. 渲染底部明細清單
+  stockList.innerHTML = (!db.stocks || !db.stocks.length) ? `<div class="empty">尚未加入股票</div>` : db.stocks.map((s, i) => {
+    const isFresh = !!stockQuotes[s.ticker];
+    const displayPrice = isFresh ? stockQuotes[s.ticker].price : s.price;
+    const priceTag = displayPrice 
+      ? `<span style="color:${isFresh ? 'var(--ocean-light)' : 'var(--text-muted)'};font-family:'DM Mono',monospace;margin-left:8px;font-size:14px;font-weight:900;">${displayPrice.toFixed(2)}${!isFresh ? ' <span style="font-size:9px;font-weight:400;">(非即時)</span>' : ''}</span>`
+      : '';
+    return `
+    <div class="stock-item" onclick="openEditStock('${s.id}')">
+      <div class="stock-ticker" style="color:${colors[i % 6]}">${s.ticker || 'STK'}</div>
+      <div style="flex:1;">
+        <div style="display:flex;align-items:baseline;"><span class="stock-name">${s.name || '未命名'}</span>${priceTag}</div>
+        <div style="font-size:10px;color:var(--text-muted);">${s.shares ? s.shares + '張' : ''}</div>
+      </div>
+      <div style="text-align:right;"><div class="stock-val">${fmt(s.value || 0)}</div><div class="stock-chg ${(s.change || 0) >= 0 ? 'pos' : 'neg'}">${(s.change || 0) >= 0 ? '+' : ''}${(s.change || 0).toFixed(2)}%</div></div>
+      <div style="padding-left:12px;color:var(--text-muted);font-size:14px;cursor:pointer;" onclick="event.stopPropagation();deleteStock('${s.id}')">✕</div>
+    </div>`;
+  }).join('');
 
-  // 圖表股票選擇器
+  // 2. 渲染圖表分析用的股票選單 (橫向方塊)
   const sel = document.getElementById('chartTickerSelector');
   if (sel) {
-    sel.innerHTML = db.stocks.filter(s=>s.ticker!=='其他').map(s => `
-      <button onclick="selectChartTicker('${s.ticker}')" id="ctab-${s.ticker}"
-        style="white-space:nowrap;padding:6px 12px;border-radius:8px;border:1px solid var(--border-glass);
-        background:var(--bg-glass);color:var(--text-secondary);font-size:12px;cursor:pointer;
-        font-family:'Noto Sans TC',sans-serif;transition:all 0.2s;"
-        onmouseover="this.style.borderColor='rgba(77,196,212,0.4)'"
-        onmouseout="if(chartState.ticker!=='${s.ticker}')this.style.borderColor=''">
-        ${s.ticker} ${s.name}
-      </button>`).join('');
+    const validStocks = db.stocks.filter(s => s.ticker && s.ticker !== '其他');
+    sel.innerHTML = validStocks.map((s, i) => `
+      <div onclick="selectChartTicker('${s.ticker}')" id="ctab-${s.ticker}"
+        style="flex-shrink:0; padding:10px 14px; border-radius:12px; background:rgba(255,255,255,0.06); 
+        border:1.5px solid ${chartState.ticker === s.ticker ? 'var(--ocean-light)' : 'transparent'};
+        cursor:pointer; transition:all 0.2s; min-width:80px; text-align:center;">
+        <div style="font-family:'DM Mono',monospace; font-size:13px; font-weight:700; color:${chartState.ticker === s.ticker ? 'var(--ocean-light)' : 'var(--text-primary)'};">${s.ticker}</div>
+        <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">${s.name}</div>
+      </div>
+    `).join('');
+    
+    // 如果沒選過且有股票，預設選第一個
+    if (!chartState.ticker && validStocks.length > 0) {
+      selectChartTicker(validStocks[0].ticker);
+    }
   }
 
-  // 銀行
-  const bankMax = Math.max(...db.banks.map(b=>b.balance), 1);
-  const bColors = ['#1a8fa0','#1a7060','#2a5f80'];
-  document.getElementById('bankFullList').innerHTML = !db.banks.length
-    ? `<div class="empty"><span class="icon">🏦</span>尚未加入任何帳戶</div>`
-    : db.banks.map((b,i) => `
+  // 3. 渲染銀行帳戶
+  const bankFullList = document.getElementById('bankFullList');
+  if (bankFullList) {
+    const maxB = Math.max(...(db.banks || []).map(b => b.balance || 0), 1);
+    bankFullList.innerHTML = (!db.banks || !db.banks.length) ? `<div class="empty">尚未加入帳戶</div>` : db.banks.map(b => `
       <div class="bank-bar-row">
         <div class="bank-name">${b.name}</div>
-        <div class="bank-track"><div class="bank-fill" style="width:${Math.round(b.balance/bankMax*80)+15}%;background:${bColors[i%bColors.length]};">${fmt(b.balance)}</div></div>
-        <div style="padding-left:8px;cursor:pointer;color:rgba(200,230,240,0.3);font-size:14px;" onclick="deleteBank('${b.id}')">✕</div>
+        <div class="bank-track" onclick="openEditBank('${b.id}')"><div class="bank-fill" style="width:${Math.round((b.balance || 0) / maxB * 80) + 15}%;background:var(--ocean-teal);">${fmt(b.balance || 0)}</div></div>
+        <div style="padding-left:8px;color:var(--text-muted);font-size:14px;cursor:pointer;" onclick="deleteBank('${b.id}')">✕</div>
       </div>`).join('');
-
-  // 若已選股自動刷圖
-  if (chartState.ticker) selectChartTicker(chartState.ticker);
+  }
 }
 
-// ── 圖表核心 ──
-function selectChartTicker(ticker) {
+async function selectChartTicker(ticker) {
   chartState.ticker = ticker;
-  // 更新 tab 樣式
-  document.querySelectorAll('[id^="ctab-"]').forEach(b => {
-    b.style.background = 'var(--bg-glass)';
-    b.style.color = 'var(--text-secondary)';
-    b.style.borderColor = '';
+  
+  // 更新 UI 選中狀態
+  document.querySelectorAll('[id^="ctab-"]').forEach(el => {
+    el.style.borderColor = 'transparent';
+    el.querySelector('div').style.color = 'var(--text-primary)';
   });
   const active = document.getElementById('ctab-' + ticker);
   if (active) {
-    active.style.background = 'rgba(26,143,160,0.25)';
-    active.style.color = 'var(--ocean-light)';
-    active.style.borderColor = 'rgba(77,196,212,0.5)';
+    active.style.borderColor = 'var(--ocean-light)';
+    active.style.background = 'rgba(77,196,212,0.1)';
+    active.querySelector('div').style.color = 'var(--ocean-light)';
   }
-  drawChart(ticker);
+
+  const loading = document.getElementById('chartLoading');
+  if (loading) { loading.style.display = 'flex'; loading.textContent = '讀取走勢中...'; }
+
+  // 檢查是否有歷史資料，沒有就抓
+  let q = stockQuotes[ticker];
+  if (!q || !q.closes) {
+    q = await fetchQuote(ticker);
+    if (q) stockQuotes[ticker] = q;
+  }
+  
+  if (q && q.closes) drawChart(ticker);
+  else if (loading) loading.textContent = '抓取走勢失敗';
 }
 
 function switchChartPeriod(period, el) {
