@@ -2384,6 +2384,7 @@ async function fetchAllQuotes() {
     const q = await fetchQuote(s.ticker);
     if (q) {
       successCount++;
+      stockQuotes[s.ticker] = q; // 存入緩存供 render 判斷
       const chg = q.prevClose ? ((q.price - q.prevClose) / q.prevClose * 100) : (s.change || 0);
       s.change = parseFloat(chg.toFixed(2));
       s.price  = q.price;
@@ -2754,13 +2755,27 @@ function renderStocksPage() {
   renderFunds();
   renderInvestSummary();
   const colors = ['#1a8fa0','#3ecf8e','#f0c040','#4dc4d4','#f0504a','#a78bfa'];
-  stockList.innerHTML = (!db.stocks || !db.stocks.length) ? `<div class="empty">尚未加入股票</div>` : db.stocks.map((s, i) => `
+  stockList.innerHTML = (!db.stocks || !db.stocks.length) ? `<div class="empty">尚未加入股票</div>` : db.stocks.map((s, i) => {
+    const isFresh = !!stockQuotes[s.ticker];
+    const displayPrice = isFresh ? stockQuotes[s.ticker].price : s.price;
+    const priceTag = displayPrice 
+      ? `<span style="color:${isFresh ? 'var(--ocean-light)' : 'var(--text-muted)'};font-family:'DM Mono',monospace;margin-left:6px;">$${displayPrice.toFixed(2)}${!isFresh ? ' <span style="font-size:9px;">(非即時)</span>' : ''}</span>`
+      : '';
+    
+    return `
     <div class="stock-item" onclick="openEditStock('${s.id}')">
       <div class="stock-ticker" style="color:${colors[i % 6]}">${s.ticker || 'STK'}</div>
-      <div style="flex:1;"><div class="stock-name">${s.name || '未命名'}</div><div style="font-size:10px;color:var(--text-muted);">${s.shares ? s.shares + '張' : ''}</div></div>
+      <div style="flex:1;">
+        <div style="display:flex;align-items:center;">
+          <span class="stock-name">${s.name || '未命名'}</span>
+          ${priceTag}
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);">${s.shares ? s.shares + '張' : ''}</div>
+      </div>
       <div style="text-align:right;"><div class="stock-val">${fmt(s.value || 0)}</div><div class="stock-chg ${(s.change || 0) >= 0 ? 'pos' : 'neg'}">${(s.change || 0) >= 0 ? '+' : ''}${(s.change || 0).toFixed(2)}%</div></div>
       <div style="padding-left:12px;color:var(--text-muted);font-size:14px;cursor:pointer;" onclick="event.stopPropagation();deleteStock('${s.id}')">✕</div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
   if (bankFullList) {
     const maxB = Math.max(...(db.banks || []).map(b => b.balance || 0), 1);
     bankFullList.innerHTML = (!db.banks || !db.banks.length) ? `<div class="empty">尚未加入帳戶</div>` : db.banks.map(b => `
