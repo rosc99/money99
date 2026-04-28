@@ -640,9 +640,13 @@
             <div class="cashflow-stat-label">▲ 收入</div>
             <div class="cashflow-stat-val" id="cfIncome" style="color:var(--accent-green)">--</div>
           </div>
-          <div class="cashflow-stat-bot">
+          <div class="cashflow-stat-bot" style="margin-top:8px;">
             <div class="cashflow-stat-label">▼ 支出</div>
             <div class="cashflow-stat-val" id="cfExpense" style="color:var(--accent-red)">--</div>
+          </div>
+          <div class="cashflow-stat-bot" style="margin-top:8px;">
+            <div class="cashflow-stat-label">○ 固定</div>
+            <div class="cashflow-stat-val" id="cfFixed" style="color:#ffb6c1">--</div>
           </div>
         </div>
       </div>
@@ -655,11 +659,17 @@
       </div>
       <div class="balance-cols">
         <div>
-          <div class="balance-col-title">支出項目</div>
+          <div class="balance-col-title" style="display:flex;justify-content:space-between;align-items:center;">
+            <span>支出項目</span>
+            <span id="expenseTotalLabel" style="font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:var(--accent-red);"></span>
+          </div>
           <div id="expenseList"></div>
         </div>
         <div>
-          <div class="balance-col-title">收入來源</div>
+          <div class="balance-col-title" style="display:flex;justify-content:space-between;align-items:center;">
+            <span>收入來源</span>
+            <span id="incomeTotalLabel" style="font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:var(--accent-green);"></span>
+          </div>
           <div id="incomeList"></div>
         </div>
       </div>
@@ -667,7 +677,7 @@
  
     <div class="mini-grid" data-m="[M-01] MiniGrid">
       <div class="card" style="margin:0;cursor:pointer;" onclick="switchPage('stocks', document.querySelector('[data-page=stocks]'))">
-        <div class="card-title">銀行帳戶</div>
+        <div class="card-title">銀行帳戶 <span id="bankTotalLabel" style="float:right;color:var(--ocean-light);font-family:'DM Mono';"></span></div>
         <div id="bankList" style="margin-top:8px;"></div>
       </div>
       <div class="card" style="margin:0;cursor:pointer;" onclick="switchPage('stocks', document.querySelector('[data-page=stocks]'))">
@@ -871,46 +881,55 @@
   <!-- ===== [M-01] PLEDGE PAGE ===== -->
   <div class="page" id="page-pledge" data-m="[M-01] PledgePage">
     <div style="height:12px"></div>
-    <div class="section-header">
-      <div class="section-title">💰 質押管理</div>
-      <div class="section-more" onclick="showAddPledge()">＋ 新增</div>
-    </div>
- 
-    <div class="card" data-m="[M-01] PledgeSummary">
-      <div class="card-title">質押總覽</div>
-      <div class="pledge-summary-grid">
-        <div class="pledge-summary-item">
-          <div class="pledge-summary-label">質押總額</div>
-          <div class="pledge-summary-val" id="pledgeTotalAmt" style="color:var(--accent-gold)">$0</div>
+    
+    <!-- 1. 維持率總覽卡片 (元大風格) -->
+    <div class="card" style="background:linear-gradient(135deg, #0d2535 0%, #061220 100%); border:1px solid rgba(77,196,212,0.3); padding:24px 20px;">
+      <div style="display:flex; flex-direction:column; align-items:center; text-align:center;">
+        <div style="font-size:12px; color:var(--text-muted); letter-spacing:0.1em; margin-bottom:8px;">預估質押維持率</div>
+        <div id="pledgeRatioDisplay" style="font-size:42px; font-family:'DM Mono',monospace; font-weight:900; line-height:1; margin-bottom:4px;">0.00%</div>
+        <div id="pledgeStatusBadge" style="padding:4px 14px; border-radius:20px; font-size:12px; font-weight:700; background:rgba(255,255,255,0.05); color:var(--text-muted);">請設定借款與擔保品</div>
+      </div>
+      
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:24px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.08);">
+        <div>
+          <div style="font-size:10px; color:var(--text-muted); margin-bottom:4px;">總擔保品市值</div>
+          <div id="pledgeTotalCollateral" style="font-family:'DM Mono',monospace; font-size:16px; font-weight:700; color:var(--ocean-light);">$0</div>
         </div>
-        <div class="pledge-summary-item">
-          <div class="pledge-summary-label">預估年利息</div>
-          <div class="pledge-summary-val" id="pledgeTotalInterest" style="color:var(--accent-red)">$0</div>
-        </div>
-        <div class="pledge-summary-item">
-          <div class="pledge-summary-label">進行中筆數</div>
-          <div class="pledge-summary-val" id="pledgeActiveCount" style="color:var(--ocean-light)">0</div>
-        </div>
-        <div class="pledge-summary-item">
-          <div class="pledge-summary-label">已結清筆數</div>
-          <div class="pledge-summary-val" id="pledgeClosedCount" style="color:var(--text-muted)">0</div>
+        <div style="text-align:right;">
+          <div style="font-size:10px; color:var(--text-muted); margin-bottom:4px;">目前借款總額</div>
+          <div id="pledgeTotalLoan" style="font-family:'DM Mono',monospace; font-size:16px; font-weight:700; color:var(--accent-gold);">$0</div>
         </div>
       </div>
-    </div>
- 
-    <!-- [M-02] Installment Debt Summary -->
-    <div class="card debt-summary-card" id="debtSummaryCard" data-m="[M-02] DebtSummary" style="display:none;">
-      <div class="card-title">📆 分期貸款剩餘待還</div>
-      <div class="debt-summary-grid" id="debtSummaryGrid"></div>
     </div>
 
-    <!-- Shortcut to fixed page -->
-<div class="card" data-m="[M-01] PledgeList" style="padding:12px 16px;">
-      <div class="section-header" style="margin-bottom:10px;">
-        <div class="section-title" style="font-size:13px;">💰 質押倉位</div>
+    <!-- 2. 設定區 -->
+    <div class="section-header" style="margin-top:20px;"><div class="section-title">⚖️ 試算設定</div></div>
+    <div class="card" style="padding:16px;">
+      <div class="form-row">
+        <div class="form-label" style="width:100px;">借款總金額</div>
+        <input class="form-input" type="number" id="inputLoanAmount" placeholder="輸入借款金額" oninput="calculatePledge()" value="0" />
       </div>
-      <div id="pledgeList"><div class="empty"><span class="icon">💰</span>尚無質押記錄</div></div>
+      
+      <!-- 歷史壓力測試區 -->
+      <div style="margin-top:16px;">
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:10px; letter-spacing:0.05em;">📉 歷史大跌壓力測試 (自動預估維持率)</div>
+        <div id="historicalCrashGrid" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+          <!-- JS 動態生成 -->
+        </div>
+      </div>
     </div>
+
+    <!-- 3. 擔保品清單 (從資產匯入) -->
+    <div class="section-header" style="margin-top:20px;"><div class="section-title">📊 擔保品明細 (從庫存提取)</div></div>
+    <div class="card" style="padding:8px 16px;">
+      <div id="pledgeStockList"></div>
+    </div>
+
+    <!-- 彈出警告訊息 -->
+    <div id="pledgeAlert" style="display:none; margin-top:16px; padding:16px; border-radius:12px; background:rgba(240,80,74,0.15); border:1.5px solid var(--accent-red); color:var(--accent-red); font-size:13px; font-weight:700; text-align:center;">
+      ⚠️ 警告：維持率低於 130%！將面臨追繳或斷頭。
+    </div>
+
   </div>
 
   <!-- ===== FIXED EXPENSE PAGE ===== -->
@@ -1656,6 +1675,9 @@ function renderDashboard() {
   const fundTotal = (db.funds || []).reduce((s, f) => s + (f.value || 0), 0);
   document.getElementById('totalAssets').textContent = fmt(bankTotal + stockTotal + fundTotal);
   document.getElementById('totalDebt').textContent = fmt(db.loans.reduce((s, l) => s + l.remaining, 0));
+  
+  const bTotalEl = document.getElementById('bankTotalLabel');
+  if (bTotalEl) bTotalEl.textContent = fmt(bankTotal);
 
   const investItems = [
     ...db.stocks.map(s => ({ name: s.name, cost: s.cost || 0, val: s.value || 0 })),
@@ -1720,6 +1742,14 @@ function renderDashboard() {
   document.getElementById('waterSub').textContent = fmt(cashflow);
   document.getElementById('cfIncome').textContent = fmt(totalIncome);
   document.getElementById('cfExpense').textContent = fmt(totalExpense);
+  if (document.getElementById('cfFixed')) {
+    document.getElementById('cfFixed').textContent = fmt(recurringTotal);
+  }
+  
+  const expLabel = document.getElementById('expenseTotalLabel');
+  const incLabel = document.getElementById('incomeTotalLabel');
+  if (expLabel) expLabel.textContent = fmt(totalExpense);
+  if (incLabel) incLabel.textContent = fmt(totalIncome);
 
   const expG = {};
   monthTx.filter(t => t.type === 'expense').forEach(t => expG[t.category] = (expG[t.category] || 0) + t.amount);
@@ -3004,204 +3034,99 @@ function addBank() {
 function deleteBank(id) { if(confirm('確定刪除？')) { db.banks=db.banks.filter(b=>b.id!==id); renderStocksPage(); renderDashboard(); saveLocal(); autoSync(); } }
  
 // ===================================================================
-//  [M-03] PLEDGE PAGE — STRESS TEST & AUTO CALC
+//  [M-03] PLEDGE PAGE — HISTORICAL STRESS TEST
 // ===================================================================
- 
-/* helpers */
+
+const HISTORICAL_CRASHES = [
+  { name: '修正狀況', note: '預期技術回檔', drop: 0.20 },
+  { name: '2008 金融海嘯', note: '雷曼兄弟引發', drop: 0.50 },
+  { name: '2000 網路泡沫', note: '科技股大崩盤', drop: 0.65 },
+  { name: '1990 台灣泡沫', note: '台股萬二崩跌', drop: 0.80 }
+];
+
+function calculatePledge() {
+  renderPledgePage();
+}
+
+/* helpers for pledge modal if still used */
 function pledgeMaintLevel(r) { return r > 160 ? 'safe' : r > 140 ? 'warn' : 'danger'; }
 function pledgeMaintColor(r) { return r > 160 ? 'var(--accent-green)' : r > 140 ? 'var(--accent-gold)' : 'var(--accent-red)'; }
-function pledgeMaintIcon(r)  { return r > 160 ? '🟢' : r > 140 ? '🟡' : '🔴'; }
- 
-/* live preview in modal */
-function pledgeAutoCalc() {
-  const shares = parseFloat(document.getElementById('pledgeShares').value) || 0;
-  const price  = parseFloat(document.getElementById('pledgePrice').value)  || 0;
-  const amount = parseFloat(document.getElementById('pledgeAmount').value) || 0;
-  const preview = document.getElementById('pledgeCalcPreview');
-  if (!shares || !price || !amount) { preview.style.display = 'none'; return; }
-  preview.style.display = 'block';
-  const mktVal  = shares * 1000 * price;
-  const maint   = (mktVal / amount) * 100;
-  const defense = (amount * 1.3) / (shares * 1000);
-  const lvl = pledgeMaintLevel(maint);
-  const col = pledgeMaintColor(maint);
-  document.getElementById('previewMktVal').textContent   = fmt(Math.round(mktVal));
-  document.getElementById('previewMaint').textContent    = maint.toFixed(1) + '%';
-  document.getElementById('previewMaint').style.color    = col;
-  document.getElementById('previewDefense').textContent  = '$' + defense.toFixed(2);
-}
- 
-function showAddPledge() {
-  document.getElementById('pledgeStartDate').value = new Date().toISOString().split('T')[0];
-  ['pledgeName','pledgeAsset','pledgeStockName','pledgeShares','pledgePrice','pledgeAmount'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('pledgeRate').value = '2.5';
-  document.getElementById('pledgeCalcPreview').style.display = 'none';
-  document.getElementById('pledgeModal').style.display = 'flex';
-}
- 
-function addPledge() {
-  const name      = document.getElementById('pledgeName').value.trim();
-  const asset     = document.getElementById('pledgeAsset').value.trim();
-  const stockName = document.getElementById('pledgeStockName').value.trim();
-  const shares    = parseFloat(document.getElementById('pledgeShares').value) || 0;
-  const price     = parseFloat(document.getElementById('pledgePrice').value)  || 0;
-  const amount    = parseFloat(document.getElementById('pledgeAmount').value) || 0;
-  const rate      = parseFloat(document.getElementById('pledgeRate').value)   || 2.5;
-  const startDate = document.getElementById('pledgeStartDate').value;
-  if (!name || !amount) { toast('請填寫名稱與借款金額！'); return; }
-  db.pledges.push({ id:uid(), name, asset, stockName, shares, price, amount, rate, startDate, status:'active' });
-  closeModal('pledgeModal'); toast('✅ 質押倉位已新增'); saveLocal(); renderPledgePage(); autoSync();
-}
- 
-function deletePledge(id) { db.pledges = db.pledges.filter(p=>p.id!==id); renderPledgePage(); saveLocal(); autoSync(); }
- 
-function togglePledgeStatus(id) {
-  const p = db.pledges.find(p=>p.id===id);
-  if (p) { p.status = p.status==='active' ? 'closed' : 'active'; saveLocal(); renderPledgePage(); }
-}
- 
+
 function renderPledgePage() {
-  const pledges = db.pledges || [];
-  const active  = pledges.filter(p=>p.status==='active');
-  const closed  = pledges.filter(p=>p.status==='closed');
-  const totalAmt      = active.reduce((s,p)=>s+p.amount, 0);
-  const totalInterest = active.reduce((s,p)=>s+(p.amount*p.rate/100), 0);
-  const totalMktVal   = active.reduce((s,p)=>s+(p.shares && p.price ? p.shares*1000*p.price : 0), 0);
- 
-  document.getElementById('pledgeTotalAmt').textContent      = fmt(totalAmt);
-  document.getElementById('pledgeTotalInterest').textContent = fmt(Math.round(totalInterest));
-  document.getElementById('pledgeActiveCount').textContent   = active.length + ' 筆';
-  document.getElementById('pledgeClosedCount').textContent   = closed.length + ' 筆';
- 
-  // [M-02] Debt summary
-  const { total: debtTotal, count: debtCount, tpls: debtTpls } = getInstallmentDebtSummary();
-  const debtCard = document.getElementById('debtSummaryCard');
-  const debtGrid = document.getElementById('debtSummaryGrid');
-  if (debtCount > 0) {
-    debtCard.style.display = 'block';
-    const monthlyTotal = debtTpls.reduce((s,t)=>s+t.amount,0);
-    debtGrid.innerHTML = `
-      <div class="debt-summary-item">
-        <div class="debt-summary-lbl">剩餘總額</div>
-        <div class="debt-summary-val" style="color:var(--accent-red)">${fmt(debtTotal)}</div>
-      </div>
-      <div class="debt-summary-item">
-        <div class="debt-summary-lbl">每月應付</div>
-        <div class="debt-summary-val" style="color:var(--accent-gold)">${fmt(monthlyTotal)}</div>
-      </div>
-      <div class="debt-summary-item">
-        <div class="debt-summary-lbl">進行中項目</div>
-        <div class="debt-summary-val" style="color:var(--ocean-light)">${debtCount} 筆</div>
-      </div>
-      <div class="debt-summary-item">
-        <div class="debt-summary-lbl">最長剩餘期數</div>
-        <div class="debt-summary-val">${Math.max(...debtTpls.map(t=>t.remainingInstallments||0))} 期</div>
-      </div>`;
-  } else {
-    debtCard.style.display = 'none';
-  }
- 
-  // [M-02] Recurring list
-  renderRecurringList();
- 
-  // Pledge list
-  const list = document.getElementById('pledgeList');
-  if (!pledges.length) {
-    list.innerHTML = '<div class="empty"><span class="icon">💰</span>尚無質押倉位，點右上角新增</div>';
-    return;
-  }
- 
-  list.innerHTML = pledges.map(p => {
-    const isClosed = p.status === 'closed';
-    const mktVal   = p.shares && p.price ? p.shares * 1000 * p.price : 0;
-    const maint    = mktVal && p.amount ? (mktVal / p.amount) * 100 : null;
-    const defense  = p.shares && p.amount ? (p.amount * 1.3) / (p.shares * 1000) : null;
-    // stress: price drops 50%
-    const stressMktVal  = mktVal * 0.5;
-    const stressMaint   = stressMktVal && p.amount ? (stressMktVal / p.amount) * 100 : null;
-    const lvl = isClosed ? 'closed-card' : maint ? pledgeMaintLevel(maint) : 'na';
- 
-    // maintenance bar: cap display at 250% = 100% width
-    const barPct    = maint ? Math.min(100, (maint / 250) * 100) : 0;
-    const barColor  = maint ? pledgeMaintColor(maint) : 'var(--text-muted)';
-    // marker positions (140%→56%, 160%→64%)
-    const m140pos = (140/250*100).toFixed(1);
-    const m160pos = (160/250*100).toFixed(1);
- 
-    const stressTag = stressMaint
-      ? `<span class="maint-badge ${stressMaint>160?'safe':stressMaint>140?'warn':'danger'}">${pledgeMaintIcon(stressMaint)} ${stressMaint.toFixed(1)}%</span>`
-      : '<span class="maint-badge na">N/A</span>';
-    const stressTrigger = stressMaint && stressMaint < 130
-      ? '<span style="color:var(--accent-red);font-size:10px;font-weight:700;">⚠️ 觸發追繳</span>'
-      : stressMaint
-        ? '<span style="color:var(--accent-green);font-size:10px;">✓ 尚安全</span>'
-        : '';
- 
+  const stockList = db.stocks || [];
+  const container = document.getElementById('pledgeStockList');
+  const crashGrid = document.getElementById('historicalCrashGrid');
+  if (!container) return;
+  
+  const inputLoan = document.getElementById('inputLoanAmount');
+  const loanAmount = inputLoan ? (parseFloat(inputLoan.value) || 0) : 0;
+
+  // 1. Calculate total collateral value from inventory (current market)
+  let totalCollateral = stockList.reduce((sum, s) => sum + (s.value || 0), 0);
+  
+  // 2. Render Inventory List
+  container.innerHTML = stockList.length ? stockList.map(s => {
+    const shares = s.shares || 0;
+    const price = s.price || (shares > 0 ? (s.value / (shares * 1000)) : 0);
     return `
-    <div class="pledge-card ${lvl}">
-      <div class="pledge-card-header">
-        <div class="pledge-card-icon ${lvl}">${isClosed ? '🔓' : maint ? pledgeMaintIcon(maint) : '💰'}</div>
-        <div class="pledge-card-title">
-          <div class="pledge-card-name">${p.name}</div>
-          <div class="pledge-card-sub">${p.asset||''}${p.stockName?' · '+p.stockName:''} · 年利 ${p.rate}% · ${p.startDate||''}</div>
-        </div>
-        <div class="pledge-card-actions">
-          ${!isClosed ? `<span class="maint-badge ${maint?pledgeMaintLevel(maint):'na'}">${maint ? maint.toFixed(1)+'%' : 'N/A'}</span>` : '<span class="maint-badge na">已結清</span>'}
-        </div>
+    <div class="stock-item" style="padding: 12px 0; border-bottom: 1px solid var(--border-glass);">
+      <div class="stock-ticker" style="color: var(--ocean-light); width: 60px; font-family: 'DM Mono', monospace; font-weight: 700;">${s.ticker}</div>
+      <div style="flex: 1;">
+        <div class="stock-name" style="font-size: 13px; font-weight: 500;">${s.name}</div>
+        <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">${shares} 張 · 市價 $${price.toFixed(2)}</div>
       </div>
- 
-      ${maint && !isClosed ? `
-      <div class="maint-bar-wrap">
-        <div class="maint-bar-track">
-          <div class="maint-bar-fill" style="width:${barPct}%;background:${barColor};"></div>
-        </div>
-        <div class="maint-bar-markers">
-          <span class="maint-marker" style="left:${m140pos}%">140%</span>
-          <span class="maint-marker" style="left:${m160pos}%">160%</span>
-        </div>
-      </div>` : ''}
- 
-      <div class="pledge-stat-grid">
-        <div class="pledge-stat">
-          <div class="pledge-stat-label">借款金額</div>
-          <div class="pledge-stat-val" style="color:var(--accent-gold)">${fmt(p.amount)}</div>
-        </div>
-        <div class="pledge-stat">
-          <div class="pledge-stat-label">持股市值</div>
-          <div class="pledge-stat-val" style="color:var(--ocean-light)">${mktVal ? fmt(Math.round(mktVal)) : '--'}</div>
-        </div>
-        <div class="pledge-stat">
-          <div class="pledge-stat-label">防守價</div>
-          <div class="pledge-stat-val" style="color:var(--accent-red)">${defense ? '$'+defense.toFixed(2) : '--'}</div>
-        </div>
-        <div class="pledge-stat">
-          <div class="pledge-stat-label">質押張數</div>
-          <div class="pledge-stat-val">${p.shares ? p.shares+' 張' : '--'}</div>
-        </div>
-        <div class="pledge-stat">
-          <div class="pledge-stat-label">目前股價</div>
-          <div class="pledge-stat-val">${p.price ? '$'+p.price : '--'}</div>
-        </div>
-        <div class="pledge-stat">
-          <div class="pledge-stat-label">年利息</div>
-          <div class="pledge-stat-val" style="color:var(--accent-red)">${fmt(Math.round(p.amount*p.rate/100))}</div>
-        </div>
-      </div>
- 
-      ${!isClosed && stressMaint !== null ? `
-      <div class="stress-row">
-        <div class="stress-label">📉 壓力測試 · 跌50%後維持率</div>
-        <div class="stress-result">${stressTag}${stressTrigger}</div>
-      </div>` : ''}
- 
-      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px;">
-        <button class="btn btn-sm" style="background:rgba(255,255,255,0.06);color:var(--text-secondary);" onclick="togglePledgeStatus('${p.id}')">
-          ${isClosed ? '↩ 恢復進行中' : '✓ 標記結清'}
-        </button>
-        <button class="btn btn-sm btn-danger" onclick="deletePledge('${p.id}')">刪除</button>
+      <div style="text-align: right;">
+        <div class="stock-val" style="font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 700;">${fmt(s.value)}</div>
       </div>
     </div>`;
-  }).join('');
+  }).join('') : '<div class="empty"><span class="icon">📦</span>庫存中尚無持股</div>';
+
+  // 3. Update Summary
+  const currentRatio = loanAmount > 0 ? (totalCollateral / loanAmount * 100) : 0;
+  document.getElementById('pledgeTotalCollateral').textContent = fmt(totalCollateral);
+  document.getElementById('pledgeTotalLoan').textContent = fmt(loanAmount);
+  
+  const ratioEl = document.getElementById('pledgeRatioDisplay');
+  const statusBadge = document.getElementById('pledgeStatusBadge');
+  const alertEl = document.getElementById('pledgeAlert');
+  
+  if (ratioEl) {
+    ratioEl.textContent = Math.round(currentRatio) + '%';
+    if (loanAmount === 0) {
+      ratioEl.style.color = 'var(--text-primary)';
+      if (statusBadge) statusBadge.textContent = '請輸入借款金額';
+      if (alertEl) alertEl.style.display = 'none';
+    } else {
+      ratioEl.style.color = pledgeMaintColor(currentRatio);
+      if (statusBadge) {
+        statusBadge.textContent = currentRatio >= 160 ? '🟢 維持率安全' : currentRatio >= 130 ? '🟡 警告：接近追繳線' : '🔴 危險：低於追繳線';
+        statusBadge.style.background = currentRatio >= 160 ? 'rgba(62,207,142,0.15)' : currentRatio >= 130 ? 'rgba(240,192,64,0.15)' : 'rgba(240,80,74,0.15)';
+        statusBadge.style.color = pledgeMaintColor(currentRatio);
+      }
+      if (alertEl) alertEl.style.display = currentRatio < 130 ? 'block' : 'none';
+    }
+  }
+
+  // 4. Render Historical Stress Test Grid
+  if (crashGrid) {
+    crashGrid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+    crashGrid.innerHTML = HISTORICAL_CRASHES.map(c => {
+      const crashedVal = totalCollateral * (1 - c.drop);
+      const crashedRatio = loanAmount > 0 ? (crashedVal / loanAmount * 100) : 0;
+      const isDanger = crashedRatio < 130 && loanAmount > 0;
+      
+      return `
+      <div style="background:rgba(255,255,255,0.04); border-radius:12px; padding:10px; border:1px solid ${isDanger ? 'rgba(240,80,74,0.3)' : 'var(--border-glass)'}; text-align:center;">
+        <div style="font-size:10px; color:var(--text-primary); font-weight:700; margin-bottom:2px;">${c.name}</div>
+        <div style="font-size:8px; color:var(--text-muted); margin-bottom:5px;">${c.note}</div>
+        <div style="font-size:10px; color:var(--accent-red); margin-bottom:6px; font-weight:700;">-${Math.round(c.drop*100)}%</div>
+        <div style="font-family:'DM Mono',monospace; font-size:14px; font-weight:900; color:${loanAmount > 0 ? pledgeMaintColor(crashedRatio) : 'var(--text-muted)'};">
+          ${loanAmount > 0 ? Math.round(crashedRatio) + '%' : '--'}
+        </div>
+        ${isDanger ? '<div style="font-size:8px; color:var(--accent-red); margin-top:4px; font-weight:700;">⚠️ 追繳</div>' : ''}
+      </div>`;
+    }).join('');
+  }
 }
  
 // ===================================================================
