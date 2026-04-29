@@ -645,7 +645,7 @@
             <div class="cashflow-stat-val" id="cfExpense" style="color:var(--accent-red)">--</div>
           </div>
           <div class="cashflow-stat-bot" style="margin-top:8px;">
-            <div class="cashflow-stat-label">○ 固定</div>
+            <div class="cashflow-stat-label">▼固定支出</div>
             <div class="cashflow-stat-val" id="cfFixed" style="color:#ffb6c1">--</div>
           </div>
         </div>
@@ -655,7 +655,7 @@
     <div class="card" data-m="[M-01] Balance" onclick="switchPage('tx', document.querySelector('[data-page=tx]'))" style="cursor:pointer;">
       <div class="balance-header">
         <div class="section-title">收支平衡</div>
-        <div class="balance-label">固定月預算 vs. 實際</div>
+        <div class="balance-label">支出 vs. 實際</div>
       </div>
       <div class="balance-cols">
         <div>
@@ -705,8 +705,12 @@
       <div class="invest-bar-row">
         <div class="invest-bar-label">成本/市值</div>
         <div class="invest-bar-track-dual">
-          <div id="investCostBar" class="invest-bar-cost" style="width:50%"></div>
-          <div id="investValBar" class="invest-bar-val" style="width:50%"></div>
+          <div style="flex:1; display:flex; justify-content:flex-end;">
+            <div id="investCostBar" class="invest-bar-cost" style="width:50%"></div>
+          </div>
+          <div style="flex:1; display:flex; justify-content:flex-start;">
+            <div id="investValBar" class="invest-bar-val" style="width:50%"></div>
+          </div>
         </div>
       </div>
       <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-top:-8px;margin-bottom:12px;">
@@ -1473,6 +1477,7 @@ const DEV_LABELS = {
   '[M-01] CashFlow'       : '現金流水球',
   '[M-01] Balance'        : '收支平衡圖',
   '[M-01] MiniGrid'       : '小卡片雙欄區',
+  '[M-01] InvestAnalysis' : '投資深度分析',
   '[M-01] StocksPage'     : '股票資產頁面',
   '[M-01] PledgePage'     : '質押管理頁面',
   '[M-01] PledgeSummary'  : '質押總覽卡片',
@@ -1496,28 +1501,29 @@ const DEV_LABELS = {
 // 格式：{ html: [起始行, 結束行], css: [起始行, 結束行], js: [起始行, 結束行] }
 const DEV_LINES = {
   //  key                      html 行範圍        css 行範圍        js 行範圍           各層用途說明
-  '[M-01] DashboardPage'  : { html:[408,467],  css:[175,180],  js:[1008,1060],  htmlDesc:'儀錶板外層 page div，包含所有首頁卡片',                     cssDesc:'page.active 顯示控制、fadeIn 動畫',                  jsDesc:'renderDashboard() 計算月份收支、更新所有卡片數字' },
-  '[M-01] TotalAssets'    : { html:[410,418],  css:[165,173],  js:[1018,1030],  htmlDesc:'總資產卡片，顯示資產總額與負債列',                          cssDesc:'.asset-total-card 漸層背景、.total-amount 字級',      jsDesc:'bankTotal+stockTotal 加總，fmt() 格式化顯示' },
-  '[M-01] CashFlow'       : { html:[420,436],  css:[130,160],  js:[1032,1042],  htmlDesc:'現金流水球卡片，含水波動畫與收支數字',                      cssDesc:'.water-ball 圓形容器、@keyframes wave 波浪動畫',     jsDesc:'cashflow 計算、waterFill 高度百分比控制' },
-  '[M-01] Balance'        : { html:[438,450],  css:[175,200],  js:[1044,1060],  htmlDesc:'收支平衡雙欄長條圖，左支出右收入',                          cssDesc:'.bar-row .bar-fill 長條樣式、income/expense 顏色',    jsDesc:'expGroups/incGroups 分組、max 值計算長條寬度%' },
-  '[M-01] MiniGrid'       : { html:[452,466],  css:[215,218],  js:[1062,1080],  htmlDesc:'2欄小卡區，左銀行帳戶列表、右股票甜甜圈',                  cssDesc:'.mini-grid grid 2欄佈局',                             jsDesc:'bankList innerHTML 生成、renderDonut() 繪製SVG' },
-  '[M-01] StocksPage'     : { html:[536,551],  css:[300,316],  js:[1375,1400],  htmlDesc:'股票&ETF 頁面，含股票列表與銀行帳戶列表',                  cssDesc:'.stock-item .stock-ticker .stock-chg 顏色徽章',       jsDesc:'renderStocksPage() 遍歷 db.stocks/db.banks' },
-  '[M-01] PledgePage'     : { html:[554,600],  css:[316,380],  js:[1450,1530],  htmlDesc:'質押管理頁面，含總覽卡片、分期摘要、倉位列表',             cssDesc:'.pledge-card safe/warn/danger 左框線色、維持率bar',   jsDesc:'renderPledgePage() 計算維持率、壓力測試跌50%' },
-  '[M-01] PledgeSummary'  : { html:[558,574],  css:[352,370],  js:[1460,1480],  htmlDesc:'質押總覽 2x2 格：質押總額/年利/進行中/已結清',             cssDesc:'.pledge-summary-grid .pledge-summary-item 背景格',    jsDesc:'active/closed 篩選、totalAmt/totalInterest 計算' },
-  '[M-01] PledgeList'     : { html:[590,596],  css:[316,330],  js:[1510,1530],  htmlDesc:'質押倉位卡片列表，每張含防守價與壓力測試列',               cssDesc:'.pledge-stat-grid 3欄統計格、.stress-row 警示列',     jsDesc:'pledges.map() 生成卡片 HTML、togglePledgeStatus()' },
-  '[M-02] DebtSummary'    : { html:[576,580],  css:[395,410],  js:[1218,1250],  htmlDesc:'分期貸款剩餘待還摘要卡（有分期才顯示）',                   cssDesc:'.debt-summary-card 紅色漸層邊框背景',                 jsDesc:'getInstallmentDebtSummary() 過濾 installment 模板' },
-  '[M-02] RecurringItem'  : { html:[null,null], css:[415,435], js:[1252,1280],  htmlDesc:'（動態生成）固定支出/分期項目列表卡片',                    cssDesc:'.recurring-card installment/fixed/settled 左線色',    jsDesc:'renderRecurringList() / renderFixedPage() 生成' },
-  '[M-04] TopNav'         : { html:[402,407],  css:[105,114],  js:[null,null],  htmlDesc:'頂部導覽：左標題、右月份選擇器按鈕',                       cssDesc:'.top-nav sticky定位、backdrop-filter 毛玻璃',         jsDesc:'無獨立JS，月份點擊 → toggleMonthPicker()' },
-  '[M-04] BottomNav'      : { html:[867,882],  css:[115,128],  js:[null,null],  htmlDesc:'底部固定導覽列，6個頁面切換按鈕',                          cssDesc:'.bottom-nav fixed、.nav-btn active 顏色切換',         jsDesc:'switchPage(page, btn) 切換 .page.active 狀態' },
-  '[M-05] TxPage'         : { html:[470,505],  css:[440,465],  js:[1082,1175],  htmlDesc:'交易記錄頁面：快速新增、多選列、標籤列、月份分組列表',      cssDesc:'.tx-item .tx-amount pos/neg 顏色、月份摺疊區',        jsDesc:'renderTxList() 依月份分組、filterTx() 類型篩選' },
-  '[M-05] TxTabs'         : { html:[490,494],  css:[278,285],  js:[1090,1100],  htmlDesc:'全部/收入/支出 三個篩選標籤',                              cssDesc:'.tab .tab.active 選中樣式',                           jsDesc:'filterTx(f, el) 更新 txFilter 並重新渲染列表' },
-  '[M-05] MultiselectBar' : { html:[484,489],  css:[470,480],  js:[1108,1130],  htmlDesc:'多選操作浮動列：顯示已選筆數、改分類、取消',               cssDesc:'.tx-multiselect-bar sticky定位、.tx-check checkbox',  jsDesc:'toggleTxMultiselect() 切換模式、batchEditCategory()' },
-  '[N-01] QuickAdd'       : { html:[474,479],  css:[265,280],  js:[1175,1195],  htmlDesc:'收入/支出 快速新增按鈕對，點擊開啟對應 Modal',             cssDesc:'.quick-add-btn income/expense 漸層按鈕、hover陰影',   jsDesc:'showAddTxType(type) 預設類型、動態改 Modal 邊框色' },
-  '[FX] FixedPage'        : { html:[603,650],  css:[390,415],  js:[1285,1340],  htmlDesc:'固定支出頁面：總覽數字、類別佔比圖、分期摘要、完整列表',  cssDesc:'.recurring-card 卡片、.install-bar 分期進度條',       jsDesc:'renderFixedPage() 統計 active/settled/installment' },
-  '[M-01] SettingsPage'   : { html:[653,800],  css:[230,248],  js:[1540,1600],  htmlDesc:'設定頁面：GitHub Gist 雲端、主題、預算、類別、資料管理',  cssDesc:'.settings-section .gist-config 金色邊框卡',          jsDesc:'renderSettings() saveGistConfig() syncToGist/FromGist()' },
-  '[CFG] GistSync'        : { html:[716,735],  css:[208,210],  js:[2160,2215],  htmlDesc:'Gist 設定卡：Token 輸入、Gist ID、儲存/載入/上傳按鈕',    cssDesc:'.gist-config 金色漸層背景邊框卡片',                  jsDesc:'saveGistConfig() syncToGist() syncFromGist() 雲端同步' },
-  '[CFG] GhPages'         : { html:[737,775],  css:[null,null], js:[null,null], htmlDesc:'GitHub Pages 部署流程說明卡（靜態展示，無互動）',          cssDesc:'（無專屬CSS，使用通用 card/settings-section）',       jsDesc:'（純 HTML 說明，無 JS 邏輯）' },
-  '[CFG] Supabase'        : { html:[777,800],  css:[null,null], js:[2148,2165], htmlDesc:'Supabase 資料表列表，動態由 SUPABASE_TABLES 陣列渲染',     cssDesc:'（無專屬CSS，使用通用 card 樣式）',                   jsDesc:'SUPABASE_TABLES[] 常數 + renderSupabaseTables() 渲染' },
+  '[M-01] DashboardPage'  : { html:[602,736],  css:[117,123],  js:[1665,1836],  htmlDesc:'儀錶板外層 page div，包含所有首頁卡片',                     cssDesc:'page.active 顯示控制、fadeIn 動畫',                  jsDesc:'renderDashboard() 計算月份收支、更新所有卡片數字' },
+  '[M-01] TotalAssets'    : { html:[604,617],  css:[129,140],  js:[1677,1685],  htmlDesc:'總資產卡片，顯示資產總額與負債列',                          cssDesc:'.asset-total-card 漸層背景、.total-amount 字級',      jsDesc:'bankTotal+stockTotal 加總，fmt() 格式化顯示' },
+  '[M-01] CashFlow'       : { html:[619,653],  css:[142,215],  js:[1774,1788],  htmlDesc:'現金流水球卡片，含水波動畫與收支數字',                      cssDesc:'.water-ball 圓形容器、@keyframes wave 波浪動畫',     jsDesc:'cashflow 計算、waterFill 高度百分比控制' },
+  '[M-01] Balance'        : { html:[655,676],  css:[217,230],  js:[1790,1813],  htmlDesc:'收支平衡雙欄長條圖，左支出右收入',                          cssDesc:'.bar-row .bar-fill 長條樣式、income/expense 顏色',    jsDesc:'expGroups/incGroups 分組、max 值計算長條寬度%' },
+  '[M-01] MiniGrid'       : { html:[678,692],  css:[232,238],  js:[1815,1836],  htmlDesc:'2欄小卡區，左銀行帳戶列表、右股票甜甜圈',                  cssDesc:'.mini-grid grid 2欄佈局',                             jsDesc:'bankList innerHTML 生成、renderDonut() 繪製SVG' },
+  '[M-01] InvestAnalysis' : { html:[694,734],  css:[513,549],  js:[1687,1772],  htmlDesc:'投資深度分析卡片，含市值/成本/回收/ROI 與 Top5 比例條',    cssDesc:'.invest-bar-row雙向長條、.invest-item-bars 迷你條', jsDesc:'investItems 計算、investDisplayMode 單位切換' },
+  '[M-01] StocksPage'     : { html:[770,884],  css:[300,313],  js:[2502,2570],  htmlDesc:'股票&ETF 頁面，含股票列表與銀行帳戶列表',                  cssDesc:'.stock-item .stock-ticker .stock-chg 顏色徽章',       jsDesc:'renderStocksPage() 遍歷 db.stocks/db.banks' },
+  '[M-01] PledgePage'     : { html:[886,938],  css:[438,481],  js:[3070,3146],  htmlDesc:'質押管理頁面，含總覽卡片、分期摘要、倉位列表',             cssDesc:'.pledge-card safe/warn/danger 左框線色、維持率bar',   jsDesc:'renderPledgePage() 計算維持率、壓力測試跌50%' },
+  '[M-01] PledgeSummary'  : { html:[890,911],  css:[483,486],  js:[3093,3118],  htmlDesc:'質押總覽卡片：質押維持率、總擔保品市值、目前借款',        cssDesc:'.pledge-summary-grid .pledge-summary-item 背景格',    jsDesc:'totalCollateral/loanAmount 計算、statusBadge 顏色' },
+  '[M-01] PledgeList'     : { html:[925,930],  css:[465,475],  js:[3077,3091],  htmlDesc:'擔保品明細清單，顯示每檔股票市值與張數',                   cssDesc:'.pledge-stat-grid 3欄統計格、.stress-row 警示列',     jsDesc:'stockList.map() 生成 HTML、fmt() 格式化金額' },
+  '[M-02] DebtSummary'    : { html:[975,978],  css:[507,511],  js:[1971,1976],  htmlDesc:'分期貸款剩餘待還摘要卡（有分期才顯示）',                   cssDesc:'.debt-summary-card 紅色漸層邊框背景',                 jsDesc:'getInstallmentDebtSummary() 過濾 installment 模板' },
+  '[M-02] RecurringItem'  : { html:[1946,1968], css:[488,499], js:[1932,1969],  htmlDesc:'（動態生成）固定支出/分期項目列表卡片',                    cssDesc:'.recurring-card installment/fixed/settled 左線色',    jsDesc:'renderRecurringList() / renderFixedPage() 生成' },
+  '[M-04] TopNav'         : { html:[592,600],  css:[91,97],    js:[3504,3546],  htmlDesc:'頂部導覽：左標題、右月份選擇器按鈕',                       cssDesc:'.top-nav sticky定位、backdrop-filter 毛玻璃',         jsDesc:'toggleMonthPicker() 彈出月份與年份選擇器' },
+  '[M-04] BottomNav'      : { html:[1137,1169], css:[98,115],   js:[1450,1466],  htmlDesc:'底部固定導覽列，6個頁面切換按鈕',                          cssDesc:'.bottom-nav fixed、.nav-btn active 顏色切換',         jsDesc:'switchPage(page, btn) 切換 .page.active 狀態' },
+  '[M-05] TxPage'         : { html:[738,768],  css:[283,291],  js:[2175,2235],  htmlDesc:'交易記錄頁面：快速新增、多選列、標籤列、月份分組列表',      cssDesc:'.tx-item .tx-amount pos/neg 顏色、月份摺疊區',        jsDesc:'renderTxList() 依月份分組、filterTx() 類型篩選' },
+  '[M-05] TxTabs'         : { html:[761,766],  css:[330,333],  js:[2110,2115],  htmlDesc:'全部/收入/支出 三個篩選標籤',                              cssDesc:'.tab .tab.active 選中樣式',                           jsDesc:'filterTx(f, el) 更新 txFilter 並重新渲染列表' },
+  '[M-05] MultiselectBar' : { html:[756,759],  css:[559,564],  js:[2117,2173],  htmlDesc:'多選操作浮動列：顯示已選筆數、改分類、取消',               cssDesc:'.tx-multiselect-bar sticky定位、.tx-check checkbox',  jsDesc:'toggleTxMultiselect() 切換模式、batchEditCategory()' },
+  '[N-01] QuickAdd'       : { html:[747,754],  css:[417,436],  js:[2289,2308],  htmlDesc:'收入/支出 快速新增按鈕對，點擊開啟對應 Modal',             cssDesc:'.quick-add-btn income/expense 漸層按鈕、hover陰影',   jsDesc:'showAddTxType(type) 預設類型、動態改 Modal 邊框色' },
+  '[FX] FixedPage'        : { html:[940,979],  css:[501,507],  js:[1981,2082],  htmlDesc:'固定支出頁面：總覽數字、類別佔比圖、分期摘要、完整列表',  cssDesc:'.recurring-card 卡片、.install-bar 分期進度條',       jsDesc:'renderFixedPage() 統計 active/settled/installment' },
+  '[M-01] SettingsPage'   : { html:[981,1135], css:[239,270],  js:[3150,3163],  htmlDesc:'設定頁面：GitHub Gist 雲端、主題、預算、類別、資料管理',  cssDesc:'.settings-section .gist-config 金色邊框卡',          jsDesc:'renderSettings() saveGistConfig() syncToGist/FromGist()' },
+  '[CFG] GistSync'        : { html:[986,1008], css:[296,298],  js:[3267,3403],  htmlDesc:'Gist 設定卡：Token 輸入、Gist ID、儲存/載入/上傳按鈕',    cssDesc:'.gist-config 金色漸層背景邊框卡片',                  jsDesc:'saveGistConfig() syncToGist() syncFromGist() 雲端同步' },
+  '[CFG] GhPages'         : { html:[1013,1041], css:[296,298],  js:[3283,3349],  htmlDesc:'GitHub Pages 部署流程說明卡，包含一鍵部署功能',            cssDesc:'（共用 .gist-config 樣式）',                        jsDesc:'pushToGitHub() 將 HTML Source 編碼後 PUT 到 Contents API' },
+  '[CFG] Supabase'        : { html:[1045,1062], css:[124,127],  js:[3174,3186],  htmlDesc:'Supabase 資料表列表，動態由 SUPABASE_TABLES 陣列渲染',     cssDesc:'（共用 .card 樣式）',                                jsDesc:'SUPABASE_TABLES[] 常數 + renderSupabaseTables() 渲染' },
 };
 
 let _devClickHandler = null;
@@ -1680,16 +1686,13 @@ function renderDashboard() {
   if (bTotalEl) bTotalEl.textContent = fmt(bankTotal);
 
   const investItems = [
-    ...db.stocks.map(s => ({ name: s.name, cost: s.cost || 0, val: s.value || 0 })),
-    ...(db.funds || []).map(f => ({ name: f.name, cost: f.cost || 0, val: f.value || 0 }))
-  ].sort((a, b) => b.val - a.val);
+    ...db.stocks.map(s => ({ ...s, val: s.value || 0, type: 'stock' })),
+    ...(db.funds || []).map(f => ({ ...f, val: f.value || 0, type: 'fund' }))
+  ].sort((a, b) => (b.val + (b.realized || 0)) - (a.val + (a.realized || 0)));
 
   const investCost = investItems.reduce((s, i) => s + i.cost, 0);
   const investVal = investItems.reduce((s, i) => s + i.val, 0);
-  const investRealized = [
-    ...db.stocks.map(s => s.realized || 0),
-    ...(db.funds || []).map(f => f.realized || 0)
-  ].reduce((s, r) => s + r, 0);
+  const investRealized = investItems.reduce((s, i) => s + (i.realized || 0), 0);
   
   const investTotalGainAmt = (investVal + investRealized) - investCost;
   const investROI = investCost > 0 ? (investTotalGainAmt / investCost * 100) : 0;
@@ -1707,18 +1710,26 @@ function renderDashboard() {
   gainEl.textContent = (investTotalGainAmt >= 0 ? '+' : '') + fmt(investTotalGainAmt);
   gainEl.style.color = investTotalGainAmt >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
 
-  const maxI = Math.max(investCost, investVal + investRealized, 1);
-  document.getElementById('investCostBar').style.width = (investCost / (investCost + investVal + investRealized) * 100) + '%';
+  const maxSummarySide = Math.max(investCost, investVal + investRealized, 1);
+  document.getElementById('investCostBar').style.width = (investCost / maxSummarySide * 100) + '%';
   const valBar = document.getElementById('investValBar');
-  valBar.style.width = ((investVal + investRealized) / (investCost + investVal + investRealized) * 100) + '%';
+  valBar.style.width = ((investVal + investRealized) / maxSummarySide * 100) + '%';
+  valBar.style.background = investTotalGainAmt >= 0 ? 'linear-gradient(90deg, #1a8060, var(--accent-green))' : 'linear-gradient(90deg, #c0362e, var(--accent-red))';
   valBar.textContent = investDisplayMode === 'pct' 
     ? (investROI >= 0 ? '+' : '') + investROI.toFixed(1) + '%'
     : (investTotalGainAmt >= 0 ? '+' : '') + fmt(investTotalGainAmt);
 
+  const maxSingleSide = Math.max(...investItems.map(i => Math.max(i.cost, i.val + (i.realized || 0))), 1);
+
   document.getElementById('investItemList').innerHTML = investItems.slice(0, 5).map(i => {
-    const itemRealized = [...db.stocks, ...(db.funds||[])].find(x=>x.name===i.name)?.realized || 0;
+    const itemRealized = i.realized || 0;
     const itemGain = (i.val + itemRealized) - i.cost;
     const itemROI = i.cost > 0 ? (itemGain / i.cost * 100) : 0;
+    
+    // Proportional scaling relative to the largest single-side value
+    const costPct = (i.cost / maxSingleSide * 100).toFixed(2);
+    const valPct = ((i.val + itemRealized) / maxSingleSide * 100).toFixed(2);
+
     return `
     <div class="invest-item-row" onclick="switchPage('stocks', document.querySelector('[data-page=stocks]'))" style="cursor:pointer;">
       <div class="invest-item-info">
@@ -1726,11 +1737,15 @@ function renderDashboard() {
         <div class="invest-item-meta">成本 ${fmt(i.cost)} · 市值 ${fmt(i.val)} ${itemRealized > 0 ? `· 回收 ${fmt(itemRealized)}` : ''}</div>
       </div>
       <div class="invest-item-bars">
-        <div class="invest-mini-cost" style="width:${(i.cost / (i.cost + i.val + itemRealized) * 100)}%"></div>
-        <div class="invest-mini-val" style="width:${((i.val + itemRealized) / (i.cost + i.val + itemRealized) * 100)}%">
-          ${investDisplayMode === 'pct' 
-            ? (itemROI >= 0 ? '+' : '') + itemROI.toFixed(0) + '%'
-            : (itemGain >= 0 ? '+' : '') + (Math.abs(itemGain) >= 10000 ? (itemGain/10000).toFixed(1)+'萬' : itemGain)}
+        <div style="width:50%; display:flex; justify-content:flex-end;">
+          <div class="invest-mini-cost" style="width:${costPct}%"></div>
+        </div>
+        <div style="width:50%; display:flex; justify-content:flex-start;">
+          <div class="invest-mini-val" style="width:${valPct}%; background:${itemGain >= 0 ? 'var(--accent-green)' : 'var(--accent-red)'}">
+            ${investDisplayMode === 'pct' 
+              ? (itemROI >= 0 ? '+' : '') + itemROI.toFixed(0) + '%'
+              : (itemGain >= 0 ? '+' : '') + (Math.abs(itemGain) >= 10000 ? (itemGain/10000).toFixed(1)+'萬' : itemGain)}
+          </div>
         </div>
       </div>
     </div>`;
@@ -3178,19 +3193,25 @@ function renderCategoryList() {
     </div>`).join('');
 }
 function addCategory() {
+  if (!db.config.categories) db.config.categories = [];
   const name=document.getElementById('newCategory').value.trim(), icon=document.getElementById('newCategoryIcon').value.trim()||'📌';
-  if (!name) return;
+  if (!name) { toast('請輸入類別名稱'); return; }
   db.config.categories.push({ name, icon });
   document.getElementById('newCategory').value='';
   document.getElementById('newCategoryIcon').value='🛒';
   document.getElementById('catIconPickerBtn').textContent='🛒';
-  renderCategoryList(); saveLocal();
+  renderCategoryList(); saveLocal(); autoSync();
+  toast('✅ 類別已新增');
 }
-function deleteCategory(i) { db.config.categories.splice(i,1); renderCategoryList(); saveLocal(); }
+function deleteCategory(i) { 
+  if (confirm(`確定要刪除「${db.config.categories[i].name}」？`)) {
+    db.config.categories.splice(i,1); renderCategoryList(); saveLocal(); autoSync(); 
+  }
+}
 
 // ===== Income Categories =====
 function renderIncomeCategoryList() {
-  if (!db.config.incomeCategories) db.config.incomeCategories = [{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資',icon:'📈'},{name:'其他收入',icon:'💹'}];
+  if (!db.config.incomeCategories) db.config.incomeCategories = [{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資獲利',icon:'📈'},{name:'股息收入',icon:'🧧'},{name:'其他收入',icon:'💹'}];
   document.getElementById('incomeCategoryList').innerHTML = db.config.incomeCategories.map((c,i) => `
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
       <span style="font-size:18px;">${c.icon}</span><span style="flex:1;font-size:13px;">${c.name}</span>
@@ -3200,14 +3221,19 @@ function renderIncomeCategoryList() {
 function addIncomeCategory() {
   if (!db.config.incomeCategories) db.config.incomeCategories = [];
   const name=document.getElementById('newIncomeCategory').value.trim(), icon=document.getElementById('newIncomeCategoryIcon').value.trim()||'💹';
-  if (!name) return;
+  if (!name) { toast('請輸入類別名稱'); return; }
   db.config.incomeCategories.push({ name, icon });
   document.getElementById('newIncomeCategory').value='';
   document.getElementById('newIncomeCategoryIcon').value='💰';
   document.getElementById('incCatIconPickerBtn').textContent='💰';
-  renderIncomeCategoryList(); saveLocal();
+  renderIncomeCategoryList(); saveLocal(); autoSync();
+  toast('✅ 收入類別已新增');
 }
-function deleteIncomeCategory(i) { db.config.incomeCategories.splice(i,1); renderIncomeCategoryList(); saveLocal(); }
+function deleteIncomeCategory(i) { 
+  if (confirm(`確定要刪除「${db.config.incomeCategories[i].name}」？`)) {
+    db.config.incomeCategories.splice(i,1); renderIncomeCategoryList(); saveLocal(); autoSync(); 
+  }
+}
 
 // ===== Icon Picker =====
 const ICONS_LIST = ['🏠','💰','📈','📋','🔁','🔒','⚙️','👤','🔔','🔍','📅','💳','🏦','💸','🧾','🛒','🛍️','🎁','🍔','☕','🍺','💊','🚗','🚌','✈️','🏖️','💼','💻','📱','🎓','📝','💡','🎯','🎮','🎵','🎬','📷','🎨','🏆','🏋️','🔧','⚡','🔋','🔑','🛡️','📦','🏠','🌸','🌿','⭐','🌙','☀️','☁️','🐱','🐶','🎂','🎈','🍀','✅','❌'];
@@ -3367,8 +3393,8 @@ async function syncFromGist() {
     if (!db.pledges) db.pledges = []; // [M-01] ensure pledge array exists
     if (!db.recurringTemplates) db.recurringTemplates = []; // [M-02] migrate
     if (!db.meta.lastSyncDate) db.meta.lastSyncDate = null;
-    if (!db.config.incomeCategories) db.config.incomeCategories = [{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資',icon:'📈'},{name:'其他收入',icon:'💹'}];
-    if (!db.config.theme) db.config.theme = 'ocean';
+    if (!db.config.categories) db.config.categories = [{name:'房貸',icon:'🏠'},{name:'生活費',icon:'🛒'},{name:'交通',icon:'🚌'},{name:'醫療',icon:'💊'},{name:'娛樂',icon:'🎮'},{name:'其他',icon:'📦'}];
+    if (!db.config.incomeCategories) db.config.incomeCategories = [{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資獲利',icon:'📈'},{name:'股息收入',icon:'🧧'},{name:'其他收入',icon:'💹'}];    if (!db.config.theme) db.config.theme = 'ocean';
       if (!db.config.ghFile) db.config.ghFile = 'index.html';
       if (!db.config.ghBranch) db.config.ghBranch = 'main';
     applyTheme(db.config.theme);
@@ -3404,7 +3430,8 @@ function loadLocal() {
       if (!db.pledges) db.pledges = []; // [M-01] migrate
       if (!db.recurringTemplates) db.recurringTemplates = []; // [M-02] migrate
       if (!db.meta.lastSyncDate) db.meta.lastSyncDate = null; // [M-02] migrate
-      if (!db.config.incomeCategories) db.config.incomeCategories = [{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資',icon:'📈'},{name:'其他收入',icon:'💹'}];
+      if (!db.config.categories) db.config.categories = [{name:'房貸',icon:'🏠'},{name:'生活費',icon:'🛒'},{name:'交通',icon:'🚌'},{name:'醫療',icon:'💊'},{name:'娛樂',icon:'🎮'},{name:'其他',icon:'📦'}];
+      if (!db.config.incomeCategories) db.config.incomeCategories = [{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資獲利',icon:'📈'},{name:'股息收入',icon:'🧧'},{name:'其他收入',icon:'💹'}];
       if (!db.config.theme) db.config.theme = 'ocean';
       if (!db.config.ghFile) db.config.ghFile = 'index.html';
       if (!db.config.ghBranch) db.config.ghBranch = 'main';
@@ -3427,8 +3454,8 @@ function importData(e) {
       if (!db.pledges) db.pledges=[]; // [M-01] migrate
       if (!db.recurringTemplates) db.recurringTemplates=[]; // [M-02] migrate
       if (!db.meta.lastSyncDate) db.meta.lastSyncDate=null;
-      if (!db.config.incomeCategories) db.config.incomeCategories=[{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資',icon:'📈'},{name:'其他收入',icon:'💹'}];
-      if (!db.config.theme) db.config.theme='ocean';
+      if (!db.config.categories) db.config.categories = [{name:'房貸',icon:'🏠'},{name:'生活費',icon:'🛒'},{name:'交通',icon:'🚌'},{name:'醫療',icon:'💊'},{name:'娛樂',icon:'🎮'},{name:'其他',icon:'📦'}];
+      if (!db.config.incomeCategories) db.config.incomeCategories = [{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資獲利',icon:'📈'},{name:'股息收入',icon:'🧧'},{name:'其他收入',icon:'💹'}];      if (!db.config.theme) db.config.theme='ocean';
       applyTheme(db.config.theme);
       saveLocal(); toast('✅ 資料已匯入'); renderDashboard(); renderSettings();
     } catch { toast('❌ 格式錯誤'); }
