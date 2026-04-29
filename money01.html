@@ -1957,11 +1957,12 @@ function renderDashboard() {
   
   const expLabel = document.getElementById('expenseTotalLabel');
   const incLabel = document.getElementById('incomeTotalLabel');
-  if (expLabel) expLabel.textContent = fmt(totalExpense);
+  const txManualExpense = monthTx.filter(t => t.type === 'expense' && !t.auto).reduce((s, t) => s + t.amount, 0);
+  if (expLabel) expLabel.textContent = fmt(txManualExpense); // [M-05] 儀表板支出僅顯示明細支出
   if (incLabel) incLabel.textContent = fmt(totalIncome);
 
   const expG = {};
-  monthTx.filter(t => t.type === 'expense').forEach(t => expG[t.category] = (expG[t.category] || 0) + t.amount);
+  monthTx.filter(t => t.type === 'expense' && !t.auto).forEach(t => expG[t.category] = (expG[t.category] || 0) + t.amount);
   const maxExp = Math.max(...Object.values(expG), 1);
   document.getElementById('expenseList').innerHTML = Object.entries(expG).sort((a, b) => b[1] - a[1]).map(([cat, val]) => `
     <div class="bar-row"><div class="bar-track"><div class="bar-fill bar-expense" style="width:${Math.round(val / maxExp * 100)}%;"></div></div></div>
