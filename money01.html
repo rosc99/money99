@@ -757,6 +757,37 @@
         <div onclick="toggleInvestDisplayMode()" style="font-size:10px;color:var(--ocean-light);background:rgba(77,196,212,0.1);padding:4px 8px;border-radius:6px;cursor:pointer;font-weight:700;border:1px solid rgba(77,196,212,0.2);" id="investModeBtn">顯示：趴數</div>
       </div>
       <div id="investItemList"></div>
+
+      <!-- [N-02] 股票基金比例 -->
+      <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:12px;display:flex;gap:12px;margin-top:4px;">
+        <div style="flex:1;">
+          <div style="font-size:10px;color:var(--text-muted);font-weight:700;margin-bottom:8px;letter-spacing:0.05em;">資產比例</div>
+          <div class="donut-wrap" style="gap:10px;">
+            <svg width="60" height="60" viewBox="0 0 80 80" id="investRatioDonut">
+              <circle cx="40" cy="40" r="28" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="12"/>
+            </svg>
+            <div id="investRatioLegend" style="font-size:9px;display:flex;flex-direction:column;gap:4px;"></div>
+          </div>
+        </div>
+        <div style="flex:1.5;">
+          <div style="font-size:10px;color:var(--text-muted);font-weight:700;margin-bottom:8px;letter-spacing:0.05em;">資產金額</div>
+          <div id="investRatioBars" style="display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- [N-03] 收支趨勢 Dashboard -->
+    <div class="card" data-m="[N-03] TrendDashboard">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <div class="section-title">📊 年度收支趨勢</div>
+        <div style="display:flex;background:rgba(255,255,255,0.06);border-radius:10px;padding:2px;">
+          <div id="trendModeIncome" onclick="toggleTrendMode('income')" style="padding:4px 10px;font-size:11px;cursor:pointer;border-radius:8px;transition:0.2s;">收入</div>
+          <div id="trendModeExpense" onclick="toggleTrendMode('expense')" style="padding:4px 10px;font-size:11px;cursor:pointer;border-radius:8px;transition:0.2s;">支出</div>
+        </div>
+      </div>
+      <div id="trendChart" style="height:140px;display:flex;align-items:flex-end;gap:5px;padding:0 4px 25px;position:relative;margin-top:10px;">
+        <!-- JS 動態生成 -->
+      </div>
     </div>
 
   </div><!-- end dashboard -->
@@ -1985,6 +2016,8 @@ function renderDashboard() {
     </div>`).join('');
   renderDonut();
   renderFixedDash(totalExpense, totalIncome);
+  renderInvestRatio(stockTotal, fundTotal); // [N-02] 股票基金比例
+  renderTrendChart(); // [N-03] 年度收支趨勢
 }
 
 // ===================================================================
@@ -2088,6 +2121,102 @@ function renderFixedDash(totalMonthExpense, totalMonthIncome) {
       <div style="width:7px;height:7px;border-radius:50%;background:${seg.color};flex-shrink:0;"></div>
       <span style="font-size:9px;color:var(--text-secondary);white-space:nowrap;">${seg.label} ${(seg.val/totalSeg*100).toFixed(0)}%</span>
     </div>`).join('');
+}
+
+// ===================================================================
+//  [N-02] INVESTMENT RATIO CHART
+// ===================================================================
+function renderInvestRatio(stockTotal, fundTotal) {
+  const donut = document.getElementById('investRatioDonut');
+  const legend = document.getElementById('investRatioLegend');
+  const bars = document.getElementById('investRatioBars');
+  if (!donut || !legend || !bars) return;
+
+  const total = stockTotal + fundTotal;
+  if (total <= 0) {
+    donut.innerHTML = '<circle cx="40" cy="40" r="28" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="12"/>';
+    legend.innerHTML = '<div style="color:var(--text-muted);">尚無資產</div>';
+    bars.innerHTML = '';
+    return;
+  }
+
+  // Donut
+  const r = 28, cx = 40, cy = 40, circ = 2 * Math.PI * r;
+  const sPct = stockTotal / total;
+  const fPct = fundTotal / total;
+  const sDash = sPct * circ, fDash = fPct * circ;
+
+  donut.innerHTML = `
+    <circle cx="40" cy="40" r="28" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="12"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--ocean-light)" stroke-width="12" stroke-dasharray="${sDash} ${circ-sDash}" transform="rotate(-90 ${cx} ${cy})"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--accent-gold)" stroke-width="12" stroke-dasharray="${fDash} ${circ-fDash}" stroke-dashoffset="${-sDash}" transform="rotate(-90 ${cx} ${cy})"/>
+  `;
+
+  legend.innerHTML = `
+    <div style="display:flex;align-items:center;gap:4px;"><div style="width:6px;height:6px;border-radius:50%;background:var(--ocean-light);"></div><span style="color:var(--text-secondary);">股票 ${(sPct*100).toFixed(0)}%</span></div>
+    <div style="display:flex;align-items:center;gap:4px;"><div style="width:6px;height:6px;border-radius:50%;background:var(--accent-gold);"></div><span style="color:var(--text-secondary);">基金 ${(fPct*100).toFixed(0)}%</span></div>
+  `;
+
+  // Bars
+  const maxVal = Math.max(stockTotal, fundTotal, 1);
+  const barHtml = (label, val, color) => `
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-bottom:3px;"><span>${label}</span><span class="mono">${fmt(val)}</span></div>
+      <div class="bar-track" style="height:10px;"><div class="bar-fill" style="width:${(val/maxVal*100)}%; background:${color};"></div></div>
+    </div>`;
+  bars.innerHTML = barHtml('股票資產', stockTotal, 'var(--ocean-light)') + barHtml('基金資產', fundTotal, 'var(--accent-gold)');
+}
+
+// ===================================================================
+//  [N-03] TREND DASHBOARD
+// ===================================================================
+let trendMode = 'income'; 
+function toggleTrendMode(mode) {
+  trendMode = mode;
+  renderDashboard();
+}
+
+function renderTrendChart() {
+  const container = document.getElementById('trendChart');
+  if (!container) return;
+
+  const btnInc = document.getElementById('trendModeIncome');
+  const btnExp = document.getElementById('trendModeExpense');
+  if (trendMode === 'income') {
+    btnInc.style.background = 'rgba(77,196,212,0.2)';
+    btnInc.style.color = 'var(--ocean-light)';
+    btnExp.style.background = 'transparent';
+    btnExp.style.color = 'var(--text-muted)';
+  } else {
+    btnExp.style.background = 'rgba(240,80,74,0.15)';
+    btnExp.style.color = 'var(--accent-red)';
+    btnInc.style.background = 'transparent';
+    btnInc.style.color = 'var(--text-muted)';
+  }
+
+  const { currentYear: y } = db.config;
+  const months = [1,2,3,4,5,6,7,8,9,10,11,12];
+  const monthlyData = months.map(m => {
+    const txs = db.transactions.filter(t => {
+      const d = new Date(t.date);
+      return d.getFullYear() === y && (d.getMonth() + 1) === m && t.type === trendMode;
+    });
+    return txs.reduce((s, t) => s + t.amount, 0);
+  });
+
+  const maxVal = Math.max(...monthlyData, 1);
+  const color = trendMode === 'income' ? 'var(--accent-green)' : 'var(--accent-red)';
+  const bg = trendMode === 'income' ? 'rgba(62,207,142,0.15)' : 'rgba(240,80,74,0.15)';
+
+  container.innerHTML = monthlyData.map((val, i) => {
+    const h = (val / maxVal * 100);
+    return `
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end;position:relative;">
+        <div style="font-size:8px;color:${color};font-family:'DM Mono',monospace;margin-bottom:2px;transform:scale(0.8);">${val > 0 ? (val >= 10000 ? (val/10000).toFixed(0)+'w' : (val/1000).toFixed(0)+'k') : ''}</div>
+        <div style="width:100%;height:${h}%;background:linear-gradient(180deg, ${color}, ${bg});border-radius:4px 4px 2px 2px;min-height:2px;transition:height 0.5s ease;"></div>
+        <div style="position:absolute;bottom:-18px;font-size:9px;color:var(--text-muted);">${i+1}月</div>
+      </div>`;
+  }).join('');
 }
  
 function runRecurringEngine() {
