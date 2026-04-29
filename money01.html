@@ -1041,7 +1041,21 @@
         </div>
         <span id="settledChevron" style="font-size:12px;color:var(--text-muted);transition:0.3s;">›</span>
       </div>
-      <div id="fixedSettledList" style="display:none;"></div>
+    <div id="fixedSettledList" style="display:none;"></div>
+    </div>
+
+    <!-- [M-05] 本月扣款紀錄 -->
+    <div style="margin-top:20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:3px;height:20px;border-radius:2px;background:var(--accent-green);"></div>
+          <span style="font-size:13px;font-weight:700;color:var(--accent-green);letter-spacing:0.04em;">✅ 本月扣款紀錄</span>
+        </div>
+        <span id="fixedMonthRecordTotal" style="font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:var(--accent-green);"></span>
+      </div>
+      <div class="card" style="padding:4px 14px;">
+        <div id="fixedMonthRecordList"></div>
+      </div>
     </div>
   </div>
 
@@ -2373,6 +2387,7 @@ function toggleSettledSection() {
 }
 
 function renderFixedPage() {
+  const { currentMonth: m, currentYear: y } = db.config;
   const tpls = db.recurringTemplates || [];
   const permanent = tpls.filter(t => t.type !== 'installment' && t.status !== 'settled');
   const installs  = tpls.filter(t => t.type === 'installment' && t.status !== 'settled');
@@ -2470,6 +2485,38 @@ function renderFixedPage() {
   if (settledSection) settledSection.style.display = settled.length ? 'block' : 'none';
   if (settledCountEl) settledCountEl.textContent = settled.length + ' 項';
   if (settledListEl)  settledListEl.innerHTML = settled.map(tpl => buildRecurringCard(tpl)).join('');
+
+  // [M-05] 渲染本月已扣款紀錄
+  const monthFixedTx = db.transactions.filter(t => {
+    const d = new Date(t.date);
+    return t.auto && (d.getMonth() + 1 === m) && (d.getFullYear() === y);
+  });
+  
+  const recordListEl = document.getElementById('fixedMonthRecordList');
+  const recordTotalEl = document.getElementById('fixedMonthRecordTotal');
+  if (recordListEl) {
+    if (!monthFixedTx.length) {
+      recordListEl.innerHTML = '<div class="empty" style="padding:8px 0;font-size:12px;">本月尚無扣款紀錄</div>';
+      if (recordTotalEl) recordTotalEl.textContent = '';
+    } else {
+      const totalAmt = monthFixedTx.reduce((s, t) => s + t.amount, 0);
+      if (recordTotalEl) recordTotalEl.textContent = fmt(totalAmt);
+      
+      const icons = {};
+      (db.config.categories||[]).forEach(c=>icons[c.name]=c.icon);
+      
+      recordListEl.innerHTML = monthFixedTx.map(t => `
+        <div class="tx-item">
+          <div class="tx-icon">${icons[t.category]||'💳'}</div>
+          <div class="tx-info">
+            <div class="tx-name">${t.name}</div>
+            <div class="tx-date">${t.category} · ${t.date}</div>
+          </div>
+          <div class="tx-amount neg">-${fmt(t.amount)}</div>
+        </div>
+      `).join('');
+    }
+  }
 }
 
 function buildRecurringCard(tpl) {
@@ -2639,6 +2686,7 @@ function renderTxList() {
   const m = db.config.currentMonth, y = db.config.currentYear;
   let list = db.transactions.filter(t => {
     if (txFilter !== 'all' && t.type !== txFilter) return false;
+    if (t.auto) return false; // [M-05] 排除固定支出
     return true;
   });
   list.sort((a,b) => new Date(b.date) - new Date(a.date));
@@ -4012,6 +4060,7 @@ switch (page) {
   case 'tx':        renderTxList();     break; // 交易列表
   case 'stocks':    renderStocksPage(); if(!Object.keys(stockQuotes).length) fetchAllQuotes(); break; // 股票頁面
   case 'pledge':    renderPledgePage();  break; // 質押頁面
+  case 'fixed':     renderFixedPage();   break; // 固定支出頁面
   case 'settings':  renderSettings();   break; // 設定
   default:          renderDashboard();         // 預設顯示儀表板
 }
