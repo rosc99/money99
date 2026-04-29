@@ -970,20 +970,22 @@
       <div class="section-title">🔁 固定支出</div>
       <div class="section-more" onclick="showAddRecurring()">＋ 新增</div>
     </div>
+
+    <!-- 總覽卡片 -->
     <div class="card" style="background:linear-gradient(135deg,rgba(240,80,74,0.12),rgba(240,80,74,0.05));border:1px solid rgba(240,80,74,0.25);">
       <div class="card-title">固定支出總覽</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;">
         <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:12px;">
-          <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">每月固定</div>
-          <div id="fixedMonthlyTotal" style="font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--accent-red);">--</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">每月固定（無期限）</div>
+          <div id="fixedMonthlyTotal" style="font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--ocean-light);">--</div>
         </div>
         <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:12px;">
           <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">年化金額</div>
           <div id="fixedAnnualTotal" style="font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--accent-gold);">--</div>
         </div>
         <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:12px;">
-          <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">進行中項目</div>
-          <div id="fixedActiveCount" style="font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--ocean-light);">0</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">每月分期（有期限）</div>
+          <div id="fixedInstallMonthly" style="font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--accent-gold);">--</div>
         </div>
         <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:12px;">
           <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">分期剩餘待還</div>
@@ -991,16 +993,55 @@
         </div>
       </div>
     </div>
+
+    <!-- 類別佔比 -->
     <div class="card" style="padding:14px 16px;">
       <div class="card-title" style="margin-bottom:10px;">類別佔比</div>
       <div id="fixedCategoryChart"></div>
     </div>
+
+    <!-- 分期貸款剩餘摘要 -->
     <div class="card debt-summary-card" id="fixedDebtSummaryCard" style="display:none;">
       <div class="card-title">📆 分期貸款剩餘待還</div>
       <div class="debt-summary-grid" id="fixedDebtSummaryGrid"></div>
     </div>
+
+    <!-- ── 無期限區塊 ── -->
+    <div class="fixed-section-header" id="fixedPermanentHeader" style="display:flex;align-items:center;justify-content:space-between;margin:16px 0 8px;padding:0 2px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:3px;height:20px;border-radius:2px;background:var(--ocean-light);"></div>
+        <span style="font-size:13px;font-weight:700;color:var(--ocean-light);letter-spacing:0.04em;">🔁 無期限固定支出</span>
+        <span id="fixedPermanentCount" style="font-size:11px;background:rgba(77,196,212,0.15);color:var(--ocean-light);border-radius:20px;padding:2px 8px;font-family:'DM Mono',monospace;font-weight:700;">0 項</span>
+      </div>
+      <span id="fixedPermanentTotal" style="font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:var(--ocean-light);"></span>
+    </div>
     <div class="card" style="padding:12px 16px;">
-      <div id="fixedRecurringList"><div class="empty"><span class="icon">📅</span>尚無固定支出模板</div></div>
+      <div id="fixedPermanentList"><div class="empty" style="padding:8px 0;"><span class="icon">🔁</span>尚無無期限固定支出</div></div>
+    </div>
+
+    <!-- ── 有期限區塊 ── -->
+    <div class="fixed-section-header" id="fixedInstallHeader" style="display:flex;align-items:center;justify-content:space-between;margin:16px 0 8px;padding:0 2px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:3px;height:20px;border-radius:2px;background:var(--accent-gold);"></div>
+        <span style="font-size:13px;font-weight:700;color:var(--accent-gold);letter-spacing:0.04em;">📆 有期限分期付款</span>
+        <span id="fixedInstallCount" style="font-size:11px;background:rgba(240,192,64,0.15);color:var(--accent-gold);border-radius:20px;padding:2px 8px;font-family:'DM Mono',monospace;font-weight:700;">0 項</span>
+      </div>
+      <span id="fixedInstallTotalLabel" style="font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:var(--accent-gold);"></span>
+    </div>
+    <div class="card" style="padding:12px 16px;">
+      <div id="fixedInstallList"><div class="empty" style="padding:8px 0;"><span class="icon">📆</span>尚無分期付款項目</div></div>
+    </div>
+
+    <!-- 已結清（摺疊） -->
+    <div id="fixedSettledSection" style="display:none;margin-top:8px;">
+      <div onclick="toggleSettledSection()" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(255,255,255,0.03);border-radius:12px;cursor:pointer;border:1px solid var(--border-glass);margin-bottom:8px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:13px;color:var(--text-muted);">✅ 已結清項目</span>
+          <span id="fixedSettledCount" style="font-size:11px;background:rgba(255,255,255,0.06);color:var(--text-muted);border-radius:20px;padding:2px 8px;font-family:'DM Mono',monospace;">0 項</span>
+        </div>
+        <span id="settledChevron" style="font-size:12px;color:var(--text-muted);transition:0.3s;">›</span>
+      </div>
+      <div id="fixedSettledList" style="display:none;"></div>
     </div>
   </div>
 
@@ -1311,83 +1352,138 @@
   </div>
 </div>
  
-<!-- [M-02] Add Recurring Template Modal -->
+<!-- [M-02] Add Recurring Template Modal — 類型先選版 -->
 <div id="recurringModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:flex-end;overflow-y:auto;">
-  <div style="background:var(--modal-bg);border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:2px solid rgba(77,196,212,0.3);">
-    <div style="font-size:16px;font-weight:700;margin-bottom:4px;color:var(--ocean-light);">🔁 新增固定支出模板</div>
-    <div style="font-size:11px;color:var(--text-muted);margin-bottom:16px;">設定後每月自動產生一筆支出記錄</div>
-
-    <div class="form-row">
-      <div class="form-label">名稱</div>
-      <input class="form-input" id="rName" placeholder="手機費、信貸…" />
+  <div style="background:var(--modal-bg);border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:2px solid rgba(77,196,212,0.3);max-height:92vh;overflow-y:auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+      <div style="font-size:16px;font-weight:700;color:var(--ocean-light);">🔁 新增固定支出模板</div>
+      <div onclick="closeModal('recurringModal')" style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--text-muted);">✕</div>
     </div>
-    <div class="form-row">
-      <div class="form-label">每月金額</div>
-      <input class="form-input" type="number" id="rAmount" placeholder="0（可由分期自動計算）" />
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:18px;">設定後每月自動產生一筆支出記錄</div>
+
+    <!-- STEP 1: 選類型 -->
+    <div id="rStep1" style="margin-bottom:18px;">
+      <div style="font-size:11px;color:var(--ocean-light);font-weight:700;letter-spacing:0.07em;margin-bottom:10px;">STEP 1 · 選擇類型</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div id="rTypeBtnFixed" onclick="selectRType('fixed')" style="border:2px solid var(--ocean-light);border-radius:14px;padding:14px 12px;cursor:pointer;background:rgba(77,196,212,0.12);transition:all 0.2s;text-align:center;">
+          <div style="font-size:22px;margin-bottom:6px;">🔁</div>
+          <div style="font-size:13px;font-weight:700;color:var(--ocean-light);">無期限</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:3px;">每月持續扣款</div>
+          <div style="font-size:9px;color:rgba(77,196,212,0.6);margin-top:2px;">手機費、保險、訂閱…</div>
+        </div>
+        <div id="rTypeBtnInstall" onclick="selectRType('installment')" style="border:2px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px 12px;cursor:pointer;background:rgba(255,255,255,0.04);transition:all 0.2s;text-align:center;">
+          <div style="font-size:22px;margin-bottom:6px;">📆</div>
+          <div style="font-size:13px;font-weight:700;color:var(--text-secondary);">有期限</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:3px;">固定期數分期</div>
+          <div style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:2px;">房貸、信貸、分期…</div>
+        </div>
+      </div>
     </div>
 
-    <div class="form-row" style="flex-direction:column;align-items:flex-start;">
-      <div class="form-label" style="margin-bottom:8px;">類別 <span style="font-size:10px;color:var(--text-muted);">（點擊快速選擇）</span></div>
-      <div id="rCategoryTags" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+    <!-- STEP 2: 選類別（根據類型顯示不同類別） -->
+    <div id="rStep2" style="margin-bottom:18px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:11px;color:var(--ocean-light);font-weight:700;letter-spacing:0.07em;">STEP 2 · 選擇類別</div>
+        <button onclick="showAddCategoryModal()" style="display:flex;align-items:center;gap:4px;background:rgba(77,196,212,0.12);border:1px solid rgba(77,196,212,0.3);border-radius:20px;padding:4px 10px;color:var(--ocean-light);font-size:11px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;">
+          <span style="font-size:14px;line-height:1;">＋</span> 新增類別
+        </button>
+      </div>
+      <div id="rCategoryTags" style="display:flex;flex-wrap:wrap;gap:6px;min-height:36px;"></div>
       <input type="hidden" id="rCategory" />
-      <div style="display:flex;gap:6px;margin-top:8px;width:100%;">
-        <input class="form-input" id="rNewCatName" placeholder="新增自訂類別名稱" style="flex:1;font-size:12px;" />
-        <button class="btn" style="background:rgba(77,196,212,0.15);border:1px solid rgba(77,196,212,0.3);padding:0 12px;font-size:12px;white-space:nowrap;" onclick="addRCategory()">＋新增</button>
-      </div>
+      <input type="hidden" id="rType" value="fixed" />
     </div>
 
-    <div class="form-row" id="rTypeRow">
-      <div class="form-label">類型</div>
-      <select class="form-input" id="rType" onchange="toggleRecurringType()">
-        <option value="fixed">無期限（固定支出）</option>
-        <option value="installment">有期限（分期付款）</option>
-      </select>
-    </div>
-    <div id="rTypeLocked" style="display:none;background:rgba(240,80,74,0.08);border:1px solid rgba(240,80,74,0.25);border-radius:10px;padding:10px 14px;margin-top:4px;font-size:12px;color:var(--accent-red);">
-      🔒 信貸／房貸類別已強制設為「有期限（分期付款）」，請在下方填寫分期資訊
-    </div>
+    <!-- STEP 3: 填寫資訊 -->
+    <div id="rStep3">
+      <div style="font-size:11px;color:var(--ocean-light);font-weight:700;letter-spacing:0.07em;margin-bottom:10px;">STEP 3 · 填寫資訊</div>
 
-    <div id="rInstallDiv" style="display:none;background:rgba(240,192,64,0.06);border:1px solid rgba(240,192,64,0.2);border-radius:12px;padding:14px;margin-top:8px;">
-      <div style="font-size:11px;color:var(--accent-gold);font-weight:700;margin-bottom:12px;letter-spacing:0.05em;">▸ 分期設定</div>
+      <!-- 名稱 -->
       <div class="form-row">
-        <div class="form-label">原始本金</div>
-        <input class="form-input" type="number" id="rPrincipal" placeholder="0" oninput="calcMonthlyPayment()" />
+        <div class="form-label">名稱</div>
+        <input class="form-input" id="rName" placeholder="手機費、信貸…" />
       </div>
-      <div class="form-row">
-        <div class="form-label">年利率 (%)</div>
-        <input class="form-input" type="number" id="rRate" placeholder="例：2.5" step="0.01" oninput="calcMonthlyPayment()" />
+
+      <!-- 鎖定提示 (信貸類) -->
+      <div id="rTypeLocked" style="display:none;background:rgba(240,80,74,0.08);border:1px solid rgba(240,80,74,0.25);border-radius:10px;padding:10px 14px;margin:4px 0 8px;font-size:12px;color:var(--accent-red);">
+        🔒 信貸／房貸類別已強制設為「有期限（分期付款）」
       </div>
-      <div class="form-row">
-        <div class="form-label">總期數（月）</div>
-        <input class="form-input" type="number" id="rTotal" placeholder="36（共幾期）" oninput="calcMonthlyPayment(); calcRemaining();" />
-      </div>
-      <div class="form-row">
-        <div class="form-label">開始日期</div>
-        <input class="form-input" type="month" id="rStartDate" onchange="calcRemaining()" />
-      </div>
-      <div class="form-row" style="align-items:center;">
-        <div class="form-label">剩餘期數</div>
-        <div style="flex:1;display:flex;gap:8px;align-items:center;">
-          <input class="form-input" type="number" id="rRemaining" placeholder="留空則等於總期數" style="flex:1;" />
-          <div id="rRemainingHint" style="font-size:10px;color:var(--ocean-light);white-space:nowrap;display:none;">已自動計算</div>
+
+      <!-- 分期設定 -->
+      <div id="rInstallDiv" style="display:none;background:rgba(240,192,64,0.06);border:1px solid rgba(240,192,64,0.2);border-radius:12px;padding:14px;margin-bottom:12px;">
+        <div style="font-size:11px;color:var(--accent-gold);font-weight:700;margin-bottom:12px;letter-spacing:0.05em;">▸ 分期設定</div>
+        <div class="form-row">
+          <div class="form-label">原始本金</div>
+          <input class="form-input" type="number" id="rPrincipal" placeholder="0" oninput="calcMonthlyPayment()" />
         </div>
-      </div>
-      <div id="rCalcResult" style="display:none;background:rgba(62,207,142,0.08);border:1px solid rgba(62,207,142,0.2);border-radius:8px;padding:10px 12px;margin-top:8px;">
-        <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">💡 自動試算每月還款</div>
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div>
-            <div style="font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--accent-green);" id="rCalcMonthly">--</div>
-            <div style="font-size:10px;color:var(--text-muted);margin-top:2px;" id="rCalcDetail">--</div>
+        <div class="form-row">
+          <div class="form-label">年利率 (%)</div>
+          <input class="form-input" type="number" id="rRate" placeholder="例：2.5" step="0.01" oninput="calcMonthlyPayment()" />
+        </div>
+        <div class="form-row">
+          <div class="form-label">總期數（月）</div>
+          <input class="form-input" type="number" id="rTotal" placeholder="36（共幾期）" oninput="calcMonthlyPayment(); calcRemaining();" />
+        </div>
+        <div class="form-row">
+          <div class="form-label">開始日期</div>
+          <input class="form-input" type="month" id="rStartDate" onchange="calcRemaining()" />
+        </div>
+        <div class="form-row" style="align-items:center;">
+          <div class="form-label">剩餘期數</div>
+          <div style="flex:1;display:flex;gap:8px;align-items:center;">
+            <input class="form-input" type="number" id="rRemaining" placeholder="留空則等於總期數" style="flex:1;" />
+            <div id="rRemainingHint" style="font-size:10px;color:var(--ocean-light);white-space:nowrap;display:none;">已自動計算</div>
           </div>
-          <button class="btn" style="background:rgba(62,207,142,0.2);border:1px solid rgba(62,207,142,0.3);font-size:12px;padding:6px 12px;" onclick="applyCalcToAmount()">套用金額</button>
         </div>
+        <div id="rCalcResult" style="display:none;background:rgba(62,207,142,0.08);border:1px solid rgba(62,207,142,0.2);border-radius:8px;padding:10px 12px;margin-top:8px;">
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">💡 自動試算每月還款</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--accent-green);" id="rCalcMonthly">--</div>
+              <div style="font-size:10px;color:var(--text-muted);margin-top:2px;" id="rCalcDetail">--</div>
+            </div>
+            <div style="font-size:10px;color:var(--accent-green);font-weight:700;">✅ 已自動帶入金額</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:8px;">💡 每產生一筆扣款，剩餘期數自動 -1，歸零後自動結清</div>
       </div>
-      <div style="font-size:11px;color:var(--text-muted);margin-top:8px;">💡 每產生一筆扣款，剩餘期數自動 -1，歸零後自動結清</div>
+
+      <!-- 每月金額 -->
+      <div class="form-row">
+        <div class="form-label">每月金額</div>
+        <input class="form-input" type="number" id="rAmount" placeholder="0（分期設定後自動帶入）" />
+      </div>
     </div>
 
     <div style="display:flex;gap:10px;margin-top:16px;">
       <button class="btn btn-primary" style="flex:1;" onclick="addRecurringTemplate()">確認新增</button>
       <button class="btn" style="background:rgba(255,255,255,0.07);flex:1;" onclick="closeModal('recurringModal')">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- 新增類別 Modal -->
+<div id="addCategoryModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:600;align-items:center;justify-content:center;">
+  <div style="background:var(--modal-bg);border-radius:20px;padding:20px;width:320px;border:1px solid rgba(77,196,212,0.3);box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+    <div style="font-size:15px;font-weight:700;color:var(--ocean-foam);margin-bottom:16px;text-align:center;">✨ 新增自訂類別</div>
+    
+    <!-- 類別名稱 -->
+    <div class="form-row" style="margin-bottom:14px;">
+      <div class="form-label" style="width:50px;">名稱</div>
+      <input class="form-input" id="newCatNameInput" placeholder="例：寵物費、美容…" style="font-size:14px;" />
+    </div>
+
+    <!-- 選擇圖案 -->
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;letter-spacing:0.04em;">選擇圖案</div>
+    <div id="catIconGrid" style="display:grid;grid-template-columns:repeat(8,1fr);gap:5px;max-height:200px;overflow-y:auto;margin-bottom:4px;"></div>
+    <div style="text-align:center;margin:8px 0 14px;">
+      <span style="font-size:11px;color:var(--text-muted);">已選：</span>
+      <span id="selectedIconPreview" style="font-size:22px;">📌</span>
+    </div>
+    <input type="hidden" id="newCatIconValue" value="📌" />
+
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="confirmAddCategory()">確定新增</button>
+      <button class="btn" style="background:rgba(255,255,255,0.07);flex:1;" onclick="closeModal('addCategoryModal')">取消</button>
     </div>
   </div>
 </div>
@@ -1936,11 +2032,8 @@ function renderFixedDash(totalMonthExpense, totalMonthIncome) {
       const maxVal = Math.max(...tpls.map(t=>t.amount), 1);
       barsEl.innerHTML = tpls.slice(0,6).map(t => {
         const widthPct = Math.round(t.amount / maxVal * 100);
-        const isLoan = ['信貸','房貸','車貸','學貸'].includes(t.category);
-        // 借貸類用 bar-expense（紅），其他固定支出用 bar-fixed（金）
-        const barCls = isLoan ? 'bar-expense' : 'bar-fixed-neutral';
         return `<div class="bar-row" style="margin-bottom:2px;">
-            <div class="bar-track"><div class="bar-fill ${barCls}" style="width:${widthPct}%;min-width:2px;"></div></div>
+            <div class="bar-track"><div class="bar-fill" style="width:${widthPct}%;min-width:2px;background:linear-gradient(90deg,#c2556a,#ffb6c1);"></div></div>
           </div>
           <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-secondary);margin-top:-4px;margin-bottom:8px;">
             <span>${t.name}</span><span style="font-family:'DM Mono',monospace;">${fmt(t.amount)}</span>
@@ -1949,17 +2042,15 @@ function renderFixedDash(totalMonthExpense, totalMonthIncome) {
     }
   }
 
-  // ── 右側：圓餅圖（顏色對齊現金流：收入=綠, 固定支出=紅, 其他支出=金）──
+  // ── 右側：圓餅圖（僅支出：固定支出 vs 其他支出）──
   const pieEl = document.getElementById('dashFixedPie');
   const legendEl = document.getElementById('dashFixedPieLegend');
   if (!pieEl || !legendEl) return;
 
   const otherExpense = Math.max(0, (totalMonthExpense || 0) - fixedTotal);
-  const income = totalMonthIncome || 0;
   const segments = [];
-  if (fixedTotal > 0)   segments.push({ label:'固定支出', val: fixedTotal,  color:'#f0504a' });
-  if (otherExpense > 0) segments.push({ label:'其他支出', val: otherExpense, color:'#f0c040' });
-  if (income > 0)       segments.push({ label:'收入',     val: income,       color:'#3ecf8e' });
+  if (fixedTotal > 0)   segments.push({ label:'固定支出', val: fixedTotal,  color:'#ffb6c1' });
+  if (otherExpense > 0) segments.push({ label:'其他支出', val: otherExpense, color:'#8b3a4a' });
   const totalSeg = segments.reduce((s,x) => s+x.val, 0);
 
   const r=28, cx=40, cy=40, circ=2*Math.PI*r;
@@ -2042,45 +2133,126 @@ function runRecurringEngine() {
 // Recurring template CRUD
 const LOAN_CATS = ['信貸','房貸','車貸','學貸']; // 信貸類強制installment
 
+// ── 目前選擇的類型 (由 selectRType 設定) ──
+let _rSelectedType = 'fixed';
+
+// 類型選擇按鈕切換
+function selectRType(type) {
+  _rSelectedType = type;
+  const btnFixed   = document.getElementById('rTypeBtnFixed');
+  const btnInstall = document.getElementById('rTypeBtnInstall');
+  if (type === 'fixed') {
+    btnFixed.style.border  = '2px solid var(--ocean-light)';
+    btnFixed.style.background = 'rgba(77,196,212,0.12)';
+    btnFixed.querySelector('div:nth-child(2)').style.color = 'var(--ocean-light)';
+    btnInstall.style.border = '2px solid rgba(255,255,255,0.1)';
+    btnInstall.style.background = 'rgba(255,255,255,0.04)';
+    btnInstall.querySelector('div:nth-child(2)').style.color = 'var(--text-secondary)';
+    document.getElementById('rType').value = 'fixed';
+    document.getElementById('rInstallDiv').style.display = 'none';
+    document.getElementById('rTypeLocked').style.display = 'none';
+  } else {
+    btnInstall.style.border = '2px solid var(--accent-gold)';
+    btnInstall.style.background = 'rgba(240,192,64,0.12)';
+    btnInstall.querySelector('div:nth-child(2)').style.color = 'var(--accent-gold)';
+    btnFixed.style.border   = '2px solid rgba(255,255,255,0.1)';
+    btnFixed.style.background = 'rgba(255,255,255,0.04)';
+    btnFixed.querySelector('div:nth-child(2)').style.color = 'var(--text-secondary)';
+    document.getElementById('rType').value = 'installment';
+    document.getElementById('rInstallDiv').style.display = 'block';
+    document.getElementById('rTypeLocked').style.display = 'none';
+  }
+  // 重新渲染類別（根據類型篩選）
+  renderRCategoryTags(document.getElementById('rCategory').value);
+}
+
+// 類別 tags 渲染：無期限顯示一般類別，有期限顯示貸款類別 + 一般類別
 function renderRCategoryTags(selectedCat) {
   const cats = db.config.categories || [];
   const container = document.getElementById('rCategoryTags');
   if (!container) return;
-  container.innerHTML = cats.map(c => {
+  const type = _rSelectedType || 'fixed';
+
+  // 無期限：排除強制分期的信貸類；有期限：全部顯示（信貸類優先）
+  let displayCats;
+  if (type === 'installment') {
+    const loanCats = cats.filter(c => LOAN_CATS.includes(c.name));
+    const otherCats = cats.filter(c => !LOAN_CATS.includes(c.name));
+    displayCats = [...loanCats, ...otherCats];
+  } else {
+    displayCats = cats;
+  }
+
+  container.innerHTML = displayCats.map(c => {
     const isLoan = LOAN_CATS.includes(c.name);
     const isSel = c.name === selectedCat;
-    return `<div class="cat-tag${isLoan?' loan-tag':''}${isSel?' selected':''}" onclick="selectRCategory('${c.name}')">${c.icon||''} ${c.name}</div>`;
+    const loanStyle = isLoan && type === 'installment' ? ' loan-tag' : '';
+    return `<div class="cat-tag${loanStyle}${isSel?' selected':''}" onclick="selectRCategory('${c.name}')">${c.icon||''} ${c.name}</div>`;
   }).join('');
 }
 
 function selectRCategory(name) {
   document.getElementById('rCategory').value = name;
   renderRCategoryTags(name);
-  // 若屬信貸類，強制設為installment並鎖定
-  if (LOAN_CATS.includes(name)) {
-    document.getElementById('rType').value = 'installment';
-    document.getElementById('rTypeRow').style.display = 'none';
+  // 若屬信貸類，強制設為 installment 並鎖定（只在無期限模式下觸發）
+  if (LOAN_CATS.includes(name) && _rSelectedType !== 'installment') {
+    selectRType('installment');
     document.getElementById('rTypeLocked').style.display = 'block';
-    document.getElementById('rInstallDiv').style.display = 'block';
+    // 讓按鈕保持選中但顯示鎖定提示
+  } else if (LOAN_CATS.includes(name) && _rSelectedType === 'installment') {
+    document.getElementById('rTypeLocked').style.display = 'block';
   } else {
-    document.getElementById('rTypeRow').style.display = 'flex';
     document.getElementById('rTypeLocked').style.display = 'none';
-    toggleRecurringType();
   }
 }
 
-function addRCategory() {
-  const input = document.getElementById('rNewCatName');
-  const name = input.value.trim();
+// ── 新增類別 Modal ──
+const CAT_ICON_LIST = [
+  '🏠','🏦','🛒','🚌','💊','🎮','🛡️','📦','📱','☕','🍽️','👗',
+  '✈️','🎓','💒','🐾','🌿','🔧','💡','🎵','🏋️','🚗','⚽','🎁',
+  '📚','💈','🧴','🏥','🍵','🎯','🖥️','🔑','💳','🧾','📌','💼',
+  '🌐','⚡','🌊','🎪','🏪','🏫','🎨','🪴','🧺','🔔','🎤','🍀'
+];
+
+function showAddCategoryModal() {
+  const grid = document.getElementById('catIconGrid');
+  const selectedIcon = document.getElementById('newCatIconValue').value || '📌';
+  grid.innerHTML = CAT_ICON_LIST.map(ic => {
+    const isSelected = ic === selectedIcon;
+    return `<div onclick="selectCatIcon('${ic}')" style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;
+      background:${isSelected ? 'rgba(77,196,212,0.25)' : 'rgba(255,255,255,0.04)'};
+      border:1px solid ${isSelected ? 'var(--ocean-light)' : 'transparent'};
+      transition:all 0.15s;" id="catIcon_${ic.codePointAt(0)}">${ic}</div>`;
+  }).join('');
+  document.getElementById('newCatNameInput').value = '';
+  document.getElementById('newCatIconValue').value = '📌';
+  document.getElementById('selectedIconPreview').textContent = '📌';
+  document.getElementById('addCategoryModal').style.display = 'flex';
+}
+
+function selectCatIcon(icon) {
+  document.getElementById('newCatIconValue').value = icon;
+  document.getElementById('selectedIconPreview').textContent = icon;
+  // 更新格子選中狀態
+  document.querySelectorAll('#catIconGrid > div').forEach(el => {
+    const isSelected = el.textContent.trim() === icon;
+    el.style.background = isSelected ? 'rgba(77,196,212,0.25)' : 'rgba(255,255,255,0.04)';
+    el.style.border = isSelected ? '1px solid var(--ocean-light)' : '1px solid transparent';
+  });
+}
+
+function confirmAddCategory() {
+  const name = document.getElementById('newCatNameInput').value.trim();
+  const icon = document.getElementById('newCatIconValue').value || '📌';
   if (!name) { toast('請輸入類別名稱'); return; }
-  if ((db.config.categories||[]).some(c=>c.name===name)) { toast('類別已存在'); return; }
+  if ((db.config.categories||[]).some(c => c.name === name)) { toast('類別已存在'); return; }
   if (!db.config.categories) db.config.categories = [];
-  db.config.categories.push({ name, icon:'📌' });
+  db.config.categories.push({ name, icon });
   saveLocal();
-  input.value = '';
+  closeModal('addCategoryModal');
   renderRCategoryTags(name);
   document.getElementById('rCategory').value = name;
-  toast('✅ 已新增類別：' + name);
+  toast('✅ 已新增類別：' + icon + ' ' + name);
 }
 
 function calcMonthlyPayment() {
@@ -2100,27 +2272,14 @@ function calcMonthlyPayment() {
       const totalInterest = totalPay - P;
       document.getElementById('rCalcDetail').textContent = `年利率 ${rateYr}%，總利息 ${fmt(Math.round(totalInterest))}`;
     }
-    document.getElementById('rCalcMonthly').textContent = fmt(Math.round(monthly));
+    const rounded = Math.round(monthly);
+    document.getElementById('rCalcMonthly').textContent = fmt(rounded);
     el.style.display = 'block';
+    // 自動帶入每月金額欄位
+    document.getElementById('rAmount').value = rounded;
   } else {
     el.style.display = 'none';
   }
-}
-
-function applyCalcToAmount() {
-  const P = parseFloat(document.getElementById('rPrincipal').value) || 0;
-  const rateYr = parseFloat(document.getElementById('rRate').value) || 0;
-  const n = parseInt(document.getElementById('rTotal').value) || 0;
-  if (!P || !n) { toast('請先填寫本金與期數'); return; }
-  let monthly;
-  if (rateYr === 0) {
-    monthly = P / n;
-  } else {
-    const r = rateYr / 100 / 12;
-    monthly = P * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1);
-  }
-  document.getElementById('rAmount').value = Math.round(monthly);
-  toast('✅ 已套用每月金額 ' + fmt(Math.round(monthly)));
 }
 
 function calcRemaining() {
@@ -2142,23 +2301,23 @@ function calcRemaining() {
 }
 
 function showAddRecurring() {
+  _rSelectedType = 'fixed';
   document.getElementById('recurringModal').style.display = 'flex';
   document.getElementById('rName').value = '';
   document.getElementById('rAmount').value = '';
-  document.getElementById('rType').value = 'fixed';
-  document.getElementById('rTypeRow').style.display = 'flex';
-  document.getElementById('rTypeLocked').style.display = 'none';
   document.getElementById('rInstallDiv').style.display = 'none';
   document.getElementById('rCalcResult').style.display = 'none';
+  document.getElementById('rTypeLocked').style.display = 'none';
   document.getElementById('rTotal').value = '';
   document.getElementById('rRemaining').value = '';
   document.getElementById('rStartDate').value = '';
   document.getElementById('rPrincipal').value = '';
   document.getElementById('rRate').value = '';
-  document.getElementById('rNewCatName').value = '';
   document.getElementById('rCategory').value = '';
   const hint = document.getElementById('rRemainingHint');
   if (hint) hint.style.display = 'none';
+  // Reset type buttons to fixed
+  selectRType('fixed');
   renderRCategoryTags('');
 }
 function toggleRecurringType() {
@@ -2193,40 +2352,7 @@ function renderRecurringList() {
   const tpls = db.recurringTemplates || [];
   const container = document.getElementById('recurringList');
   if (!container) return; // container removed - now on fixed page
-  container.innerHTML = tpls.map(tpl => {
-    const isInstall = tpl.type === 'installment';
-    const isSettled = tpl.status === 'settled';
-    const done = isInstall ? (tpl.totalInstallments - tpl.remainingInstallments) : 0;
-    const pct = isInstall && tpl.totalInstallments ? Math.round(done / tpl.totalInstallments * 100) : 0;
-    const cardCls = isSettled ? 'settled' : isInstall ? 'installment' : 'fixed';
-    const tagColor = isSettled ? 'var(--text-muted)' : isInstall ? 'var(--accent-gold)' : 'var(--ocean-light)';
-    const tagLabel = isSettled ? '已結清' : isInstall ? '分期' : '固定';
-    const icon = isSettled ? '✅' : isInstall ? '📆' : '🔁';
-    return `
-    <div class="recurring-card ${cardCls}" data-m="[M-02] RecurringItem">
-      <div class="recurring-header">
-        <div class="recurring-icon">${icon}</div>
-        <div class="recurring-name">
-          <div class="recurring-title">${tpl.name}</div>
-          <div class="recurring-sub">${tpl.category} · <span style="color:${tagColor};font-weight:700;">${tagLabel}</span></div>
-        </div>
-        <div style="text-align:right;">
-          <div class="recurring-amount">-${fmt(tpl.amount)}</div>
-          <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">每月</div>
-        </div>
-        <div style="padding-left:8px;cursor:pointer;color:rgba(200,230,240,0.3);font-size:14px;" onclick="deleteRecurring('${tpl.id}')">✕</div>
-      </div>
-      ${isInstall && !isSettled ? `
-      <div class="install-bar-wrap">
-        <div class="install-bar-track"><div class="install-bar-fill" style="width:${pct}%"></div></div>
-        <div class="install-bar-label">
-          <span>已還 ${done}/${tpl.totalInstallments} 期</span>
-          <span>剩餘 ${tpl.remainingInstallments} 期 · ${fmt(tpl.amount * tpl.remainingInstallments)}</span>
-        </div>
-      </div>` : ''}
-      ${isSettled ? `<div style="font-size:11px;color:var(--accent-green);text-align:center;padding:4px 0;">🎉 分期已全數結清</div>` : ''}
-    </div>`;
-  }).join('');
+  container.innerHTML = tpls.map(tpl => buildRecurringCard(tpl)).join('');
 }
 function getInstallmentDebtSummary() {
   const tpls = (db.recurringTemplates || []).filter(t => t.type === 'installment' && t.status !== 'settled');
@@ -2238,146 +2364,181 @@ function getInstallmentDebtSummary() {
 // ===================================================================
 //  FIXED EXPENSE PAGE
 // ===================================================================
+function toggleSettledSection() {
+  const list = document.getElementById('fixedSettledList');
+  const chevron = document.getElementById('settledChevron');
+  const isOpen = list.style.display !== 'none';
+  list.style.display = isOpen ? 'none' : 'block';
+  chevron.style.transform = isOpen ? '' : 'rotate(90deg)';
+}
+
 function renderFixedPage() {
   const tpls = db.recurringTemplates || [];
-  const active = tpls.filter(t => t.status !== 'settled');
-  const monthlyTotal = active.reduce((s,t) => s+t.amount, 0);
-  const installDebt = tpls.filter(t=>t.type==='installment'&&t.status!=='settled')
-    .reduce((s,t)=>s+t.amount*(t.remainingInstallments||0),0);
+  const permanent = tpls.filter(t => t.type !== 'installment' && t.status !== 'settled');
+  const installs  = tpls.filter(t => t.type === 'installment' && t.status !== 'settled');
+  const settled   = tpls.filter(t => t.status === 'settled');
 
+  const permTotal    = permanent.reduce((s,t) => s+t.amount, 0);
+  const installTotal = installs.reduce((s,t) => s+t.amount, 0);
+  const installDebt  = installs.reduce((s,t) => s+t.amount*(t.remainingInstallments||0), 0);
+
+  // ── 統計卡 ──
   const mEl = document.getElementById('fixedMonthlyTotal');
   const aEl = document.getElementById('fixedAnnualTotal');
-  const cEl = document.getElementById('fixedActiveCount');
-  const dEl = document.getElementById('fixedInstallDebt');
-  if (mEl) mEl.textContent = fmt(monthlyTotal);
-  if (aEl) aEl.textContent = fmt(monthlyTotal * 12);
-  if (cEl) cEl.textContent = active.length;
-  if (dEl) dEl.textContent = installDebt > 0 ? fmt(installDebt) : '--';
+  const imEl = document.getElementById('fixedInstallMonthly');
+  const dEl  = document.getElementById('fixedInstallDebt');
+  if (mEl)  mEl.textContent  = permTotal > 0 ? fmt(permTotal) : '--';
+  if (aEl)  aEl.textContent  = permTotal > 0 ? fmt(permTotal * 12) : '--';
+  if (imEl) imEl.textContent = installTotal > 0 ? fmt(installTotal) : '--';
+  if (dEl)  dEl.textContent  = installDebt > 0 ? fmt(installDebt) : '--';
 
-  // Category chart
+  // ── 類別佔比 ──
   const catTotals = {};
-  active.forEach(t => { catTotals[t.category] = (catTotals[t.category]||0) + t.amount; });
+  [...permanent, ...installs].forEach(t => { catTotals[t.category] = (catTotals[t.category]||0) + t.amount; });
   const maxCat = Math.max(...Object.values(catTotals), 1);
   const chartEl = document.getElementById('fixedCategoryChart');
   if (chartEl) {
     if (!Object.keys(catTotals).length) {
       chartEl.innerHTML = '<div class="empty" style="padding:16px 0;">尚無資料</div>';
     } else {
-      chartEl.innerHTML = Object.entries(catTotals).sort((a,b)=>b[1]-a[1]).map(([cat,val]) => `
-        <div style="margin-bottom:10px;">
+      chartEl.innerHTML = Object.entries(catTotals).sort((a,b)=>b[1]-a[1]).map(([cat,val]) => {
+        const isLoan = LOAN_CATS.includes(cat);
+        const barClass = isLoan ? 'bar-expense' : 'bar-fixed-neutral';
+        return `<div style="margin-bottom:10px;">
           <div class="bar-row">
             <div class="bar-track" style="flex:1;">
-              <div class="bar-fill bar-expense" style="width:${Math.round(val/maxCat*100)}%;min-width:2px;"></div>
+              <div class="bar-fill ${barClass}" style="width:${Math.round(val/maxCat*100)}%;min-width:2px;"></div>
             </div>
           </div>
           <div style="display:flex;justify-content:space-between;font-size:10px;font-family:'DM Mono',monospace;color:rgba(200,200,200,0.7);margin-top:2px;">
             <span>${cat}</span><span>${fmt(val)}/月</span>
           </div>
-        </div>`).join('');
+        </div>`;
+      }).join('');
     }
   }
 
-  // Installment debt summary
+  // ── 分期摘要卡 ──
   const { count: debtCount, tpls: debtTpls } = getInstallmentDebtSummary();
   const debtCard = document.getElementById('fixedDebtSummaryCard');
   const debtGrid = document.getElementById('fixedDebtSummaryGrid');
   if (debtCard && debtGrid) {
     if (debtCount > 0) {
       debtCard.style.display = 'block';
-      const monthlyInstall = debtTpls.reduce((s,t)=>s+t.amount,0);
       debtGrid.innerHTML = `
         <div class="debt-summary-item"><div class="debt-summary-lbl">剩餘總額</div><div class="debt-summary-val" style="color:var(--accent-red)">${fmt(installDebt)}</div></div>
-        <div class="debt-summary-item"><div class="debt-summary-lbl">每月應付</div><div class="debt-summary-val" style="color:var(--accent-gold)">${fmt(monthlyInstall)}</div></div>
+        <div class="debt-summary-item"><div class="debt-summary-lbl">每月應付</div><div class="debt-summary-val" style="color:var(--accent-gold)">${fmt(installTotal)}</div></div>
         <div class="debt-summary-item"><div class="debt-summary-lbl">進行中項目</div><div class="debt-summary-val" style="color:var(--ocean-light)">${debtCount} 筆</div></div>
-        <div class="debt-summary-item"><div class="debt-summary-lbl">最長剩餘期數</div><div class="debt-summary-val">${Math.max(...debtTpls.map(t=>t.remainingInstallments||0))} 期</div></div>`;
+        <div class="debt-summary-item"><div class="debt-summary-lbl">最長剩餘期數</div><div class="debt-summary-val">${debtTpls.length ? Math.max(...debtTpls.map(t=>t.remainingInstallments||0)) : 0} 期</div></div>`;
     } else {
       debtCard.style.display = 'none';
     }
   }
 
-  // Full recurring list
-  const listEl = document.getElementById('fixedRecurringList');
-  if (!listEl) return;
-  if (!tpls.length) {
-    listEl.innerHTML = '<div class="empty"><span class="icon">📅</span>尚無固定支出模板</div>';
-    return;
-  }
-  listEl.innerHTML = tpls.map(tpl => {
-    const isInstall = tpl.type === 'installment';
-    const isSettled = tpl.status === 'settled';
-    const done = isInstall ? (tpl.totalInstallments - tpl.remainingInstallments) : 0;
-    const pct = isInstall && tpl.totalInstallments ? Math.round(done / tpl.totalInstallments * 100) : 0;
-    const cardCls = isSettled ? 'settled' : isInstall ? 'installment' : 'fixed';
-    const tagColor = isSettled ? 'var(--text-muted)' : isInstall ? 'var(--accent-gold)' : 'var(--ocean-light)';
-    const tagLabel = isSettled ? '已結清' : isInstall ? '分期' : '固定';
-    const icon = isSettled ? '✅' : isInstall ? '📆' : '🔁';
-
-    // 計算開始日 / 預計結清日
-    let dateInfoHtml = '';
-    if (isInstall && !isSettled) {
-      let startStr = '', endStr = '';
-      if (tpl.startDate) {
-        const [sy, sm] = tpl.startDate.split('-').map(Number);
-        startStr = `${sy}/${String(sm).padStart(2,'0')}`;
-        const endYM = sy * 12 + (sm - 1) + (tpl.totalInstallments || 0) - 1;
-        const ey = Math.floor(endYM / 12);
-        const em = (endYM % 12) + 1;
-        endStr = `${ey}/${String(em).padStart(2,'0')}`;
-      }
-      // 時間軸進度條：基於 startDate 與 totalInstallments
-      const timelinePct = tpl.totalInstallments > 0 ? Math.min(100, Math.round(done / tpl.totalInstallments * 100)) : 0;
-      // 顏色漸層：低→橘→紅
-      const barGradient = timelinePct < 33
-        ? 'linear-gradient(90deg,#1a6fa0,var(--ocean-light))'
-        : timelinePct < 66
-          ? 'linear-gradient(90deg,#a07010,var(--accent-gold))'
-          : 'linear-gradient(90deg,#a02020,var(--accent-red))';
-
-      dateInfoHtml = `
-      <div style="margin-top:10px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
-          <span style="font-size:10px;color:var(--text-muted);">還款進度</span>
-          <span style="font-size:10px;font-family:'DM Mono',monospace;color:var(--accent-gold);font-weight:700;">${timelinePct}%</span>
-        </div>
-        <div style="height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;position:relative;">
-          <div style="height:100%;width:${timelinePct}%;background:${barGradient};border-radius:4px;transition:width 0.8s cubic-bezier(0.4,0,0.2,1);position:relative;">
-            ${timelinePct > 5 ? `<div style="position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:8px;color:rgba(255,255,255,0.8);font-family:'DM Mono',monospace;">${done}/${tpl.totalInstallments}</div>` : ''}
-          </div>
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:10px;color:var(--text-muted);">
-          <span>已還 <span style="color:var(--text-secondary);font-family:'DM Mono',monospace;">${done} 期</span></span>
-          <span>剩 <span style="color:var(--accent-red);font-family:'DM Mono',monospace;">${tpl.remainingInstallments} 期</span> · <span style="font-family:'DM Mono',monospace;">${fmt(tpl.amount * tpl.remainingInstallments)}</span></span>
-        </div>
-        ${startStr ? `<div style="display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:var(--text-muted);">
-          <span>📅 開始 <span style="color:var(--text-secondary);">${startStr}</span></span>
-          <span>🏁 結清 <span style="color:var(--ocean-light);">${endStr}</span></span>
-        </div>` : ''}
-        ${tpl.principal ? `<div style="display:flex;gap:14px;margin-top:6px;font-size:10px;color:var(--text-muted);">
-          <span>本金 <span style="color:var(--text-secondary);font-family:'DM Mono',monospace;">${fmt(tpl.principal)}</span></span>
-          ${tpl.annualRate ? `<span>年利率 <span style="color:var(--accent-gold);font-family:'DM Mono',monospace;">${tpl.annualRate}%</span></span>` : ''}
-          <span>總利息 <span style="color:var(--accent-red);font-family:'DM Mono',monospace;">${tpl.annualRate ? fmt(Math.round(tpl.amount * tpl.totalInstallments - tpl.principal)) : '--'}</span></span>
-        </div>` : ''}
-      </div>`;
+  // ── 無期限列表 ──
+  const permCountEl = document.getElementById('fixedPermanentCount');
+  const permTotalEl = document.getElementById('fixedPermanentTotal');
+  const permListEl  = document.getElementById('fixedPermanentList');
+  if (permCountEl) permCountEl.textContent = permanent.length + ' 項';
+  if (permTotalEl) permTotalEl.textContent = permTotal > 0 ? fmt(permTotal) + '/月' : '';
+  if (permListEl) {
+    if (!permanent.length) {
+      permListEl.innerHTML = '<div class="empty" style="padding:8px 0;font-size:12px;"><span class="icon">🔁</span>尚無無期限固定支出</div>';
+    } else {
+      permListEl.innerHTML = permanent.map(tpl => buildRecurringCard(tpl)).join('');
     }
+  }
 
-    return `
-    <div class="recurring-card ${cardCls}">
-      <div class="recurring-header">
-        <div class="recurring-icon">${icon}</div>
-        <div class="recurring-name">
-          <div class="recurring-title">${tpl.name}</div>
-          <div class="recurring-sub">${tpl.category} · <span style="color:${tagColor};font-weight:700;">${tagLabel}</span></div>
-        </div>
-        <div style="text-align:right;">
-          <div class="recurring-amount">-${fmt(tpl.amount)}</div>
-          <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">每月</div>
-        </div>
-        <div style="padding-left:8px;cursor:pointer;color:rgba(200,230,240,0.3);font-size:14px;" onclick="deleteRecurring('${tpl.id}')">✕</div>
+  // ── 有期限列表 ──
+  const instCountEl = document.getElementById('fixedInstallCount');
+  const instTotalEl = document.getElementById('fixedInstallTotalLabel');
+  const instListEl  = document.getElementById('fixedInstallList');
+  if (instCountEl) instCountEl.textContent = installs.length + ' 項';
+  if (instTotalEl) instTotalEl.textContent = installTotal > 0 ? fmt(installTotal) + '/月' : '';
+  if (instListEl) {
+    if (!installs.length) {
+      instListEl.innerHTML = '<div class="empty" style="padding:8px 0;font-size:12px;"><span class="icon">📆</span>尚無分期付款項目</div>';
+    } else {
+      instListEl.innerHTML = installs.map(tpl => buildRecurringCard(tpl)).join('');
+    }
+  }
+
+  // ── 已結清 ──
+  const settledSection = document.getElementById('fixedSettledSection');
+  const settledCountEl = document.getElementById('fixedSettledCount');
+  const settledListEl  = document.getElementById('fixedSettledList');
+  if (settledSection) settledSection.style.display = settled.length ? 'block' : 'none';
+  if (settledCountEl) settledCountEl.textContent = settled.length + ' 項';
+  if (settledListEl)  settledListEl.innerHTML = settled.map(tpl => buildRecurringCard(tpl)).join('');
+}
+
+function buildRecurringCard(tpl) {
+  const isInstall = tpl.type === 'installment';
+  const isSettled = tpl.status === 'settled';
+  const done = isInstall ? ((tpl.totalInstallments||0) - (tpl.remainingInstallments||0)) : 0;
+  const pct  = isInstall && tpl.totalInstallments ? Math.round(done / tpl.totalInstallments * 100) : 0;
+  const cardCls   = isSettled ? 'settled' : isInstall ? 'installment' : 'fixed';
+  const tagColor  = isSettled ? 'var(--text-muted)' : isInstall ? 'var(--accent-gold)' : 'var(--ocean-light)';
+  const tagLabel  = isSettled ? '已結清' : isInstall ? '有期限' : '無期限';
+  const icon      = isSettled ? '✅' : isInstall ? '📆' : '🔁';
+
+  // 分期進度
+  let dateInfoHtml = '';
+  if (isInstall && !isSettled) {
+    let startStr='', endStr='';
+    if (tpl.startDate) {
+      const [sy,sm] = tpl.startDate.split('-').map(Number);
+      startStr = `${sy}/${String(sm).padStart(2,'0')}`;
+      const endYM = sy*12 + (sm-1) + (tpl.totalInstallments||0) - 1;
+      const ey = Math.floor(endYM/12), em = (endYM%12)+1;
+      endStr = `${ey}/${String(em).padStart(2,'0')}`;
+    }
+    const barGradient = pct < 33
+      ? 'linear-gradient(90deg,#1a6fa0,var(--ocean-light))'
+      : pct < 66
+        ? 'linear-gradient(90deg,#a07010,var(--accent-gold))'
+        : 'linear-gradient(90deg,#a02020,var(--accent-red))';
+    dateInfoHtml = `
+    <div style="margin-top:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+        <span style="font-size:10px;color:var(--text-muted);">還款進度</span>
+        <span style="font-size:10px;font-family:'DM Mono',monospace;color:var(--accent-gold);font-weight:700;">${pct}%</span>
       </div>
-      ${dateInfoHtml}
-      ${isSettled ? `<div style="font-size:11px;color:var(--accent-green);text-align:center;padding:4px 0;">🎉 分期已全數結清</div>` : ''}
+      <div style="height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;">
+        <div style="height:100%;width:${pct}%;background:${barGradient};border-radius:4px;transition:width 0.8s cubic-bezier(0.4,0,0.2,1);"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:10px;color:var(--text-muted);">
+        <span>已還 <span style="color:var(--text-secondary);font-family:'DM Mono',monospace;">${done} 期</span></span>
+        <span>剩餘 <span style="color:var(--accent-gold);font-family:'DM Mono',monospace;">${tpl.remainingInstallments||0} 期</span></span>
+        ${endStr ? `<span>預計 <span style="font-family:'DM Mono',monospace;">${endStr}</span> 結清</span>` : ''}
+      </div>
+      ${tpl.principal ? `<div style="display:flex;gap:12px;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.05);flex-wrap:wrap;">
+        <span style="font-size:10px;color:var(--text-muted);">本金 <span style="color:var(--text-secondary);font-family:'DM Mono',monospace;">${fmt(tpl.principal)}</span></span>
+        ${tpl.annualRate ? `<span style="font-size:10px;color:var(--text-muted);">年利率 <span style="color:var(--accent-gold);font-family:'DM Mono',monospace;">${tpl.annualRate}%</span></span>` : ''}
+        <span style="font-size:10px;color:var(--text-muted);">剩餘 <span style="color:var(--accent-red);font-family:'DM Mono',monospace;">${fmt(tpl.amount*(tpl.remainingInstallments||0))}</span></span>
+      </div>` : ''}
     </div>`;
-  }).join('');
+  }
+
+  const catIcon = (db.config.categories||[]).find(c=>c.name===tpl.category)?.icon || icon;
+
+  return `
+  <div class="recurring-card ${cardCls}" data-m="[M-02] RecurringItem">
+    <div class="recurring-header">
+      <div class="recurring-icon">${catIcon}</div>
+      <div class="recurring-name">
+        <div class="recurring-title">${tpl.name}</div>
+        <div class="recurring-sub">${tpl.category} · <span style="color:${tagColor};font-weight:700;">${tagLabel}</span></div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <div class="recurring-amount">-${fmt(tpl.amount)}</div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">每月</div>
+      </div>
+      <div style="padding-left:8px;cursor:pointer;color:rgba(200,230,240,0.3);font-size:14px;flex-shrink:0;" onclick="deleteRecurring('${tpl.id}')">✕</div>
+    </div>
+    ${dateInfoHtml}
+    ${isSettled ? `<div style="font-size:11px;color:var(--accent-green);text-align:center;padding:4px 0;">🎉 分期已全數結清</div>` : ''}
+  </div>`;
 }
 
 // ===================================================================
@@ -3743,7 +3904,12 @@ async function syncFromGist() {
     if (!db.pledges) db.pledges = []; // [M-01] ensure pledge array exists
     if (!db.recurringTemplates) db.recurringTemplates = []; // [M-02] migrate
     if (!db.meta.lastSyncDate) db.meta.lastSyncDate = null;
-    if (!db.config.categories) db.config.categories = [{name:'房貸',icon:'🏠'},{name:'生活費',icon:'🛒'},{name:'交通',icon:'🚌'},{name:'醫療',icon:'💊'},{name:'娛樂',icon:'🎮'},{name:'其他',icon:'📦'}];
+    if (!db.config.categories) db.config.categories = [{name:'房貸',icon:'🏠'},{name:'信貸',icon:'🏦'},{name:'生活費',icon:'🛒'},{name:'交通',icon:'🚌'},{name:'醫療',icon:'💊'},{name:'娛樂',icon:'🎮'},{name:'其他',icon:'📦'}];
+    // 遷移：若舊資料缺少信貸類別，補入房貸後方
+    if (!db.config.categories.some(c => c.name === '信貸')) {
+      const idx = db.config.categories.findIndex(c => c.name === '房貸');
+      db.config.categories.splice(idx >= 0 ? idx + 1 : 0, 0, {name:'信貸', icon:'🏦'});
+    }
     if (!db.config.incomeCategories) db.config.incomeCategories = [{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資獲利',icon:'📈'},{name:'股息收入',icon:'🧧'},{name:'其他收入',icon:'💹'}];    if (!db.config.theme) db.config.theme = 'ocean';
       if (!db.config.ghFile) db.config.ghFile = 'index.html';
       if (!db.config.ghBranch) db.config.ghBranch = 'main';
@@ -3780,7 +3946,8 @@ function loadLocal() {
       if (!db.pledges) db.pledges = []; // [M-01] migrate
       if (!db.recurringTemplates) db.recurringTemplates = []; // [M-02] migrate
       if (!db.meta.lastSyncDate) db.meta.lastSyncDate = null; // [M-02] migrate
-      if (!db.config.categories) db.config.categories = [{name:'房貸',icon:'🏠'},{name:'生活費',icon:'🛒'},{name:'交通',icon:'🚌'},{name:'醫療',icon:'💊'},{name:'娛樂',icon:'🎮'},{name:'其他',icon:'📦'}];
+      if (!db.config.categories) db.config.categories = [{name:'房貸',icon:'🏠'},{name:'信貸',icon:'🏦'},{name:'生活費',icon:'🛒'},{name:'交通',icon:'🚌'},{name:'醫療',icon:'💊'},{name:'娛樂',icon:'🎮'},{name:'其他',icon:'📦'}];
+      if (!db.config.categories.some(c => c.name === '信貸')) { const idx = db.config.categories.findIndex(c=>c.name==='房貸'); db.config.categories.splice(idx>=0?idx+1:0,0,{name:'信貸',icon:'🏦'}); }
       if (!db.config.incomeCategories) db.config.incomeCategories = [{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資獲利',icon:'📈'},{name:'股息收入',icon:'🧧'},{name:'其他收入',icon:'💹'}];
       if (!db.config.theme) db.config.theme = 'ocean';
       if (!db.config.ghFile) db.config.ghFile = 'index.html';
@@ -3804,7 +3971,8 @@ function importData(e) {
       if (!db.pledges) db.pledges=[]; // [M-01] migrate
       if (!db.recurringTemplates) db.recurringTemplates=[]; // [M-02] migrate
       if (!db.meta.lastSyncDate) db.meta.lastSyncDate=null;
-      if (!db.config.categories) db.config.categories = [{name:'房貸',icon:'🏠'},{name:'生活費',icon:'🛒'},{name:'交通',icon:'🚌'},{name:'醫療',icon:'💊'},{name:'娛樂',icon:'🎮'},{name:'其他',icon:'📦'}];
+      if (!db.config.categories) db.config.categories = [{name:'房貸',icon:'🏠'},{name:'信貸',icon:'🏦'},{name:'生活費',icon:'🛒'},{name:'交通',icon:'🚌'},{name:'醫療',icon:'💊'},{name:'娛樂',icon:'🎮'},{name:'其他',icon:'📦'}];
+      if (!db.config.categories.some(c => c.name === '信貸')) { const idx = db.config.categories.findIndex(c=>c.name==='房貸'); db.config.categories.splice(idx>=0?idx+1:0,0,{name:'信貸',icon:'🏦'}); }
       if (!db.config.incomeCategories) db.config.incomeCategories = [{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資獲利',icon:'📈'},{name:'股息收入',icon:'🧧'},{name:'其他收入',icon:'💹'}];      if (!db.config.theme) db.config.theme='ocean';
       applyTheme(db.config.theme);
       saveLocal(); toast('✅ 資料已匯入'); renderDashboard(); renderSettings();
