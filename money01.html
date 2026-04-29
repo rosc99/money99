@@ -219,6 +219,7 @@
   .bar-income { background: linear-gradient(90deg, #1a8060, #3ecf8e); }
   .bar-income-2 { background: linear-gradient(90deg, #2a9060, #3ecf8e); }
   .bar-income-3 { background: linear-gradient(90deg, #1a7050, #2eaf6e); }
+  .bar-fixed-neutral { background: linear-gradient(90deg, #a07010, #f0c040); }
  
   /* ===== MINI CARDS GRID ===== */
   .mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
@@ -480,6 +481,17 @@
   .recurring-card:hover { background: var(--bg-glass-hover); }
   .recurring-card.installment { border-left: 3px solid var(--accent-gold); }
   .recurring-card.fixed { border-left: 3px solid var(--ocean-light); }
+  /* Category Tag Picker */
+  .cat-tag { display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);transition:all 0.2s;user-select:none; }
+  .cat-tag:hover { background:rgba(77,196,212,0.15);border-color:rgba(77,196,212,0.4); }
+  .cat-tag.selected { background:rgba(77,196,212,0.25);border-color:var(--ocean-light);color:var(--ocean-foam);box-shadow:0 0 8px rgba(77,196,212,0.2); }
+  .cat-tag.loan-tag { border-color:rgba(240,80,74,0.35);background:rgba(240,80,74,0.08); }
+  .cat-tag.loan-tag.selected { background:rgba(240,80,74,0.2);border-color:var(--accent-red);box-shadow:0 0 8px rgba(240,80,74,0.2); }
+  /* Fixed expense dashboard card */
+  .fixed-dash-card { background:var(--bg-glass);border:1px solid var(--border-glass);border-radius:var(--card-radius);padding:18px;margin-bottom:14px;backdrop-filter:blur(10px); }
+  .fixed-dash-inner { display:flex;gap:12px;align-items:stretch; }
+  .fixed-dash-bars { flex:1;min-width:0; }
+  .fixed-dash-pie { width:100px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center; }
   .recurring-card.settled { opacity: 0.5; border-left: 3px solid var(--text-muted); }
   .recurring-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
   .recurring-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; background: var(--bg-glass); }
@@ -508,16 +520,21 @@
   .icon-picker-item:hover { background:rgba(77,196,212,0.2);border-color:rgba(77,196,212,0.4); }
 
   /* ===== INVESTMENT ANALYSIS ===== */
-  .invest-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .invest-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
   .invest-bar-label { font-size: 11px; color: var(--text-secondary); width: 60px; flex-shrink: 0; }
-  .invest-bar-track-dual { flex: 1; height: 16px; display: flex; gap: 2px; }
-  .invest-bar-cost { height: 100%; background: var(--ocean-light); border-radius: 4px 0 0 4px; transition: width 0.8s ease; opacity: 0.9; }
+  .invest-bar-track-dual { flex: 1; height: 16px; display: flex; border-radius: 4px; overflow: hidden; background: rgba(255,255,255,0.04); }
+  .invest-bar-cost {
+    height: 100%;
+    background: linear-gradient(90deg, #0d6fa0, var(--ocean-light));
+    transition: width 0.8s ease;
+    flex-shrink: 0;
+    position: relative;
+  }
   .invest-bar-val  {
     height: 100%;
-    background: linear-gradient(90deg, #c0362e, var(--accent-red));
-    border-radius: 0 4px 4px 0;
+    background: linear-gradient(90deg, #1a8060, var(--accent-green));
     transition: width 0.8s ease;
-    box-shadow: 0 0 10px rgba(240,80,74,0.3);
+    box-shadow: 0 0 10px rgba(62,207,142,0.3);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -528,25 +545,24 @@
     text-shadow: 0 1px 2px rgba(0,0,0,0.5);
     overflow: hidden;
     white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .invest-bar-val.neg {
+    background: linear-gradient(90deg, #a02020, var(--accent-red));
+    box-shadow: 0 0 10px rgba(240,80,74,0.3);
   }
   .invest-item-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
   .invest-item-info { flex: 1; }
   .invest-item-name { font-size: 12px; font-weight: 500; }
   .invest-item-meta { font-size: 10px; color: var(--text-muted); }
-  .invest-item-bars { width: 100px; height: 10px; display: flex; gap: 1px; background: rgba(255,255,255,0.03); border-radius: 3px; overflow: hidden; }
-  .invest-mini-cost { height: 100%; background: var(--ocean-light); opacity: 0.8; }
+  .invest-item-bars-wrap { width: 110px; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+  .invest-item-bars { width: 110px; height: 10px; display: flex; border-radius: 3px; overflow: hidden; background: rgba(255,255,255,0.03); }
+  .invest-item-bar-label { font-size: 9px; font-family: 'DM Mono', monospace; font-weight: 700; white-space: nowrap; }
+  .invest-mini-cost { height: 100%; background: linear-gradient(90deg, #0d6fa0, var(--ocean-light)); opacity: 0.85; flex-shrink:0; }
   .invest-mini-val  {
     height: 100%;
-    background: var(--accent-red);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 8px;
-    font-family: 'DM Mono', monospace;
-    font-weight: 900;
-    color: #fff;
-    overflow: hidden;
-    white-space: nowrap;
+    background: var(--accent-green);
+    flex-shrink: 0;
   }
 
   /* ===== [M-05] TX MONTH COLLAPSE ===== */
@@ -674,7 +690,24 @@
         </div>
       </div>
     </div>
- 
+
+    <!-- ===== 固定支出 Dashboard ===== -->
+    <div class="fixed-dash-card" data-m="[M-01] FixedDash" onclick="switchPage('fixed', document.querySelector('[data-page=fixed]'))" style="cursor:pointer;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div class="card-title" style="margin:0;">🔁 固定支出</div>
+        <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:var(--accent-red);" id="dashFixedTotal">--/月</div>
+      </div>
+      <div class="fixed-dash-inner">
+        <div class="fixed-dash-bars" id="dashFixedBars"></div>
+        <div class="fixed-dash-pie">
+          <svg width="80" height="80" viewBox="0 0 80 80" id="dashFixedPie">
+            <circle cx="40" cy="40" r="28" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="12"/>
+          </svg>
+          <div id="dashFixedPieLegend" style="margin-top:6px;display:flex;flex-direction:column;gap:3px;width:100%;"></div>
+        </div>
+      </div>
+    </div>
+
     <div class="mini-grid" data-m="[M-01] MiniGrid">
       <div class="card" style="margin:0;cursor:pointer;" onclick="switchPage('stocks', document.querySelector('[data-page=stocks]'))">
         <div class="card-title">銀行帳戶 <span id="bankTotalLabel" style="float:right;color:var(--ocean-light);font-family:'DM Mono';"></span></div>
@@ -701,22 +734,21 @@
         </div>
       </div>
       
-      <!-- 對稱長條圖 -->
+      <!-- 成本/市值長條圖：左到右，藍=成本，綠=增值 -->
       <div class="invest-bar-row">
         <div class="invest-bar-label">成本/市值</div>
         <div class="invest-bar-track-dual">
-          <div style="flex:1; display:flex; justify-content:flex-end;">
-            <div id="investCostBar" class="invest-bar-cost" style="width:50%"></div>
-          </div>
-          <div style="flex:1; display:flex; justify-content:flex-start;">
-            <div id="investValBar" class="invest-bar-val" style="width:50%"></div>
-          </div>
+          <div id="investCostBar" class="invest-bar-cost" style="width:60%"></div>
+          <div id="investValBar" class="invest-bar-val" style="width:20%"></div>
         </div>
       </div>
-      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-top:-8px;margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-top:2px;margin-bottom:4px;">
         <span id="investTotalCost">成本 --</span>
         <span id="investTotalRealized" style="color:var(--accent-green)">回收 --</span>
         <span id="investTotalValSub">市值 --</span>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
+        <div id="investNetReturnLabel" style="font-size:10px;color:var(--text-muted);">扣回收總報酬 <span id="investNetReturn" style="font-family:'DM Mono',monospace;font-weight:700;color:var(--accent-green);">--</span></div>
       </div>
 
       <!-- 切換按鈕與明細標題 -->
@@ -727,11 +759,6 @@
       <div id="investItemList"></div>
     </div>
 
-    <div class="sync-status">
-      <div class="sync-dot" id="syncDot"></div>
-      <span id="syncText">正在同步...</span>
-    </div>
- 
   </div><!-- end dashboard -->
  
   <!-- ===== TRANSACTIONS PAGE 收入支出===== -->
@@ -1289,40 +1316,75 @@
   <div style="background:var(--modal-bg);border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:2px solid rgba(77,196,212,0.3);">
     <div style="font-size:16px;font-weight:700;margin-bottom:4px;color:var(--ocean-light);">🔁 新增固定支出模板</div>
     <div style="font-size:11px;color:var(--text-muted);margin-bottom:16px;">設定後每月自動產生一筆支出記錄</div>
- 
+
     <div class="form-row">
       <div class="form-label">名稱</div>
       <input class="form-input" id="rName" placeholder="手機費、信貸…" />
     </div>
     <div class="form-row">
       <div class="form-label">每月金額</div>
-      <input class="form-input" type="number" id="rAmount" placeholder="0" />
+      <input class="form-input" type="number" id="rAmount" placeholder="0（可由分期自動計算）" />
     </div>
-    <div class="form-row">
-      <div class="form-label">類別</div>
-      <select class="form-input" id="rCategory"></select>
+
+    <div class="form-row" style="flex-direction:column;align-items:flex-start;">
+      <div class="form-label" style="margin-bottom:8px;">類別 <span style="font-size:10px;color:var(--text-muted);">（點擊快速選擇）</span></div>
+      <div id="rCategoryTags" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+      <input type="hidden" id="rCategory" />
+      <div style="display:flex;gap:6px;margin-top:8px;width:100%;">
+        <input class="form-input" id="rNewCatName" placeholder="新增自訂類別名稱" style="flex:1;font-size:12px;" />
+        <button class="btn" style="background:rgba(77,196,212,0.15);border:1px solid rgba(77,196,212,0.3);padding:0 12px;font-size:12px;white-space:nowrap;" onclick="addRCategory()">＋新增</button>
+      </div>
     </div>
-    <div class="form-row">
+
+    <div class="form-row" id="rTypeRow">
       <div class="form-label">類型</div>
       <select class="form-input" id="rType" onchange="toggleRecurringType()">
         <option value="fixed">無期限（固定支出）</option>
         <option value="installment">有期限（分期付款）</option>
       </select>
     </div>
- 
-    <div id="rInstallDiv" style="display:none;background:rgba(240,192,64,0.06);border:1px solid rgba(240,192,64,0.2);border-radius:12px;padding:12px;margin-top:4px;">
-      <div style="font-size:11px;color:var(--accent-gold);font-weight:700;margin-bottom:10px;letter-spacing:0.05em;">▸ 分期設定</div>
-      <div class="form-row">
-        <div class="form-label">總期數</div>
-        <input class="form-input" type="number" id="rTotal" placeholder="36（共幾期）" />
-      </div>
-      <div class="form-row">
-        <div class="form-label">剩餘期數</div>
-        <input class="form-input" type="number" id="rRemaining" placeholder="留空則等於總期數" />
-      </div>
-      <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">💡 每產生一筆扣款，剩餘期數自動 -1，歸零後自動結清</div>
+    <div id="rTypeLocked" style="display:none;background:rgba(240,80,74,0.08);border:1px solid rgba(240,80,74,0.25);border-radius:10px;padding:10px 14px;margin-top:4px;font-size:12px;color:var(--accent-red);">
+      🔒 信貸／房貸類別已強制設為「有期限（分期付款）」，請在下方填寫分期資訊
     </div>
- 
+
+    <div id="rInstallDiv" style="display:none;background:rgba(240,192,64,0.06);border:1px solid rgba(240,192,64,0.2);border-radius:12px;padding:14px;margin-top:8px;">
+      <div style="font-size:11px;color:var(--accent-gold);font-weight:700;margin-bottom:12px;letter-spacing:0.05em;">▸ 分期設定</div>
+      <div class="form-row">
+        <div class="form-label">原始本金</div>
+        <input class="form-input" type="number" id="rPrincipal" placeholder="0" oninput="calcMonthlyPayment()" />
+      </div>
+      <div class="form-row">
+        <div class="form-label">年利率 (%)</div>
+        <input class="form-input" type="number" id="rRate" placeholder="例：2.5" step="0.01" oninput="calcMonthlyPayment()" />
+      </div>
+      <div class="form-row">
+        <div class="form-label">總期數（月）</div>
+        <input class="form-input" type="number" id="rTotal" placeholder="36（共幾期）" oninput="calcMonthlyPayment(); calcRemaining();" />
+      </div>
+      <div class="form-row">
+        <div class="form-label">開始日期</div>
+        <input class="form-input" type="month" id="rStartDate" onchange="calcRemaining()" />
+      </div>
+      <div class="form-row" style="align-items:center;">
+        <div class="form-label">剩餘期數</div>
+        <div style="flex:1;display:flex;gap:8px;align-items:center;">
+          <input class="form-input" type="number" id="rRemaining" placeholder="留空則等於總期數" style="flex:1;" />
+          <div id="rRemainingHint" style="font-size:10px;color:var(--ocean-light);white-space:nowrap;display:none;">已自動計算</div>
+        </div>
+      </div>
+      <div id="rCalcResult" style="display:none;background:rgba(62,207,142,0.08);border:1px solid rgba(62,207,142,0.2);border-radius:8px;padding:10px 12px;margin-top:8px;">
+        <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">💡 自動試算每月還款</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--accent-green);" id="rCalcMonthly">--</div>
+            <div style="font-size:10px;color:var(--text-muted);margin-top:2px;" id="rCalcDetail">--</div>
+          </div>
+          <button class="btn" style="background:rgba(62,207,142,0.2);border:1px solid rgba(62,207,142,0.3);font-size:12px;padding:6px 12px;" onclick="applyCalcToAmount()">套用金額</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:8px;">💡 每產生一筆扣款，剩餘期數自動 -1，歸零後自動結清</div>
+    </div>
+
     <div style="display:flex;gap:10px;margin-top:16px;">
       <button class="btn btn-primary" style="flex:1;" onclick="addRecurringTemplate()">確認新增</button>
       <button class="btn" style="background:rgba(255,255,255,0.07);flex:1;" onclick="closeModal('recurringModal')">取消</button>
@@ -1354,9 +1416,10 @@ let db = {
     ghRepo: '', ghFile: 'index.html', ghBranch: 'main',
     ghRepo: '', ghFile: 'index.html', ghBranch: 'main',
     categories: [
-      { name:'房貸', icon:'🏠' }, { name:'生活費', icon:'🛒' },
-      { name:'交通', icon:'🚌' }, { name:'醫療', icon:'💊' },
-      { name:'娛樂', icon:'🎮' }, { name:'其他', icon:'📦' },
+      { name:'房貸', icon:'🏠' }, { name:'信貸', icon:'🏦' },
+      { name:'生活費', icon:'🛒' }, { name:'交通', icon:'🚌' },
+      { name:'醫療', icon:'💊' }, { name:'娛樂', icon:'🎮' },
+      { name:'保險', icon:'🛡️' }, { name:'其他', icon:'📦' },
     ],
     incomeCategories: [
       { name:'薪資', icon:'💰' }, { name:'獎金', icon:'🎁' },
@@ -1710,25 +1773,51 @@ function renderDashboard() {
   gainEl.textContent = (investTotalGainAmt >= 0 ? '+' : '') + fmt(investTotalGainAmt);
   gainEl.style.color = investTotalGainAmt >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
 
-  const maxSummarySide = Math.max(investCost, investVal + investRealized, 1);
-  document.getElementById('investCostBar').style.width = (investCost / maxSummarySide * 100) + '%';
-  const valBar = document.getElementById('investValBar');
-  valBar.style.width = ((investVal + investRealized) / maxSummarySide * 100) + '%';
-  valBar.style.background = investTotalGainAmt >= 0 ? 'linear-gradient(90deg, #1a8060, var(--accent-green))' : 'linear-gradient(90deg, #c0362e, var(--accent-red))';
-  valBar.textContent = investDisplayMode === 'pct' 
-    ? (investROI >= 0 ? '+' : '') + investROI.toFixed(1) + '%'
-    : (investTotalGainAmt >= 0 ? '+' : '') + fmt(investTotalGainAmt);
+  // 總覽長條圖邏輯：
+  // 藍色 = 成本（固定部分）
+  // 綠色 = 增值部分 = (市值 - 成本)，即未實現損益
+  // 比例以 investROI（增長趴數）決定：總寬 = 藍 + 綠 = 100%*(cost) + 100%*(gain)
+  // 將整條以「成本 + |增值|」為基準，依比例分配寬度
+  const investUnrealizedGain = investVal - investCost; // 未實現損益（不含已回收）
+  const totalSpan = Math.max(investCost + Math.abs(investUnrealizedGain), 1);
+  const costBarPct = (investCost / totalSpan * 100).toFixed(2);
+  const gainBarPct = (Math.abs(investUnrealizedGain) / totalSpan * 100).toFixed(2);
 
-  const maxSingleSide = Math.max(...investItems.map(i => Math.max(i.cost, i.val + (i.realized || 0))), 1);
+  document.getElementById('investCostBar').style.width = costBarPct + '%';
+  const valBar = document.getElementById('investValBar');
+  valBar.style.width = gainBarPct + '%';
+  const isGainPos = investUnrealizedGain >= 0;
+  valBar.style.background = isGainPos
+    ? 'linear-gradient(90deg, #1a8060, var(--accent-green))'
+    : 'linear-gradient(90deg, #c0362e, var(--accent-red))';
+  valBar.textContent = investDisplayMode === 'pct'
+    ? (investUnrealizedGain >= 0 ? '+' : '') + (investCost > 0 ? (investUnrealizedGain / investCost * 100).toFixed(1) : '0') + '%'
+    : (investUnrealizedGain >= 0 ? '+' : '') + fmt(investUnrealizedGain);
+
+  // 含回收總報酬 = 市值 - 成本 - 回收（回收視為已提出，不算在報酬內）
+  const netReturn = investVal - investCost - investRealized;
+  const netReturnEl = document.getElementById('investNetReturn');
+  if (netReturnEl) {
+    netReturnEl.textContent = (netReturn >= 0 ? '+' : '') + fmt(netReturn);
+    netReturnEl.style.color = netReturn >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+  }
 
   document.getElementById('investItemList').innerHTML = investItems.slice(0, 5).map(i => {
     const itemRealized = i.realized || 0;
     const itemGain = (i.val + itemRealized) - i.cost;
     const itemROI = i.cost > 0 ? (itemGain / i.cost * 100) : 0;
     
-    // Proportional scaling relative to the largest single-side value
-    const costPct = (i.cost / maxSingleSide * 100).toFixed(2);
-    const valPct = ((i.val + itemRealized) / maxSingleSide * 100).toFixed(2);
+    // 藍=成本比例，綠=未實現損益（val-cost），依增長趴數分配寬度
+    const itemUnrealized = i.val - i.cost; // 未實現損益（不含回收）
+    const itemSpan = Math.max(i.cost + Math.abs(itemUnrealized), 1);
+    const costPct = (i.cost / itemSpan * 100).toFixed(2);
+    const unrealPct = (Math.abs(itemUnrealized) / itemSpan * 100).toFixed(2);
+    const isItemPos = itemUnrealized >= 0;
+
+    const labelText = investDisplayMode === 'pct'
+      ? (itemROI >= 0 ? '+' : '') + itemROI.toFixed(1) + '%'
+      : (itemUnrealized >= 0 ? '+' : '') + (Math.abs(itemUnrealized) >= 10000 ? (itemUnrealized/10000).toFixed(1)+'萬' : fmt(itemUnrealized));
+    const labelColor = isItemPos ? 'var(--accent-green)' : 'var(--accent-red)';
 
     return `
     <div class="invest-item-row" onclick="switchPage('stocks', document.querySelector('[data-page=stocks]'))" style="cursor:pointer;">
@@ -1736,17 +1825,12 @@ function renderDashboard() {
         <div class="invest-item-name">${i.name}</div>
         <div class="invest-item-meta">成本 ${fmt(i.cost)} · 市值 ${fmt(i.val)} ${itemRealized > 0 ? `· 回收 ${fmt(itemRealized)}` : ''}</div>
       </div>
-      <div class="invest-item-bars">
-        <div style="width:50%; display:flex; justify-content:flex-end;">
+      <div class="invest-item-bars-wrap">
+        <div class="invest-item-bars">
           <div class="invest-mini-cost" style="width:${costPct}%"></div>
+          <div class="invest-mini-val" style="width:${unrealPct}%; background:${isItemPos ? 'var(--accent-green)' : 'var(--accent-red)'}"></div>
         </div>
-        <div style="width:50%; display:flex; justify-content:flex-start;">
-          <div class="invest-mini-val" style="width:${valPct}%; background:${itemGain >= 0 ? 'var(--accent-green)' : 'var(--accent-red)'}">
-            ${investDisplayMode === 'pct' 
-              ? (itemROI >= 0 ? '+' : '') + itemROI.toFixed(0) + '%'
-              : (itemGain >= 0 ? '+' : '') + (Math.abs(itemGain) >= 10000 ? (itemGain/10000).toFixed(1)+'萬' : itemGain)}
-          </div>
-        </div>
+        <div class="invest-item-bar-label" style="color:${labelColor}">${labelText}</div>
       </div>
     </div>`;
   }).join('');
@@ -1789,6 +1873,7 @@ function renderDashboard() {
       <div class="bank-track"><div class="bank-fill" style="width:${Math.round(b.balance / maxB * 85) + 10}%;background:var(--ocean-teal);">${fmt(b.balance)}</div></div>
     </div>`).join('');
   renderDonut();
+  renderFixedDash(totalExpense, totalIncome);
 }
 
 // ===================================================================
@@ -1832,10 +1917,73 @@ function renderDonut() {
     </div>`).join('');
 }
 
+// ===================================================================
+//  FIXED EXPENSE DASHBOARD (首頁小看板)
+// ===================================================================
+function renderFixedDash(totalMonthExpense, totalMonthIncome) {
+  const tpls = (db.recurringTemplates || []).filter(t => t.status !== 'settled');
+  const fixedTotal = tpls.reduce((s,t) => s+t.amount, 0);
+
+  const totalEl = document.getElementById('dashFixedTotal');
+  if (totalEl) totalEl.textContent = fmt(fixedTotal) + '/月';
+
+  // ── 左側：長條圖（使用與收支平衡相同的 bar-row/bar-track/bar-fill 樣式）──
+  const barsEl = document.getElementById('dashFixedBars');
+  if (barsEl) {
+    if (!tpls.length) {
+      barsEl.innerHTML = '<div class="empty" style="padding:8px 0;font-size:11px;">尚無固定支出</div>';
+    } else {
+      const maxVal = Math.max(...tpls.map(t=>t.amount), 1);
+      barsEl.innerHTML = tpls.slice(0,6).map(t => {
+        const widthPct = Math.round(t.amount / maxVal * 100);
+        const isLoan = ['信貸','房貸','車貸','學貸'].includes(t.category);
+        // 借貸類用 bar-expense（紅），其他固定支出用 bar-fixed（金）
+        const barCls = isLoan ? 'bar-expense' : 'bar-fixed-neutral';
+        return `<div class="bar-row" style="margin-bottom:2px;">
+            <div class="bar-track"><div class="bar-fill ${barCls}" style="width:${widthPct}%;min-width:2px;"></div></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-secondary);margin-top:-4px;margin-bottom:8px;">
+            <span>${t.name}</span><span style="font-family:'DM Mono',monospace;">${fmt(t.amount)}</span>
+          </div>`;
+      }).join('');
+    }
+  }
+
+  // ── 右側：圓餅圖（顏色對齊現金流：收入=綠, 固定支出=紅, 其他支出=金）──
+  const pieEl = document.getElementById('dashFixedPie');
+  const legendEl = document.getElementById('dashFixedPieLegend');
+  if (!pieEl || !legendEl) return;
+
+  const otherExpense = Math.max(0, (totalMonthExpense || 0) - fixedTotal);
+  const income = totalMonthIncome || 0;
+  const segments = [];
+  if (fixedTotal > 0)   segments.push({ label:'固定支出', val: fixedTotal,  color:'#f0504a' });
+  if (otherExpense > 0) segments.push({ label:'其他支出', val: otherExpense, color:'#f0c040' });
+  if (income > 0)       segments.push({ label:'收入',     val: income,       color:'#3ecf8e' });
+  const totalSeg = segments.reduce((s,x) => s+x.val, 0);
+
+  const r=28, cx=40, cy=40, circ=2*Math.PI*r;
+  if (!totalSeg) {
+    pieEl.innerHTML = '<circle cx="40" cy="40" r="28" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="12"/>';
+    legendEl.innerHTML = '<div style="font-size:9px;color:var(--text-muted);">尚無資料</div>';
+    return;
+  }
+  let offset = 0;
+  let paths = '<circle cx="40" cy="40" r="28" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="12"/>';
+  segments.forEach(seg => {
+    const pct = seg.val / totalSeg;
+    const dash = pct * circ, gap = circ - dash;
+    paths += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${seg.color}" stroke-width="12" stroke-dasharray="${dash.toFixed(2)} ${gap.toFixed(2)}" stroke-dashoffset="${(-offset*circ).toFixed(2)}" transform="rotate(-90 ${cx} ${cy})"/>`;
+    offset += pct;
+  });
+  pieEl.innerHTML = paths;
+  legendEl.innerHTML = segments.map(seg => `
+    <div style="display:flex;align-items:center;gap:4px;">
+      <div style="width:7px;height:7px;border-radius:50%;background:${seg.color};flex-shrink:0;"></div>
+      <span style="font-size:9px;color:var(--text-secondary);white-space:nowrap;">${seg.label} ${(seg.val/totalSeg*100).toFixed(0)}%</span>
+    </div>`).join('');
+}
  
-// ===================================================================
-//  [M-02] RECURRING TEMPLATES ENGINE
-// ===================================================================
 function runRecurringEngine() {
   if (!db.recurringTemplates || !db.recurringTemplates.length) return;
   const today = new Date();
@@ -1892,17 +2040,126 @@ function runRecurringEngine() {
 }
  
 // Recurring template CRUD
+const LOAN_CATS = ['信貸','房貸','車貸','學貸']; // 信貸類強制installment
+
+function renderRCategoryTags(selectedCat) {
+  const cats = db.config.categories || [];
+  const container = document.getElementById('rCategoryTags');
+  if (!container) return;
+  container.innerHTML = cats.map(c => {
+    const isLoan = LOAN_CATS.includes(c.name);
+    const isSel = c.name === selectedCat;
+    return `<div class="cat-tag${isLoan?' loan-tag':''}${isSel?' selected':''}" onclick="selectRCategory('${c.name}')">${c.icon||''} ${c.name}</div>`;
+  }).join('');
+}
+
+function selectRCategory(name) {
+  document.getElementById('rCategory').value = name;
+  renderRCategoryTags(name);
+  // 若屬信貸類，強制設為installment並鎖定
+  if (LOAN_CATS.includes(name)) {
+    document.getElementById('rType').value = 'installment';
+    document.getElementById('rTypeRow').style.display = 'none';
+    document.getElementById('rTypeLocked').style.display = 'block';
+    document.getElementById('rInstallDiv').style.display = 'block';
+  } else {
+    document.getElementById('rTypeRow').style.display = 'flex';
+    document.getElementById('rTypeLocked').style.display = 'none';
+    toggleRecurringType();
+  }
+}
+
+function addRCategory() {
+  const input = document.getElementById('rNewCatName');
+  const name = input.value.trim();
+  if (!name) { toast('請輸入類別名稱'); return; }
+  if ((db.config.categories||[]).some(c=>c.name===name)) { toast('類別已存在'); return; }
+  if (!db.config.categories) db.config.categories = [];
+  db.config.categories.push({ name, icon:'📌' });
+  saveLocal();
+  input.value = '';
+  renderRCategoryTags(name);
+  document.getElementById('rCategory').value = name;
+  toast('✅ 已新增類別：' + name);
+}
+
+function calcMonthlyPayment() {
+  const P = parseFloat(document.getElementById('rPrincipal').value) || 0;
+  const rateYr = parseFloat(document.getElementById('rRate').value) || 0;
+  const n = parseInt(document.getElementById('rTotal').value) || 0;
+  const el = document.getElementById('rCalcResult');
+  if (P > 0 && n > 0) {
+    let monthly;
+    if (rateYr === 0) {
+      monthly = P / n;
+      document.getElementById('rCalcDetail').textContent = `本金平均攤還，共 ${n} 期`;
+    } else {
+      const r = rateYr / 100 / 12;
+      monthly = P * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1);
+      const totalPay = monthly * n;
+      const totalInterest = totalPay - P;
+      document.getElementById('rCalcDetail').textContent = `年利率 ${rateYr}%，總利息 ${fmt(Math.round(totalInterest))}`;
+    }
+    document.getElementById('rCalcMonthly').textContent = fmt(Math.round(monthly));
+    el.style.display = 'block';
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+function applyCalcToAmount() {
+  const P = parseFloat(document.getElementById('rPrincipal').value) || 0;
+  const rateYr = parseFloat(document.getElementById('rRate').value) || 0;
+  const n = parseInt(document.getElementById('rTotal').value) || 0;
+  if (!P || !n) { toast('請先填寫本金與期數'); return; }
+  let monthly;
+  if (rateYr === 0) {
+    monthly = P / n;
+  } else {
+    const r = rateYr / 100 / 12;
+    monthly = P * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1);
+  }
+  document.getElementById('rAmount').value = Math.round(monthly);
+  toast('✅ 已套用每月金額 ' + fmt(Math.round(monthly)));
+}
+
+function calcRemaining() {
+  const total = parseInt(document.getElementById('rTotal').value) || 0;
+  const startVal = document.getElementById('rStartDate').value; // 'YYYY-MM'
+  const hint = document.getElementById('rRemainingHint');
+  if (total > 0 && startVal) {
+    const [sy, sm] = startVal.split('-').map(Number);
+    const now = new Date();
+    const nowYM = now.getFullYear() * 12 + now.getMonth(); // 0-based month
+    const startYM = sy * 12 + (sm - 1);
+    const elapsed = Math.max(0, nowYM - startYM); // 已過月數（不含當月）
+    const remaining = Math.max(0, total - elapsed);
+    document.getElementById('rRemaining').value = remaining;
+    if (hint) hint.style.display = 'inline';
+  } else {
+    if (hint) hint.style.display = 'none';
+  }
+}
+
 function showAddRecurring() {
   document.getElementById('recurringModal').style.display = 'flex';
   document.getElementById('rName').value = '';
   document.getElementById('rAmount').value = '';
   document.getElementById('rType').value = 'fixed';
+  document.getElementById('rTypeRow').style.display = 'flex';
+  document.getElementById('rTypeLocked').style.display = 'none';
   document.getElementById('rInstallDiv').style.display = 'none';
+  document.getElementById('rCalcResult').style.display = 'none';
   document.getElementById('rTotal').value = '';
   document.getElementById('rRemaining').value = '';
-  const cats = db.config.categories.map(c=>`<option>${c.name}</option>`).join('');
-  document.getElementById('rCategory').innerHTML = cats;
-  toggleRecurringType();
+  document.getElementById('rStartDate').value = '';
+  document.getElementById('rPrincipal').value = '';
+  document.getElementById('rRate').value = '';
+  document.getElementById('rNewCatName').value = '';
+  document.getElementById('rCategory').value = '';
+  const hint = document.getElementById('rRemainingHint');
+  if (hint) hint.style.display = 'none';
+  renderRCategoryTags('');
 }
 function toggleRecurringType() {
   const t = document.getElementById('rType').value;
@@ -1912,12 +2169,15 @@ function addRecurringTemplate() {
   const name = document.getElementById('rName').value.trim();
   const amount = parseFloat(document.getElementById('rAmount').value) || 0;
   const type = document.getElementById('rType').value;
-  const category = document.getElementById('rCategory').value;
+  const category = document.getElementById('rCategory').value || (db.config.categories?.[0]?.name || '其他');
   if (!name || !amount) { toast('請填寫名稱與金額！'); return; }
   const tpl = { id: uid(), name, amount, type, category, status: 'active' };
   if (type === 'installment') {
     tpl.totalInstallments = parseInt(document.getElementById('rTotal').value) || 0;
     tpl.remainingInstallments = parseInt(document.getElementById('rRemaining').value) || tpl.totalInstallments;
+    tpl.principal = parseFloat(document.getElementById('rPrincipal').value) || 0;
+    tpl.annualRate = parseFloat(document.getElementById('rRate').value) || 0;
+    tpl.startDate = document.getElementById('rStartDate').value || '';
   }
   if (!db.recurringTemplates) db.recurringTemplates = [];
   db.recurringTemplates.push(tpl);
@@ -2051,6 +2311,55 @@ function renderFixedPage() {
     const tagColor = isSettled ? 'var(--text-muted)' : isInstall ? 'var(--accent-gold)' : 'var(--ocean-light)';
     const tagLabel = isSettled ? '已結清' : isInstall ? '分期' : '固定';
     const icon = isSettled ? '✅' : isInstall ? '📆' : '🔁';
+
+    // 計算開始日 / 預計結清日
+    let dateInfoHtml = '';
+    if (isInstall && !isSettled) {
+      let startStr = '', endStr = '';
+      if (tpl.startDate) {
+        const [sy, sm] = tpl.startDate.split('-').map(Number);
+        startStr = `${sy}/${String(sm).padStart(2,'0')}`;
+        const endYM = sy * 12 + (sm - 1) + (tpl.totalInstallments || 0) - 1;
+        const ey = Math.floor(endYM / 12);
+        const em = (endYM % 12) + 1;
+        endStr = `${ey}/${String(em).padStart(2,'0')}`;
+      }
+      // 時間軸進度條：基於 startDate 與 totalInstallments
+      const timelinePct = tpl.totalInstallments > 0 ? Math.min(100, Math.round(done / tpl.totalInstallments * 100)) : 0;
+      // 顏色漸層：低→橘→紅
+      const barGradient = timelinePct < 33
+        ? 'linear-gradient(90deg,#1a6fa0,var(--ocean-light))'
+        : timelinePct < 66
+          ? 'linear-gradient(90deg,#a07010,var(--accent-gold))'
+          : 'linear-gradient(90deg,#a02020,var(--accent-red))';
+
+      dateInfoHtml = `
+      <div style="margin-top:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+          <span style="font-size:10px;color:var(--text-muted);">還款進度</span>
+          <span style="font-size:10px;font-family:'DM Mono',monospace;color:var(--accent-gold);font-weight:700;">${timelinePct}%</span>
+        </div>
+        <div style="height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;position:relative;">
+          <div style="height:100%;width:${timelinePct}%;background:${barGradient};border-radius:4px;transition:width 0.8s cubic-bezier(0.4,0,0.2,1);position:relative;">
+            ${timelinePct > 5 ? `<div style="position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:8px;color:rgba(255,255,255,0.8);font-family:'DM Mono',monospace;">${done}/${tpl.totalInstallments}</div>` : ''}
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:10px;color:var(--text-muted);">
+          <span>已還 <span style="color:var(--text-secondary);font-family:'DM Mono',monospace;">${done} 期</span></span>
+          <span>剩 <span style="color:var(--accent-red);font-family:'DM Mono',monospace;">${tpl.remainingInstallments} 期</span> · <span style="font-family:'DM Mono',monospace;">${fmt(tpl.amount * tpl.remainingInstallments)}</span></span>
+        </div>
+        ${startStr ? `<div style="display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:var(--text-muted);">
+          <span>📅 開始 <span style="color:var(--text-secondary);">${startStr}</span></span>
+          <span>🏁 結清 <span style="color:var(--ocean-light);">${endStr}</span></span>
+        </div>` : ''}
+        ${tpl.principal ? `<div style="display:flex;gap:14px;margin-top:6px;font-size:10px;color:var(--text-muted);">
+          <span>本金 <span style="color:var(--text-secondary);font-family:'DM Mono',monospace;">${fmt(tpl.principal)}</span></span>
+          ${tpl.annualRate ? `<span>年利率 <span style="color:var(--accent-gold);font-family:'DM Mono',monospace;">${tpl.annualRate}%</span></span>` : ''}
+          <span>總利息 <span style="color:var(--accent-red);font-family:'DM Mono',monospace;">${tpl.annualRate ? fmt(Math.round(tpl.amount * tpl.totalInstallments - tpl.principal)) : '--'}</span></span>
+        </div>` : ''}
+      </div>`;
+    }
+
     return `
     <div class="recurring-card ${cardCls}">
       <div class="recurring-header">
@@ -2065,14 +2374,7 @@ function renderFixedPage() {
         </div>
         <div style="padding-left:8px;cursor:pointer;color:rgba(200,230,240,0.3);font-size:14px;" onclick="deleteRecurring('${tpl.id}')">✕</div>
       </div>
-      ${isInstall && !isSettled ? `
-      <div class="install-bar-wrap">
-        <div class="install-bar-track"><div class="install-bar-fill" style="width:${pct}%"></div></div>
-        <div class="install-bar-label">
-          <span>已還 ${done}/${tpl.totalInstallments} 期</span>
-          <span>剩餘 ${tpl.remainingInstallments} 期 · ${fmt(tpl.amount * tpl.remainingInstallments)}</span>
-        </div>
-      </div>` : ''}
+      ${dateInfoHtml}
       ${isSettled ? `<div style="font-size:11px;color:var(--accent-green);text-align:center;padding:4px 0;">🎉 分期已全數結清</div>` : ''}
     </div>`;
   }).join('');
@@ -2335,6 +2637,14 @@ function deleteTx(id) { db.transactions=db.transactions.filter(t=>t.id!==id); re
 //  STOCKS & BANKS PAGE
 // ===================================================================
 
+// ── 安全 fetch wrapper（避免 AbortSignal.timeout 在某些環境無法序列化）──
+function fetchWithTimeout(url, ms, options = {}) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), ms);
+  return fetch(url, { ...options, signal: ctrl.signal })
+    .finally(() => clearTimeout(timer));
+}
+
 // ── 股市行情狀態 ──
 let stockQuotes = {}; // { ticker: { price, change, changeAmt, high52, low52, volume } }
 let chartState = { ticker: null, period: 'D', candles: [], vols: [] };
@@ -2349,7 +2659,7 @@ async function fetchQuote(ticker) {
   // 方案 1: Yahoo Finance (代理 C: corsproxy.io)
   try {
     const url = `https://corsproxy.io/?${encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/' + tw + '?interval=1d&range=1d')}`;
-    const res = await fetch(url, { signal: AbortSignal.timeout(4000) });
+    const res = await fetchWithTimeout(url, 4000);
     const d = await res.json();
     const meta = d?.chart?.result?.[0]?.meta;
     if (meta && meta.regularMarketPrice) return { price: meta.regularMarketPrice, prevClose: meta.previousClose, source: 'Yahoo(C)' };
@@ -2359,7 +2669,7 @@ async function fetchQuote(ticker) {
   if (ticker.match(/^\d/)) {
     try {
       const url = `https://api.allorigins.win/raw?url=${encodeURIComponent('https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_' + ticker + '.tw|otc_' + ticker + '.tw')}`;
-      const res = await fetch(url, { signal: AbortSignal.timeout(6000) });
+      const res = await fetchWithTimeout(url, 6000);
       const d = await res.json();
       const info = d?.msgArray?.[0];
       if (info && info.z && info.z !== '-') return { price: parseFloat(info.z), prevClose: parseFloat(info.y), source: 'TWSE' };
@@ -2368,9 +2678,8 @@ async function fetchQuote(ticker) {
 
   // 方案 3: Supabase Edge Function
   try {
-    const res = await fetch(`${QUOTE_PROXY_URL}?ticker=${encodeURIComponent(ticker)}`, {
-      headers: { 'Authorization': `Bearer ${QUOTE_PROXY_KEY}` },
-      signal: AbortSignal.timeout(3000)
+    const res = await fetchWithTimeout(`${QUOTE_PROXY_URL}?ticker=${encodeURIComponent(ticker)}`, 3000, {
+      headers: { 'Authorization': `Bearer ${QUOTE_PROXY_KEY}` }
     });
     const data = await res.json();
     if (data && data.price) return { price: data.price, prevClose: data.prevClose, source: 'Supabase' };
@@ -2396,7 +2705,7 @@ async function fetchChartHistory(ticker) {
 
   for (const proxy of proxies) {
     try {
-      const res = await fetch(proxy(yahooUrl), { signal: AbortSignal.timeout(timeout) });
+      const res = await fetchWithTimeout(proxy(yahooUrl), timeout);
       if (!res.ok) continue;
       
       const data = await res.json();
@@ -2445,7 +2754,7 @@ async function showConnTest() {
     const start = Date.now();
     let status = '⏳'; let color = 'var(--text-muted)';
     try {
-      const res = await fetch(t.url, { signal: AbortSignal.timeout(6000) });
+      const res = await fetchWithTimeout(t.url, 6000);
       const ms = Date.now() - start;
       status = res.ok ? `✅ OK (${ms}ms)` : `❌ ${res.status}`;
       color = res.ok ? 'var(--accent-green)' : 'var(--accent-red)';
@@ -2632,7 +2941,7 @@ async function showConnTest() {
     const start = Date.now();
     let status = '⏳'; let color = 'var(--text-muted)';
     try {
-      const res = await fetch(t.url, { signal: AbortSignal.timeout(8000) });
+      const res = await fetchWithTimeout(t.url, 8000);
       const ms = Date.now() - start;
       status = res.ok ? `✅ OK (${ms}ms)` : `❌ ${res.status}`;
       color = res.ok ? 'var(--accent-green)' : 'var(--accent-red)';
@@ -3610,7 +3919,7 @@ window.addEventListener('load', () => {
   document.getElementById('currentMonthLabel').textContent =
     (initY !== thisY ? initY + '年' : '') + initM + '月';
   if (db.config.gistToken) { setSyncStatus(db.config.gistId?'ok':'error'); }
-  else { document.getElementById('syncDot').className='sync-dot offline'; document.getElementById('syncText').textContent='未設定雲端同步'; }
+  else { setSyncStatus('error'); }
   document.querySelectorAll('[id$="Modal"]').forEach(m => { m.addEventListener('click', e => { if (e.target===m) m.style.display='none'; }); });
 });
 </script> /* --- [JS END] --- */
