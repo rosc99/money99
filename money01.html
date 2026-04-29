@@ -2813,8 +2813,24 @@ function renderStocksPage() {
   if (!stockList) return;
   
   const totalVal = (db.stocks || []).reduce((s, st) => s + (st.value || 0), 0);
+  const totalCost = (db.stocks || []).reduce((s, st) => s + (st.cost || 0), 0);
   const tvEl = document.getElementById('stocksTotalVal');
   if (tvEl) tvEl.textContent = fmt(totalVal);
+
+  // 總市值漲跌幅 = 加權平均（以市值為權重）
+  const badge = document.getElementById('stocksTotalBadge');
+  if (badge) {
+    let weightedChg = 0;
+    if (totalVal > 0) {
+      weightedChg = (db.stocks || []).reduce((sum, st) => {
+        const w = (st.value || 0) / totalVal;
+        return sum + (st.change || 0) * w;
+      }, 0);
+    }
+    badge.textContent = (weightedChg >= 0 ? '+' : '') + weightedChg.toFixed(2) + '%';
+    badge.style.background = weightedChg >= 0 ? 'rgba(62,207,142,0.15)' : 'rgba(240,80,74,0.15)';
+    badge.style.color = weightedChg >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+  }
 
   renderFunds();
   renderInvestSummary();
@@ -3376,6 +3392,16 @@ function calculatePledge() {
 function pledgeMaintLevel(r) { return r > 160 ? 'safe' : r > 140 ? 'warn' : 'danger'; }
 function pledgeMaintColor(r) { return r > 160 ? 'var(--accent-green)' : r > 140 ? 'var(--accent-gold)' : 'var(--accent-red)'; }
 
+function setPledgeShares(stockId, delta) {
+  const s = (db.stocks || []).find(st => st.id === stockId);
+  if (!s) return;
+  const maxShares = s.shares || 0;
+  const cur = s.pledgeShares || 0;
+  s.pledgeShares = Math.max(0, Math.min(maxShares, cur + delta));
+  saveLocal();
+  renderPledgePage();
+}
+
 function renderPledgePage() {
   const stockList = db.stocks || [];
   const container = document.getElementById('pledgeStockList');
@@ -3385,27 +3411,42 @@ function renderPledgePage() {
   const inputLoan = document.getElementById('inputLoanAmount');
   const loanAmount = inputLoan ? (parseFloat(inputLoan.value) || 0) : 0;
 
-  // 1. Calculate total collateral value from inventory (current market)
-  let totalCollateral = stockList.reduce((sum, s) => sum + (s.value || 0), 0);
-  
-  // 2. Render Inventory List
+  // 1. 擔保品市值只計算「已質押張數」部分
+  let totalCollateral = stockList.reduce((sum, s) => {
+    const pledged = s.pledgeShares || 0;
+    const pricePerShare = s.shares > 0 ? (s.value / (s.shares * 1000)) : (s.price || 0);
+    return sum + pledged * 1000 * pricePerShare;
+  }, 0);
+
+  // 2. 渲染每檔股票：含張數選取 spinner
   container.innerHTML = stockList.length ? stockList.map(s => {
     const shares = s.shares || 0;
-    const price = s.price || (shares > 0 ? (s.value / (shares * 1000)) : 0);
+    const price = shares > 0 ? (s.value / (shares * 1000)) : (s.price || 0);
+    const pledged = s.pledgeShares || 0;
+    const pledgedVal = pledged * 1000 * price;
+    const isPledged = pledged > 0;
+
     return `
-    <div class="stock-item" style="padding: 12px 0; border-bottom: 1px solid var(--border-glass);">
-      <div class="stock-ticker" style="color: var(--ocean-light); width: 60px; font-family: 'DM Mono', monospace; font-weight: 700;">${s.ticker}</div>
-      <div style="flex: 1;">
-        <div class="stock-name" style="font-size: 13px; font-weight: 500;">${s.name}</div>
-        <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">${shares} 張 · 市價 $${price.toFixed(2)}</div>
+    <div style="display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--border-glass);">
+      <div style="color:var(--ocean-light);width:60px;font-family:'DM Mono',monospace;font-weight:700;font-size:13px;">${s.ticker}</div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:500;">${s.name}</div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">持有 ${shares} 張 · 市價 $${price.toFixed(2)}</div>
       </div>
-      <div style="text-align: right;">
-        <div class="stock-val" style="font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 700;">${fmt(s.value)}</div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <button onclick="setPledgeShares('${s.id}',-1)" style="width:28px;height:28px;border-radius:8px;border:1px solid var(--border-glass);background:rgba(255,255,255,0.06);color:var(--text-primary);font-size:16px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;" ${pledged <= 0 ? 'disabled style="opacity:0.3;cursor:default;"' : ''}>－</button>
+          <div style="min-width:36px;text-align:center;font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:${isPledged ? 'var(--ocean-light)' : 'var(--text-muted)'};">${pledged}<span style="font-size:10px;font-weight:400;"> 張</span></div>
+          <button onclick="setPledgeShares('${s.id}',1)" style="width:28px;height:28px;border-radius:8px;border:1px solid var(--border-glass);background:rgba(255,255,255,0.06);color:var(--text-primary);font-size:16px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;" ${pledged >= shares ? 'disabled style="opacity:0.3;cursor:default;"' : ''}>＋</button>
+        </div>
+        <div style="font-family:'DM Mono',monospace;font-size:12px;color:${isPledged ? 'var(--ocean-light)' : 'var(--text-muted)'};">
+          ${isPledged ? fmt(pledgedVal) : '未質押'}
+        </div>
       </div>
     </div>`;
   }).join('') : '<div class="empty"><span class="icon">📦</span>庫存中尚無持股</div>';
 
-  // 3. Update Summary
+  // 3. 更新總覽數字
   const currentRatio = loanAmount > 0 ? (totalCollateral / loanAmount * 100) : 0;
   document.getElementById('pledgeTotalCollateral').textContent = fmt(totalCollateral);
   document.getElementById('pledgeTotalLoan').textContent = fmt(loanAmount);
@@ -3431,7 +3472,7 @@ function renderPledgePage() {
     }
   }
 
-  // 4. Render Historical Stress Test Grid
+  // 4. 壓力測試（用已質押市值計算）
   if (crashGrid) {
     crashGrid.style.gridTemplateColumns = 'repeat(4, 1fr)';
     crashGrid.innerHTML = HISTORICAL_CRASHES.map(c => {
