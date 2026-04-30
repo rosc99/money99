@@ -489,7 +489,7 @@
   .cat-tag.loan-tag.selected { background:rgba(240,80,74,0.2);border-color:var(--accent-red);box-shadow:0 0 8px rgba(240,80,74,0.2); }
   /* Fixed expense dashboard card */
   .fixed-dash-card { background:var(--bg-glass);border:1px solid var(--border-glass);border-radius:var(--card-radius);padding:18px;margin-bottom:14px;backdrop-filter:blur(10px); }
-  .fixed-dash-inner { display:flex;gap:12px;align-items:stretch; }
+  .fixed-dash-inner { display:flex;gap:12px;align-items:flex-start; }
   .fixed-dash-bars { flex:1;min-width:0; }
   .fixed-dash-pie { width:100px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center; }
   .recurring-card.settled { opacity: 0.5; border-left: 3px solid var(--text-muted); }
@@ -2209,7 +2209,7 @@ function renderFixedDash(totalMonthExpense, totalMonthIncome) {
       const combined = [
         ...installs.map(t => ({ ...t, _isInstall: true })),
         ...permanent.map(t => ({ ...t, _isInstall: false }))
-      ].sort((a, b) => b.amount - a.amount).slice(0, 7);
+      ].sort((a, b) => b.amount - a.amount);
       const sqrtMax = Math.max(...combined.map(t => Math.sqrt(t.amount)), 1);
       barsEl.innerHTML = combined.map(t => {
         const widthPct = Math.round(Math.sqrt(t.amount) / sqrtMax * 100);
