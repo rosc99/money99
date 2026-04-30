@@ -2114,7 +2114,7 @@ function renderDashboard() {
   const maxB = Math.max(...db.banks.map(b => b.balance), 1);
   document.getElementById('bankList').innerHTML = db.banks.map(b => `
     <div class="bank-bar-row">
-      <div class="bank-name">${b.name}</div>
+      <div class="bank-name" style="width:auto;max-width:52px;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${b.name}</div>
       <div class="bank-track"><div class="bank-fill" style="width:${Math.round(b.balance / maxB * 85) + 10}%;background:var(--ocean-teal);">${fmt(b.balance)}</div></div>
     </div>`).join('');
   renderDonut();
