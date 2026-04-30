@@ -1004,7 +1004,7 @@
     <div class="card" style="padding:16px;">
       <div class="form-row">
         <div class="form-label" style="width:100px;">借款總金額</div>
-        <input class="form-input" type="number" id="inputLoanAmount" placeholder="輸入借款金額" oninput="calculatePledge()" value="0" />
+        <input class="form-input" type="number" id="inputLoanAmount" placeholder="輸入借款金額" oninput="savePledgeLoan(this.value)" />
       </div>
       
       <!-- 歷史壓力測試區 -->
@@ -1959,7 +1959,12 @@ function renderDashboard() {
   const stockTotal = db.stocks.reduce((s, st) => s + (st.value || 0), 0);
   const fundTotal = (db.funds || []).reduce((s, f) => s + (f.value || 0), 0);
   document.getElementById('totalAssets').textContent = fmt(bankTotal + stockTotal + fundTotal);
-  document.getElementById('totalDebt').textContent = fmt(db.loans.reduce((s, l) => s + l.remaining, 0));
+  // 總負債 = 固定支出頁有期限(分期)剩餘總金額 + 質押借款總金額
+  const installDebt = (db.recurringTemplates || [])
+    .filter(t => t.type === 'installment' && t.status !== 'settled')
+    .reduce((s, t) => s + t.amount * (t.remainingInstallments || 0), 0);
+  const pledgeDebt = db.config.pledgeLoanAmount || 0;
+  document.getElementById('totalDebt').textContent = fmt(installDebt + pledgeDebt);
   
   const bTotalEl = document.getElementById('bankTotalLabel');
   if (bTotalEl) bTotalEl.textContent = fmt(bankTotal);
@@ -3937,6 +3942,11 @@ const HISTORICAL_CRASHES = [
 function calculatePledge() {
   renderPledgePage();
 }
+function savePledgeLoan(val) {
+  db.config.pledgeLoanAmount = parseFloat(val) || 0;
+  saveLocal(); autoSync();
+  renderPledgePage();
+}
 
 /* helpers for pledge modal if still used */
 function pledgeMaintLevel(r) { return r > 160 ? 'safe' : r > 140 ? 'warn' : 'danger'; }
@@ -3958,8 +3968,13 @@ function renderPledgePage() {
   const crashGrid = document.getElementById('historicalCrashGrid');
   if (!container) return;
   
+  // 恢復借款金額（從 db 讀取，保持記憶）
+  const savedLoan = db.config.pledgeLoanAmount || 0;
   const inputLoan = document.getElementById('inputLoanAmount');
-  const loanAmount = inputLoan ? (parseFloat(inputLoan.value) || 0) : 0;
+  if (inputLoan && (inputLoan.value === '' || (parseFloat(inputLoan.value) === 0 && savedLoan > 0))) {
+    inputLoan.value = savedLoan;
+  }
+  const loanAmount = inputLoan ? (parseFloat(inputLoan.value) || savedLoan) : savedLoan;
 
   // 1. 擔保品市值只計算「已質押張數」部分
   let totalCollateral = stockList.reduce((sum, s) => {
@@ -4320,6 +4335,8 @@ async function syncFromGist() {
     db=loaded; db.config.gistToken=gistToken; db.config.gistId=gistIdVal;
     if (!db.pledges) db.pledges = []; // [M-01] ensure pledge array exists
     if (!db.recurringTemplates) db.recurringTemplates = []; // [M-02] migrate
+    if (!db.config.pledgeLoanAmount) db.config.pledgeLoanAmount = 0; // migrate pledge loan amount
+    if (!db.investPool) db.investPool = { initialCost: 0, netWithdrawn: 0, brokerBankId: null }; // migrate
     if (!db.meta.lastSyncDate) db.meta.lastSyncDate = null;
     if (!db.config.categories) db.config.categories = [{name:'房貸',icon:'🏠'},{name:'信貸',icon:'🏦'},{name:'生活費',icon:'🛒'},{name:'交通',icon:'🚌'},{name:'醫療',icon:'💊'},{name:'娛樂',icon:'🎮'},{name:'其他',icon:'📦'}];
     // 遷移：若舊資料缺少信貸類別，補入房貸後方
