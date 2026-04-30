@@ -823,9 +823,12 @@
             <button onclick="changeTrendYear(1)" style="width:22px;height:22px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:var(--text-muted);font-size:13px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;">›</button>
           </div>
         </div>
-        <div style="display:flex;gap:12px;font-size:10px;color:var(--text-muted);">
-          <span style="display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:16px;height:2px;background:var(--accent-green);border-radius:2px;"></span>收入</span>
-          <span style="display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:16px;height:2px;background:var(--accent-red);border-radius:2px;"></span>支出</span>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <div style="display:flex;gap:10px;font-size:10px;color:var(--text-muted);">
+            <span style="display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:16px;height:2px;background:var(--accent-green);border-radius:2px;"></span>收入</span>
+            <span style="display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:16px;height:2px;background:var(--accent-red);border-radius:2px;"></span>支出</span>
+          </div>
+          <button id="trendExpModeBtn" onclick="toggleTrendExpMode()" style="font-size:9px;padding:2px 6px;border-radius:8px;border:1px solid rgba(255,80,74,0.35);background:rgba(255,80,74,0.10);color:var(--accent-red);cursor:pointer;font-family:'Noto Sans TC',sans-serif;white-space:nowrap;">含固定</button>
         </div>
       </div>
       <!-- 平均月收入 -->
@@ -2324,10 +2327,18 @@ function toggleInvestDetail() {
 }
 
 let trendYear = null; // null = 用 db.config.currentYear
+let trendExpMode = 'combined'; // 'combined' = 含固定支出, 'pure' = 純支出
 
 function changeTrendYear(delta) {
   if (trendYear === null) trendYear = db.config.currentYear;
   trendYear += delta;
+  renderTrendChart();
+}
+
+function toggleTrendExpMode() {
+  trendExpMode = trendExpMode === 'combined' ? 'pure' : 'combined';
+  const btn = document.getElementById('trendExpModeBtn');
+  if (btn) btn.textContent = trendExpMode === 'combined' ? '含固定' : '純支出';
   renderTrendChart();
 }
 
@@ -2346,10 +2357,33 @@ function renderTrendChart() {
     return d.getFullYear() === y && (d.getMonth()+1) === m && t.type === 'income';
   }).reduce((s,t) => s+t.amount, 0));
 
-  const expenseData = months.map(m => db.transactions.filter(t => {
+  const txExpenseData = months.map(m => db.transactions.filter(t => {
     const d = new Date(t.date);
     return d.getFullYear() === y && (d.getMonth()+1) === m && t.type === 'expense';
   }).reduce((s,t) => s+t.amount, 0));
+
+  // 固定支出：每月計算當月有效的 recurringTemplates 金額總和
+  const fixedData = months.map(m => {
+    const tpls = db.recurringTemplates || [];
+    return tpls.reduce((s, tpl) => {
+      if (tpl.status === 'settled') return s;
+      if (tpl.type === 'installment') {
+        if (!tpl.startDate || !tpl.totalInstallments) return s;
+        const start = new Date(tpl.startDate);
+        const startYM = start.getFullYear() * 12 + start.getMonth();
+        const curYM   = y * 12 + (m - 1);
+        const elapsed = curYM - startYM;
+        if (elapsed < 0 || elapsed >= tpl.totalInstallments) return s;
+        return s + tpl.amount;
+      }
+      return s + tpl.amount;
+    }, 0);
+  });
+
+  // 依模式合併：combined = 交易支出 + 固定支出, pure = 純交易支出
+  const expenseData = trendExpMode === 'combined'
+    ? months.map((_, i) => txExpenseData[i] + fixedData[i])
+    : txExpenseData;
 
   // 平均：只算有數值（>0）的月份
   const incomeMonths  = incomeData.filter(v => v > 0);
