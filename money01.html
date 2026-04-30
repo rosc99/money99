@@ -1336,11 +1336,12 @@
 <!-- Add Bank Modal -->
 <div id="bankModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:flex-end;">
   <div style="background:var(--modal-bg);border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:1px solid rgba(77,196,212,0.2);">
-    <div style="font-size:16px;font-weight:700;margin-bottom:16px;">新增銀行帳戶</div>
+    <div id="bankModalTitle" style="font-size:16px;font-weight:700;margin-bottom:16px;">新增銀行帳戶</div>
+    <input type="hidden" id="editBankId" value="">
     <div class="form-row"><div class="form-label">銀行名</div><input class="form-input" id="bankName" placeholder="國泰、玉山…" /></div>
     <div class="form-row"><div class="form-label">餘額</div><input class="form-input" type="number" id="bankBalance" placeholder="0" /></div>
     <div style="display:flex;gap:10px;margin-top:8px;">
-      <button class="btn btn-primary" style="flex:1;" onclick="addBank()">確認新增</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="addBank()">確認</button>
       <button class="btn" style="background:rgba(255,255,255,0.07);flex:1;" onclick="closeModal('bankModal')">取消</button>
     </div>
   </div>
@@ -1976,12 +1977,18 @@ function renderDashboard() {
     </div>`;
   }).join('');
 
-  const pct = totalIncome > 0 ? Math.max(0, Math.min(100, Math.round((cashflow / totalIncome) * 100))) : 0;
+  // 水球水位 = (收入 - 一般支出 - 固定支出) / 收入
+  // txExpense = 本月一般支出（含 auto 固定支出交易）
+  // recurringActual = 扣除已自動產生交易後的實際固定支出（避免重複計算）
+  const recurringActual = Math.max(0, recurringTotal - autoThisMonth);
+  const pureExpense = txExpense - autoThisMonth; // 純一般支出（不含固定支出的 auto 交易）
+  const netCashflow = totalIncome - pureExpense - recurringTotal;
+  const pct = totalIncome > 0 ? Math.max(0, Math.min(100, Math.round((netCashflow / totalIncome) * 100))) : 0;
   document.getElementById('waterFill').style.height = pct + '%';
   document.getElementById('waterPct').textContent = pct + '%';
-  document.getElementById('waterSub').textContent = fmt(cashflow);
+  document.getElementById('waterSub').textContent = fmt(netCashflow);
   document.getElementById('cfIncome').textContent = fmt(totalIncome);
-  document.getElementById('cfExpense').textContent = fmt(totalExpense);
+  document.getElementById('cfExpense').textContent = fmt(pureExpense);
   if (document.getElementById('cfFixed')) {
     document.getElementById('cfFixed').textContent = fmt(recurringTotal);
   }
@@ -2065,26 +2072,41 @@ function renderDonut() {
 //  FIXED EXPENSE DASHBOARD (首頁小看板)
 // ===================================================================
 function renderFixedDash(totalMonthExpense, totalMonthIncome) {
-  const tpls = (db.recurringTemplates || []).filter(t => t.status !== 'settled');
-  const fixedTotal = tpls.reduce((s,t) => s+t.amount, 0);
+  const allTpls = (db.recurringTemplates || []).filter(t => t.status !== 'settled');
+  const permanent = allTpls.filter(t => t.type !== 'installment');
+  const installs  = allTpls.filter(t => t.type === 'installment');
+  const permTotal    = permanent.reduce((s,t) => s+t.amount, 0);
+  const installTotal = installs.reduce((s,t) => s+t.amount, 0);
+  const fixedTotal   = permTotal + installTotal;
 
   const totalEl = document.getElementById('dashFixedTotal');
   if (totalEl) totalEl.textContent = fmt(fixedTotal) + '/月';
 
-  // ── 左側：長條圖（使用與收支平衡相同的 bar-row/bar-track/bar-fill 樣式）──
+  // ── 左側：長條圖，分無期限（粉）/ 有期限（金），使用 sqrt scale 防止極端──
   const barsEl = document.getElementById('dashFixedBars');
   if (barsEl) {
-    if (!tpls.length) {
+    if (!allTpls.length) {
       barsEl.innerHTML = '<div class="empty" style="padding:8px 0;font-size:11px;">尚無固定支出</div>';
     } else {
-      const maxVal = Math.max(...tpls.map(t=>t.amount), 1);
-      barsEl.innerHTML = tpls.slice(0,6).map(t => {
-        const widthPct = Math.round(t.amount / maxVal * 100);
+      // 合併列表，標記類型；以 sqrt 讓大小差異不那麼極端
+      const combined = [
+        ...installs.map(t => ({ ...t, _isInstall: true })),
+        ...permanent.map(t => ({ ...t, _isInstall: false }))
+      ].sort((a, b) => b.amount - a.amount).slice(0, 7);
+      const sqrtMax = Math.max(...combined.map(t => Math.sqrt(t.amount)), 1);
+      barsEl.innerHTML = combined.map(t => {
+        const widthPct = Math.round(Math.sqrt(t.amount) / sqrtMax * 100);
+        const barColor = t._isInstall
+          ? 'linear-gradient(90deg,#a07010,#f0c040)'   // 金色 = 有期限
+          : 'linear-gradient(90deg,#c2556a,#ffb6c1)';  // 粉色 = 無期限
+        const tagHtml = t._isInstall
+          ? `<span style="font-size:9px;color:var(--accent-gold);margin-left:4px;">[分期 剩${t.remainingInstallments||0}期]</span>`
+          : '';
         return `<div class="bar-row" style="margin-bottom:2px;">
-            <div class="bar-track"><div class="bar-fill" style="width:${widthPct}%;min-width:2px;background:linear-gradient(90deg,#c2556a,#ffb6c1);"></div></div>
+            <div class="bar-track"><div class="bar-fill" style="width:${widthPct}%;min-width:2px;background:${barColor};"></div></div>
           </div>
           <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-secondary);margin-top:-4px;margin-bottom:8px;">
-            <span>${t.name}</span><span style="font-family:'DM Mono',monospace;">${fmt(t.amount)}</span>
+            <span>${t.name}${tagHtml}</span><span style="font-family:'DM Mono',monospace;">${fmt(t.amount)}</span>
           </div>`;
       }).join('');
     }
@@ -3617,6 +3639,8 @@ function renderFunds() {
 function openEditBank(id) {
   const b = db.banks.find(x => x.id === id);
   if (!b) return;
+  document.getElementById('bankModalTitle').textContent = '編輯銀行帳戶';
+  document.getElementById('editBankId').value = id;
   document.getElementById('bankName').value = b.name;
   document.getElementById('bankBalance').value = b.balance;
   document.getElementById('bankModal').style.display = 'flex';
@@ -3706,9 +3730,26 @@ function showAddFund() {
   document.getElementById('fundModal').style.display = 'flex';
 }
 
+function showAddBank() {
+  document.getElementById('bankModalTitle').textContent = '新增銀行帳戶';
+  document.getElementById('editBankId').value = '';
+  document.getElementById('bankName').value = '';
+  document.getElementById('bankBalance').value = '';
+  document.getElementById('bankModal').style.display = 'flex';
+}
+
 function addBank() {
-  const name = document.getElementById('bankName').value.trim(), bal = parseFloat(document.getElementById('bankBalance').value);
-  if (name && bal) { db.banks.push({ id: uid(), name, balance: bal }); closeModal('bankModal'); saveLocal(); renderStocksPage(); renderDashboard(); }
+  const name = document.getElementById('bankName').value.trim();
+  const bal  = parseFloat(document.getElementById('bankBalance').value);
+  if (!name || isNaN(bal)) return toast('請填寫銀行名稱與餘額');
+  const editId = document.getElementById('editBankId').value;
+  if (editId) {
+    const idx = db.banks.findIndex(b => b.id === editId);
+    if (idx !== -1) db.banks[idx] = { ...db.banks[idx], name, balance: bal };
+  } else {
+    db.banks.push({ id: uid(), name, balance: bal });
+  }
+  closeModal('bankModal'); saveLocal(); renderStocksPage(); renderDashboard(); autoSync();
 }
 function deleteBank(id) { if(confirm('確定刪除？')) { db.banks=db.banks.filter(b=>b.id!==id); renderStocksPage(); renderDashboard(); saveLocal(); autoSync(); } }
  
