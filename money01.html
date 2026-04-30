@@ -813,14 +813,27 @@
 
     <!-- [N-03] 收支趨勢 Dashboard -->
     <div class="card" data-m="[N-03] TrendDashboard">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <div class="section-title">📊 年度收支趨勢</div>
+      <!-- 標題列：年份選擇 + 圖例 -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="section-title">📊 年度收支趨勢</div>
+          <div style="display:flex;align-items:center;gap:2px;">
+            <button onclick="changeTrendYear(-1)" style="width:22px;height:22px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:var(--text-muted);font-size:13px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;">‹</button>
+            <span id="trendYearLabel" style="font-family:'DM Mono',monospace;font-size:12px;color:var(--ocean-light);font-weight:700;min-width:38px;text-align:center;">2025</span>
+            <button onclick="changeTrendYear(1)" style="width:22px;height:22px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:var(--text-muted);font-size:13px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;">›</button>
+          </div>
+        </div>
         <div style="display:flex;gap:12px;font-size:10px;color:var(--text-muted);">
           <span style="display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:16px;height:2px;background:var(--accent-green);border-radius:2px;"></span>收入</span>
           <span style="display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:16px;height:2px;background:var(--accent-red);border-radius:2px;"></span>支出</span>
         </div>
       </div>
-      <svg id="trendChart" width="100%" height="160" style="overflow:visible;display:block;margin-top:4px;">
+      <!-- 平均月收入 -->
+      <div style="font-size:10px;color:var(--text-muted);margin-bottom:8px;">
+        平均月收入 <span id="trendAvgIncome" style="font-family:'DM Mono',monospace;color:var(--accent-green);font-weight:700;">--</span>
+        <span style="margin-left:8px;">平均月支出 <span id="trendAvgExpense" style="font-family:'DM Mono',monospace;color:var(--accent-red);font-weight:700;">--</span></span>
+      </div>
+      <svg id="trendChart" width="100%" height="160" style="overflow:visible;display:block;">
         <!-- JS 動態生成 -->
       </svg>
     </div>
@@ -2310,11 +2323,22 @@ function toggleInvestDetail() {
   if (chev) chev.style.transform = open ? '' : 'rotate(180deg)';
 }
 
+let trendYear = null; // null = 用 db.config.currentYear
+
+function changeTrendYear(delta) {
+  if (trendYear === null) trendYear = db.config.currentYear;
+  trendYear += delta;
+  renderTrendChart();
+}
+
 function renderTrendChart() {
   const svg = document.getElementById('trendChart');
   if (!svg) return;
 
-  const { currentYear: y } = db.config;
+  const y = trendYear !== null ? trendYear : db.config.currentYear;
+  const yearLabel = document.getElementById('trendYearLabel');
+  if (yearLabel) yearLabel.textContent = y;
+
   const months = [1,2,3,4,5,6,7,8,9,10,11,12];
 
   const incomeData = months.map(m => db.transactions.filter(t => {
@@ -2327,10 +2351,20 @@ function renderTrendChart() {
     return d.getFullYear() === y && (d.getMonth()+1) === m && t.type === 'expense';
   }).reduce((s,t) => s+t.amount, 0));
 
+  // 平均：只算有數值（>0）的月份
+  const incomeMonths  = incomeData.filter(v => v > 0);
+  const expenseMonths = expenseData.filter(v => v > 0);
+  const avgIncome  = incomeMonths.length  ? Math.round(incomeMonths.reduce((s,v)=>s+v,0)  / incomeMonths.length)  : 0;
+  const avgExpense = expenseMonths.length ? Math.round(expenseMonths.reduce((s,v)=>s+v,0) / expenseMonths.length) : 0;
+
+  const avgIncEl  = document.getElementById('trendAvgIncome');
+  const avgExpEl  = document.getElementById('trendAvgExpense');
+  if (avgIncEl)  avgIncEl.textContent  = avgIncome  ? fmt(avgIncome)  : '--';
+  if (avgExpEl)  avgExpEl.textContent  = avgExpense ? fmt(avgExpense) : '--';
+
   const allVals = [...incomeData, ...expenseData];
   const maxVal = Math.max(...allVals, 1);
 
-  // SVG coordinate helpers
   const W = 420, H = 130, padL = 8, padR = 8, padT = 14, padB = 28;
   const chartW = W - padL - padR;
   const chartH = H - padT - padB;
@@ -2341,7 +2375,6 @@ function renderTrendChart() {
 
   const polyline = (data, color) => {
     const pts = data.map((v, i) => `${toX(i).toFixed(1)},${toY(v).toFixed(1)}`).join(' ');
-    // area fill polygon
     const first = `${toX(0).toFixed(1)},${(padT+chartH).toFixed(1)}`;
     const last  = `${toX(11).toFixed(1)},${(padT+chartH).toFixed(1)}`;
     const areaPts = first + ' ' + data.map((v,i) => `${toX(i).toFixed(1)},${toY(v).toFixed(1)}`).join(' ') + ' ' + last;
@@ -2354,22 +2387,19 @@ function renderTrendChart() {
 
   const fmtLabel = v => v >= 10000 ? (v/10000).toFixed(0)+'w' : v >= 1000 ? (v/1000).toFixed(0)+'k' : '';
 
-  // Tooltip dots with value labels (only non-zero)
   const valueLabels = (data, color, anchor) => data.map((v, i) => {
     if (!v) return '';
-    const x = toX(i), y = toY(v);
+    const x = toX(i), yy = toY(v);
     const lbl = fmtLabel(v);
     if (!lbl) return '';
-    const ay = anchor === 'top' ? y - 5 : y + 10;
+    const ay = anchor === 'top' ? yy - 5 : yy + 10;
     return `<text x="${x.toFixed(1)}" y="${ay.toFixed(1)}" text-anchor="middle" font-size="7" fill="${color}" font-family="DM Mono,monospace">${lbl}</text>`;
   }).join('');
 
-  // Month labels
   const monthLabels = months.map((m,i) =>
     `<text x="${toX(i).toFixed(1)}" y="${(H-6).toFixed(1)}" text-anchor="middle" font-size="8.5" fill="rgba(150,200,220,0.45)" font-family="Noto Sans TC,sans-serif">${m}月</text>`
   ).join('');
 
-  // Grid lines (3 horizontal)
   const gridLines = [0.25, 0.5, 0.75].map(pct => {
     const gy = padT + chartH * (1 - pct);
     const lbl = fmtLabel(Math.round(maxVal * pct));
@@ -4570,6 +4600,6 @@ window.addEventListener('load', () => {
   else { setSyncStatus('error'); }
   document.querySelectorAll('[id$="Modal"]').forEach(m => { m.addEventListener('click', e => { if (e.target===m) m.style.display='none'; }); });
 });
-</script> /* --- [JS END] --- */
+</script>
 </body>
 </html>
