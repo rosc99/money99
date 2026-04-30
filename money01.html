@@ -726,54 +726,29 @@
  
     <div class="card" data-m="[M-01] InvestAnalysis">
       <div class="card-title">💰 投資損益分析 (股票+基金)</div>
-
-      <!-- 主數字：真實總損益 + 報酬率 -->
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;">
-        <div>
-          <div style="font-size:10px;color:var(--text-muted);margin-bottom:3px;">真實總損益</div>
-          <div class="total-amount" id="investTotalVal" style="font-size:24px;">--</div>
-        </div>
+        <div class="total-amount" id="investTotalVal" style="font-size:24px;">--</div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
           <div id="investTotalROI" class="total-badge">+0%</div>
           <div id="investTotalGain" style="font-family:'DM Mono',monospace;font-size:12px;font-weight:900;color:var(--text-secondary);">+$0</div>
         </div>
       </div>
-
-      <!-- 投資池拆解長條圖 -->
+      
+      <!-- 成本/市值長條圖：左到右，藍=成本，綠=增值 -->
       <div class="invest-bar-row">
-        <div class="invest-bar-label">本金/現值</div>
+        <div class="invest-bar-label">成本/市值</div>
         <div class="invest-bar-track-dual">
           <div id="investCostBar" class="invest-bar-cost" style="width:60%"></div>
           <div id="investValBar" class="invest-bar-val" style="width:20%"></div>
         </div>
       </div>
-
-      <!-- 三行數字說明：原始本金 / 現金池 / 股票市值 -->
-      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-top:2px;margin-bottom:12px;">
-        <span id="investTotalCost">本金 --</span>
-        <span id="investTotalRealized" style="color:var(--accent-gold);">現金池 --</span>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-top:2px;margin-bottom:4px;">
+        <span id="investTotalCost">成本 --</span>
+        <span id="investTotalRealized" style="color:var(--accent-green)">回收 --</span>
         <span id="investTotalValSub">市值 --</span>
       </div>
-
-      <!-- 投資池公式說明 -->
-      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:10px;color:var(--text-muted);line-height:1.8;">
-        <div style="display:flex;justify-content:space-between;">
-          <span>📈 股票+基金市值</span>
-          <span id="ipStockVal" style="font-family:'DM Mono',monospace;color:var(--text-secondary);">--</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;">
-          <span>🏦 交割帳戶餘額</span>
-          <span id="ipBrokerBal" style="font-family:'DM Mono',monospace;color:var(--accent-gold);">--</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;">
-          <span>💸 累計匯出</span>
-          <span id="ipNetWithdrawn" style="font-family:'DM Mono',monospace;color:var(--ocean-light);">--</span>
-        </div>
-        <div style="border-top:1px solid rgba(255,255,255,0.06);margin-top:4px;padding-top:4px;display:flex;justify-content:space-between;font-weight:700;">
-          <span style="color:var(--text-secondary);">= 投資總資產</span>
-          <span id="ipTotalAsset" style="font-family:'DM Mono',monospace;color:var(--ocean-foam);">--</span>
-        </div>
-        <div id="ipNoBrokerWarn" style="display:none;color:var(--accent-gold);margin-top:4px;">⚠️ 尚未指定交割帳戶，請至設定配置</div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
+        <div id="investNetReturnLabel" style="font-size:10px;color:var(--text-muted);">扣回收總報酬 <span id="investNetReturn" style="font-family:'DM Mono',monospace;font-weight:700;color:var(--accent-green);">--</span></div>
       </div>
 
       <!-- 切換按鈕與明細標題 -->
@@ -1216,33 +1191,6 @@
     </div>
 
     <div class="settings-section">
-    <div class="settings-section">
-      <div class="settings-section-title">📐 投資池設定</div>
-      <div class="card" style="padding:14px 16px;">
-        <div style="font-size:10px;color:var(--text-muted);margin-bottom:12px;line-height:1.6;">設定後投資損益分析卡片將使用新公式計算真實報酬率。交割帳戶請至「資產 → 銀行帳戶 → 新增/編輯」勾選設定。</div>
-        <div class="form-row">
-          <div class="form-label">初始本金</div>
-          <input class="form-input" type="number" id="ipInitialCost" placeholder="首次投入的本金" />
-        </div>
-        <div class="form-row">
-          <div class="form-label">累計匯出</div>
-          <input class="form-input" type="number" id="ipNetWithdrawn" placeholder="從交割戶匯回生活帳戶" />
-        </div>
-        <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px;margin-bottom:12px;font-size:10px;color:var(--text-muted);line-height:1.9;">
-          <div style="display:flex;justify-content:space-between;">
-            <span>目前交割帳戶</span>
-            <span id="ipBrokerBankLabel" style="color:var(--accent-gold);font-weight:700;">未設定</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;">
-            <span>明細「投資」類支出合計</span>
-            <span id="ipAutoTxLabel" style="font-family:'DM Mono',monospace;color:var(--text-secondary);">--</span>
-          </div>
-        </div>
-        <button class="btn btn-primary btn-sm" onclick="saveInvestPool()">儲存投資池設定</button>
-      </div>
-    </div>
-
-    <div class="settings-section">
       <div class="settings-section-title">📊 每月預算設定</div>
       <div class="card" style="padding:14px 16px;">
         <div class="form-row">
@@ -1388,19 +1336,11 @@
 <!-- Add Bank Modal -->
 <div id="bankModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:flex-end;">
   <div style="background:var(--modal-bg);border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;margin:0 auto;border-top:1px solid rgba(77,196,212,0.2);">
-    <div id="bankModalTitle" style="font-size:16px;font-weight:700;margin-bottom:16px;">新增銀行帳戶</div>
-    <input type="hidden" id="editBankId" value="">
+    <div style="font-size:16px;font-weight:700;margin-bottom:16px;">新增銀行帳戶</div>
     <div class="form-row"><div class="form-label">銀行名</div><input class="form-input" id="bankName" placeholder="國泰、玉山…" /></div>
     <div class="form-row"><div class="form-label">餘額</div><input class="form-input" type="number" id="bankBalance" placeholder="0" /></div>
-    <div style="display:flex;align-items:center;gap:10px;margin:4px 0 14px;padding:10px 12px;background:rgba(240,192,64,0.07);border:1px solid rgba(240,192,64,0.2);border-radius:10px;">
-      <input type="checkbox" id="bankIsBroker" style="width:16px;height:16px;accent-color:var(--accent-gold);cursor:pointer;">
-      <div>
-        <div style="font-size:12px;font-weight:700;color:var(--accent-gold);">設為證券交割帳戶</div>
-        <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">勾選後此帳戶餘額將用於投資損益分析計算（僅能設一個）</div>
-      </div>
-    </div>
     <div style="display:flex;gap:10px;margin-top:8px;">
-      <button class="btn btn-primary" style="flex:1;" onclick="addBank()">確認</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="addBank()">確認新增</button>
       <button class="btn" style="background:rgba(255,255,255,0.07);flex:1;" onclick="closeModal('bankModal')">取消</button>
     </div>
   </div>
@@ -1644,12 +1584,7 @@ let db = {
   ],
   loans: [{ id:'l1', name:'房屋貸款', total:500000, remaining:420000 }],
   pledges: [], // [M-01] Pledge Store
-  recurringTemplates: [], // [M-02] Recurring Fixed Expenses
-  investPool: {
-    initialCost: 0,       // 手動填寫的初始本金
-    netWithdrawn: 0,      // 累計從交割戶匯出至生活帳戶的金額
-    brokerBankId: null    // 指向 db.banks 中 isBroker:true 的帳戶 id
-  }
+  recurringTemplates: [] // [M-02] Recurring Fixed Expenses
 };
  
 db.transactions = [
@@ -1959,100 +1894,77 @@ function renderDashboard() {
     ...(db.funds || []).map(f => ({ ...f, val: f.value || 0, type: 'fund' }))
   ].sort((a, b) => (b.val + (b.realized || 0)) - (a.val + (a.realized || 0)));
 
-  const investVal = investItems.reduce((s, i) => s + i.val, 0); // 股票+基金市值
+  const investCost = investItems.reduce((s, i) => s + i.cost, 0);
+  const investVal = investItems.reduce((s, i) => s + i.val, 0);
+  const investRealized = investItems.reduce((s, i) => s + (i.realized || 0), 0);
+  
+  const investTotalGainAmt = (investVal + investRealized) - investCost;
+  const investROI = investCost > 0 ? (investTotalGainAmt / investCost * 100) : 0;
 
-  // ── 投資池（InvestPool）核心計算 ──
-  const ip = db.investPool || { initialCost: 0, netWithdrawn: 0, brokerBankId: null };
-
-  // 原始投入本金 = 初始本金 + 所有明細「投資」類支出（不限月份）+ 固定支出「投資」類
-  const txInvestCost = db.transactions
-    .filter(t => t.type === 'expense' && !t.auto && t.category === '投資')
-    .reduce((s, t) => s + t.amount, 0);
-  const recurringInvestCost = (db.recurringTemplates || [])
-    .filter(t => t.category === '投資')
-    .reduce((s, t) => {
-      // 有期限：已付期數 × 月金額；無期限：月金額（視為每月持續投入，用已產生交易計算較準，這裡補計模板本身）
-      if (t.type === 'installment') {
-        const paid = (t.totalInstallments || 0) - (t.remainingInstallments || 0);
-        return s + t.amount * paid;
-      }
-      return s; // 無期限固定投資已被 txInvestCost 的 auto 交易涵蓋，不重複加
-    }, 0);
-  const originalCapital = (ip.initialCost || 0) + txInvestCost + recurringInvestCost;
-
-  // 交割帳戶餘額（從 db.banks 借用，不重複計入資產）
-  const brokerBank = ip.brokerBankId ? (db.banks || []).find(b => b.id === ip.brokerBankId) : null;
-  const brokerBalance = brokerBank ? (brokerBank.balance || 0) : 0;
-
-  // 投資總資產 = 市值 + 交割帳戶 + 累計匯出
-  const totalInvestAsset = investVal + brokerBalance + (ip.netWithdrawn || 0);
-
-  // 真實總損益 & 真實報酬率
-  const truePnL    = totalInvestAsset - originalCapital;
-  const trueROI    = originalCapital > 0 ? (truePnL / originalCapital * 100) : 0;
-
-  // ── 更新投資卡片 UI ──
-  const gainEl = document.getElementById('investTotalGain');
-  gainEl.textContent = (truePnL >= 0 ? '+' : '') + fmt(truePnL);
-  gainEl.style.color = truePnL >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
-
-  const roiBadge = document.getElementById('investTotalROI');
-  roiBadge.textContent = (trueROI >= 0 ? '+' : '') + trueROI.toFixed(2) + '%';
-  roiBadge.className = 'total-badge' + (trueROI < 0 ? ' neg' : '');
-
-  // 主數字改為「真實總損益」
-  document.getElementById('investTotalVal').textContent = (truePnL >= 0 ? '+' : '') + fmt(truePnL);
-  document.getElementById('investTotalVal').style.color = truePnL >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
-
-  document.getElementById('investTotalCost').textContent = '本金 ' + fmt(originalCapital);
-  document.getElementById('investTotalRealized').textContent = '現金池 ' + fmt(brokerBalance + (ip.netWithdrawn || 0));
+  document.getElementById('investTotalVal').textContent = fmt(investVal);
+  document.getElementById('investTotalCost').textContent = '成本 ' + fmt(investCost);
+  document.getElementById('investTotalRealized').textContent = '回收 ' + fmt(investRealized);
   document.getElementById('investTotalValSub').textContent = '市值 ' + fmt(investVal);
+  
+  const roiBadge = document.getElementById('investTotalROI');
+  roiBadge.textContent = (investROI >= 0 ? '+' : '') + investROI.toFixed(2) + '%';
+  roiBadge.className = 'total-badge' + (investROI < 0 ? ' neg' : '');
+  
+  const gainEl = document.getElementById('investTotalGain');
+  gainEl.textContent = (investTotalGainAmt >= 0 ? '+' : '') + fmt(investTotalGainAmt);
+  gainEl.style.color = investTotalGainAmt >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
 
-  // 投資池公式明細
-  const ipStockEl = document.getElementById('ipStockVal');
-  const ipBrokerEl = document.getElementById('ipBrokerBal');
-  const ipWithEl = document.getElementById('ipNetWithdrawn');
-  const ipTotalEl = document.getElementById('ipTotalAsset');
-  const ipWarnEl = document.getElementById('ipNoBrokerWarn');
-  if (ipStockEl) ipStockEl.textContent = fmt(investVal);
-  if (ipBrokerEl) ipBrokerEl.textContent = brokerBank ? fmt(brokerBalance) : '未設定';
-  if (ipWithEl) ipWithEl.textContent = fmt(ip.netWithdrawn || 0);
-  if (ipTotalEl) ipTotalEl.textContent = fmt(totalInvestAsset);
-  if (ipWarnEl) ipWarnEl.style.display = brokerBank ? 'none' : 'block';
+  // 總覽長條圖邏輯：
+  // 藍色 = 成本（固定部分）
+  // 綠色 = 增值部分 = (市值 - 成本)，即未實現損益
+  // 比例以 investROI（增長趴數）決定：總寬 = 藍 + 綠 = 100%*(cost) + 100%*(gain)
+  // 將整條以「成本 + |增值|」為基準，依比例分配寬度
+  const investUnrealizedGain = investVal - investCost; // 未實現損益（不含已回收）
+  const totalSpan = Math.max(investCost + Math.abs(investUnrealizedGain), 1);
+  const costBarPct = (investCost / totalSpan * 100).toFixed(2);
+  const gainBarPct = (Math.abs(investUnrealizedGain) / totalSpan * 100).toFixed(2);
 
-  // 長條圖：藍=原始本金，綠/紅=真實損益
-  const totalSpan = Math.max(originalCapital + Math.abs(truePnL), 1);
-  const costBarPct = (originalCapital / totalSpan * 100).toFixed(2);
-  const gainBarPct = (Math.abs(truePnL) / totalSpan * 100).toFixed(2);
   document.getElementById('investCostBar').style.width = costBarPct + '%';
   const valBar = document.getElementById('investValBar');
   valBar.style.width = gainBarPct + '%';
-  valBar.style.background = truePnL >= 0
+  const isGainPos = investUnrealizedGain >= 0;
+  valBar.style.background = isGainPos
     ? 'linear-gradient(90deg, #1a8060, var(--accent-green))'
     : 'linear-gradient(90deg, #c0362e, var(--accent-red))';
   valBar.textContent = investDisplayMode === 'pct'
-    ? (trueROI >= 0 ? '+' : '') + trueROI.toFixed(1) + '%'
-    : (truePnL >= 0 ? '+' : '') + fmt(truePnL);
+    ? (investUnrealizedGain >= 0 ? '+' : '') + (investCost > 0 ? (investUnrealizedGain / investCost * 100).toFixed(1) : '0') + '%'
+    : (investUnrealizedGain >= 0 ? '+' : '') + fmt(investUnrealizedGain);
 
-  // ── 個股明細列表（保留單筆 realized，僅顯示各標的本身損益）──
+  // 含回收總報酬 = 市值 - 成本 - 回收（回收視為已提出，不算在報酬內）
+  const netReturn = investVal - investCost - investRealized;
+  const netReturnEl = document.getElementById('investNetReturn');
+  if (netReturnEl) {
+    netReturnEl.textContent = (netReturn >= 0 ? '+' : '') + fmt(netReturn);
+    netReturnEl.style.color = netReturn >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+  }
+
   document.getElementById('investItemList').innerHTML = investItems.slice(0, 5).map(i => {
     const itemRealized = i.realized || 0;
     const itemGain = (i.val + itemRealized) - i.cost;
     const itemROI = i.cost > 0 ? (itemGain / i.cost * 100) : 0;
-    const itemUnrealized = i.val - i.cost;
+    
+    // 藍=成本比例，綠=未實現損益（val-cost），依增長趴數分配寬度
+    const itemUnrealized = i.val - i.cost; // 未實現損益（不含回收）
     const itemSpan = Math.max(i.cost + Math.abs(itemUnrealized), 1);
     const costPct = (i.cost / itemSpan * 100).toFixed(2);
     const unrealPct = (Math.abs(itemUnrealized) / itemSpan * 100).toFixed(2);
     const isItemPos = itemUnrealized >= 0;
+
     const labelText = investDisplayMode === 'pct'
       ? (itemROI >= 0 ? '+' : '') + itemROI.toFixed(1) + '%'
       : (itemUnrealized >= 0 ? '+' : '') + (Math.abs(itemUnrealized) >= 10000 ? (itemUnrealized/10000).toFixed(1)+'萬' : fmt(itemUnrealized));
     const labelColor = isItemPos ? 'var(--accent-green)' : 'var(--accent-red)';
+
     return `
     <div class="invest-item-row" onclick="switchPage('stocks', document.querySelector('[data-page=stocks]'))" style="cursor:pointer;">
       <div class="invest-item-info">
         <div class="invest-item-name">${i.name}</div>
-        <div class="invest-item-meta">成本 ${fmt(i.cost)} · 市值 ${fmt(i.val)}${itemRealized > 0 ? ` · 已回收 ${fmt(itemRealized)}` : ''}</div>
+        <div class="invest-item-meta">成本 ${fmt(i.cost)} · 市值 ${fmt(i.val)} ${itemRealized > 0 ? `· 回收 ${fmt(itemRealized)}` : ''}</div>
       </div>
       <div class="invest-item-bars-wrap">
         <div class="invest-item-bars">
@@ -3333,18 +3245,12 @@ function renderStocksPage() {
   const bankFullList = document.getElementById('bankFullList');
   if (bankFullList) {
     const maxB = Math.max(...(db.banks || []).map(b => b.balance || 0), 1);
-    bankFullList.innerHTML = (!db.banks || !db.banks.length) ? `<div class="empty">尚未加入帳戶</div>` : db.banks.map(b => {
-      const brokerBadge = b.isBroker
-        ? `<span style="font-size:9px;background:rgba(240,192,64,0.15);color:var(--accent-gold);border:1px solid rgba(240,192,64,0.3);border-radius:4px;padding:1px 5px;margin-left:4px;font-weight:700;">交割</span>`
-        : '';
-      const barColor = b.isBroker ? '#b08000' : 'var(--ocean-teal)';
-      return `
+    bankFullList.innerHTML = (!db.banks || !db.banks.length) ? `<div class="empty">尚未加入帳戶</div>` : db.banks.map(b => `
       <div class="bank-bar-row">
-        <div class="bank-name" style="width:auto;min-width:30px;white-space:nowrap;">${b.name}${brokerBadge}</div>
-        <div class="bank-track" style="margin-left:8px;" onclick="openEditBank('${b.id}')"><div class="bank-fill" style="width:${Math.round((b.balance || 0) / maxB * 80) + 15}%;background:${barColor};">${fmt(b.balance || 0)}</div></div>
+        <div class="bank-name">${b.name}</div>
+        <div class="bank-track" onclick="openEditBank('${b.id}')"><div class="bank-fill" style="width:${Math.round((b.balance || 0) / maxB * 80) + 15}%;background:var(--ocean-teal);">${fmt(b.balance || 0)}</div></div>
         <div style="padding-left:8px;color:var(--text-muted);font-size:14px;cursor:pointer;" onclick="deleteBank('${b.id}')">✕</div>
-      </div>`;
-    }).join('');
+      </div>`).join('');
   }
 }
 
@@ -3732,11 +3638,8 @@ function renderFunds() {
 function openEditBank(id) {
   const b = db.banks.find(x => x.id === id);
   if (!b) return;
-  document.getElementById('bankModalTitle').textContent = '編輯銀行帳戶';
-  document.getElementById('editBankId').value = id;
   document.getElementById('bankName').value = b.name;
   document.getElementById('bankBalance').value = b.balance;
-  document.getElementById('bankIsBroker').checked = !!b.isBroker;
   document.getElementById('bankModal').style.display = 'flex';
 }
 
@@ -3824,49 +3727,11 @@ function showAddFund() {
   document.getElementById('fundModal').style.display = 'flex';
 }
 
-function showAddBank() {
-  document.getElementById('bankModalTitle').textContent = '新增銀行帳戶';
-  document.getElementById('editBankId').value = '';
-  document.getElementById('bankName').value = '';
-  document.getElementById('bankBalance').value = '';
-  document.getElementById('bankIsBroker').checked = false;
-  document.getElementById('bankModal').style.display = 'flex';
-}
-
 function addBank() {
-  const name = document.getElementById('bankName').value.trim();
-  const bal  = parseFloat(document.getElementById('bankBalance').value);
-  if (!name || isNaN(bal)) return toast('請填寫銀行名稱與餘額');
-  const isBroker = document.getElementById('bankIsBroker').checked;
-  const editId = document.getElementById('editBankId').value;
-
-  // 若設為交割帳戶，先清除其他帳戶的 isBroker 標記
-  if (isBroker) {
-    db.banks.forEach(b => { b.isBroker = false; });
-    if (!db.investPool) db.investPool = { initialCost: 0, netWithdrawn: 0, brokerBankId: null };
-  }
-
-  if (editId) {
-    const idx = db.banks.findIndex(b => b.id === editId);
-    if (idx !== -1) {
-      db.banks[idx] = { ...db.banks[idx], name, balance: bal, isBroker };
-      if (isBroker) db.investPool.brokerBankId = editId;
-      else if (db.investPool && db.investPool.brokerBankId === editId) db.investPool.brokerBankId = null;
-    }
-  } else {
-    const newId = uid();
-    db.banks.push({ id: newId, name, balance: bal, isBroker });
-    if (isBroker) db.investPool.brokerBankId = newId;
-  }
-  closeModal('bankModal'); saveLocal(); renderStocksPage(); renderDashboard(); autoSync();
+  const name = document.getElementById('bankName').value.trim(), bal = parseFloat(document.getElementById('bankBalance').value);
+  if (name && bal) { db.banks.push({ id: uid(), name, balance: bal }); closeModal('bankModal'); saveLocal(); renderStocksPage(); renderDashboard(); }
 }
-function deleteBank(id) {
-  if (confirm('確定刪除？')) {
-    db.banks = db.banks.filter(b => b.id !== id);
-    if (db.investPool && db.investPool.brokerBankId === id) db.investPool.brokerBankId = null;
-    renderStocksPage(); renderDashboard(); saveLocal(); autoSync();
-  }
-}
+function deleteBank(id) { if(confirm('確定刪除？')) { db.banks=db.banks.filter(b=>b.id!==id); renderStocksPage(); renderDashboard(); saveLocal(); autoSync(); } }
  
 // ===================================================================
 //  [M-03] PLEDGE PAGE — HISTORICAL STRESS TEST
@@ -4004,34 +3869,6 @@ function renderSettings() {
   applyTheme(db.config.theme || 'ocean');
   renderCategoryList(); renderIncomeCategoryList(); updateSyncUI();
   renderSupabaseTables();
-
-  // 投資池設定
-  const ip = db.investPool || { initialCost: 0, netWithdrawn: 0, brokerBankId: null };
-  const ipIC = document.getElementById('ipInitialCost');
-  const ipNW = document.getElementById('ipNetWithdrawn');
-  const ipBL = document.getElementById('ipBrokerBankLabel');
-  const ipAT = document.getElementById('ipAutoTxLabel');
-  if (ipIC) ipIC.value = ip.initialCost || '';
-  if (ipNW) ipNW.value = ip.netWithdrawn || '';
-  if (ipBL) {
-    const brokerBank = ip.brokerBankId ? (db.banks || []).find(b => b.id === ip.brokerBankId) : null;
-    ipBL.textContent = brokerBank ? `${brokerBank.name} (${fmt(brokerBank.balance)})` : '未設定';
-  }
-  if (ipAT) {
-    const autoTx = db.transactions.filter(t => t.type === 'expense' && !t.auto && t.category === '投資')
-      .reduce((s, t) => s + t.amount, 0);
-    ipAT.textContent = fmt(autoTx);
-  }
-}
-
-function saveInvestPool() {
-  if (!db.investPool) db.investPool = { initialCost: 0, netWithdrawn: 0, brokerBankId: null };
-  const ic = parseFloat(document.getElementById('ipInitialCost').value) || 0;
-  const nw = parseFloat(document.getElementById('ipNetWithdrawn').value) || 0;
-  db.investPool.initialCost = ic;
-  db.investPool.netWithdrawn = nw;
-  saveLocal(); renderDashboard(); renderSettings(); autoSync();
-  toast('✅ 投資池設定已儲存');
 }
 
 // ===================================================================
@@ -4308,10 +4145,6 @@ function loadLocal() {
       if (!db.pledges) db.pledges = []; // [M-01] migrate
       if (!db.recurringTemplates) db.recurringTemplates = []; // [M-02] migrate
       if (!db.meta.lastSyncDate) db.meta.lastSyncDate = null; // [M-02] migrate
-      if (!db.investPool) db.investPool = { initialCost: 0, netWithdrawn: 0, brokerBankId: null }; // [IP] migrate
-      if (db.investPool.initialCost === undefined) db.investPool.initialCost = 0;
-      if (db.investPool.netWithdrawn === undefined) db.investPool.netWithdrawn = 0;
-      if (db.investPool.brokerBankId === undefined) db.investPool.brokerBankId = null;
       if (!db.config.categories) db.config.categories = [{name:'房貸',icon:'🏠'},{name:'信貸',icon:'🏦'},{name:'生活費',icon:'🛒'},{name:'交通',icon:'🚌'},{name:'醫療',icon:'💊'},{name:'娛樂',icon:'🎮'},{name:'其他',icon:'📦'}];
       if (!db.config.categories.some(c => c.name === '信貸')) { const idx = db.config.categories.findIndex(c=>c.name==='房貸'); db.config.categories.splice(idx>=0?idx+1:0,0,{name:'信貸',icon:'🏦'}); }
       if (!db.config.incomeCategories) db.config.incomeCategories = [{name:'薪資',icon:'💰'},{name:'獎金',icon:'🎁'},{name:'投資獲利',icon:'📈'},{name:'股息收入',icon:'🧧'},{name:'其他收入',icon:'💹'}];
