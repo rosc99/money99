@@ -3226,7 +3226,49 @@ const QUOTE_PROXY_URL = 'https://dlwswwioqbghwpksbnjv.supabase.co/functions/v1/q
 const QUOTE_PROXY_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsd3N3d2lvcWJnaHdwa3Nibmp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MzQ3NjEsImV4cCI6MjA4ODMxMDc2MX0.d5jRhb_6qQDnfcEIfvRErfAWIEWcEnuR74diYtAicfg';
 
 async function fetchQuote(ticker) {
-  const tw = ticker.match(/^\d/) ? ticker + '.TW' : ticker;
+  const isTW = ticker.match(/^\d/); // 台股代號以數字開頭
+
+  // ── [A] 台股：優先用 TWSE openapi（免 proxy，最穩定）──
+  if (isTW) {
+    try {
+      // openapi.twse.com.tw 為官方開放資料，支援 CORS
+      const res = await fetchWithTimeout(
+        `https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_AVG?stockNo=${ticker}`,
+        6000
+      );
+      if (res.ok) {
+        const arr = await res.json();
+        // 回傳陣列，最後一筆為最新
+        if (arr && arr.length > 0) {
+          const last = arr[arr.length - 1];
+          const price = parseFloat(last.ClosingPrice);
+          const prev  = arr.length > 1 ? parseFloat(arr[arr.length - 2].ClosingPrice) : price;
+          if (price > 0) return { price, prevClose: prev, source: 'TWSE-openapi' };
+        }
+      }
+    } catch(e) { console.warn('[fetchQuote] TWSE openapi fail:', e); }
+
+    // ── [B] 台股備援：TWSE 即時行情 via AllOrigins ──
+    try {
+      const twseUrl = `https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_${ticker}.tw&_=${Date.now()}`;
+      const res = await fetchWithTimeout(
+        `https://api.allorigins.win/raw?url=${encodeURIComponent(twseUrl)}`,
+        7000
+      );
+      if (res.ok) {
+        const d = await res.json();
+        const item = d?.msgArray?.[0];
+        if (item) {
+          const price    = parseFloat(item.z !== '-' ? item.z : item.y) || 0;
+          const prevClose= parseFloat(item.y) || price;
+          if (price > 0) return { price, prevClose, source: 'TWSE-realtime' };
+        }
+      }
+    } catch(e) { console.warn('[fetchQuote] TWSE realtime fail:', e); }
+  }
+
+  // ── [C] Yahoo Finance via CodeTabs（台股 & 美股通用）──
+  const tw = isTW ? ticker + '.TW' : ticker;
   const yahooPath = `https://query1.finance.yahoo.com/v8/finance/chart/${tw}?interval=1d&range=1d`;
 
   function parseYahooMeta(d) {
@@ -3235,29 +3277,26 @@ async function fetchQuote(ticker) {
     return null;
   }
 
-  // ── 三個 proxy 同時競賽，誰先成功就用誰 ──
   const proxyAttempts = [
-    // CodeTabs（連線測試最快）
     async () => {
       const url = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(yahooPath)}`;
-      const res = await fetchWithTimeout(url, 5000);
+      const res = await fetchWithTimeout(url, 6000);
       const d = await res.json();
       const r = parseYahooMeta(d);
       if (!r) throw new Error('no price');
       return { ...r, source: 'Yahoo(CodeTabs)' };
     },
-    // AllOrigins（連線測試備用）
     async () => {
       const url = `https://api.allorigins.win/raw?url=${encodeURIComponent(yahooPath)}`;
-      const res = await fetchWithTimeout(url, 6000);
+      const res = await fetchWithTimeout(url, 7000);
       const d = await res.json();
       const r = parseYahooMeta(d);
       if (!r) throw new Error('no price');
       return { ...r, source: 'Yahoo(AllOrigins)' };
     },
-    // Supabase Edge Function（最後備援）
+    // ── [D] Supabase Edge Function 最終備援 ──
     async () => {
-      const res = await fetchWithTimeout(`${QUOTE_PROXY_URL}?ticker=${encodeURIComponent(ticker)}`, 5000, {
+      const res = await fetchWithTimeout(`${QUOTE_PROXY_URL}?ticker=${encodeURIComponent(ticker)}`, 6000, {
         headers: { 'Authorization': `Bearer ${QUOTE_PROXY_KEY}` }
       });
       const data = await res.json();
@@ -3329,9 +3368,10 @@ async function showConnTest() {
   list.innerHTML = '<div style="color:var(--text-muted);font-size:12px;text-align:center;">正在測試連線...</div>';
 
   const targets = [
-    { name: 'AllOrigins (Proxy A)', url: 'https://api.allorigins.win/get?url=https://www.google.com' },
-    { name: 'CorsProxy (Proxy C)', url: 'https://corsproxy.io/?https://www.google.com' },
-    { name: '證交所 API', url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_2330.tw') }
+    { name: 'CodeTabs (超強代理)', url: 'https://api.codetabs.com/v1/proxy?quest=https://www.google.com' },
+    { name: 'AllOrigins (穩定代理)', url: 'https://api.allorigins.win/get?url=https://www.google.com' },
+    { name: 'TWSE openapi (主要來源)', url: 'https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_AVG?stockNo=2330' },
+    { name: 'TWSE 即時行情 (備援)', url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_2330.tw&_=' + Date.now()) }
   ];
 
   let html = '';
@@ -3540,7 +3580,8 @@ async function showConnTest() {
   const targets = [
     { name: 'CodeTabs (超強代理)', url: 'https://api.codetabs.com/v1/proxy?quest=https://www.google.com' },
     { name: 'AllOrigins (穩定代理)', url: 'https://api.allorigins.win/get?url=https://www.google.com' },
-    { name: '證交所 API', url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_2330.tw&_=' + Date.now()) }
+    { name: 'TWSE openapi (主要來源)', url: 'https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_AVG?stockNo=2330' },
+    { name: 'TWSE 即時行情 (備援)', url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_2330.tw&_=' + Date.now()) }
   ];
 
   let html = '';
