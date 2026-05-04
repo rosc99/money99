@@ -3260,53 +3260,86 @@ async function fetchQuote(ticker) {
   return null;
 }
 
+// ── 圖表歷史快取（localStorage, 1小時有效）──
+const CHART_CACHE_TTL = 60 * 60 * 1000; // 1 hour
+function getChartCache(ticker, period) {
+  try {
+    const key = `chartCache_${ticker}_${period}`;
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const { ts, data } = JSON.parse(raw);
+    if (Date.now() - ts < CHART_CACHE_TTL) return data;
+    localStorage.removeItem(key);
+  } catch(e) {}
+  return null;
+}
+function setChartCache(ticker, period, data) {
+  try {
+    localStorage.setItem(`chartCache_${ticker}_${period}`, JSON.stringify({ ts: Date.now(), data }));
+  } catch(e) {}
+}
+
 async function fetchChartHistory(ticker) {
+  const period = chartState.period;
+
+  // ── 快取命中直接返回 ──
+  const cached = getChartCache(ticker, period);
+  if (cached) { console.log(`[Chart] Cache hit: ${ticker} ${period}`); return cached; }
+
   const tw = ticker.match(/^\d/) ? ticker + '.TW' : ticker;
   const rangeMap = { D: '3mo', W: '1y', M: '2y', Y: '5y' };
-  const range = rangeMap[chartState.period] || '3mo';
-  const timeout = 12000;
-  
-  // 按照穩定度排序的 Proxy 列表
-  const proxies = [
-    url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
-    url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-    url => `https://cors-anywhere.azm.workers.dev/${url}`
-  ];
+  const range = rangeMap[period] || '3mo';
+
+  // 解析 Yahoo Finance JSON → 結構化 result
+  function parseYahoo(data) {
+    const r = data?.chart?.result?.[0];
+    if (!r || !r.indicators?.quote?.[0]?.close) return null;
+    const meta = r.meta;
+    const q = r.indicators.quote[0];
+    const ts = r.timestamp || [];
+    const valid = ts.map((t, i) => ({
+      t, c: q.close[i], h: q.high[i], l: q.low[i], o: q.open[i], v: q.volume[i]
+    })).filter(x => x.c != null && x.o != null);
+    if (valid.length < 2) return null;
+    return {
+      price: meta.regularMarketPrice || valid[valid.length-1].c,
+      prevClose: meta.previousClose || valid[valid.length-2].c,
+      high52: meta.fiftyTwoWeekHigh || Math.max(...valid.map(x=>x.h)),
+      closes: valid.map(x => x.c),
+      highs: valid.map(x => x.h),
+      lows: valid.map(x => x.l),
+      opens: valid.map(x => x.o),
+      vols: valid.map(x => x.v),
+      source: 'Yahoo-Hist'
+    };
+  }
 
   const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${tw}?interval=1d&range=${range}&includePrePost=false&events=div%7Csplit%7Cearn`;
 
-  for (const proxy of proxies) {
-    try {
-      const res = await fetchWithTimeout(proxy(yahooUrl), timeout);
-      if (!res.ok) continue;
-      
-      const data = await res.json();
-      const r = data?.chart?.result?.[0];
-      if (!r || !r.indicators?.quote?.[0]?.close) continue;
-      
-      const meta = r.meta;
-      const q = r.indicators.quote[0];
-      const ts = r.timestamp || [];
-      const valid = ts.map((t, i) => ({
-        t, c: q.close[i], h: q.high[i], l: q.low[i], o: q.open[i], v: q.volume[i]
-      })).filter(x => x.c != null && x.o != null);
-      
-      if (valid.length < 2) continue;
-      
-      return {
-        price: meta.regularMarketPrice || valid[valid.length-1].c,
-        prevClose: meta.previousClose || valid[valid.length-2].c,
-        high52: meta.fiftyTwoWeekHigh || Math.max(...valid.map(x=>x.h)),
-        closes: valid.map(x => x.c),
-        highs: valid.map(x => x.h),
-        lows: valid.map(x => x.l),
-        opens: valid.map(x => x.o),
-        vols: valid.map(x => x.v),
-        source: 'Yahoo-Hist'
-      };
-    } catch(e) { console.warn(`[Chart] Proxy fail:`, e); }
+  // ── 所有 proxy 同時競賽，誰先成功就用誰 ──
+  const proxyFns = [
+    url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+    url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+    url => `https://cors-anywhere.azm.workers.dev/${url}`
+  ];
+
+  const racePromises = proxyFns.map(async (makeProxy) => {
+    const res = await fetchWithTimeout(makeProxy(yahooUrl), 8000);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const result = parseYahoo(data);
+    if (!result) throw new Error('parse fail');
+    return result;
+  });
+
+  try {
+    const result = await Promise.any(racePromises);
+    setChartCache(ticker, period, result);
+    return result;
+  } catch(e) {
+    console.warn('[Chart] All proxies failed:', e);
+    return null;
   }
-  return null;
 }
 
 async function showConnTest() {
@@ -3340,42 +3373,44 @@ async function fetchAllQuotes() {
   if (!db.stocks.length) return;
   const btn = document.getElementById('refreshBtn');
   if (btn) { btn.textContent = '⏳ 更新中…'; btn.disabled = true; }
-  
-  let successCount = 0;
+
   const now = new Date();
   const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
 
-  for (const s of db.stocks) {
-    // 基本防呆：確保代號存在
-    if (s.ticker === '其他' || !s.ticker) {
+  // ── 所有股票同時並行抓取（大幅縮短等待時間）──
+  const results = await Promise.all(db.stocks.map(async (s) => {
+    if (s.ticker === '其他' || !s.ticker) return { s, q: null };
+    const q = await fetchQuote(s.ticker);
+    return { s, q };
+  }));
+
+  let successCount = 0;
+  for (const { s, q } of results) {
+    if (!s.ticker || s.ticker === '其他') {
       if (s.shares && s.price) s.value = Math.round(s.shares * 1000 * s.price);
       continue;
     }
-
-    const q = await fetchQuote(s.ticker);
     if (q) {
       successCount++;
       stockQuotes[s.ticker] = q;
       const chg = q.prevClose ? ((q.price - q.prevClose) / q.prevClose * 100) : (s.change || 0);
       s.change = parseFloat(chg.toFixed(2));
       s.price  = q.price;
-      s.lastUpdate = timeStr; // 紀錄本次成功更新時間
+      s.lastUpdate = timeStr;
     }
-    
-    // 無論是否更新成功，都基於目前的 s.price 重新計算市值
     if (s.shares && s.price) {
       s.value = Math.round(s.shares * 1000 * s.price);
     }
   }
-  
+
   saveLocal();
   renderStocksPage();
   renderDashboard();
-  
+
   if (btn) { btn.textContent = '🔄 刷新'; btn.disabled = false; }
   const upEl = document.getElementById('stocksLastUpdate');
   if (upEl) upEl.textContent = `最後更新：${timeStr} (成功 ${successCount}/${db.stocks.length})`;
-  
+
   if (successCount === 0) toast('❌ 股價更新失敗，已沿用舊有資料計算市值');
   else toast(`✅ 已更新 ${successCount} 筆持股報價`);
 }
@@ -3552,6 +3587,8 @@ function switchChartPeriod(period, el) {
   if (chartState.ticker) {
     const ticker = chartState.ticker;
     delete stockQuotes[ticker];
+    // 同步清除 localStorage 圖表快取，確保新週期重新抓取
+    try { localStorage.removeItem(`chartCache_${ticker}_${period}`); } catch(e) {}
     selectChartTicker(ticker);
   }
 }
