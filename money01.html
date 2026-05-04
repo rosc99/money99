@@ -1225,6 +1225,34 @@
       </div>
     </div>
  
+    <!-- ══ Cloudflare Worker Proxy 設定 ══ -->
+    <div class="settings-section">
+      <div class="settings-section-title">⚡ 股價代理伺服器</div>
+      <div class="card" style="padding:14px 16px;">
+        <div style="font-size:11px;color:var(--text-secondary);line-height:1.8;margin-bottom:10px;">
+          設定你自己的 <strong style="color:var(--ocean-light);">Cloudflare Worker</strong> URL 作為股價 Proxy（免費、穩定、不受限）
+        </div>
+        <div class="form-row">
+          <div class="form-label">Worker URL</div>
+          <input class="form-input" type="url" id="cfWorkerUrl"
+            placeholder="https://your-worker.your-name.workers.dev"
+            oninput="db.config.cfWorkerUrl=this.value;saveLocal()" />
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <button onclick="testCfWorker()" style="flex:1;padding:8px;border-radius:10px;border:1px solid rgba(77,196,212,0.3);background:rgba(77,196,212,0.1);color:var(--ocean-light);font-size:12px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;">🧪 測試連線</button>
+          <button onclick="copyCfWorkerCode()" style="flex:1;padding:8px;border-radius:10px;border:1px solid rgba(240,192,64,0.3);background:rgba(240,192,64,0.08);color:var(--accent-gold);font-size:12px;cursor:pointer;font-family:'Noto Sans TC',sans-serif;">📋 複製程式碼</button>
+        </div>
+        <div id="cfWorkerStatus" style="margin-top:10px;font-size:11px;color:var(--text-muted);display:none;"></div>
+        <div style="margin-top:12px;background:rgba(255,255,255,0.03);border-radius:8px;padding:10px;font-size:10px;color:var(--text-muted);line-height:1.7;">
+          <div style="color:var(--accent-gold);font-weight:700;margin-bottom:4px;">🚀 部署步驟（3分鐘完成）</div>
+          1. 到 <a href="https://dash.cloudflare.com" target="_blank" style="color:var(--ocean-light);">dash.cloudflare.com</a> 免費註冊<br>
+          2. 左側選 Workers & Pages → 建立 Worker<br>
+          3. 點「複製程式碼」→ 貼入編輯器 → 部署<br>
+          4. 複製 Worker URL → 貼入上方欄位存檔
+        </div>
+      </div>
+    </div>
+
     <div class="settings-section">
       <div class="settings-section-title">🎨 顏色主題</div>
       <div class="card" style="padding:14px 16px;">
@@ -3225,49 +3253,105 @@ let chartState = { ticker: null, period: 'D', candles: [], vols: [] };
 const QUOTE_PROXY_URL = 'https://dlwswwioqbghwpksbnjv.supabase.co/functions/v1/quote-proxy';
 const QUOTE_PROXY_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsd3N3d2lvcWJnaHdwa3Nibmp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MzQ3NjEsImV4cCI6MjA4ODMxMDc2MX0.d5jRhb_6qQDnfcEIfvRErfAWIEWcEnuR74diYtAicfg';
 
-async function fetchQuote(ticker) {
-  const isTW = ticker.match(/^\d/); // 台股代號以數字開頭
+// ── Worker 程式碼（部署到 Cloudflare）──
+const CF_WORKER_CODE = `
+// Cloudflare Worker — 股價 Proxy
+// 部署後貼入 money01.html 設定頁的 Worker URL 欄位
+export default {
+  async fetch(request) {
+    const url = new URL(request.url);
+    const ticker = url.searchParams.get('ticker') || '2330';
+    const isTW = /^\\d/.test(ticker);
+    const symbol = isTW ? ticker + '.TW' : ticker;
 
-  // ── [A] 台股：優先用 TWSE openapi（免 proxy，最穩定）──
-  if (isTW) {
+    const headers = {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      'Accept': 'application/json',
+    };
+
+    const cors = {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
+    };
+
     try {
-      // openapi.twse.com.tw 為官方開放資料，支援 CORS
-      const res = await fetchWithTimeout(
-        `https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_AVG?stockNo=${ticker}`,
-        6000
-      );
-      if (res.ok) {
-        const arr = await res.json();
-        // 回傳陣列，最後一筆為最新
-        if (arr && arr.length > 0) {
-          const last = arr[arr.length - 1];
-          const price = parseFloat(last.ClosingPrice);
-          const prev  = arr.length > 1 ? parseFloat(arr[arr.length - 2].ClosingPrice) : price;
-          if (price > 0) return { price, prevClose: prev, source: 'TWSE-openapi' };
+      // 台股優先用 TWSE openapi（官方，免費，穩定）
+      if (isTW) {
+        const r = await fetch(
+          \`https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_AVG?stockNo=\${ticker}\`,
+          { headers }
+        );
+        if (r.ok) {
+          const arr = await r.json();
+          if (arr && arr.length >= 2) {
+            const price = parseFloat(arr[arr.length - 1].ClosingPrice);
+            const prev  = parseFloat(arr[arr.length - 2].ClosingPrice);
+            if (price > 0) return Response.json({ price, prevClose: prev, source: 'TWSE' }, { headers: cors });
+          }
         }
       }
-    } catch(e) { console.warn('[fetchQuote] TWSE openapi fail:', e); }
-
-    // ── [B] 台股備援：TWSE 即時行情 via AllOrigins ──
-    try {
-      const twseUrl = `https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_${ticker}.tw&_=${Date.now()}`;
-      const res = await fetchWithTimeout(
-        `https://api.allorigins.win/raw?url=${encodeURIComponent(twseUrl)}`,
-        7000
+      // 通用：Yahoo Finance（在 Worker 伺服器端抓，無 CORS 問題）
+      const yahoo = await fetch(
+        \`https://query1.finance.yahoo.com/v8/finance/chart/\${symbol}?interval=1d&range=1d\`,
+        { headers }
       );
-      if (res.ok) {
-        const d = await res.json();
-        const item = d?.msgArray?.[0];
-        if (item) {
-          const price    = parseFloat(item.z !== '-' ? item.z : item.y) || 0;
-          const prevClose= parseFloat(item.y) || price;
-          if (price > 0) return { price, prevClose, source: 'TWSE-realtime' };
+      if (yahoo.ok) {
+        const d = await yahoo.json();
+        const meta = d?.chart?.result?.[0]?.meta;
+        if (meta?.regularMarketPrice) {
+          return Response.json({
+            price: meta.regularMarketPrice,
+            prevClose: meta.previousClose,
+            source: 'Yahoo'
+          }, { headers: cors });
         }
       }
-    } catch(e) { console.warn('[fetchQuote] TWSE realtime fail:', e); }
+    } catch(e) {}
+
+    return Response.json({ error: 'fetch failed' }, { status: 502, headers: cors });
   }
+};
+`.trim();
 
-  // ── [C] Yahoo Finance via CodeTabs（台股 & 美股通用）──
+function copyCfWorkerCode() {
+  navigator.clipboard.writeText(CF_WORKER_CODE).then(() => {
+    toast('✅ Cloudflare Worker 程式碼已複製，請貼入 Cloudflare 編輯器');
+  }).catch(() => {
+    // fallback：顯示 textarea
+    const ta = document.createElement('textarea');
+    ta.value = CF_WORKER_CODE;
+    ta.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:90%;max-width:400px;height:300px;z-index:9999;background:#1a2a3a;color:#eee;border:1px solid #4dc4d4;border-radius:12px;padding:12px;font-size:11px;font-family:monospace;';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    setTimeout(() => ta.remove(), 4000);
+    toast('✅ 程式碼已複製（請手動關閉彈出框）');
+  });
+}
+
+async function testCfWorker() {
+  const url = (db.config.cfWorkerUrl || '').trim();
+  const el = document.getElementById('cfWorkerStatus');
+  if (!url) { el.style.display='block'; el.style.color='var(--accent-red)'; el.textContent='⚠️ 請先輸入 Worker URL'; return; }
+  el.style.display='block'; el.style.color='var(--text-muted)'; el.textContent='⏳ 測試中...';
+  try {
+    const res = await fetchWithTimeout(`${url}?ticker=2330`, 8000);
+    const d = await res.json();
+    if (d?.price) {
+      el.style.color = 'var(--accent-green)';
+      el.textContent = `✅ 成功！台積電股價：$${d.price}（來源：${d.source || 'Worker'}）`;
+    } else {
+      el.style.color = 'var(--accent-red)';
+      el.textContent = `❌ Worker 回應異常：${JSON.stringify(d).slice(0,60)}`;
+    }
+  } catch(e) {
+    el.style.color = 'var(--accent-red)';
+    el.textContent = `❌ 連線失敗：${e.message}`;
+  }
+}
+
+async function fetchQuote(ticker) {
+  const isTW = ticker.match(/^\d/);
   const tw = isTW ? ticker + '.TW' : ticker;
   const yahooPath = `https://query1.finance.yahoo.com/v8/finance/chart/${tw}?interval=1d&range=1d`;
 
@@ -3277,7 +3361,26 @@ async function fetchQuote(ticker) {
     return null;
   }
 
-  const proxyAttempts = [
+  const attempts = [
+    // ── [1] 自訂 Cloudflare Worker（最優先，自己部署最穩定）──
+    async () => {
+      const cfUrl = (db.config?.cfWorkerUrl || '').trim();
+      if (!cfUrl) throw new Error('no worker url');
+      const res = await fetchWithTimeout(`${cfUrl}?ticker=${encodeURIComponent(ticker)}`, 7000);
+      const d = await res.json();
+      if (!d?.price) throw new Error('no price');
+      return { price: d.price, prevClose: d.prevClose, source: 'CF-Worker' };
+    },
+    // ── [2] Supabase Edge Function ──
+    async () => {
+      const res = await fetchWithTimeout(`${QUOTE_PROXY_URL}?ticker=${encodeURIComponent(ticker)}`, 6000, {
+        headers: { 'Authorization': `Bearer ${QUOTE_PROXY_KEY}` }
+      });
+      const data = await res.json();
+      if (!data?.price) throw new Error('no price');
+      return { price: data.price, prevClose: data.prevClose, source: 'Supabase' };
+    },
+    // ── [3] CodeTabs -> Yahoo（已知可能被限，保留備援）──
     async () => {
       const url = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(yahooPath)}`;
       const res = await fetchWithTimeout(url, 6000);
@@ -3286,6 +3389,7 @@ async function fetchQuote(ticker) {
       if (!r) throw new Error('no price');
       return { ...r, source: 'Yahoo(CodeTabs)' };
     },
+    // ── [4] AllOrigins -> Yahoo ──
     async () => {
       const url = `https://api.allorigins.win/raw?url=${encodeURIComponent(yahooPath)}`;
       const res = await fetchWithTimeout(url, 7000);
@@ -3294,22 +3398,15 @@ async function fetchQuote(ticker) {
       if (!r) throw new Error('no price');
       return { ...r, source: 'Yahoo(AllOrigins)' };
     },
-    // ── [D] Supabase Edge Function 最終備援 ──
-    async () => {
-      const res = await fetchWithTimeout(`${QUOTE_PROXY_URL}?ticker=${encodeURIComponent(ticker)}`, 6000, {
-        headers: { 'Authorization': `Bearer ${QUOTE_PROXY_KEY}` }
-      });
-      const data = await res.json();
-      if (!data || !data.price) throw new Error('no price');
-      return { price: data.price, prevClose: data.prevClose, source: 'Supabase' };
-    }
   ];
 
-  try {
-    return await Promise.any(proxyAttempts.map(fn => fn()));
-  } catch(e) {
-    return null;
+  for (const fn of attempts) {
+    try {
+      const result = await fn();
+      if (result) return result;
+    } catch(e) { /* 繼續下一個 */ }
   }
+  return null;
 }
 
 async function fetchChartHistory(ticker) {
@@ -3367,24 +3464,37 @@ async function showConnTest() {
   modal.style.display = 'flex';
   list.innerHTML = '<div style="color:var(--text-muted);font-size:12px;text-align:center;">正在測試連線...</div>';
 
+  const cfUrl = (db.config?.cfWorkerUrl || '').trim();
   const targets = [
-    { name: 'CodeTabs (超強代理)', url: 'https://api.codetabs.com/v1/proxy?quest=https://www.google.com' },
-    { name: 'AllOrigins (穩定代理)', url: 'https://api.allorigins.win/get?url=https://www.google.com' },
-    { name: 'TWSE openapi (主要來源)', url: 'https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_AVG?stockNo=2330' },
-    { name: 'TWSE 即時行情 (備援)', url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_2330.tw&_=' + Date.now()) }
+    { name: '⚡ CF Worker（自訂代理）', url: cfUrl ? `${cfUrl}?ticker=2330` : null, isJson: true },
+    { name: 'CodeTabs Proxy', url: 'https://api.codetabs.com/v1/proxy?quest=https://www.google.com' },
+    { name: 'AllOrigins Proxy', url: 'https://api.allorigins.win/get?url=https://www.google.com' },
+    { name: 'Supabase Edge Fn', url: `${QUOTE_PROXY_URL}?ticker=2330` },
   ];
 
   let html = '';
   for (const t of targets) {
+    let status, color;
+    if (!t.url) {
+      status = '⚠️ 未設定'; color = 'var(--accent-gold)';
+      html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(255,255,255,0.03);border-radius:10px;"><span style="font-size:13px;">${t.name}</span><span style="font-family:monospace;font-size:11px;color:${color}">${status}</span></div>`;
+      continue;
+    }
     const start = Date.now();
-    let status = '⏳'; let color = 'var(--text-muted)';
     try {
-      const res = await fetchWithTimeout(t.url, 6000);
+      const opts = t.url.includes(QUOTE_PROXY_URL) ? { headers: { 'Authorization': `Bearer ${QUOTE_PROXY_KEY}` } } : {};
+      const res = await fetchWithTimeout(t.url, 8000, opts);
       const ms = Date.now() - start;
-      status = res.ok ? `✅ OK (${ms}ms)` : `❌ ${res.status}`;
-      color = res.ok ? 'var(--accent-green)' : 'var(--accent-red)';
+      if (res.ok && t.isJson) {
+        const d = await res.json();
+        status = d?.price ? `✅ $${d.price} (${ms}ms)` : `⚠️ 無股價 (${ms}ms)`;
+        color = d?.price ? 'var(--accent-green)' : 'var(--accent-gold)';
+      } else {
+        status = res.ok ? `✅ OK (${ms}ms)` : `❌ ${res.status}`;
+        color = res.ok ? 'var(--accent-green)' : 'var(--accent-red)';
+      }
     } catch(e) { status = '❌ 失敗'; color = 'var(--accent-red)'; }
-    html += `<div style="display:flex;justify-content:space-between;padding:10px;background:rgba(255,255,255,0.03);border-radius:10px;"><span style="font-size:13px;">${t.name}</span><span style="font-family:monospace;font-size:11px;color:${color}">${status}</span></div>`;
+    html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(255,255,255,0.03);border-radius:10px;"><span style="font-size:13px;">${t.name}</span><span style="font-family:monospace;font-size:11px;color:${color}">${status}</span></div>`;
   }
   list.innerHTML = html;
 }
@@ -3569,34 +3679,6 @@ async function selectChartTicker(ticker) {
       <button class="btn btn-sm btn-primary" onclick="delete stockQuotes['${ticker}']; selectChartTicker('${ticker}')">🔄 重試</button>
     </div>`;
   }
-}
-
-async function showConnTest() {
-  const modal = document.getElementById('connModal');
-  const list = document.getElementById('connList');
-  modal.style.display = 'flex';
-  list.innerHTML = '<div style="color:var(--text-muted);font-size:12px;text-align:center;">正在測試連線...</div>';
-
-  const targets = [
-    { name: 'CodeTabs (超強代理)', url: 'https://api.codetabs.com/v1/proxy?quest=https://www.google.com' },
-    { name: 'AllOrigins (穩定代理)', url: 'https://api.allorigins.win/get?url=https://www.google.com' },
-    { name: 'TWSE openapi (主要來源)', url: 'https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_AVG?stockNo=2330' },
-    { name: 'TWSE 即時行情 (備援)', url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_2330.tw&_=' + Date.now()) }
-  ];
-
-  let html = '';
-  for (const t of targets) {
-    const start = Date.now();
-    let status = '⏳'; let color = 'var(--text-muted)';
-    try {
-      const res = await fetchWithTimeout(t.url, 8000);
-      const ms = Date.now() - start;
-      status = res.ok ? `✅ OK (${ms}ms)` : `❌ ${res.status}`;
-      color = res.ok ? 'var(--accent-green)' : 'var(--accent-red)';
-    } catch(e) { status = '❌ 失敗'; color = 'var(--accent-red)'; }
-    html += `<div style="display:flex;justify-content:space-between;padding:10px;background:rgba(255,255,255,0.03);border-radius:10px;"><span style="font-size:13px;">${t.name}</span><span style="font-family:monospace;font-size:11px;color:${color}">${status}</span></div>`;
-  }
-  list.innerHTML = html;
 }
 
 function switchChartPeriod(period, el) {
@@ -4189,6 +4271,8 @@ function renderSettings() {
   const r = document.getElementById('ghRepo');   if(r) r.value = db.config.ghRepo||'';
   const f = document.getElementById('ghFile');   if(f) f.value = db.config.ghFile||'index.html';
   const b = document.getElementById('ghBranch'); if(b) b.value = db.config.ghBranch||'main';
+  // Cloudflare Worker URL
+  const cw = document.getElementById('cfWorkerUrl'); if(cw) cw.value = db.config.cfWorkerUrl||'';
   applyTheme(db.config.theme || 'ocean');
   renderCategoryList(); renderIncomeCategoryList(); updateSyncUI();
   renderSupabaseTables();
