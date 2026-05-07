@@ -2385,17 +2385,20 @@ function renderTrendChart() {
     ? months.map((_, i) => txExpenseData[i] + fixedData[i])
     : txExpenseData;
 
-  // 平均：收入只算有數值（>0）的月份；支出 combined 模式用全12個月（固定支出每月都有）
-  const incomeMonths  = incomeData.filter(v => v > 0);
-  const avgIncome  = incomeMonths.length  ? Math.round(incomeMonths.reduce((s,v)=>s+v,0)  / incomeMonths.length)  : 0;
+  // 平均：收入只算有數值（>0）的月份
+  const incomeMonths = incomeData.filter(v => v > 0);
+  const avgIncome = incomeMonths.length ? Math.round(incomeMonths.reduce((s,v)=>s+v,0) / incomeMonths.length) : 0;
 
   let avgExpense = 0;
   if (trendExpMode === 'combined') {
-    // combined：分母用12（固定支出每月都存在，不應排除零值月）
-    const totalExp = expenseData.reduce((s,v) => s+v, 0);
-    avgExpense = Math.round(totalExp / 12);
+    // 一般支出：只算有數值的月份平均（不讓空月份拉低）
+    const txMonths = txExpenseData.filter(v => v > 0);
+    const avgTx = txMonths.length ? Math.round(txMonths.reduce((s,v)=>s+v,0) / txMonths.length) : 0;
+    // 固定支出：直接用12個月總和 / 12（每月都有）
+    const avgFixed = Math.round(fixedData.reduce((s,v)=>s+v,0) / 12);
+    avgExpense = avgTx + avgFixed;
   } else {
-    const expenseMonths = expenseData.filter(v => v > 0);
+    const expenseMonths = txExpenseData.filter(v => v > 0);
     avgExpense = expenseMonths.length ? Math.round(expenseMonths.reduce((s,v)=>s+v,0) / expenseMonths.length) : 0;
   }
 
